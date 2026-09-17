@@ -1,0 +1,22 @@
+# Office lock files
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# large data and model outputs (keep scripts + README only)
+data/raw/
+data/features/
+data/graphs/
+*.pt
+*.ckpt
+*.npy
