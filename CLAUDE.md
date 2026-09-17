@@ -7,7 +7,7 @@ Project cuối kì môn Học máy với dữ liệu đồ thị. Đề đã ch�
 - 25C11050 Nguyễn Đình Lộc (người đang làm việc với Claude).
 - 25C15003 Ngô Trương Minh Đạt.
 - 25C15015 Trần Đắc Khoa.
-- 25C15055 Mẫn Nhi — chưa có họ tên đầy đủ.
+- 25C15055 Nguyễn Bùi Mẫn Nhi.
 - 25C15045 Dương Khang — chưa có họ tên đầy đủ.
 
 Nhóm số 7 trong danh sách đăng ký. Giảng viên hướng dẫn: TS. Lê Ngọc Thành.
