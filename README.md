@@ -30,7 +30,7 @@ Giảng viên hướng dẫn: **TS. Lê Ngọc Thành**.
 | Giai đoạn | Bộ dữ liệu | Việc chính |
 |---|---|---|
 | 0. Nền chung | — | Khung repo + config theo seed; trích đặc trưng CLIP + FAISS; module đánh giá (Recall@1/5/10, MRR, ≥3 seed); thử CLIP đa ngữ cho truy vấn tiếng Việt để chốt encoder. |
-| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng đồ thị (VG150 + ConceptNet) → nối truy vấn vào đồ thị → GAT + điểm đồ thị → re-rank, chọn α trên validation → ablation bỏ/xáo cạnh → hiển thị đường đi + notebook demo → phân tích 5 thành công / 5 thất bại. |
+| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng đồ thị (VG150 + ConceptNet) → nối truy vấn vào đồ thị → GAT + điểm đồ thị → re-rank, chọn α trên validation → ablation bỏ/xáo cạnh → hiển thị đường đi → platform demo (web app nhỏ: nhập truy vấn → top-k, so CLIP với CLIP + Graph, đường đi giải thích; Lộc phụ trách) → phân tích 5 thành công / 5 thất bại. |
 | 2. Cấp độ 2 | + MKG-W | Sinh truy vấn từ mô tả thực thể, chia truy vấn và triple theo split → chạy lại CLIP và CLIP + GNN → tái lập NativE/AdaMF-MAT (a: link prediction gốc, so với bài báo; b: embedding thay GNN trong điểm đồ thị) → bộ ≥20 truy vấn mỗi tập, báo cáo tách trực tiếp / gián tiếp. |
 | 3. Cấp độ 3 | + MMKG tiếng Việt | Chốt định nghĩa và cài đặt fidelity / validity / sparsity trên ≥10 truy vấn → xây MMKG tiếng Việt (50–150 thực thể, 300–1.000 triple, 200–500 ảnh) + data card → chạy phương pháp tốt nhất, phân tích chuyển giao. |
 | 4. Mở rộng | 2 tập công khai | Ưu tiên hướng (a): α thích nghi theo truy vấn hoặc cách chọn đường đi giải thích. Hướng (c) khảo sát người dùng nếu còn thời gian. Bỏ hướng video. |
