@@ -27,6 +27,8 @@ Giảng viên hướng dẫn: **TS. Lê Ngọc Thành**.
 
 ## Kế hoạch theo cấp độ
 
+**Hạn nộp + vấn đáp: 22/11/2026.** Kế hoạch chi tiết (5 gói công việc, phụ thuộc, lộ trình 9 tuần, rủi ro): [plan.md](plan.md).
+
 | Giai đoạn | Bộ dữ liệu | Việc chính |
 |---|---|---|
 | 0. Nền chung | — | Khung repo + config theo seed; trích đặc trưng CLIP + FAISS; module đánh giá (Recall@1/5/10, MRR, ≥3 seed); thử CLIP đa ngữ cho truy vấn tiếng Việt để chốt encoder. |
