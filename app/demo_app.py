@@ -1,0 +1,107 @@
+"""Demo: type a query, see the top-k images and why each one was returned.
+
+Runs fully offline once features and the test/val images are on disk:
+    python app/demo_app.py [--split test] [--port 7860]
+then open http://localhost:7860
+
+The page only calls SearchService.search(); ranking modes added to the service (for example
+CLIP + graph) appear in the "Chế độ xếp hạng" selector automatically.
+"""
+import argparse
+import random
+import sys
+from pathlib import Path
+
+import gradio as gr
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.service.search_service import Hit, SearchService  # noqa: E402
+from src.utils.config import load_config, resolve  # noqa: E402
+
+MODE_LABELS = {"clip": "CLIP thuần", "clip_graph": "CLIP + Đồ thị"}
+
+
+def describe(hit: Hit, mode: str) -> str:
+    lines = [f"### Hạng {hit.rank} · ảnh `{hit.image_id}`",
+             f"- Điểm cuối: **{hit.score:.4f}**",
+             f"- Điểm CLIP (cosine): {hit.clip_score:.4f}"]
+    if hit.graph_score is not None:
+        lines.append(f"- Điểm đồ thị: {hit.graph_score:.4f}")
+    lines.append("\n**Giải thích**")
+    if hit.explanation:
+        for path in hit.explanation:
+            lines.append("- " + " ; ".join(f"{h} –{r}→ {t}" for h, r, t in path))
+    elif mode == "clip":
+        lines.append("- Chế độ CLIP thuần chỉ so khớp vector, không dùng đồ thị nên không có đường đi giải thích.")
+    else:
+        lines.append("- Không có đường đi nào nối truy vấn với ảnh này; chỉ điểm CLIP đóng góp.")
+    lines.append("\n**Caption gốc của ảnh (COCO)**")
+    lines += [f"- {c}" for c in hit.captions]
+    return "\n".join(lines)
+
+
+def build(service: SearchService, split: str) -> gr.Blocks:
+    gold_pairs = [(c, i) for i, m in service.meta.items() for c in m["captions"]]
+
+    def run(query: str, mode: str, k: int, gold_id):
+        hits = service.search(query, mode=mode, k=int(k))
+        gallery = [(str(h.image_path), f"#{h.rank} · {h.score:.3f}") for h in hits]
+        note = f"{len(hits)} kết quả · pool {len(service.meta)} ảnh ({split}) · chế độ {MODE_LABELS.get(mode, mode)}"
+        if gold_id is not None and hits:
+            rank = service.rank_of(query, gold_id, mode)
+            where = f"hạng **{rank}**" if rank else f"ngoài top-{service.pool_k}"
+            note += f"\n\nẢnh đúng của caption này là `{gold_id}`: {where}."
+        detail = describe(hits[0], mode) if hits else "Nhập truy vấn để bắt đầu."
+        return gallery, note, detail, hits
+
+    def pick(hits, mode, evt: gr.SelectData):
+        return describe(hits[evt.index], mode)
+
+    def random_caption():
+        text, gold = random.choice(gold_pairs)
+        return text, gold
+
+    with gr.Blocks(title="Truy vấn ảnh có giải thích bằng đồ thị") as demo:
+        gr.Markdown("# Truy vấn văn bản → ảnh, có giải thích bằng đồ thị\n"
+                    f"Nhóm 7 · Visual Genome ∩ COCO · pool: {len(service.meta)} ảnh của split `{split}`")
+        hits_state, gold_state = gr.State([]), gr.State(None)
+        with gr.Row():
+            query = gr.Textbox(label="Truy vấn (tiếng Anh)", placeholder="a child playing football", scale=5)
+            go = gr.Button("Tìm", variant="primary", scale=1)
+        with gr.Row():
+            mode = gr.Radio([(MODE_LABELS.get(m, m), m) for m in service.modes], value="clip", label="Chế độ xếp hạng")
+            k = gr.Slider(1, 50, value=12, step=1, label="Số kết quả (k)")
+            lucky = gr.Button("Lấy ngẫu nhiên một caption của pool")
+        note = gr.Markdown()
+        with gr.Row():
+            gallery = gr.Gallery(label="Kết quả", columns=4, height=620, object_fit="cover", scale=3)
+            detail = gr.Markdown("Nhập truy vấn để bắt đầu.")
+
+        outputs = [gallery, note, detail, hits_state]
+        go.click(run, [query, mode, k, gold_state], outputs)
+        query.submit(run, [query, mode, k, gold_state], outputs)
+        mode.change(run, [query, mode, k, gold_state], outputs)
+        query.input(lambda: None, None, gold_state)          # a hand-typed query has no known gold image
+        lucky.click(random_caption, None, [query, gold_state]).then(run, [query, mode, k, gold_state], outputs)
+        gallery.select(pick, [hits_state, mode], detail)
+    return demo
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--split", default="test", choices=["test", "val"])
+    ap.add_argument("--port", type=int, default=7860)
+    ap.add_argument("--host", default="127.0.0.1")
+    args = ap.parse_args()
+
+    cfg = load_config()
+    service = SearchService.from_config(split=args.split, cfg=cfg)
+    missing = [m["path"].name for m in service.meta.values() if not m["path"].exists()]
+    if missing:
+        sys.exit(f"{len(missing)} images missing; run: python scripts/download_images.py --splits {args.split}")
+    build(service, args.split).launch(server_name=args.host, server_port=args.port,
+                                      allowed_paths=[str(resolve(cfg, "raw") / "images")])
+
+
+if __name__ == "__main__":
+    main()
