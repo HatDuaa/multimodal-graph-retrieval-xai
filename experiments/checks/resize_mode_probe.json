@@ -1,0 +1,39 @@
+{
+  "encoder": "ViT-B-32/openai",
+  "split": "val",
+  "queries": 10633,
+  "image_shapes": {
+    "images": 2126,
+    "median_aspect_ratio": 1.33,
+    "landscape_share": 0.726,
+    "portrait_share": 0.231,
+    "long_side_kept_mean": 0.714,
+    "long_side_kept_min": 0.25
+  },
+  "modes": {
+    "shortest": {
+      "description": "center crop (default, used by the project)",
+      "recall@1": 38.0,
+      "recall@5": 66.2,
+      "recall@10": 77.19,
+      "recall@50": 96.59,
+      "mrr": 51.06
+    },
+    "longest": {
+      "description": "pad to square",
+      "recall@1": 37.87,
+      "recall@5": 65.34,
+      "recall@10": 77.09,
+      "recall@50": 96.46,
+      "mrr": 50.67
+    },
+    "squash": {
+      "description": "distort to square",
+      "recall@1": 37.99,
+      "recall@5": 65.05,
+      "recall@10": 76.75,
+      "recall@50": 96.5,
+      "mrr": 50.72
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "encoder": "ViT-B-32/openai",
+  "pool_images": 5000,
+  "captions": 25010,
+  "reference_source": "open_clip docs/openclip_retrieval_results.csv",
+  "directions": {
+    "text_to_image": {
+      "ours": {
+        "recall@1": 30.26,
+        "recall@5": 54.97,
+        "recall@10": 65.71
+      },
+      "published": {
+        "recall@1": 30.44,
+        "recall@5": 55.94,
+        "recall@10": 66.87
+      },
+      "difference": {
+        "recall@1": -0.18,
+        "recall@5": -0.97,
+        "recall@10": -1.16
+      }
+    },
+    "image_to_text": {
+      "ours": {
+        "recall@1": 49.16,
+        "recall@5": 73.34,
+        "recall@10": 82.34
+      },
+      "published": {
+        "recall@1": 50.12,
+        "recall@5": 75.0,
+        "recall@10": 83.52
+      },
+      "difference": {
+        "recall@1": -0.96,
+        "recall@5": -1.66,
+        "recall@10": -1.18
+      }
+    }
+  }
+}

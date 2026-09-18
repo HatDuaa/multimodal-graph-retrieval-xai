@@ -33,3 +33,15 @@ Trích ngày 2026-09-19 bằng `scripts/extract_features.py` trên RTX 4090, enc
 | `data/features/vg_coco_caption.ids.json` | — | 3025454 | `ff1824f6c87cfae46ba2cef4ff1fc47691b3ebbf8ec2ad20f0ec24977504a370` |
 
 Kiểm tra sau khi tải về: `sha256sum data/features/vg_coco_*` (Windows: `certutil -hashfile <file> SHA256`).
+
+### Đặc trưng MSCOCO 5K (chỉ để kiểm tra pipeline, không phải dữ liệu của đề tài)
+
+Sinh ngày 2026-09-19 bằng `scripts/checks/coco5k_zero_shot.py` trên RTX 4090, encoder `ViT-B-32/openai`. Chỉ nằm trên máy chạy, không có trên Drive. Xem `experiments/checks/README.md`.
+
+| File | Dòng × chiều | Bytes | SHA-256 |
+|---|---|---|---|
+| `data/features/coco5k_image.npy` | 5 000 × 512 | 10240128 | `495ad7a7b834a8d688590b74bddc2b2ae8c0dff500e25b259cfe86d1a98fa23f` |
+| `data/features/coco5k_image.ids.json` | — | 39079 | `d8ee11d74cd42910a13d3b95342be065853096842dcddd8a238e1c9a9424642f` |
+| `data/features/coco5k_caption.npy` | 25 010 × 512 | 51220608 | `c10763b7b93e90a048e7fe34b62ca3dd49e632d0dc2ef007b7f0c5faef5c584f` |
+| `data/features/coco5k_caption.ids.json` | — | 295309 | `46f66e7b025c8dbbf06f34f7c3e16c29dbba2ec32090a10643af70882cd3720d` |
+
