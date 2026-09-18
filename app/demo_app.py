@@ -20,6 +20,26 @@ from src.utils.config import load_config, resolve  # noqa: E402
 
 MODE_LABELS = {"clip": "CLIP thuần", "clip_graph": "CLIP + Đồ thị"}
 
+# The page fills the browser window exactly: only the result grid and the detail panel scroll.
+CSS = """
+html, body { height: 100%; margin: 0; overflow: hidden; }
+.gradio-container { height: 100vh !important; max-width: 100% !important; padding: 10px 16px !important; overflow: hidden; }
+footer { display: none !important; }
+#title h1 { font-size: 1.25rem; margin: 0; }
+#title p { margin: 0; }
+#note p { margin: 0; }
+#results { flex: 1 1 0 !important; min-height: 0 !important; flex-wrap: nowrap !important; }
+#results > * { height: 100% !important; min-height: 0 !important; }
+#gallery { height: 100% !important; }
+/* rows stretch to fill the grid; with many results they keep a 150px minimum and the grid scrolls */
+#gallery .gallery-container { height: 100% !important; display: flex; flex-direction: column; }
+#gallery .grid-wrap { height: 100% !important; max-height: none !important; flex: 1 1 0; min-height: 0; overflow-y: auto !important; }
+#gallery .grid-container { min-height: 100%; grid-auto-rows: minmax(150px, 1fr) !important; box-sizing: border-box; }
+#gallery .gallery-item { height: 100%; }
+#gallery .thumbnail-item { aspect-ratio: auto !important; height: 100% !important; width: 100% !important; }
+#detail { height: 100% !important; overflow-y: auto; padding-right: 6px; }
+"""
+
 
 def describe(hit: Hit, mode: str) -> str:
     lines = [f"### Hạng {hit.rank} · ảnh `{hit.image_id}`",
@@ -61,21 +81,22 @@ def build(service: SearchService, split: str) -> gr.Blocks:
         text, gold = random.choice(gold_pairs)
         return text, gold
 
-    with gr.Blocks(title="Truy vấn ảnh có giải thích bằng đồ thị") as demo:
+    with gr.Blocks(title="Truy vấn ảnh có giải thích bằng đồ thị", fill_height=True, fill_width=True) as demo:
         gr.Markdown("# Truy vấn văn bản → ảnh, có giải thích bằng đồ thị\n"
-                    f"Nhóm 7 · Visual Genome ∩ COCO · pool: {len(service.meta)} ảnh của split `{split}`")
+                    f"Nhóm 7 · Visual Genome ∩ COCO · pool: {len(service.meta)} ảnh của split `{split}`", elem_id="title")
         hits_state, gold_state = gr.State([]), gr.State(None)
         with gr.Row():
-            query = gr.Textbox(label="Truy vấn (tiếng Anh)", placeholder="a child playing football", scale=5)
-            go = gr.Button("Tìm", variant="primary", scale=1)
-        with gr.Row():
-            mode = gr.Radio([(MODE_LABELS.get(m, m), m) for m in service.modes], value="clip", label="Chế độ xếp hạng")
-            k = gr.Slider(1, 50, value=12, step=1, label="Số kết quả (k)")
-            lucky = gr.Button("Lấy ngẫu nhiên một caption của pool")
-        note = gr.Markdown()
-        with gr.Row():
-            gallery = gr.Gallery(label="Kết quả", columns=4, height=620, object_fit="cover", scale=3)
-            detail = gr.Markdown("Nhập truy vấn để bắt đầu.")
+            query = gr.Textbox(label="Truy vấn (tiếng Anh)", placeholder="a child playing football", scale=6)
+            mode = gr.Radio([(MODE_LABELS.get(m, m), m) for m in service.modes], value="clip",
+                            label="Chế độ xếp hạng", scale=3)
+            k = gr.Slider(1, 50, value=12, step=1, label="Số kết quả (k)", scale=3)
+            with gr.Column(scale=2, min_width=180):
+                go = gr.Button("Tìm", variant="primary")
+                lucky = gr.Button("Caption ngẫu nhiên của pool")
+        note = gr.Markdown(elem_id="note")
+        with gr.Row(elem_id="results"):
+            gallery = gr.Gallery(label="Kết quả", columns=6, object_fit="cover", scale=3, elem_id="gallery")
+            detail = gr.Markdown("Nhập truy vấn để bắt đầu.", elem_id="detail")
 
         outputs = [gallery, note, detail, hits_state]
         go.click(run, [query, mode, k, gold_state], outputs)
@@ -100,7 +121,7 @@ def main() -> None:
     if missing:
         sys.exit(f"{len(missing)} images missing; run: python scripts/download_images.py --splits {args.split}")
     build(service, args.split).launch(server_name=args.host, server_port=args.port,
-                                      allowed_paths=[str(resolve(cfg, "raw") / "images")])
+                                      allowed_paths=[str(resolve(cfg, "raw") / "images")], css=CSS)
 
 
 if __name__ == "__main__":
