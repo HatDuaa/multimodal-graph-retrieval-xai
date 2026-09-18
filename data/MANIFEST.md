@@ -21,4 +21,15 @@ Số đếm thật từ các file này (in ra bởi `scripts/smoke_test.py`): Vi
 
 ## File nhóm sinh ra
 
-*(chưa có)*
+### Đặc trưng CLIP của vg_coco
+
+Trích ngày 2026-09-19 bằng `scripts/extract_features.py` trên RTX 4090, encoder `ViT-B-32/openai` (open_clip 3.3.0, torch 2.14.0), từ đủ 51 208 ảnh (0 ảnh lỗi khi tải).
+
+| File | Dòng × chiều | Bytes | SHA-256 |
+|---|---|---|---|
+| `data/features/vg_coco_image.npy` | 51 208 × 512 | 104874112 | `76f873e5f423a0e6575a6765cf322888f1267851d5411456a78dab91c37c8a6a` |
+| `data/features/vg_coco_image.ids.json` | — | 459654 | `6afabaf0e7801db02a8d167e378995d8cf520feb2b35503ef33458e164701f51` |
+| `data/features/vg_coco_caption.npy` | 256 183 × 512 | 524662912 | `c61a39290c4d0eb3e2958467f6fc7098b147305585a4e6b8a4323f312fa392d5` |
+| `data/features/vg_coco_caption.ids.json` | — | 3025454 | `ff1824f6c87cfae46ba2cef4ff1fc47691b3ebbf8ec2ad20f0ec24977504a370` |
+
+Kiểm tra sau khi tải về: `sha256sum data/features/vg_coco_*` (Windows: `certutil -hashfile <file> SHA256`).
