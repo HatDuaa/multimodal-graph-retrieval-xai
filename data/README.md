@@ -38,9 +38,9 @@ python scripts/download_images.py                        # cả 51 208 ảnh, ~7
 | File | Nội dung | Dung lượng ước tính |
 |---|---|---|
 | `data/features/vg_coco_image.npy` + `.ids.json` | 51 208 vector ảnh, 512 chiều | ~100 MB |
-| `data/features/vg_coco_caption.npy` + `.ids.json` | ~256 000 vector caption | ~525 MB |
+| `data/features/vg_coco_caption.npy` + `.ids.json` | 256 183 vector caption | ~525 MB |
 
-Link Drive: *(chưa có — Lộc cập nhật khi trích xong; checksum ghi ở `MANIFEST.md`)*. Tải về đặt đúng vào `data/features/`.
+**Link Drive của nhóm:** <https://drive.google.com/drive/folders/11xG7r4oX884RmKfmLjtFQeLVpcSrv6cV?usp=sharing> → thư mục `data/features/`. Tải cả 4 file về đặt đúng vào `data/features/` trong repo, rồi đối chiếu checksum với `MANIFEST.md`.
 
 Chỉ chạy `scripts/extract_features.py` khi đổi encoder; khi đó phải tải đủ 51 208 ảnh trước (script từ chối chạy nếu thiếu ảnh) và phát hành file mới với tên mới.
 
@@ -57,6 +57,6 @@ data/
 
 ## File nặng dùng chung
 
-Ảnh của tập con, đặc trưng CLIP, đồ thị và checkpoint đặt trên Google Drive của nhóm, cấu trúc thư mục giống hệt `data/` và `experiments/` để tải về là đặt đúng chỗ. Link Drive: *(chưa tạo; khi có sẽ ghi ở mục "Lấy đặc trưng CLIP" phía trên)*.
+Ảnh của tập con, đặc trưng CLIP, đồ thị và checkpoint đặt trên Google Drive của nhóm, cấu trúc thư mục giống hệt `data/` và `experiments/` để tải về là đặt đúng chỗ. Link Drive: <https://drive.google.com/drive/folders/11xG7r4oX884RmKfmLjtFQeLVpcSrv6cV?usp=sharing>.
 
 Quy tắc: file trên Drive **không sửa tại chỗ**. Khi cần đổi thì tạo tên mới (ví dụ `image_feats_v2.npy`) và cập nhật `MANIFEST.md`, để mọi người luôn chạy trên cùng một bản.
