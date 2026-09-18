@@ -23,3 +23,6 @@ data/graphs/
 *.pt
 *.ckpt
 *.npy
+
+# intermediate products
+data/processed/

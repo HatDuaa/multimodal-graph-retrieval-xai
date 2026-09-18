@@ -1,0 +1,28 @@
+# Shared configuration. Every script reads this file; do not hard-code paths elsewhere.
+# Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]          # main experiments are reported as mean ± std over these
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features
+  graphs: data/graphs
+  processed: data/processed
+  experiments: experiments
+
+clip:
+  model: ViT-B-32         # open_clip model name
+  pretrained: openai      # open_clip pretrained tag
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+vg_coco:
+  subset_seed: 0
+  n_train: 10000
+  n_val: 1000
+  n_test: 1000
+
+retrieval:
+  top_k: 50
