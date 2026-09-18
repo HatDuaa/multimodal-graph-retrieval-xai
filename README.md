@@ -15,13 +15,13 @@ Lý do chọn Project 3: cấp độ 2 yêu cầu tái lập một phương phá
 
 Giảng viên hướng dẫn: **TS. Lê Ngọc Thành**.
 
-| MSHV | Họ tên | Vai trò ở project trước (tham khảo) |
+| MSHV | Họ tên | Vai trò ở project |
 |---|---|---|
-| 25C11050 | Nguyễn Đình Lộc | Dữ liệu và tiền xử lý |
-| 25C15003 | Ngô Trương Minh Đạt | Gold gán tay, baseline, cải tiến, phân tích |
-| 25C15015 | Trần Đắc Khoa | Tái lập phương pháp mới (CroCoAlign) |
+| 25C11050 | Nguyễn Đình Lộc | — |
+| 25C15003 | Ngô Trương Minh Đạt | — |
+| 25C15015 | Trần Đắc Khoa | — |
 | 25C15055 | Nguyễn Bùi Mẫn Nhi | — |
-| 25C15045 | Dương Khang *(chưa có họ tên đầy đủ)* | — |
+| 25C15045 | Âu Dương Khang | — |
 
 **Phân công:** chưa chốt, mỗi người tự chọn việc trong [task-assignment.xlsx](task-assignment.xlsx) (hàng = đầu việc theo giai đoạn, cột = thành viên, điền "Chính" / "Hỗ trợ"). Bảng phân công cuối cùng phải ghi vào báo cáo (đề yêu cầu) kèm lịch sử commit; giảng viên vấn đáp từng người nên ai cũng cần có commit ở phần của mình.
 
