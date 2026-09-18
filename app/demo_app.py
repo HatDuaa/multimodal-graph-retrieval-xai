@@ -35,8 +35,9 @@ footer { display: none !important; }
 #gallery .gallery-container { height: 100% !important; display: flex; flex-direction: column; }
 #gallery .grid-wrap { height: 100% !important; max-height: none !important; flex: 1 1 0; min-height: 0; overflow-y: auto !important; }
 #gallery .grid-container { min-height: 100%; grid-auto-rows: minmax(150px, 1fr) !important; box-sizing: border-box; }
-#gallery .gallery-item { height: 100%; }
-#gallery .thumbnail-item { aspect-ratio: auto !important; height: 100% !important; width: 100% !important; }
+/* the image is taken out of the flow so its natural size cannot stretch a row */
+#gallery .gallery-item { position: relative; height: 100%; min-height: 0; }
+#gallery .thumbnail-item { position: absolute !important; inset: 0; aspect-ratio: auto !important; height: 100% !important; width: 100% !important; background: var(--neutral-100, #f3f4f6); }
 #detail { height: 100% !important; overflow-y: auto; padding-right: 6px; }
 """
 
@@ -95,7 +96,7 @@ def build(service: SearchService, split: str) -> gr.Blocks:
                 lucky = gr.Button("Caption ngẫu nhiên của pool")
         note = gr.Markdown(elem_id="note")
         with gr.Row(elem_id="results"):
-            gallery = gr.Gallery(label="Kết quả", columns=6, object_fit="cover", scale=3, elem_id="gallery")
+            gallery = gr.Gallery(label="Kết quả", columns=6, object_fit="contain", scale=3, elem_id="gallery")
             detail = gr.Markdown("Nhập truy vấn để bắt đầu.", elem_id="detail")
 
         outputs = [gallery, note, detail, hits_state]
