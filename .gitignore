@@ -26,3 +26,6 @@ data/graphs/
 
 # intermediate products
 data/processed/
+
+# per-query rankings are large; metrics files stay in git
+experiments/**/top*_*.json
