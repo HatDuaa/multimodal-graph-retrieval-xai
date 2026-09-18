@@ -46,6 +46,16 @@ Ghi và đọc bằng `save_features()` / `load_features()` trong `src/features/
 - Một file chứa cả train, val và test; lọc theo split bằng id lấy từ file split.
 - Tìm top-k: `CosineIndex(feats, ids).search(queries, k)` trong `src/retrieval/faiss_index.py`.
 
+## 2b. Đánh giá — `src/eval/metrics.py`
+
+Mọi con số trong báo cáo phải đi qua module này để so sánh được với nhau.
+
+- `evaluate(ranked_lists, golds, ks=(1, 5, 10))` → `{"n_queries", "recall@1", "recall@5", "recall@10", "mrr"}`. `golds[i]` là một id, hoặc một tập id khi truy vấn có nhiều đáp án đúng (khi đó tính theo đáp án xếp cao nhất).
+- Hạng tính từ 1. Đáp án không nằm trong danh sách trả về thì tính trượt ở mọi Recall@k và đóng góp 0 vào MRR; vì danh sách thường cắt ở top-k nên MRR ở đây là MRR@độ-dài-danh-sách.
+- `aggregate_seeds(runs)` → mean và **độ lệch chuẩn mẫu** (ddof=1) qua các seed; một lần chạy thì std = 0.
+- `write_metrics(path, method=..., dataset=..., split=..., per_seed={seed: metrics}, config=...)` ghi `metrics.json` theo một schema duy nhất: `method`, `dataset`, `split`, `per_seed`, `aggregate`, `config`.
+- Lộc viết bản đầu (2026-09-18) để baseline không bị chặn; người nhận gói 4 giữ và mở rộng module này (nDCG, tách nhóm truy vấn trực tiếp / gián tiếp).
+
 ## 3. Đồ thị — ĐỀ XUẤT
 
 Danh sách cạnh dạng bảng, không phụ thuộc thư viện, để gói 4 và demo đọc được mà không cần PyTorch Geometric:
