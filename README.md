@@ -75,6 +75,20 @@ Metric bắt buộc: Recall@1/5/10, MRR; so CLIP thuần với CLIP + Graph trê
 - Cấp độ 2: bộ ≥20 truy vấn + cách xây. Cấp độ 3: MMKG tự xây + data card.
 - Demo chạy trực tiếp khi vấn đáp, video dự phòng ≤5 phút. Trình bày ≤20 phút.
 
+## Cài đặt và chạy thử
+
+Cần Python 3.11 hoặc 3.12 (bộ phiên bản trong `requirements.txt` đã kiểm tra trên Ubuntu 24.04 + RTX 4090; máy không có GPU NVIDIA vẫn cài được, chạy bằng CPU).
+
+```bash
+python3.12 -m venv ~/venvs/mgrx && source ~/venvs/mgrx/bin/activate
+pip install -r requirements.txt
+pytest                              # kiểm tra các module dùng chung
+python scripts/download_data.py     # tải chú thích Visual Genome + split Karpathy (~170 MB, chưa có ảnh)
+python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh: join → tải ảnh → CLIP → FAISS → top-k
+```
+
+Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
+
 ## Cấu trúc thư mục dự kiến
 
 ```
