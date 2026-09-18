@@ -18,6 +18,32 @@ python scripts/download_data.py
 
 Tải khoảng 170 MB vào `data/raw/visual_genome/` và `data/raw/coco/`, giải nén, rồi in ra các dòng checksum để đối chiếu với `MANIFEST.md`. Script **không tải ảnh**: ảnh chỉ tải cho tập con cố định sau khi đã có file split (cả bộ ảnh Visual Genome nặng khoảng 15 GB, không cần).
 
+## Tải ảnh
+
+Link từng ảnh nằm sẵn trong file split (`data/splits/vg_coco_*.json`, trường `url`, máy chủ `cs.stanford.edu/people/rak248/VG_100K*`). Tải bằng script, **không tải tay**:
+
+```bash
+python scripts/download_images.py --splits test val     # 4 264 ảnh, ~600 MB, vài phút
+python scripts/download_images.py                        # cả 51 208 ảnh, ~7,3 GB, khoảng 1 giờ 15 phút
+```
+
+- Script chạy lại được: ảnh đã có và đọc được thì bỏ qua; ảnh lỗi ghi vào `data/raw/images_failed.txt`, chạy lại đến khi file này rỗng.
+- **Hầu hết mọi người chỉ cần `--splits test val`** (để xem ảnh khi phân tích kết quả và chạy demo). Ảnh train chỉ cần trên máy trích đặc trưng CLIP; sau bước đó mọi thực nghiệm chạy trên vector, không đọc ảnh nữa.
+- Ảnh lưu tại `data/raw/images/<image_id>.jpg`, trùng với trường `file_name` trong file split.
+
+## Lấy đặc trưng CLIP
+
+**Không tự trích lại.** Đặc trưng được trích một lần (Lộc, máy RTX 4090) và chia sẻ qua Drive, để cả nhóm chạy trên đúng một bản; tự trích trên máy khác có thể lệch số ở chữ số thập phân cuối và làm kết quả các gói không khớp nhau.
+
+| File | Nội dung | Dung lượng ước tính |
+|---|---|---|
+| `data/features/vg_coco_image.npy` + `.ids.json` | 51 208 vector ảnh, 512 chiều | ~100 MB |
+| `data/features/vg_coco_caption.npy` + `.ids.json` | ~256 000 vector caption | ~525 MB |
+
+Link Drive: *(chưa có — Lộc cập nhật khi trích xong; checksum ghi ở `MANIFEST.md`)*. Tải về đặt đúng vào `data/features/`.
+
+Chỉ chạy `scripts/extract_features.py` khi đổi encoder; khi đó phải tải đủ 51 208 ảnh trước (script từ chối chạy nếu thiếu ảnh) và phát hành file mới với tên mới.
+
 ## Cấu trúc thư mục
 
 ```
@@ -31,6 +57,6 @@ data/
 
 ## File nặng dùng chung
 
-Ảnh của tập con, đặc trưng CLIP, đồ thị và checkpoint đặt trên Google Drive của nhóm, cấu trúc thư mục giống hệt `data/` và `experiments/` để tải về là đặt đúng chỗ. Link Drive: *(chưa tạo)*.
+Ảnh của tập con, đặc trưng CLIP, đồ thị và checkpoint đặt trên Google Drive của nhóm, cấu trúc thư mục giống hệt `data/` và `experiments/` để tải về là đặt đúng chỗ. Link Drive: *(chưa tạo; khi có sẽ ghi ở mục "Lấy đặc trưng CLIP" phía trên)*.
 
 Quy tắc: file trên Drive **không sửa tại chỗ**. Khi cần đổi thì tạo tên mới (ví dụ `image_feats_v2.npy`) và cập nhật `MANIFEST.md`, để mọi người luôn chạy trên cùng một bản.
