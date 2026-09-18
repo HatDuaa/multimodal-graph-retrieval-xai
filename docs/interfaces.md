@@ -10,12 +10,14 @@ Gói 1 phát hành, các gói khác chỉ đọc. Ví dụ: `vg_coco_train.json`
 {
   "dataset": "vg_coco",
   "split": "test",
-  "subset_seed": 0,
   "images": [
     {
       "image_id": 2368620,
       "coco_id": 391895,
       "file_name": "2368620.jpg",
+      "url": "https://cs.stanford.edu/people/rak248/VG_100K_2/2368620.jpg",
+      "width": 500,
+      "height": 375,
       "captions": [
         {"caption_id": "391895_0", "text": "A man riding a motorcycle on a dirt road."}
       ]
@@ -27,6 +29,7 @@ Gói 1 phát hành, các gói khác chỉ đọc. Ví dụ: `vg_coco_train.json`
 - `image_id` là id của Visual Genome, dùng làm khoá chính ở mọi nơi (đặc trưng, node ảnh trong đồ thị, kết quả).
 - Mỗi caption là một truy vấn; đáp án đúng là ảnh chứa nó. `caption_id` = `<coco_id>_<thứ tự>`.
 - Pool ứng viên khi đánh giá split nào là toàn bộ ảnh của chính split đó.
+- Lấy **toàn bộ** phần giao Visual Genome ∩ COCO, không lấy mẫu: train 46 944 ảnh (đã gộp `restval` của Karpathy), val 2 126, test 2 138; đa số ảnh có 5 caption, một ít có 6–7. 290 ảnh Visual Genome bị bỏ vì trùng `coco_id` với ảnh khác. Số liệu đầy đủ: `experiments/data_stats.md`.
 
 ## 2. Đặc trưng CLIP — `data/features/<dataset>_<loại>.npy` + `.ids.json`
 
