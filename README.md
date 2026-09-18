@@ -87,6 +87,17 @@ python scripts/download_data.py     # tải chú thích Visual Genome + split Ka
 python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh: join → tải ảnh → CLIP → FAISS → top-k
 ```
 
+### Chạy platform demo
+
+Cần: 4 file đặc trưng trong `data/features/` (tải từ Drive, xem [data/README.md](data/README.md)) và ảnh của split muốn xem.
+
+```bash
+python scripts/download_images.py --splits test    # 2 138 ảnh, một lần
+python app/demo_app.py --split test                 # mở http://localhost:7860
+```
+
+Nhập truy vấn tiếng Anh rồi bấm **Tìm** → lưới top-k ảnh kèm hạng và điểm; bấm vào một ảnh để xem điểm, giải thích và caption gốc. Nút **Lấy ngẫu nhiên một caption của pool** lấy một truy vấn có sẵn đáp án và báo ảnh đúng đứng hạng mấy. Chạy offline, có GPU hay không đều được. Hiện có chế độ **CLIP thuần**; chế độ CLIP + Đồ thị sẽ tự hiện trong mục "Chế độ xếp hạng" khi bộ xếp hạng lại được đăng ký vào `SearchService.add_mode()` (`src/service/search_service.py`).
+
 Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
 
 ## Cấu trúc thư mục dự kiến

@@ -13,3 +13,5 @@ requests==2.34.2
 tqdm==4.70.1
 spacy==3.8.16
 pytest==9.1.1
+# demo app (not needed for experiments)
+gradio==6.28.0
