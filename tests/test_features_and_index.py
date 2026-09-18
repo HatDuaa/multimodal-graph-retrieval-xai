@@ -14,7 +14,7 @@ def unit_vectors(n, d, seed=0):
 
 def test_config_has_required_sections():
     cfg = load_config()
-    for key in ("seed", "seeds", "paths", "clip", "vg_coco", "retrieval"):
+    for key in ("seed", "seeds", "paths", "clip", "retrieval"):
         assert key in cfg
     assert len(cfg["seeds"]) >= 3  # the brief requires at least 3 seeds
 

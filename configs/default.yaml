@@ -18,11 +18,7 @@ clip:
   batch_size: 256
   concept_prompt: "a photo of a {}"
 
-vg_coco:
-  subset_seed: 0
-  n_train: 10000
-  n_val: 1000
-  n_test: 1000
+# vg_coco uses the full Visual Genome ∩ COCO intersection (no sampling); see src/data/build_split.py
 
 retrieval:
   top_k: 50
