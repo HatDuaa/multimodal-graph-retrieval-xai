@@ -106,3 +106,12 @@ def top_misses(queries: list[dict], canon_queries: list[dict], results: list[dic
         entities.update(e for e, hit in zip(cq["entities"], r["entity"]) if not hit)
         predicates.update(rel["predicate"].lower() for rel, hit in zip(q["relations"], r["triple"]) if not hit)
     return {"entities_not_in_gold_image": entities.most_common(n), "predicates_without_exact_match": predicates.most_common(n)}
+
+
+def frequent_entities(canon_queries: list[dict], results: list[dict], n: int = 30) -> list[dict]:
+    """The n most frequent caption entity labels with the share of their mentions found in the gold image."""
+    total, hits = Counter(), Counter()
+    for cq, r in zip(canon_queries, results):
+        total.update(cq["entities"])
+        hits.update(e for e, hit in zip(cq["entities"], r["entity"]) if hit)
+    return [{"label": label, "mentions": count, "hit_share": _share(hits[label], count)} for label, count in total.most_common(n)]

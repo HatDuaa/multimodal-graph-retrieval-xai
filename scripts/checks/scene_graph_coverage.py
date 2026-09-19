@@ -26,7 +26,7 @@ from importlib.metadata import version
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from src.graph.coverage import (canon_query, coverage, graph_stats, image_index, parser_stats,  # noqa: E402
+from src.graph.coverage import (canon_query, coverage, frequent_entities, graph_stats, image_index, parser_stats,  # noqa: E402
                                 pool_selectivity, summarize, top_misses)
 from src.graph.parse_query import parse_many  # noqa: E402
 from src.graph.scene_graph import Vocab, iter_scene_graphs, load_raw  # noqa: E402
@@ -76,6 +76,7 @@ def main() -> None:
             if split == "val":   # the val images are exactly the retrieval pool of the val queries
                 entry["settings"][setting]["pool_selectivity"] = pool_selectivity(canon, golds, indexes)
                 entry["settings"][setting]["top_misses"] = top_misses(queries, canon, results)
+                entry["settings"][setting]["frequent_entities"] = frequent_entities(canon, results)
         report["splits"][split] = entry
         print(split, json.dumps({k: v["gold_image_coverage"] for k, v in entry["settings"].items()}, indent=1))
 

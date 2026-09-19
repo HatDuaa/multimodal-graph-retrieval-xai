@@ -1,7 +1,7 @@
 """Scene graph normalisation, VG150 filtering and caption coverage. No spaCy, no real data."""
 import pytest
 
-from src.graph.coverage import (canon_query, coverage, graph_stats, image_index, parser_stats, pool_selectivity,
+from src.graph.coverage import (canon_query, coverage, frequent_entities, graph_stats, image_index, parser_stats, pool_selectivity,
                                 summarize, top_misses)
 from src.graph.scene_graph import Vocab, build_scene_graph, label_pairs, label_triples, load_alias, normalize_label
 
@@ -105,3 +105,4 @@ def test_pool_selectivity_and_top_misses(vocab):
     misses = top_misses(queries, canon, [coverage(canon[0], indexes[2])])
     assert misses["entities_not_in_gold_image"] == [("ball", 1), ("dog", 1)]
     assert misses["predicates_without_exact_match"] == [("holds", 1)]
+    assert frequent_entities(canon, [coverage(canon[0], indexes[2])])[0] == {"label": "person", "mentions": 1, "hit_share": 1.0}
