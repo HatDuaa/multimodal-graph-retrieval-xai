@@ -12,6 +12,8 @@ PyYAML==6.0.3
 requests==2.34.2
 tqdm==4.70.1
 spacy==3.8.16
+# Install the parser model with: python -m spacy download en_core_web_sm
+SceneGraphParser==0.1.0
 pytest==9.1.1
 # demo app (not needed for experiments)
 gradio==6.28.0

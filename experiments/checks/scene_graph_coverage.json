@@ -1,0 +1,991 @@
+{
+  "date": "2026-09-19",
+  "config": {
+    "seed": 0,
+    "train_sample": 20000,
+    "matching": "exact label match",
+    "parser": "SceneGraphParser 0.1.0",
+    "spacy": "3.8.16 / en_core_web_sm 3.8.0"
+  },
+  "splits": {
+    "train": {
+      "parser": {
+        "captions": 20000,
+        "share_with_entity": 1.0,
+        "share_with_relation": 0.886,
+        "entities_mean": 3.19,
+        "relations_mean": 1.76
+      },
+      "settings": {
+        "vg150": {
+          "scene_graphs": {
+            "images": 46944,
+            "objects_mean": 13.0,
+            "objects_median": 12.0,
+            "relations_mean": 5.39,
+            "relations_median": 4.0,
+            "unique_label_triples_mean": 4.19,
+            "unique_label_triples_median": 3.0,
+            "share_images_without_objects": 0.0247,
+            "share_images_without_relations": 0.1553
+          },
+          "gold_image_coverage": {
+            "captions": 20000,
+            "entity_items": 63715,
+            "entity_item_share": 0.3021,
+            "captions_with_entity_hit": 0.6641,
+            "pair_items": 35179,
+            "pair_item_share": 0.0386,
+            "captions_with_pair_hit": 0.063,
+            "either_pair_items": 35179,
+            "either_pair_item_share": 0.0477,
+            "captions_with_either_pair_hit": 0.0765,
+            "triple_items": 35179,
+            "triple_item_share": 0.0161,
+            "captions_with_triple_hit": 0.0273,
+            "captions_with_all_entities_hit": 0.0394
+          }
+        },
+        "open_vocab": {
+          "scene_graphs": {
+            "images": 46944,
+            "objects_mean": 26.75,
+            "objects_median": 26.0,
+            "relations_mean": 18.05,
+            "relations_median": 17.0,
+            "unique_label_triples_mean": 14.71,
+            "unique_label_triples_median": 14.0,
+            "share_images_without_objects": 0.0137,
+            "share_images_without_relations": 0.0303
+          },
+          "gold_image_coverage": {
+            "captions": 20000,
+            "entity_items": 63715,
+            "entity_item_share": 0.441,
+            "captions_with_entity_hit": 0.8002,
+            "pair_items": 35179,
+            "pair_item_share": 0.082,
+            "captions_with_pair_hit": 0.1278,
+            "either_pair_items": 35179,
+            "either_pair_item_share": 0.1023,
+            "captions_with_either_pair_hit": 0.1553,
+            "triple_items": 35179,
+            "triple_item_share": 0.0343,
+            "captions_with_triple_hit": 0.0568,
+            "captions_with_all_entities_hit": 0.1095
+          }
+        }
+      }
+    },
+    "val": {
+      "parser": {
+        "captions": 10633,
+        "share_with_entity": 0.9998,
+        "share_with_relation": 0.8838,
+        "entities_mean": 3.18,
+        "relations_mean": 1.75
+      },
+      "settings": {
+        "vg150": {
+          "scene_graphs": {
+            "images": 2126,
+            "objects_mean": 12.83,
+            "objects_median": 12.0,
+            "relations_mean": 5.34,
+            "relations_median": 4.0,
+            "unique_label_triples_mean": 4.2,
+            "unique_label_triples_median": 3.0,
+            "share_images_without_objects": 0.0292,
+            "share_images_without_relations": 0.1552
+          },
+          "gold_image_coverage": {
+            "captions": 10633,
+            "entity_items": 33829,
+            "entity_item_share": 0.3103,
+            "captions_with_entity_hit": 0.6778,
+            "pair_items": 18618,
+            "pair_item_share": 0.038,
+            "captions_with_pair_hit": 0.0624,
+            "either_pair_items": 18618,
+            "either_pair_item_share": 0.0464,
+            "captions_with_either_pair_hit": 0.0766,
+            "triple_items": 18618,
+            "triple_item_share": 0.0162,
+            "captions_with_triple_hit": 0.0273,
+            "captions_with_all_entities_hit": 0.0371
+          },
+          "pool_selectivity": {
+            "any_entity": {
+              "captions_with_gold_hit": 7207,
+              "pool_share_mean": 0.1302,
+              "pool_share_median": 0.104
+            },
+            "all_entities": {
+              "captions_with_gold_hit": 395,
+              "pool_share_mean": 0.0112,
+              "pool_share_median": 0.0038
+            },
+            "any_pair": {
+              "captions_with_gold_hit": 815,
+              "pool_share_mean": 0.0083,
+              "pool_share_median": 0.0047
+            },
+            "any_triple": {
+              "captions_with_gold_hit": 290,
+              "pool_share_mean": 0.004,
+              "pool_share_median": 0.0024
+            }
+          },
+          "top_misses": {
+            "entities_not_in_gold_image": [
+              [
+                "that",
+                488
+              ],
+              [
+                "people",
+                453
+              ],
+              [
+                "it",
+                443
+              ],
+              [
+                "group",
+                405
+              ],
+              [
+                "man",
+                333
+              ],
+              [
+                "water",
+                325
+              ],
+              [
+                "field",
+                317
+              ],
+              [
+                "person",
+                277
+              ],
+              [
+                "street",
+                221
+              ],
+              [
+                "grass",
+                220
+              ],
+              [
+                "woman",
+                189
+              ],
+              [
+                "couple",
+                174
+              ],
+              [
+                "road",
+                161
+              ],
+              [
+                "bathroom",
+                149
+              ],
+              [
+                "room",
+                147
+              ],
+              [
+                "picture",
+                147
+              ],
+              [
+                "side",
+                143
+              ],
+              [
+                "sky",
+                135
+              ],
+              [
+                "background",
+                132
+              ],
+              [
+                "air",
+                130
+              ],
+              [
+                "kitchen",
+                124
+              ],
+              [
+                "frisbee",
+                124
+              ],
+              [
+                "ball",
+                115
+              ],
+              [
+                "area",
+                110
+              ],
+              [
+                "bunch",
+                109
+              ],
+              [
+                "cell phone",
+                104
+              ],
+              [
+                "wall",
+                103
+              ],
+              [
+                "child",
+                102
+              ],
+              [
+                "city street",
+                101
+              ],
+              [
+                "table",
+                100
+              ]
+            ],
+            "predicates_without_exact_match": [
+              [
+                "of",
+                2789
+              ],
+              [
+                "with",
+                2757
+              ],
+              [
+                "in",
+                2490
+              ],
+              [
+                "on",
+                2299
+              ],
+              [
+                "at",
+                663
+              ],
+              [
+                "next to",
+                544
+              ],
+              [
+                "holding",
+                352
+              ],
+              [
+                "sitting on",
+                341
+              ],
+              [
+                "near",
+                340
+              ],
+              [
+                "riding",
+                219
+              ],
+              [
+                "has",
+                200
+              ],
+              [
+                "down",
+                188
+              ],
+              [
+                "to",
+                166
+              ],
+              [
+                "playing",
+                153
+              ],
+              [
+                "wearing",
+                143
+              ],
+              [
+                "over",
+                125
+              ],
+              [
+                "through",
+                123
+              ],
+              [
+                "from",
+                123
+              ],
+              [
+                "sitting in",
+                120
+              ],
+              [
+                "under",
+                118
+              ],
+              [
+                "for",
+                115
+              ],
+              [
+                "by",
+                105
+              ],
+              [
+                "behind",
+                101
+              ],
+              [
+                "is",
+                90
+              ],
+              [
+                "eating",
+                86
+              ],
+              [
+                "in front of",
+                82
+              ],
+              [
+                "along",
+                79
+              ],
+              [
+                "into",
+                77
+              ],
+              [
+                "full of",
+                72
+              ],
+              [
+                "sits on",
+                67
+              ]
+            ]
+          },
+          "frequent_entities": [
+            {
+              "label": "man",
+              "mentions": 1427,
+              "hit_share": 0.7666
+            },
+            {
+              "label": "people",
+              "mentions": 746,
+              "hit_share": 0.3928
+            },
+            {
+              "label": "woman",
+              "mentions": 608,
+              "hit_share": 0.6891
+            },
+            {
+              "label": "that",
+              "mentions": 488,
+              "hit_share": 0.0
+            },
+            {
+              "label": "it",
+              "mentions": 443,
+              "hit_share": 0.0
+            },
+            {
+              "label": "person",
+              "mentions": 422,
+              "hit_share": 0.3436
+            },
+            {
+              "label": "table",
+              "mentions": 417,
+              "hit_share": 0.7602
+            },
+            {
+              "label": "group",
+              "mentions": 405,
+              "hit_share": 0.0
+            },
+            {
+              "label": "street",
+              "mentions": 363,
+              "hit_share": 0.3912
+            },
+            {
+              "label": "water",
+              "mentions": 325,
+              "hit_share": 0.0
+            },
+            {
+              "label": "field",
+              "mentions": 317,
+              "hit_share": 0.0
+            },
+            {
+              "label": "cat",
+              "mentions": 309,
+              "hit_share": 0.9417
+            },
+            {
+              "label": "dog",
+              "mentions": 306,
+              "hit_share": 0.781
+            },
+            {
+              "label": "train",
+              "mentions": 285,
+              "hit_share": 0.9088
+            },
+            {
+              "label": "plate",
+              "mentions": 270,
+              "hit_share": 0.8148
+            },
+            {
+              "label": "building",
+              "mentions": 264,
+              "hit_share": 0.7955
+            },
+            {
+              "label": "beach",
+              "mentions": 258,
+              "hit_share": 0.7791
+            },
+            {
+              "label": "tree",
+              "mentions": 244,
+              "hit_share": 0.8443
+            },
+            {
+              "label": "umbrella",
+              "mentions": 234,
+              "hit_share": 0.9444
+            },
+            {
+              "label": "giraffe",
+              "mentions": 222,
+              "hit_share": 0.9099
+            },
+            {
+              "label": "grass",
+              "mentions": 220,
+              "hit_share": 0.0
+            },
+            {
+              "label": "bus",
+              "mentions": 215,
+              "hit_share": 0.8605
+            },
+            {
+              "label": "horse",
+              "mentions": 215,
+              "hit_share": 0.9581
+            },
+            {
+              "label": "room",
+              "mentions": 203,
+              "hit_share": 0.2759
+            },
+            {
+              "label": "boy",
+              "mentions": 198,
+              "hit_share": 0.7727
+            },
+            {
+              "label": "clock",
+              "mentions": 191,
+              "hit_share": 0.9372
+            },
+            {
+              "label": "motorcycle",
+              "mentions": 187,
+              "hit_share": 0.7647
+            },
+            {
+              "label": "car",
+              "mentions": 185,
+              "hit_share": 0.8324
+            },
+            {
+              "label": "bed",
+              "mentions": 185,
+              "hit_share": 0.8703
+            },
+            {
+              "label": "girl",
+              "mentions": 182,
+              "hit_share": 0.7253
+            }
+          ]
+        },
+        "open_vocab": {
+          "scene_graphs": {
+            "images": 2126,
+            "objects_mean": 26.43,
+            "objects_median": 25.0,
+            "relations_mean": 17.9,
+            "relations_median": 17.0,
+            "unique_label_triples_mean": 14.65,
+            "unique_label_triples_median": 14.0,
+            "share_images_without_objects": 0.0141,
+            "share_images_without_relations": 0.0292
+          },
+          "gold_image_coverage": {
+            "captions": 10633,
+            "entity_items": 33829,
+            "entity_item_share": 0.4462,
+            "captions_with_entity_hit": 0.8062,
+            "pair_items": 18618,
+            "pair_item_share": 0.082,
+            "captions_with_pair_hit": 0.1266,
+            "either_pair_items": 18618,
+            "either_pair_item_share": 0.1015,
+            "captions_with_either_pair_hit": 0.1544,
+            "triple_items": 18618,
+            "triple_item_share": 0.034,
+            "captions_with_triple_hit": 0.0558,
+            "captions_with_all_entities_hit": 0.1097
+          },
+          "pool_selectivity": {
+            "any_entity": {
+              "captions_with_gold_hit": 8572,
+              "pool_share_mean": 0.1398,
+              "pool_share_median": 0.1185
+            },
+            "all_entities": {
+              "captions_with_gold_hit": 1166,
+              "pool_share_mean": 0.0059,
+              "pool_share_median": 0.0019
+            },
+            "any_pair": {
+              "captions_with_gold_hit": 1642,
+              "pool_share_mean": 0.0064,
+              "pool_share_median": 0.0028
+            },
+            "any_triple": {
+              "captions_with_gold_hit": 593,
+              "pool_share_mean": 0.003,
+              "pool_share_median": 0.0014
+            }
+          },
+          "top_misses": {
+            "entities_not_in_gold_image": [
+              [
+                "that",
+                488
+              ],
+              [
+                "people",
+                455
+              ],
+              [
+                "it",
+                442
+              ],
+              [
+                "group",
+                390
+              ],
+              [
+                "man",
+                333
+              ],
+              [
+                "person",
+                277
+              ],
+              [
+                "street",
+                216
+              ],
+              [
+                "woman",
+                187
+              ],
+              [
+                "couple",
+                165
+              ],
+              [
+                "room",
+                147
+              ],
+              [
+                "field",
+                143
+              ],
+              [
+                "side",
+                136
+              ],
+              [
+                "picture",
+                130
+              ],
+              [
+                "background",
+                120
+              ],
+              [
+                "area",
+                106
+              ],
+              [
+                "city street",
+                101
+              ],
+              [
+                "table",
+                99
+              ],
+              [
+                "air",
+                99
+              ],
+              [
+                "lot",
+                97
+              ],
+              [
+                "child",
+                97
+              ],
+              [
+                "top",
+                95
+              ],
+              [
+                "bunch",
+                93
+              ],
+              [
+                "food",
+                90
+              ],
+              [
+                "view",
+                84
+              ],
+              [
+                "day",
+                82
+              ],
+              [
+                "image",
+                82
+              ],
+              [
+                "street sign",
+                80
+              ],
+              [
+                "cell phone",
+                77
+              ],
+              [
+                "kitchen",
+                76
+              ],
+              [
+                "baseball player",
+                75
+              ]
+            ],
+            "predicates_without_exact_match": [
+              [
+                "of",
+                2761
+              ],
+              [
+                "with",
+                2745
+              ],
+              [
+                "in",
+                2392
+              ],
+              [
+                "on",
+                2229
+              ],
+              [
+                "at",
+                662
+              ],
+              [
+                "next to",
+                538
+              ],
+              [
+                "near",
+                335
+              ],
+              [
+                "sitting on",
+                333
+              ],
+              [
+                "holding",
+                331
+              ],
+              [
+                "riding",
+                217
+              ],
+              [
+                "has",
+                198
+              ],
+              [
+                "down",
+                188
+              ],
+              [
+                "to",
+                166
+              ],
+              [
+                "playing",
+                146
+              ],
+              [
+                "wearing",
+                140
+              ],
+              [
+                "over",
+                125
+              ],
+              [
+                "through",
+                123
+              ],
+              [
+                "from",
+                123
+              ],
+              [
+                "sitting in",
+                118
+              ],
+              [
+                "for",
+                115
+              ],
+              [
+                "under",
+                114
+              ],
+              [
+                "by",
+                104
+              ],
+              [
+                "behind",
+                100
+              ],
+              [
+                "is",
+                90
+              ],
+              [
+                "in front of",
+                82
+              ],
+              [
+                "eating",
+                81
+              ],
+              [
+                "along",
+                79
+              ],
+              [
+                "into",
+                77
+              ],
+              [
+                "full of",
+                72
+              ],
+              [
+                "sits on",
+                67
+              ]
+            ]
+          },
+          "frequent_entities": [
+            {
+              "label": "man",
+              "mentions": 1427,
+              "hit_share": 0.7666
+            },
+            {
+              "label": "people",
+              "mentions": 746,
+              "hit_share": 0.3901
+            },
+            {
+              "label": "woman",
+              "mentions": 608,
+              "hit_share": 0.6924
+            },
+            {
+              "label": "that",
+              "mentions": 488,
+              "hit_share": 0.0
+            },
+            {
+              "label": "it",
+              "mentions": 443,
+              "hit_share": 0.0023
+            },
+            {
+              "label": "person",
+              "mentions": 422,
+              "hit_share": 0.3436
+            },
+            {
+              "label": "table",
+              "mentions": 417,
+              "hit_share": 0.7626
+            },
+            {
+              "label": "group",
+              "mentions": 405,
+              "hit_share": 0.037
+            },
+            {
+              "label": "street",
+              "mentions": 363,
+              "hit_share": 0.405
+            },
+            {
+              "label": "water",
+              "mentions": 325,
+              "hit_share": 0.8185
+            },
+            {
+              "label": "field",
+              "mentions": 317,
+              "hit_share": 0.5489
+            },
+            {
+              "label": "cat",
+              "mentions": 309,
+              "hit_share": 0.9417
+            },
+            {
+              "label": "dog",
+              "mentions": 306,
+              "hit_share": 0.781
+            },
+            {
+              "label": "train",
+              "mentions": 285,
+              "hit_share": 0.9088
+            },
+            {
+              "label": "plate",
+              "mentions": 270,
+              "hit_share": 0.7963
+            },
+            {
+              "label": "building",
+              "mentions": 264,
+              "hit_share": 0.7879
+            },
+            {
+              "label": "beach",
+              "mentions": 258,
+              "hit_share": 0.7481
+            },
+            {
+              "label": "tree",
+              "mentions": 244,
+              "hit_share": 0.8443
+            },
+            {
+              "label": "umbrella",
+              "mentions": 234,
+              "hit_share": 0.9444
+            },
+            {
+              "label": "giraffe",
+              "mentions": 222,
+              "hit_share": 0.9099
+            },
+            {
+              "label": "grass",
+              "mentions": 220,
+              "hit_share": 0.8636
+            },
+            {
+              "label": "bus",
+              "mentions": 215,
+              "hit_share": 0.8605
+            },
+            {
+              "label": "horse",
+              "mentions": 215,
+              "hit_share": 0.9581
+            },
+            {
+              "label": "room",
+              "mentions": 203,
+              "hit_share": 0.2759
+            },
+            {
+              "label": "boy",
+              "mentions": 198,
+              "hit_share": 0.7525
+            },
+            {
+              "label": "clock",
+              "mentions": 191,
+              "hit_share": 0.9372
+            },
+            {
+              "label": "motorcycle",
+              "mentions": 187,
+              "hit_share": 0.7647
+            },
+            {
+              "label": "car",
+              "mentions": 185,
+              "hit_share": 0.8324
+            },
+            {
+              "label": "bed",
+              "mentions": 185,
+              "hit_share": 0.8703
+            },
+            {
+              "label": "girl",
+              "mentions": 182,
+              "hit_share": 0.7253
+            }
+          ]
+        }
+      }
+    }
+  },
+  "runtime_seconds": 51.0
+}
