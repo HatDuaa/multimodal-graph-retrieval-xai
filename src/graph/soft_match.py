@@ -53,8 +53,10 @@ def match(query_vecs: np.ndarray, image_vecs: np.ndarray, mode: str = "max", tem
 
 def zscore_rows(scores: np.ndarray) -> np.ndarray:
     """Standardise each query's candidate scores; missing scores (nan) become 0, i.e. neutral."""
-    mean = np.nanmean(scores, axis=1, keepdims=True)
-    std = np.nanstd(scores, axis=1, keepdims=True)
+    known = ~np.isnan(scores)
+    count = np.maximum(known.sum(axis=1, keepdims=True), 1)     # a row without any score stays all zero
+    mean = np.where(known, scores, 0.0).sum(axis=1, keepdims=True) / count
+    std = np.sqrt(np.where(known, (scores - mean) ** 2, 0.0).sum(axis=1, keepdims=True) / count)
     z = (scores - mean) / np.where(std > 0, std, 1.0)
     return np.nan_to_num(z, nan=0.0)
 
