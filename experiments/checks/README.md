@@ -159,3 +159,23 @@ Về quan hệ, các vị từ trượt nhiều nhất là giới từ chung chu
 | Danh sách VG150 | `data/raw/vg150/` | Tải bằng `scripts/download_data.py`; checksum ở `data/MANIFEST.md` |
 | Vector CLIP text của các phần đồ thị (val) | `data/features/vg_coco_val_graph_parts.npy` + `.ids.json` (84 MB) | Chỉ trên máy chạy; checksum ở `data/MANIFEST.md`; script chạy lại sẽ sinh lại |
 | Kết quả và đặc trưng trước khi sửa tên mô hình | `experiments/archive-vit-b-32-gelu/` (trong git); `data/features/archive-vit-b-32-gelu/` trên máy GPU, máy Windows của Lộc và Drive | Giữ để đối chiếu, không dùng cho thực nghiệm mới |
+
+## 6. Tham chiếu ba kênh cho mô hình GAT
+
+Phép kiểm tra này tạo đúng phép tính không huấn luyện mà mô hình re-ranker phải tái tạo ở bước 0. Chỉ dùng split **val**, không đọc test. Hai kênh đồ thị giữ riêng vật thể và bộ ba; điểm cuối dùng `Graph = z(beta * z(S_objects) + (1 - beta) * z(S_triples))` rồi trộn với CLIP.
+
+| Cấu hình | R@1 | R@5 | R@10 | MRR@50 |
+|---|---:|---:|---:|---:|
+| Tham chiếu tốt nhất K=50 | TODO(run) | TODO(run) | TODO(run) | TODO(run) |
+| Xáo scene graph | TODO(run) | TODO(run) | TODO(run) | TODO(run) |
+| beta = 1 (vật thể) | TODO(run) | TODO(run) | TODO(run) | TODO(run) |
+| beta = 0 (bộ ba) | TODO(run) | TODO(run) | TODO(run) | TODO(run) |
+
+Chạy trên máy GPU sau khi các đặc trưng và split đã có:
+
+```bash
+~/venvs/mgrx/bin/python scripts/checks/three_channel_probe.py --workers 16 --top-k 50
+~/venvs/mgrx/bin/python scripts/checks/three_channel_probe.py --workers 16 --top-k 50 --encoder sbert
+```
+
+Kết quả nằm ở `experiments/checks/three_channel_probe.json` (hoặc hậu tố `_sbert.json`). Điểm thô, z-score, điểm trộn và thứ hạng của 200 truy vấn đầu được lưu trong `experiments/checks/three_channel_probe_reference_scores.npz`.
