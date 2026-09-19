@@ -1,6 +1,6 @@
 # Kiểm tra pipeline và kiểm tra trước khi thiết kế
 
-Mục 1 và 2 kiểm tra baseline CLIP; mục 3 (thêm 2026-09-19) đo dữ liệu trước khi viết phần đồ thị. Hai phép kiểm tra đầu **không phải thực nghiệm của đề tài** (đề không yêu cầu, không có đồ thị, không tính là tập dữ liệu của nhóm). Chúng trả lời hai câu hỏi về baseline CLIP: pipeline có chạy đúng không, và cách tiền xử lý ảnh có nên đổi không. Mọi số dưới đây lấy từ file JSON cùng thư mục, do script sinh ra, không sửa tay. Chạy ngày 2026-09-19 trên RTX 4090, encoder `ViT-B-32/openai` (open_clip 3.3.0, torch 2.14.0).
+Mục 1 và 2 kiểm tra baseline CLIP; mục 3 và 4 (thêm 2026-09-19) đo dữ liệu và thử điểm đồ thị không huấn luyện trước khi viết GNN. Hai phép kiểm tra đầu **không phải thực nghiệm của đề tài** (đề không yêu cầu, không có đồ thị, không tính là tập dữ liệu của nhóm). Chúng trả lời hai câu hỏi về baseline CLIP: pipeline có chạy đúng không, và cách tiền xử lý ảnh có nên đổi không. Mọi số dưới đây lấy từ file JSON cùng thư mục, do script sinh ra, không sửa tay. Chạy ngày 2026-09-19 trên RTX 4090, encoder `ViT-B-32/openai` (open_clip 3.3.0, torch 2.14.0).
 
 ## 1. Đối chiếu với số đã công bố trên MSCOCO 5K
 
@@ -101,6 +101,39 @@ Về quan hệ, các vị từ trượt nhiều nhất là giới từ chung chu
 
 **Hạn chế của phép đo.** Chỉ một bộ tách, chưa so với bộ tách khác; mẫu train 20 000 caption (val dùng đủ); đối tượng có nhiều tên chỉ lấy tên đầu; chưa gộp số ít / số nhiều ngoài những gì file alias đã có.
 
+## 4. Điểm đồ thị không huấn luyện có giúp được CLIP không
+
+**Vì sao cần.** Mục 3 cho thấy khớp nhãn chính xác phủ quá ít truy vấn, nên phải khớp mềm bằng vector. Trước khi viết GNN, phép thử này hỏi: chỉ cần vector hoá các phần của đồ thị bằng CLIP text (đóng băng), **không huấn luyện gì, không GNN**, thì điểm đồ thị đã giúp được CLIP chưa? Nếu chưa thì GNN học trên cùng dữ liệu cũng khó làm được.
+
+**Cách chạy.** `python scripts/checks/soft_graph_rerank_probe.py --workers 24` (58 giây, RTX 4090). Chỉ dùng split **val**: 10 633 truy vấn, pool 2 126 ảnh, xếp hạng lại top-50 của baseline CLIP. Scene graph dùng mọi nhãn (không lọc VG150). Mỗi nhãn đối tượng được mã hoá theo mẫu `a photo of a {tên}`, mỗi bộ ba được viết thành cụm (`boy holding ball`) rồi mã hoá; tổng cộng 8 241 nhãn và 34 495 cụm bộ ba khác nhau. Mỗi phần của truy vấn đi tìm phần giống nó nhất bên ảnh (cosine), điểm đồ thị = trung bình trên các phần của truy vấn. Điểm cuối = `α·z(CLIP) + (1−α)·z(đồ thị)`, trong đó z là chuẩn hoá z-score trong top-50 của từng truy vấn; truy vấn hoặc ảnh không có phần nào thì điểm đồ thị coi là 0 (trung tính). α quét từ 0 đến 1, bước 0,1. Đại từ do bộ tách sinh ra (`that`, `it`…) bị bỏ. Kết quả: `soft_graph_rerank_probe.json` (có toàn bộ đường quét α).
+
+| Điểm đồ thị | α tốt nhất | R@1 | R@5 | R@10 | MRR@50 |
+|---|---|---|---|---|---|
+| Không có (CLIP thuần, α = 1) | — | 38,00 | 66,20 | 77,19 | 51,06 |
+| Mức đối tượng (chỉ nhãn vật thể, không quan hệ) | 0,6 | **41,95** | 69,75 | 80,05 | 54,63 |
+| Mức bộ ba, lấy bộ ba giống nhất | 0,6 | 39,89 | 67,37 | 78,43 | 52,68 |
+| Mức bộ ba, softmax nhiệt độ 0,02 | 0,6 | 40,05 | 67,38 | 78,64 | 52,81 |
+| Mức bộ ba, softmax nhiệt độ 0,1 | 0,6 | 39,80 | 67,84 | 78,73 | 52,70 |
+| Đối tượng + bộ ba (trung bình hai z-score) | 0,6 | 41,80 | 69,05 | 80,13 | 54,40 |
+| Đối chứng: gán cho mỗi ảnh scene graph của ảnh khác (cả ba loại điểm) | 1,0 | 38,00 | 66,20 | 77,19 | 51,06 |
+
+Đường quét α của mức đối tượng trơn và có một đỉnh: R@1 = 25,69 (α = 0, chỉ đồ thị) → 38,59 (0,3) → 41,75 (0,5) → **41,95 (0,6)** → 40,65 (0,8) → 38,00 (1,0).
+
+**Kết luận.**
+
+1. **Scene graph có thông tin mà CLIP chưa dùng được**: chưa huấn luyện gì mà R@1 tăng 3,95 điểm (38,00 → 41,95), R@10 tăng 2,86 điểm. Đối chứng xáo đồ thị không tăng chút nào (α tốt nhất = 1,0, tức bỏ hẳn điểm đồ thị), nên phần tăng đến từ việc đồ thị **đúng là của ảnh đó**, không phải do cách chuẩn hoá hay do cộng thêm một điểm bất kỳ.
+2. **Mức đối tượng mạnh hơn mức bộ ba** (+3,95 so với +1,89), và ghép hai mức **không hơn** dùng riêng mức đối tượng (41,80 so với 41,95). Khi chưa huấn luyện, quan hệ chưa đóng góp thêm gì ngoài danh sách vật thể. Hai cách giải thích, chưa phân biệt được: (a) vector CLIP text của cụm bộ ba cũng mang tính túi từ, `ball on table` vẫn gần `child playing with ball` vì chung chữ `ball`; (b) scene graph của Visual Genome ít khi gán đúng quan hệ mà caption nhắc tới (mục 3).
+3. **Softmax so với lấy max ở phía ảnh gần như không khác** (39,80–40,05 so với 39,89) khi chưa có gì để học.
+4. Đồ thị một mình kém CLIP xa (R@1 = 25,69 so với 38,00): nó là tín hiệu bổ sung, không thay được CLIP.
+
+**Ý nghĩa cho thiết kế cấp độ 1.**
+- Hướng "đồ thị riêng từng ảnh + khớp mềm" **khả thi**, tiếp tục.
+- Bảng này là **baseline đồ thị không huấn luyện** để so với GAT trong báo cáo: GAT phải vượt 41,95 thì mới chứng minh được việc học và lan truyền thông tin trong đồ thị có ích.
+- Câu hỏi mở mà GAT phải trả lời: làm cho **quan hệ** đóng góp thêm ngoài danh sách vật thể. Ablation "bỏ cạnh quan hệ" của đề sẽ đo đúng điều này; nếu sau khi huấn luyện mà bỏ cạnh vẫn không đổi kết quả thì phải báo cáo đúng như vậy.
+- Điểm đồ thị nên có cả hai mức (đối tượng và bộ ba); mức đối tượng không được bỏ.
+
+**Hạn chế của phép thử.** α được chọn trên chính tập val dùng để báo cáo, nên con số hơi lạc quan (11 giá trị α trên 10 633 truy vấn, sai lệch nhỏ); kết quả chính thức phải chọn α trên val rồi đo trên test. Chưa chạy trên test. Scene graph là chú thích gán tay của ảnh ứng viên; ảnh mới ngoài thực tế không có sẵn. 1 510 truy vấn (14,2%) không có bộ ba nào sau khi bỏ đại từ, và 62 ảnh (2,9%) không có quan hệ nào; các trường hợp này nhận điểm bộ ba trung tính.
+
 ## File giữ lại
 
 | Thứ | Ở đâu | Ghi chú |
@@ -111,3 +144,4 @@ Về quan hệ, các vị từ trượt nhiều nhất là giới từ chung chu
 | Đặc trưng MSCOCO 5K | `data/features/coco5k_{image,caption}.npy` + `.ids.json` (~60 MB) | Chỉ trên máy chạy; checksum ở `data/MANIFEST.md`. Không đưa lên Drive vì các gói khác không dùng |
 | Caption đã tách thành đồ thị | `data/processed/query_graphs_check_{train,val}.json` (5,4 MB và 2,9 MB) | Chỉ trên máy chạy; SHA-256 bắt đầu bằng `3f78bc2a` và `c8680264`; chạy lại script với seed 0 sẽ sinh lại |
 | Danh sách VG150 | `data/raw/vg150/` | Tải bằng `scripts/download_data.py`; checksum ở `data/MANIFEST.md` |
+| Vector CLIP text của các phần đồ thị (val) | `data/features/vg_coco_val_graph_parts.npy` + `.ids.json` (84 MB) | Chỉ trên máy chạy; checksum ở `data/MANIFEST.md`; script chạy lại sẽ sinh lại |

@@ -51,3 +51,11 @@ Sinh ngày 2026-09-19 bằng `scripts/checks/coco5k_zero_shot.py` trên RTX 4090
 | `data/features/coco5k_caption.npy` | 25 010 × 512 | 51220608 | `c10763b7b93e90a048e7fe34b62ca3dd49e632d0dc2ef007b7f0c5faef5c584f` |
 | `data/features/coco5k_caption.ids.json` | — | 295309 | `46f66e7b025c8dbbf06f34f7c3e16c29dbba2ec32090a10643af70882cd3720d` |
 
+### Vector các phần đồ thị của split val (phép thử ở `experiments/checks/`, mục 4)
+
+Sinh bởi `scripts/checks/soft_graph_rerank_probe.py` ngày 2026-09-19; khoá trong `ids` có dạng `node:<nhãn>` hoặc `triple:<cụm bộ ba>`. Chỉ lưu trên máy chạy.
+
+| File | Dòng × chiều | Bytes | SHA-256 |
+|---|---|---|---|
+| `data/features/vg_coco_val_graph_parts.npy` | 42 736 × 512 | 87523456 | `8505a3be034396e42b265ba0998f624b9744319a4da36c18e8c27d6ed96d3d62` |
+| `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176815 | `87f748ca3c4c81ffc82658d7d70dafa476e17d1fa4e8ad59c5c6dd681cde6311` |
