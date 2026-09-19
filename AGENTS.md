@@ -9,3 +9,4 @@ Any coding agent (Codex, Claude Code, others) working in this repository follows
 5. Design decisions use train and validation only; the test split is touched once, for the final numbers.
 6. Code changes go through a branch and a pull request. Conventional commit messages, no AI attribution.
 7. Large data is not committed; see `data/README.md` and `data/MANIFEST.md`.
+8. Text files are UTF-8 without BOM and with LF line endings. README files, reports and the spreadsheet notes are Vietnamese: read and write them as UTF-8 explicitly (on Windows, never rely on the default code page or on PowerShell's default encoding) and check that diacritics survived before finishing.
