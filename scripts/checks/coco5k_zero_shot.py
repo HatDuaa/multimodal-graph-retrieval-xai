@@ -28,6 +28,8 @@ from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
 # https://github.com/mlfoundations/open_clip/blob/main/docs/openclip_retrieval_results.csv
 # rows "<model>,<pretrained>", columns "MSCOCO image retr." (text->image) and "MSCOCO text retr." (image->text)
 REFERENCE = {
+    # the published row is named ViT-B-32/openai; with open_clip 3.x those weights must be loaded as ViT-B-32-quickgelu
+    "ViT-B-32-quickgelu/openai": {"text_to_image": [30.44, 55.94, 66.87], "image_to_text": [50.12, 75.00, 83.52]},
     "ViT-B-32/openai": {"text_to_image": [30.44, 55.94, 66.87], "image_to_text": [50.12, 75.00, 83.52]},
     "ViT-L-14-336/openai": {"text_to_image": [37.09, 61.62, 71.47], "image_to_text": [57.94, 81.20, 87.92]},
 }

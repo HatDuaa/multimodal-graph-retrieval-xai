@@ -1,0 +1,101 @@
+{
+  "date": "2026-09-19",
+  "open_clip_version": "3.3.0",
+  "torch_version": "2.14.0+cu130",
+  "models": {
+    "ViT-B-32": {
+      "quickgelu_warning": true,
+      "vg_coco_val": {
+        "n_queries": 10633,
+        "recall@1": 0.38004326154424906,
+        "recall@5": 0.6619956738455751,
+        "recall@10": 0.771936424339321,
+        "recall@50": 0.9658609987773912,
+        "mrr": 0.510580250358418
+      },
+      "coco5k": {
+        "text_to_image": {
+          "ours": {
+            "recall@1": 30.26,
+            "recall@5": 54.97,
+            "recall@10": 65.71
+          },
+          "published": {
+            "recall@1": 30.44,
+            "recall@5": 55.94,
+            "recall@10": 66.87
+          },
+          "difference": {
+            "recall@1": -0.18,
+            "recall@5": -0.97,
+            "recall@10": -1.16
+          }
+        },
+        "image_to_text": {
+          "ours": {
+            "recall@1": 49.16,
+            "recall@5": 73.34,
+            "recall@10": 82.34
+          },
+          "published": {
+            "recall@1": 50.12,
+            "recall@5": 75.0,
+            "recall@10": 83.52
+          },
+          "difference": {
+            "recall@1": -0.96,
+            "recall@5": -1.66,
+            "recall@10": -1.18
+          }
+        }
+      }
+    },
+    "ViT-B-32-quickgelu": {
+      "quickgelu_warning": false,
+      "vg_coco_val": {
+        "n_queries": 10633,
+        "recall@1": 0.391328881783128,
+        "recall@5": 0.6788300573685695,
+        "recall@10": 0.7897112762155554,
+        "recall@50": 0.967177654471927,
+        "mrr": 0.5233535974637776
+      },
+      "coco5k": {
+        "text_to_image": {
+          "ours": {
+            "recall@1": 30.45,
+            "recall@5": 55.97,
+            "recall@10": 66.86
+          },
+          "published": {
+            "recall@1": 30.44,
+            "recall@5": 55.94,
+            "recall@10": 66.87
+          },
+          "difference": {
+            "recall@1": 0.01,
+            "recall@5": 0.03,
+            "recall@10": -0.01
+          }
+        },
+        "image_to_text": {
+          "ours": {
+            "recall@1": 50.12,
+            "recall@5": 75.0,
+            "recall@10": 83.54
+          },
+          "published": {
+            "recall@1": 50.12,
+            "recall@5": 75.0,
+            "recall@10": 83.52
+          },
+          "difference": {
+            "recall@1": 0.0,
+            "recall@5": 0.0,
+            "recall@10": 0.02
+          }
+        }
+      }
+    }
+  }
+}

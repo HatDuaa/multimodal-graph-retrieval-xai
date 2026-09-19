@@ -13,7 +13,7 @@ paths:
   experiments: experiments
 
 clip:
-  model: ViT-B-32         # open_clip model name
+  model: ViT-B-32-quickgelu   # open_clip model name; OpenAI weights need the QuickGELU config (experiments/checks, section 5)
   pretrained: openai      # open_clip pretrained tag
   batch_size: 256
   concept_prompt: "a photo of a {}"
