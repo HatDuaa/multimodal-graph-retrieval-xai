@@ -28,6 +28,8 @@ from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
 # https://github.com/mlfoundations/open_clip/blob/main/docs/openclip_retrieval_results.csv
 # rows "<model>,<pretrained>", columns "MSCOCO image retr." (text->image) and "MSCOCO text retr." (image->text)
 REFERENCE = {
+    # the published row is named ViT-B-32/openai; with open_clip 3.x those weights must be loaded as ViT-B-32-quickgelu
+    "ViT-B-32-quickgelu/openai": {"text_to_image": [30.44, 55.94, 66.87], "image_to_text": [50.12, 75.00, 83.52]},
     "ViT-B-32/openai": {"text_to_image": [30.44, 55.94, 66.87], "image_to_text": [50.12, 75.00, 83.52]},
     "ViT-L-14-336/openai": {"text_to_image": [37.09, 61.62, 71.47], "image_to_text": [57.94, 81.20, 87.92]},
 }
@@ -49,42 +51,66 @@ def fetch(job: tuple[str, Path]) -> bool:
     return False
 
 
-def main() -> None:
-    cfg = load_config()
+def prepare_coco5k(cfg: dict, *, download: bool = True) -> tuple[list[dict], list[Path], list[int], list[tuple[str, str, int]]]:
+    """Download (when needed) and return the public Karpathy 5K pool and captions."""
     raw = resolve(cfg, "raw")
-    test = [im for im in json.loads((raw / "coco" / "dataset_coco.json").read_text())["images"] if im["split"] == "test"]
+    test = [im for im in json.loads((raw / "coco" / "dataset_coco.json").read_text())[
+        "images"] if im["split"] == "test"]
     img_dir = raw / "coco5k_images"
     img_dir.mkdir(exist_ok=True)
-    jobs = [(f"http://images.cocodataset.org/{im['filepath']}/{im['filename']}", img_dir / im["filename"]) for im in test]
-    with ThreadPoolExecutor(16) as pool:
-        ok = list(pool.map(fetch, jobs))
+    jobs = [(f"http://images.cocodataset.org/{im['filepath']}/{im['filename']}", img_dir / im["filename"])
+            for im in test]
+    if download:
+        with ThreadPoolExecutor(16) as pool:
+            ok = list(pool.map(fetch, jobs))
+    else:
+        ok = [dest.exists() and dest.stat().st_size > 0 for _, dest in jobs]
     print(f"Karpathy test images: {len(test)} | on disk: {sum(ok)}", flush=True)
-    assert all(ok), "some images failed to download; run again"
-
-    enc = ClipEncoder.from_config(cfg)
+    if download:
+        assert all(ok), "some images failed to download; run again"
     image_ids = [im["cocoid"] for im in test]
     paths = [dest for _, dest in jobs]
-    img = np.concatenate([enc.encode_images(paths[i:i + 1000]) for i in range(0, len(paths), 1000)])
     caps = [(f"{im['cocoid']}_{i}", " ".join(s["raw"].split()), im["cocoid"])
             for im in test for i, s in enumerate(im["sentences"])]
-    txt = enc.encode_texts([t for _, t, _ in caps])
-    feat_dir = resolve(cfg, "features")
-    save_features(feat_dir / "coco5k_image", img, image_ids, enc.name)
-    save_features(feat_dir / "coco5k_caption", txt, [c for c, _, _ in caps], enc.name)
+    return test, paths, image_ids, caps
 
+
+def encode_coco5k(enc: ClipEncoder, paths: list[Path], caps: list[tuple[str, str, int]]) -> tuple[np.ndarray, np.ndarray]:
+    """Encode the image and caption lists used by the published 5K check."""
+    img = np.concatenate([enc.encode_images(paths[i:i + 1000]) for i in range(0, len(paths), 1000)])
+    txt = enc.encode_texts([t for _, t, _ in caps])
+    return img, txt
+
+
+def evaluate_coco5k(img: np.ndarray, txt: np.ndarray, image_ids: list[int],
+                    caps: list[tuple[str, str, int]]) -> dict[str, dict]:
+    """Compute both retrieval directions with the shared metric implementation."""
     _, ranked = CosineIndex(img, image_ids).search(txt, max(KS))
     t2i = evaluate(ranked, [g for _, _, g in caps], ks=KS)
-    captions_of: dict[int, set] = {}
+    captions_of: dict[int, set[str]] = {}
     for cap_id, _, gold in caps:
         captions_of.setdefault(gold, set()).add(cap_id)
     _, ranked = CosineIndex(txt, [c for c, _, _ in caps]).search(img, max(KS))
     i2t = evaluate(ranked, [captions_of[i] for i in image_ids], ks=KS)
+    return {"text_to_image": t2i, "image_to_text": i2t}
+
+
+def main() -> None:
+    cfg = load_config()
+    _, paths, image_ids, caps = prepare_coco5k(cfg)
+    enc = ClipEncoder.from_config(cfg)
+    img, txt = encode_coco5k(enc, paths, caps)
+    feat_dir = resolve(cfg, "features")
+    save_features(feat_dir / "coco5k_image", img, image_ids, enc.name)
+    save_features(feat_dir / "coco5k_caption", txt, [c for c, _, _ in caps], enc.name)
+
+    directions = evaluate_coco5k(img, txt, image_ids, caps)
 
     ref = REFERENCE.get(enc.name)
     result = {"encoder": enc.name, "pool_images": len(image_ids), "captions": len(caps), "reference_source":
               "open_clip docs/openclip_retrieval_results.csv", "directions": {}}
     print(f"encoder {enc.name} | {len(image_ids)} images | {len(caps)} captions")
-    for name, m in (("text_to_image", t2i), ("image_to_text", i2t)):
+    for name, m in directions.items():
         ours = [round(100 * m[f"recall@{k}"], 2) for k in KS]
         entry = {"ours": dict(zip((f"recall@{k}" for k in KS), ours))}
         line = f"{name}: ours R@1/5/10 = {ours}"

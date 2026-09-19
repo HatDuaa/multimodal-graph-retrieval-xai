@@ -29,27 +29,27 @@ Số đếm thật từ các file này (in ra bởi `scripts/smoke_test.py`): Vi
 
 ### Đặc trưng CLIP của vg_coco
 
-Trích ngày 2026-09-19 bằng `scripts/extract_features.py` trên RTX 4090, encoder `ViT-B-32/openai` (open_clip 3.3.0, torch 2.14.0), từ đủ 51 208 ảnh (0 ảnh lỗi khi tải).
+Trích ngày 2026-09-19 bằng `scripts/extract_features.py` trên RTX 4090, encoder `ViT-B-32-quickgelu/openai` (open_clip 3.3.0, torch 2.14.0), từ đủ 51 208 ảnh (0 ảnh lỗi khi tải).
 
 | File | Dòng × chiều | Bytes | SHA-256 |
 |---|---|---|---|
-| `data/features/vg_coco_image.npy` | 51 208 × 512 | 104874112 | `76f873e5f423a0e6575a6765cf322888f1267851d5411456a78dab91c37c8a6a` |
-| `data/features/vg_coco_image.ids.json` | — | 459654 | `6afabaf0e7801db02a8d167e378995d8cf520feb2b35503ef33458e164701f51` |
-| `data/features/vg_coco_caption.npy` | 256 183 × 512 | 524662912 | `c61a39290c4d0eb3e2958467f6fc7098b147305585a4e6b8a4323f312fa392d5` |
-| `data/features/vg_coco_caption.ids.json` | — | 3025454 | `ff1824f6c87cfae46ba2cef4ff1fc47691b3ebbf8ec2ad20f0ec24977504a370` |
+| `data/features/vg_coco_image.npy` | 51 208 × 512 | 104874112 | `091acde31fa1b3e7a24314dab889205c24d4ff0bdf405fb2128d923c87e2a1a9` |
+| `data/features/vg_coco_image.ids.json` | — | 459664 | `b82397bb868044a9e7a8dd351b978c73b33cbfbb84d178fb49f0a072c990e25b` |
+| `data/features/vg_coco_caption.npy` | 256 183 × 512 | 524662912 | `c116bfe099bdcb33dc5810f829de9080647b972eb53104fa647b2e2e0cb286d3` |
+| `data/features/vg_coco_caption.ids.json` | — | 3025464 | `7eb6a7a05dff4007bdd6aa7c2f4b08570f79d095336a932ce5843da92df6cf69` |
 
 Kiểm tra sau khi tải về: `sha256sum data/features/vg_coco_*` (Windows: `certutil -hashfile <file> SHA256`).
 
 ### Đặc trưng MSCOCO 5K (chỉ để kiểm tra pipeline, không phải dữ liệu của đề tài)
 
-Sinh ngày 2026-09-19 bằng `scripts/checks/coco5k_zero_shot.py` trên RTX 4090, encoder `ViT-B-32/openai`. Chỉ nằm trên máy chạy, không có trên Drive. Xem `experiments/checks/README.md`.
+Sinh ngày 2026-09-19 bằng `scripts/checks/coco5k_zero_shot.py` trên RTX 4090, encoder `ViT-B-32-quickgelu/openai`. Chỉ nằm trên máy chạy, không có trên Drive. Xem `experiments/checks/README.md`.
 
 | File | Dòng × chiều | Bytes | SHA-256 |
 |---|---|---|---|
-| `data/features/coco5k_image.npy` | 5 000 × 512 | 10240128 | `495ad7a7b834a8d688590b74bddc2b2ae8c0dff500e25b259cfe86d1a98fa23f` |
-| `data/features/coco5k_image.ids.json` | — | 39079 | `d8ee11d74cd42910a13d3b95342be065853096842dcddd8a238e1c9a9424642f` |
-| `data/features/coco5k_caption.npy` | 25 010 × 512 | 51220608 | `c10763b7b93e90a048e7fe34b62ca3dd49e632d0dc2ef007b7f0c5faef5c584f` |
-| `data/features/coco5k_caption.ids.json` | — | 295309 | `46f66e7b025c8dbbf06f34f7c3e16c29dbba2ec32090a10643af70882cd3720d` |
+| `data/features/coco5k_image.npy` | 5 000 × 512 | 10240128 | `14e7908d8151ef25128596586efc2652e88eeac7f2c076b99c3176bbd6916a93` |
+| `data/features/coco5k_image.ids.json` | — | 39089 | `ed26e1361a67dc470249f4b6885585f9123c6ce991ac1ddac12d76876be455f2` |
+| `data/features/coco5k_caption.npy` | 25 010 × 512 | 51220608 | `2b6a18218cbcbf05bb1e1d8fdfcc4ce8cb330b7bc23df99c39ca59ad4aa1a8f5` |
+| `data/features/coco5k_caption.ids.json` | — | 295319 | `a563a520c6ae78fd7c793ca61eb6a174afe98ac1440fd5b599424bd905b1a56b` |
 
 ### Vector các phần đồ thị của split val (phép thử ở `experiments/checks/`, mục 4)
 
@@ -57,5 +57,7 @@ Sinh bởi `scripts/checks/soft_graph_rerank_probe.py` ngày 2026-09-19; khoá t
 
 | File | Dòng × chiều | Bytes | SHA-256 |
 |---|---|---|---|
-| `data/features/vg_coco_val_graph_parts.npy` | 42 736 × 512 | 87523456 | `8505a3be034396e42b265ba0998f624b9744319a4da36c18e8c27d6ed96d3d62` |
-| `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176815 | `87f748ca3c4c81ffc82658d7d70dafa476e17d1fa4e8ad59c5c6dd681cde6311` |
+| `data/features/vg_coco_val_graph_parts.npy` | 42 736 × 512 | 87523456 | `8c41676c5f228eafbfbf9957768daaf552bf4cfd2f56d1bf819d856cd461adca` |
+| `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176825 | `5dc2be646f18a0d11025842e171f56315197e6871bfe5d68a13610e1f31e5543` |
+
+Ghi chú: các file trước đó (encoder `ViT-B-32/openai`) được lưu trữ trên máy GPU tại `data/features/archive-vit-b-32-gelu/`. Ai đã tải feature từ Drive trước thay đổi này cần tải lại.

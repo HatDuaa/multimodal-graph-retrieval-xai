@@ -13,7 +13,7 @@ from PIL import Image
 
 
 class ClipEncoder:
-    def __init__(self, model: str = "ViT-B-32", pretrained: str = "openai",
+    def __init__(self, model: str = "ViT-B-32-quickgelu", pretrained: str = "openai",
                  device: str | None = None, batch_size: int = 256):
         import open_clip
 
