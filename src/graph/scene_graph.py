@@ -13,8 +13,9 @@ from src.utils.config import resolve
 
 
 def normalize_label(text: str) -> str:
-    text = re.sub(r"\s+", " ", str(text).lower().strip())
-    return text.strip(".,;:!?()[]{}\"'")
+    text = str(text).lower().strip(" 	
+.,;:!?()[]{}\"'")
+    return re.sub(r"\s+", " ", text)
 
 
 def load_alias(path: str | Path) -> dict[str, str]:
