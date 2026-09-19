@@ -6,6 +6,7 @@ annotations of its own image, so nothing is aggregated across images or splits.
 """
 import json
 import re
+import string
 from pathlib import Path
 from typing import Iterable, Iterator
 
@@ -13,8 +14,7 @@ from src.utils.config import resolve
 
 
 def normalize_label(text: str) -> str:
-    text = str(text).lower().strip(" 	
-.,;:!?()[]{}\"'")
+    text = str(text).lower().strip(string.whitespace + ".,;:!?()[]{}\"'")
     return re.sub(r"\s+", " ", text)
 
 
