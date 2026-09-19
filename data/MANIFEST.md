@@ -13,7 +13,13 @@ Tải ngày 2026-09-18.
 | `data/raw/visual_genome/relationships.json.zip` | 77904473 | `e648867b8087e4aeb10019a959f914e2580909f1c3e50a21b25de8741679182f` |
 | `data/raw/visual_genome/object_alias.txt` | 60166 | `0c8e059fc31eeebfd98231f5789892da8ae33bfa00434c70aee969dc6eaa853b` |
 | `data/raw/visual_genome/relationship_alias.txt` | 122102 | `15f7f64802c95c5bf5b5690457566b1b19ee64eac7a94d8b8cbb3a4378f2ec7c` |
+| `data/raw/vg150/object_list.txt` | 885 | `7f0824cff05b721ff3dd52114c88b683082a4628b3152fb7c222853a9d262404` |
+| `data/raw/vg150/predicate_list.txt` | 393 | `d455d4dd841b94e42bfc96bcf7c040ec0efd905e85f51cd7649ab4791e8c9aeb` |
+| `data/raw/vg150/object_alias.txt` | 60166 | `0c8e059fc31eeebfd98231f5789892da8ae33bfa00434c70aee969dc6eaa853b` |
+| `data/raw/vg150/predicate_alias.txt` | 122102 | `15f7f64802c95c5bf5b5690457566b1b19ee64eac7a94d8b8cbb3a4378f2ec7c` |
 | `data/raw/coco/caption_datasets.zip` | 36745453 | `4cfd70132527b80933105e5829dc9034eaab9573482e2e680abbab6130244817` |
+
+Bốn file `vg150/` là danh sách 150 lớp đối tượng và 50 quan hệ (VG150, Xu và cộng sự 2017) lấy từ repo `danfeiX/scene-graph-TF-release`, tải ngày 2026-09-19. Hai file alias ở đó trùng từng byte với hai file alias của Visual Genome (cùng SHA-256).
 
 Sau khi giải nén, `data/raw/` chiếm khoảng 1,4 GB.
 

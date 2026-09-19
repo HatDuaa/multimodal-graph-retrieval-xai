@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.utils.config import load_config, resolve  # noqa: E402
 
 VG = "https://homes.cs.washington.edu/~ranjay/visualgenome/data/dataset/"
+VG150 = "https://raw.githubusercontent.com/danfeiX/scene-graph-TF-release/master/data_tools/VG/"
 # (url, sub-folder under data/raw, unzip?)
 FILES = [
     (VG + "image_data.json.zip", "visual_genome", True),      # has the coco_id field used for the join
@@ -26,6 +27,10 @@ FILES = [
     (VG + "relationships.json.zip", "visual_genome", True),
     (VG + "object_alias.txt", "visual_genome", False),
     (VG + "relationship_alias.txt", "visual_genome", False),
+    (VG150 + "object_list.txt", "vg150", False),
+    (VG150 + "predicate_list.txt", "vg150", False),
+    (VG150 + "object_alias.txt", "vg150", False),
+    (VG150 + "predicate_alias.txt", "vg150", False),
     # Karpathy split; dataset_coco.json holds split, cocoid and the 5 captions of every image
     ("https://cs.stanford.edu/people/karpathy/deepimagesent/caption_datasets.zip", "coco", True),
 ]
