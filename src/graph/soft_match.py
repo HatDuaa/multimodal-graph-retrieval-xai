@@ -31,6 +31,68 @@ def image_parts(graph: dict) -> tuple[list[str], list[str]]:
     return list(dict.fromkeys(names.values())), list(dict.fromkeys(triples))
 
 
+def instance_parts(graph: dict) -> tuple[list[str], list[str]]:
+    """Return one object part per instance and one phrase per relation."""
+    names = {o["id"]: o["name"] for o in graph["objects"]}
+    triples = [triple_phrase(names[r["subject"]], r["predicate"], names[r["object"]]) for r in graph["relations"]]
+    return [o["name"] for o in graph["objects"]], triples
+
+
+def query_instance_parts(query: dict) -> tuple[list[str], list[str]]:
+    """Return query instances while applying the same pronoun filtering as query_parts."""
+    names = [o["name"] for o in query["objects"]]
+    nodes = [n for n in names if n and n not in PRONOUNS]
+    triples = [triple_phrase(names[r["subject"]], r["predicate"].lower(), names[r["object"]])
+               for r in query["relations"] if names[r["subject"]] not in PRONOUNS and names[r["object"]] not in PRONOUNS]
+    return nodes, triples
+
+
+def channel_scores(query_vecs: np.ndarray, image_vecs_list: list[np.ndarray], temperature: float) -> np.ndarray:
+    """Compute uniform query-part softmax matching scores for many candidates."""
+    out = np.full(len(image_vecs_list), np.nan, dtype=float)
+    if len(query_vecs) == 0:
+        return out
+    for i, image_vecs in enumerate(image_vecs_list):
+        if len(image_vecs) == 0:
+            continue
+        sims = query_vecs @ image_vecs.T
+        shifted = (sims - sims.max(axis=1, keepdims=True)) / temperature
+        weights = np.exp(shifted)
+        out[i] = float((weights / weights.sum(axis=1, keepdims=True) * sims).sum(axis=1).mean())
+    return out
+
+
+def zscore_channel(scores: np.ndarray, eps: float = 1e-6) -> np.ndarray:
+    """Z-score one candidate vector, treating missing scores as the known-value mean."""
+    scores = np.asarray(scores, dtype=float)
+    known = ~np.isnan(scores)
+    if known.sum() < 2:
+        return np.zeros_like(scores)
+    mean = float(scores[known].mean())
+    std = float(scores[known].std())
+    if std < eps:
+        return np.zeros_like(scores)
+    filled = np.where(known, scores, mean)
+    return (filled - mean) / (std + eps)
+
+
+def fuse_three_channels(clip: np.ndarray, s_obj: np.ndarray, s_tri: np.ndarray, alpha: float, beta: float) -> np.ndarray:
+    """Fuse CLIP, object, and triple channels using the fixed reference equations."""
+    z_clip = zscore_channel(clip)
+    z_obj, z_tri = zscore_channel(s_obj), zscore_channel(s_tri)
+    obj_active = np.count_nonzero(~np.isnan(s_obj)) >= 2 and np.std(s_obj[~np.isnan(s_obj)]) >= 1e-6
+    tri_active = np.count_nonzero(~np.isnan(s_tri)) >= 2 and np.std(s_tri[~np.isnan(s_tri)]) >= 1e-6
+    if obj_active and tri_active:
+        graph = zscore_channel(beta * z_obj + (1 - beta) * z_tri)
+    elif obj_active:
+        graph = z_obj
+    elif tri_active:
+        graph = z_tri
+    else:
+        graph = np.zeros_like(z_clip)
+    return alpha * z_clip + (1 - alpha) * graph
+
+
 def match(query_vecs: np.ndarray, image_vecs: np.ndarray, mode: str = "max", temperature: float = 0.05) -> tuple[float, list]:
     """Score of one query against one image, plus per query part (best image part index, similarity, contribution).
 

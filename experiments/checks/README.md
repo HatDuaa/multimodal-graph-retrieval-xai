@@ -147,12 +147,71 @@ Về quan hệ, các vị từ trượt nhiều nhất là giới từ chung chu
 
 **Bài học.** Đọc cảnh báo của bộ nạp mô hình trước khi tin một baseline; tái lập "gần đúng" (lệch 1 điểm) vẫn có thể che một lỗi cấu hình.
 
+## 6. Mốc tham chiếu ba kênh cho mô hình GAT
+
+**Câu hỏi.** Mô hình re-ranker sẽ huấn luyện có ba kênh điểm (CLIP, vật thể, bộ ba). Khi chưa học gì, nó phải cho ra đúng con số nào, và xếp hạng lại 50 ảnh đầu đã đủ chưa?
+
+**Cách làm.** Script `scripts/checks/three_channel_probe.py`, chỉ dùng split **val** (10633 truy vấn, pool 2126 ảnh), không huấn luyện gì. Khác mục 4 ở ba chỗ: mỗi vật thể trong ảnh là một phần riêng (không gộp nhãn trùng, giống số node mà GAT sẽ thấy; trung bình 26,4 vật thể và 17,9 quan hệ mỗi ảnh, 3,06 và 1,65 mỗi truy vấn); vật thể chỉ so với vật thể, bộ ba chỉ so với bộ ba, mỗi phần của truy vấn lấy trung bình có trọng số softmax(độ giống / τ) trên các phần của ảnh; điểm cuối đúng công thức của đề:
+
+```text
+Graph = z( β · z(S_vật thể) + (1 − β) · z(S_bộ ba) )
+điểm  = α · z(CLIP) + (1 − α) · Graph          z = chuẩn hoá trong danh sách ứng viên của từng truy vấn
+```
+
+Ứng viên lấy bằng đúng `CosineIndex` của baseline và script tự kiểm tra K = 50 phải trùng `top50_val.json`. Quét α, β từ 0 đến 1 bước 0,1.
+
+**Kết quả ở K = 50.**
+
+| Cấu hình | α | β | R@1 | R@5 | R@10 | MRR |
+|---|---:|---:|---:|---:|---:|---:|
+| Chỉ CLIP | 1,0 | – | 39,13 | 67,88 | 78,97 | 52,34 |
+| CLIP + vật thể | 0,6 | 1,0 | 43,21 | 70,77 | 81,22 | 55,88 |
+| CLIP + bộ ba | 0,6 | 0,0 | 41,45 | 69,18 | 80,28 | 54,26 |
+| **Ba kênh (mốc tham chiếu), τ = 0,05** | **0,6** | **0,7** | 43,50 | 70,95 | 81,59 | 56,10 |
+| Đối chứng: scene graph của ảnh khác | 1,0 | – | 39,13 | 67,88 | 78,97 | 52,34 |
+
+Theo nhiệt độ τ của softmax (mỗi dòng là α, β tốt nhất):
+
+| τ | α | β | R@1 | R@5 | R@10 | MRR |
+|---|---:|---:|---:|---:|---:|---:|
+| 0,02 | 0,6 | 0,7 | 43,47 | 70,96 | 81,48 | 56,08 |
+| 0,05 | 0,6 | 0,7 | 43,50 | 70,95 | 81,59 | 56,10 |
+| 0,1 | 0,6 | 0,5 | 42,18 | 69,72 | 80,83 | 54,93 |
+
+**Số ứng viên K** (τ = 0,05; α, β tốt nhất của từng K):
+
+| K | α | β | R@1 | R@5 | R@10 | MRR |
+|---|---:|---:|---:|---:|---:|---:|
+| 50 | 0,6 | 0,7 | 43,50 | 70,95 | 81,59 | 56,10 |
+| 100 | 0,6 | 0,7 | 43,55 | 70,72 | 81,16 | 56,11 |
+| 200 | 0,6 | 0,7 | 43,52 | 70,48 | 80,87 | 55,96 |
+| cả pool (2126) | 0,8 | 0,9 | 43,34 | 70,52 | 81,01 | 55,94 |
+
+**Kết luận.**
+
+- Mốc tham chiếu của mô hình ba kênh: R@1 = 43,50%, với α = 0,6, β = 0,7, τ = 0,05. Mô hình có huấn luyện khởi tạo bằng đúng ba giá trị này và ở bước 0 phải tái tạo con số trên; file `three_channel_probe_reference_scores.npz` lưu điểm thô, z-score, `Graph`, điểm trộn và thứ hạng của 200 truy vấn đầu để so từng số.
+- Kênh bộ ba thêm 0,29 điểm R@1 so với chỉ dùng vật thể (khoảng 31 truy vấn). Mức này nhỏ; chưa đủ để nói quan hệ có đóng góp. Câu trả lời phải đến từ mô hình có huấn luyện và các ablation.
+- Đối chứng rơi đúng về CLIP thuần (α tốt nhất = 1): phần lợi đến từ scene graph đúng của từng ảnh.
+- Tăng K không giúp: 50, 100, 200 cho R@1 gần như bằng nhau, và xếp hạng lại cả pool còn thấp hơn một chút vì điểm đồ thị kéo theo ảnh có đúng vật thể nhưng sai cảnh. Giữ K = 50.
+- τ = 0,1 kém rõ (softmax quá phẳng, phần khớp nhất bị pha loãng); 0,02 và 0,05 gần như nhau.
+- Lần chạy đầu bị chính script chặn lại: tự sắp xếp bằng numpy cho thứ tự khác FAISS ở 33 / 10633 truy vấn (hai ảnh liền nhau có điểm cách nhau cỡ 4e-8). Đã chuyển sang dùng chung đường code với baseline.
+- Chưa chạy biến thể Sentence-BERT (`--encoder sbert`): gói `sentence-transformers` chưa có trong môi trường và không thuộc `requirements.txt`.
+
+**Chạy lại.**
+
+```bash
+python scripts/checks/three_channel_probe.py --top-k 50,100,200,0
+```
+
+Khoảng 15 phút trên máy GPU (phần lớn là xếp hạng lại cả pool); riêng `--top-k 50` mất chưa tới 2 phút.
+
 ## File giữ lại
 
 | Thứ | Ở đâu | Ghi chú |
 |---|---|---|
 | Script | `scripts/checks/` | Trong git |
 | Kết quả | `experiments/checks/*.json` | Trong git |
+| Điểm tham chiếu ba kênh của 200 truy vấn val đầu | `experiments/checks/three_channel_probe_reference_scores.npz` (0,8 MB) | Trong git; mô hình GAT so bước 0 với file này |
 | 5 000 ảnh test MSCOCO | `data/raw/coco5k_images/` (793 MB) | Chỉ trên máy chạy; script chạy lại sẽ bỏ qua ảnh đã có |
 | Đặc trưng MSCOCO 5K | `data/features/coco5k_{image,caption}.npy` + `.ids.json` (~60 MB) | Chỉ trên máy chạy; checksum ở `data/MANIFEST.md`. Không đưa lên Drive vì các gói khác không dùng |
 | Caption đã tách thành đồ thị | `data/processed/query_graphs_check_{train,val}.json` (5,4 MB và 2,9 MB) | Chỉ trên máy chạy; SHA-256 bắt đầu bằng `3f78bc2a` và `c8680264`; chạy lại script với seed 0 sẽ sinh lại |
