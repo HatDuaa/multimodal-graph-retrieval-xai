@@ -18,6 +18,7 @@ from src.features.extract_clip import ClipEncoder, load_features, save_features 
 from src.graph.parse_query import parse_many  # noqa: E402
 from src.graph.scene_graph import Vocab, iter_scene_graphs, load_raw  # noqa: E402
 from src.graph.soft_match import channel_scores, fuse_three_channels, instance_parts, query_instance_parts  # noqa: E402
+from src.retrieval.faiss_index import CosineIndex  # noqa: E402
 from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
 
 GRID = [round(i / 10, 1) for i in range(11)]
@@ -34,21 +35,19 @@ def parse_top_k(values: list[str] | None) -> list[int]:
 
 def candidate_pools(caption_features: np.ndarray, image_features: np.ndarray, image_ids: list[int],
                     ks: list[int]) -> dict:
-    """Build stable CLIP candidate pools for every requested K."""
-    similarities = caption_features @ image_features.T
-    order = np.argsort(-similarities, axis=1, kind="stable")
+    """Build candidate pools through the same FAISS path as the CLIP baseline."""
+    index = CosineIndex(image_features, image_ids)
     result = {}
     for k in ks:
         width = len(image_ids) if k == 0 else min(k, len(image_ids))
-        rows = order[:, :width]
-        scores = np.take_along_axis(similarities, rows, axis=1)
-        ranked = [[image_ids[index] for index in row] for row in rows]
+        scores, ranked = index.search(caption_features, width)
         result[k] = (scores, ranked)
     return result
 
 
 def zscore_rows(scores: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Apply zscore_channel row-wise and return z-scores plus active-row flags."""
+    scores = np.asarray(scores, dtype=float)
     known = ~np.isnan(scores)
     count = known.sum(axis=1)
     safe_count = np.maximum(count, 1)
