@@ -39,7 +39,7 @@ Ghi và đọc bằng `save_features()` / `load_features()` trong `src/features/
 |---|---|---|
 | `vg_coco_image.npy` | một ảnh | `image_id` |
 | `vg_coco_caption.npy` | một caption | `caption_id` |
-| `vg_coco_concept.npy` | một khái niệm, mã hoá theo mẫu `a photo of a {tên}` | tên khái niệm |
+| `vg_coco_concept.npy` | một nhãn VG150 (đối tượng theo mẫu `a photo of a {tên}`, quan hệ mã hoá nguyên văn); chưa trích | tên nhãn |
 
 - Ma trận `float32`, mỗi dòng đã chuẩn hoá L2, nên tích vô hướng chính là cosine.
 - `<tên>.ids.json` = `{"encoder": "ViT-B-32/openai", "dim": 512, "ids": [...]}`; dòng `i` của ma trận thuộc về `ids[i]`.
@@ -56,23 +56,32 @@ Mọi con số trong báo cáo phải đi qua module này để so sánh đượ
 - `write_metrics(path, method=..., dataset=..., split=..., per_seed={seed: metrics}, config=...)` ghi `metrics.json` theo một schema duy nhất: `method`, `dataset`, `split`, `per_seed`, `aggregate`, `config`.
 - Lộc viết bản đầu (2026-09-18) để baseline không bị chặn; người nhận gói 4 giữ và mở rộng module này (nDCG, tách nhóm truy vấn trực tiếp / gián tiếp).
 
-## 3. Đồ thị — ĐỀ XUẤT
+## 3. Đồ thị — ĐỀ XUẤT (đổi 2026-09-19)
 
-Danh sách cạnh dạng bảng, không phụ thuộc thư viện, để gói 4 và demo đọc được mà không cần PyTorch Geometric:
+Mỗi ảnh một đồ thị nhỏ riêng, truy vấn cũng được tách thành một đồ thị cùng dạng; **không** dựng một đồ thị chung chứa mọi ảnh. Lý do và các bài tham khảo: `docs/research/graph-enhanced-image-retrieval-approaches.md`; chi tiết từng bước: sheet "Cap do 1" của `task-assignment.xlsx`. Thiết kế còn chờ số đo độ phủ (`scripts/checks/scene_graph_coverage.py`). ConceptNet không dùng ở cấp độ 1.
 
-- `data/graphs/<dataset>_nodes.json`: `[{"node_id": "img:2368620", "type": "image"}, {"node_id": "c:ball", "type": "concept"}]`
-- `data/graphs/<dataset>_edges.tsv`: các cột `head`, `relation`, `tail`, `source`, `weight`, trong đó `source` ∈ {`scene_graph`, `conceptnet`, `contains`}.
+Format JSON thuần, không phụ thuộc thư viện, để gói 4 và demo đọc được mà không cần PyTorch Geometric:
 
-Tiền tố `img:` và `c:` giúp id không trùng nhau giữa các loại node. Cạnh gộp từ thống kê chỉ tính trên ảnh train.
+- `data/graphs/<dataset>_scene_graphs.jsonl`, mỗi dòng một ảnh:
+
+```json
+{"image_id": 2368620,
+ "objects": [{"id": 0, "name": "man"}, {"id": 1, "name": "motorcycle"}],
+ "relations": [{"subject": 0, "predicate": "riding", "object": 1}]}
+```
+
+- `data/processed/query_graphs_<split>.json`: `{caption_id: {"objects": [...], "relations": [...]}}`, cùng cấu trúc như trên.
+
+Tên đối tượng và quan hệ của ảnh đã chuẩn hoá theo alias và lọc theo VG150. Đồ thị của ảnh nào chỉ chứa chú thích của chính ảnh đó, không có cạnh gộp từ nhiều ảnh.
 
 ## 4. API điểm đồ thị — ĐỀ XUẤT
 
 ```python
-def score(query: str, candidate_image_id: int) -> tuple[float, list[Path]]: ...
+def score(query: str, candidate_image_id: int) -> tuple[float, list[Match]]: ...
 
-# Path = danh sách cạnh (head, relation, tail) kèm trọng số đóng góp vào điểm
+# Match = (bộ ba của truy vấn, bộ ba của ảnh, đóng góp vào điểm); bộ ba = (head, relation, tail)
 ```
 
-- Đường đi trả về phải là thứ thật sự tham gia tính điểm (đề cấm tìm đường đi sau khi đã xếp hạng).
-- Cần thêm hàm `score_without(query, candidate, removed_edges)` để gói 4 đo fidelity và để demo có nút "bỏ cạnh này".
+- Các cặp bộ ba trả về phải là thứ thật sự tham gia tính điểm (đề cấm tìm đường đi sau khi đã xếp hạng).
+- Cần thêm hàm `score_without(query, candidate, removed_triples)` để gói 4 đo fidelity và để demo có nút "bỏ bộ ba này".
 - Demo và đánh giá chỉ gọi hai hàm này, không đọc trực tiếp bên trong mô hình.
