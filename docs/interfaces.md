@@ -42,7 +42,7 @@ Ghi và đọc bằng `save_features()` / `load_features()` trong `src/features/
 | `vg_coco_concept.npy` | một nhãn VG150 (đối tượng theo mẫu `a photo of a {tên}`, quan hệ mã hoá nguyên văn); chưa trích | tên nhãn |
 
 - Ma trận `float32`, mỗi dòng đã chuẩn hoá L2, nên tích vô hướng chính là cosine.
-- `<tên>.ids.json` = `{"encoder": "ViT-B-32/openai", "dim": 512, "ids": [...]}`; dòng `i` của ma trận thuộc về `ids[i]`.
+- `<tên>.ids.json` = `{"encoder": "ViT-B-32-quickgelu/openai", "dim": 512, "ids": [...]}`; dòng `i` của ma trận thuộc về `ids[i]`.
 - Một file chứa cả train, val và test; lọc theo split bằng id lấy từ file split.
 - Tìm top-k: `CosineIndex(feats, ids).search(queries, k)` trong `src/retrieval/faiss_index.py`.
 
