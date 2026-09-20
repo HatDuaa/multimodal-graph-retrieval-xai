@@ -92,6 +92,8 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--batch-size", type=int, default=256)
+    parser.add_argument("--micro-batch-size", type=int, default=128,
+                        help="Per-forward micro batch; gradients accumulate to the effective batch-size.")
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--adaptive-weights", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--use-gat", action=argparse.BooleanOptionalAction, default=True)
@@ -146,9 +148,17 @@ def main() -> None:
                                   "gpu_bytes": torch.cuda.memory_allocated() if torch.cuda.is_available() else 0}),
                       flush=True)
             optimizer.zero_grad(set_to_none=True)
-            loss = batch_loss(model, store, train_arrays, [row for row, _ in batch], device)
-            if loss is None: continue
-            loss.backward(); optimizer.step()
+            micro = max(1, min(args.micro_batch_size, len(batch)))
+            valid = 0
+            for micro_start in range(0, len(batch), micro):
+                part = batch[micro_start:micro_start + micro]
+                loss = batch_loss(model, store, train_arrays, [row for row, _ in part], device)
+                if loss is None:
+                    continue
+                (loss * (len(part) / len(batch))).backward()
+                valid += len(part)
+            if valid:
+                optimizer.step()
         if epoch == 1:
             for parameter in ((model.weight_map,) if args.adaptive_weights else ()) + (model.weight_bias,):
                 parameter.requires_grad_(True)
