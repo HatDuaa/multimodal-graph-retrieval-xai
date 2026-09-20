@@ -92,7 +92,7 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--micro-batch-size", type=int, default=128,
+    parser.add_argument("--micro-batch-size", type=int, default=32,
                         help="Per-forward micro batch; gradients accumulate to the effective batch-size.")
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--adaptive-weights", action=argparse.BooleanOptionalAction, default=True)
@@ -157,6 +157,9 @@ def main() -> None:
                     continue
                 (loss * (len(part) / len(batch))).backward()
                 valid += len(part)
+                del loss
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
             if valid:
                 optimizer.step()
         if epoch == 1:
