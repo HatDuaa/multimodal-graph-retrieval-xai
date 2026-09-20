@@ -63,7 +63,10 @@ def main() -> None:
         golds.append(int(arrays["gold"][row]))
         if (row + 1) % 1000 == 0:
             print(f"scored {row + 1}/{len(arrays['caption_ids'])}", flush=True)
-    print("full_val_metrics", json.dumps(evaluate(ranked, golds)))
+    metrics = evaluate(ranked, golds)
+    print("full_val_metrics", json.dumps(metrics))
+    if abs(metrics["recall@1"] - 0.434967) > 1e-6:
+        raise SystemExit(f"full-val R@1 mismatch: {metrics['recall@1']}, expected 0.434967 +/- 1e-6")
 
 
 if __name__ == "__main__":
