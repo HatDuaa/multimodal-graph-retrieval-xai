@@ -105,8 +105,8 @@ def main() -> None:
     run_dir.mkdir(parents=True, exist_ok=True)
     if args.eval_only:
         model.eval(); print(json.dumps(evaluate_val(model, store, val_arrays, device))); return
-    if not args.adaptive_weights:
-        model.weight_map.requires_grad_(False)
+    # Warm up graph parameters for epoch 1; gates open only after that epoch.
+    model.weight_map.requires_grad_(False)
     model.weight_bias.requires_grad_(False)
     decay, no_decay = [], []
     for name, parameter in model.named_parameters():
