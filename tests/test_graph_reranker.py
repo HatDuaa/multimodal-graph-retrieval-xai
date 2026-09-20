@@ -8,6 +8,14 @@ from src.data.graph_store import GraphStore
 from src.explain.graph_explainer import remove_parts, score, score_without
 from src.graph.soft_match import fuse_three_channels
 from src.models.graph_reranker import GraphReranker, fuse_tensor, zscore_tensor
+from src.train_graph_reranker import shuffled_rows
+
+
+def test_training_order_is_deterministic_but_changes_each_epoch():
+    rows = [(i, str(i)) for i in range(100)]
+    first = shuffled_rows(rows, 7, 1)
+    assert first == shuffled_rows(rows, 7, 1)
+    assert first != shuffled_rows(rows, 7, 2)
 
 
 def graph(n=4, edges=True):

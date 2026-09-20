@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
+import os
+import resource
 import subprocess
 import sys
 import time
@@ -33,6 +36,12 @@ def rows_for(store, arrays, limit=None):
         indices = indices[:limit]
     for row in indices:
         yield int(row), str(arrays["caption_ids"][row])
+
+
+def shuffled_rows(rows, seed, epoch):
+    """Deterministic per-epoch order, independent of process hash/random state."""
+    rng = np.random.default_rng(np.random.SeedSequence([seed, epoch]))
+    return [rows[index] for index in rng.permutation(len(rows))]
 
 
 def batch_loss(model, store, arrays, indices, device):
@@ -121,12 +130,21 @@ def main() -> None:
     (run_dir / "config.json").write_text(json.dumps(metadata, indent=2, default=str), encoding="utf-8")
     log = run_dir / "log.jsonl"
     best, stale = -1.0, 0
+    best_metrics = None
     last_metrics = None
     rows = list(rows_for(store, train_arrays, args.limit_train))
     for epoch in range(1, args.epochs + 1):
         started = time.time(); model.train()
-        for start in range(0, len(rows), args.batch_size):
-            batch = rows[start:start + args.batch_size]
+        # Only the fault reproduction uses the legacy order; all reported runs shuffle.
+        epoch_rows = rows if os.environ.get("MGRX_DEBUG_LEGACY_ORDER") else shuffled_rows(rows, args.seed, epoch)
+        for start in range(0, len(epoch_rows), args.batch_size):
+            batch = epoch_rows[start:start + args.batch_size]
+            if os.environ.get("MGRX_DEBUG_BATCH_LOG") and start % (args.batch_size * 50) == 0:
+                rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+                print(json.dumps({"debug": "batch", "epoch": epoch, "start": start,
+                                  "rss_bytes": rss,
+                                  "gpu_bytes": torch.cuda.memory_allocated() if torch.cuda.is_available() else 0}),
+                      flush=True)
             optimizer.zero_grad(set_to_none=True)
             loss = batch_loss(model, store, train_arrays, [row for row, _ in batch], device)
             if loss is None: continue
@@ -147,15 +165,20 @@ def main() -> None:
         last_metrics = metrics
         with log.open("a", encoding="utf-8") as handle: handle.write(json.dumps(metrics) + "\n")
         print(json.dumps(metrics), flush=True)
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         score = metrics["recall@1"]
         if score > best:
             best, stale = score, 0
+            best_metrics = metrics
             torch.save({"model": model.state_dict(), "epoch": epoch, "metrics": metrics}, run_dir / "checkpoint_best.pt")
         else:
             stale += 1
             if stale >= 2: break
     if last_metrics is not None:
-        (run_dir / "metrics.json").write_text(json.dumps(last_metrics, indent=2), encoding="utf-8")
+        (run_dir / "metrics.json").write_text(json.dumps({"best": best_metrics, "last": last_metrics}, indent=2), encoding="utf-8")
+        print(json.dumps({"best": best_metrics, "last": last_metrics}), flush=True)
 
 
 if __name__ == "__main__": main()
