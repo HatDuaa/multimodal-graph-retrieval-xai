@@ -1,0 +1,374 @@
+{
+  "date": "2026-09-20",
+  "config": {
+    "seed": 0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "paths": {
+      "raw": "data/raw",
+      "splits": "data/splits",
+      "features": "data/features",
+      "graphs": "data/graphs",
+      "processed": "data/processed",
+      "experiments": "experiments"
+    },
+    "clip": {
+      "model": "ViT-B-32-quickgelu",
+      "pretrained": "openai",
+      "batch_size": 256,
+      "concept_prompt": "a photo of a {}"
+    },
+    "retrieval": {
+      "top_k": 50
+    }
+  },
+  "seed": 0,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "limit": null,
+  "dtype": "float32",
+  "workers": 24,
+  "stages": [
+    "graphs",
+    "queries",
+    "count",
+    "vectors",
+    "candidates"
+  ],
+  "split_sha256": {
+    "train": "3216c07c437a1d028a0a9c5067ef05d0ddb36fab50d1b6575d5dc3d85e671dfb",
+    "val": "b649f11d65641ff2aa4a586e9ef6417f666904aee9520093ba56bb61930d2d12",
+    "test": "ada90b6b1417840ae054b260accf820f2146d31cbbe1c5dc2ebe948b91e81d7c"
+  },
+  "outputs": {
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/graphs/vg_coco_scene_graphs.jsonl": {
+      "bytes": 91246921,
+      "sha256": "1f65f3e24e4f2bcb9e390e1092aa12f764154a398d3e163fffc237b837f41788"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/processed/query_graphs_train.json": {
+      "bytes": 110566228,
+      "sha256": "fb79548ba4565fa6a7d3f141bebed3edd62f6891e0de1d38c6da14929107bb04"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/processed/query_graphs_val.json": {
+      "bytes": 4999446,
+      "sha256": "f2f18a871e9cf001ad8b8ec2712b911cf64cfb5ea148525e08ab35ec83c32412"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/processed/query_graphs_test.json": {
+      "bytes": 5026707,
+      "sha256": "e5972020e319891c05253c39bf91ca35b103740bbad7c3e505414745e8b4f84e"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/level1/data_packaging/part_counts.json": {
+      "bytes": 1561,
+      "sha256": "1f7d4dc32969eeb110ac1577763ec2a73e029a242cf706c217f958615066ce0a"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/features/vg_coco_graph_parts.npy": {
+      "bytes": 1192110208,
+      "sha256": "555eebcfef67d57bdd56d4813abfa109186de910e12beb4b7266244ed1adc5d3"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/features/vg_coco_graph_parts.ids.json": {
+      "bytes": 17039232,
+      "sha256": "bec0332e783afd5566b5326af2625fe68de3b4e1e246b48361304593c884e929"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/splits/vg_coco_train_groups.json": {
+      "bytes": 703407,
+      "sha256": "235ddfdde7c65e711a1e1f34232743cef071b4fca8b977602c41cfc64944547e"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/processed/candidates_train.npz": {
+      "bytes": 155954210,
+      "sha256": "549083b1756df5a467887cc8d860a2d056f6f93878f088c819e0bffb6053f958"
+    },
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/data/processed/candidates_val.npz": {
+      "bytes": 7064252,
+      "sha256": "ec4bc3432594d9923b1de7ac4ff33b1511d334690a8b681768fd9637ede91d79"
+    }
+  },
+  "counts": {
+    "vg_coco_scene_graphs.jsonl": {
+      "graphs": 51208
+    },
+    "query_graphs_train.json": {
+      "queries": 234854
+    },
+    "query_graphs_val.json": {
+      "queries": 10633
+    },
+    "query_graphs_test.json": {
+      "queries": 10696
+    },
+    "part_counts.json": {
+      "seed": 0,
+      "limit": null,
+      "splits": {
+        "train": {
+          "images": {
+            "node": 46123,
+            "rel": 18357,
+            "triple": 295935
+          },
+          "queries": {
+            "node": 30015,
+            "rel": 3179,
+            "triple": 181638
+          },
+          "all": {
+            "node": 67254,
+            "rel": 19880,
+            "triple": 456104
+          }
+        },
+        "val": {
+          "images": {
+            "node": 5741,
+            "rel": 1983,
+            "triple": 22480
+          },
+          "queries": {
+            "node": 4044,
+            "rel": 670,
+            "triple": 13189
+          },
+          "all": {
+            "node": 8241,
+            "rel": 2368,
+            "triple": 34495
+          }
+        },
+        "test": {
+          "images": {
+            "node": 6138,
+            "rel": 2062,
+            "triple": 22891
+          },
+          "queries": {
+            "node": 4091,
+            "rel": 662,
+            "triple": 13229
+          },
+          "all": {
+            "node": 8648,
+            "rel": 2449,
+            "triple": 35030
+          }
+        }
+      },
+      "total": {
+        "node": 71388,
+        "rel": 21088,
+        "triple": 489609
+      },
+      "images": {
+        "train": 46944,
+        "val": 2126,
+        "test": 2138
+      },
+      "queries": {
+        "train": 234854,
+        "val": 10633,
+        "test": 10696
+      },
+      "unseen_in_train": {
+        "val": {
+          "node": 1957,
+          "rel": 586,
+          "triple": 16538
+        },
+        "test": {
+          "node": 2207,
+          "rel": 633,
+          "triple": 17129
+        }
+      },
+      "total_keys": 582085,
+      "projected_vector_bytes": {
+        "float32": 1192110080,
+        "float16": 596055040
+      },
+      "size_note": "Matrix payload only; NPY header and IDs JSON are additional."
+    },
+    "vg_coco_graph_parts.npy": {
+      "vectors": 582085,
+      "dtype": "float32",
+      "reference_sample": 1000,
+      "reference_max_abs_error_float32": 5.960464477539063e-08
+    },
+    "vg_coco_train_groups.json": {
+      "dev": 0,
+      "groups": [
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2134,
+        2133,
+        2133,
+        2133,
+        2133
+      ]
+    },
+    "candidates_train.npz": {
+      "overall": {
+        "n_queries": 234854,
+        "recall@50": 0.9656722900184795,
+        "mrr": 0.5205777373696852
+      },
+      "per_group": {
+        "0": {
+          "n_queries": 10679,
+          "recall@50": 0.9691918718981178,
+          "mrr": 0.5275576740239283
+        },
+        "1": {
+          "n_queries": 10680,
+          "recall@50": 0.9633895131086142,
+          "mrr": 0.5165380058450796
+        },
+        "2": {
+          "n_queries": 10673,
+          "recall@50": 0.9689871638714513,
+          "mrr": 0.5318682935392554
+        },
+        "3": {
+          "n_queries": 10673,
+          "recall@50": 0.9657078609575565,
+          "mrr": 0.5172969882721055
+        },
+        "4": {
+          "n_queries": 10672,
+          "recall@50": 0.9650487256371814,
+          "mrr": 0.5120414785307603
+        },
+        "5": {
+          "n_queries": 10681,
+          "recall@50": 0.9645164310457822,
+          "mrr": 0.5149488983000702
+        },
+        "6": {
+          "n_queries": 10676,
+          "recall@50": 0.9682465342825028,
+          "mrr": 0.5091620280083525
+        },
+        "7": {
+          "n_queries": 10676,
+          "recall@50": 0.965436493068565,
+          "mrr": 0.5269848418270869
+        },
+        "8": {
+          "n_queries": 10678,
+          "recall@50": 0.9633826559280764,
+          "mrr": 0.5129233150456404
+        },
+        "9": {
+          "n_queries": 10681,
+          "recall@50": 0.964984552008239,
+          "mrr": 0.522824742217137
+        },
+        "10": {
+          "n_queries": 10676,
+          "recall@50": 0.9648744848257774,
+          "mrr": 0.5136139181035004
+        },
+        "11": {
+          "n_queries": 10677,
+          "recall@50": 0.9639411819799569,
+          "mrr": 0.5337869014697884
+        },
+        "12": {
+          "n_queries": 10674,
+          "recall@50": 0.9609331084879146,
+          "mrr": 0.5125595071613499
+        },
+        "13": {
+          "n_queries": 10674,
+          "recall@50": 0.9653363312722504,
+          "mrr": 0.5302678271862818
+        },
+        "14": {
+          "n_queries": 10672,
+          "recall@50": 0.9642053973013494,
+          "mrr": 0.515916601846889
+        },
+        "15": {
+          "n_queries": 10677,
+          "recall@50": 0.9699353751053666,
+          "mrr": 0.5223561460275272
+        },
+        "16": {
+          "n_queries": 10675,
+          "recall@50": 0.9690866510538642,
+          "mrr": 0.5267188240224532
+        },
+        "17": {
+          "n_queries": 10677,
+          "recall@50": 0.97124660485155,
+          "mrr": 0.528138499958191
+        },
+        "18": {
+          "n_queries": 10674,
+          "recall@50": 0.9658984448191869,
+          "mrr": 0.5202943791252372
+        },
+        "19": {
+          "n_queries": 10670,
+          "recall@50": 0.9582942830365511,
+          "mrr": 0.5154353289902756
+        },
+        "20": {
+          "n_queries": 10668,
+          "recall@50": 0.963817022872141,
+          "mrr": 0.523686211454092
+        },
+        "21": {
+          "n_queries": 10671,
+          "recall@50": 0.9683253678193234,
+          "mrr": 0.517786542547309
+        }
+      }
+    },
+    "candidates_val.npz": {
+      "overall": {
+        "n_queries": 10633,
+        "recall@50": 0.967177654471927,
+        "mrr": 0.5233535974637776
+      }
+    }
+  },
+  "runtimes_seconds": {
+    "graphs": 16.219966317992657,
+    "queries": 56.52891070605256,
+    "count": 2.276217269944027,
+    "vectors": 165.19114745990373,
+    "candidates": 6.2023181188851595
+  },
+  "runtime_seconds": 246.4185758230742,
+  "leakage": {
+    "groups_from_train_only": true,
+    "has_dev_split": false,
+    "val_used_for_early_stopping_and_model_selection": true,
+    "test_untouched_by_this_task": true,
+    "no_cross_image_graph_statistics": true,
+    "vocabulary_union_is_only_a_frozen_text_lookup": true,
+    "test_candidates_computed": false,
+    "test_metrics_computed": false,
+    "note": "Per-image annotations only; no edges, fitted statistics or filters cross images. Counts/union across splits are storage bookkeeping only."
+  },
+  "smoke_policy": "First N images per split; no dev split; small pools pad candidate=-1, clip_score=-inf; gold ranks are 1-based."
+}

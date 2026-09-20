@@ -61,3 +61,16 @@ Sinh bởi `scripts/checks/soft_graph_rerank_probe.py` ngày 2026-09-19; khoá t
 | `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176825 | `5dc2be646f18a0d11025842e171f56315197e6871bfe5d68a13610e1f31e5543` |
 
 Ghi chú: các file trước đó (encoder `ViT-B-32/openai`) được lưu trữ trên máy GPU tại `data/features/archive-vit-b-32-gelu/`. Ai đã tải feature từ Drive trước thay đổi này cần tải lại.
+
+### Gói dữ liệu re-ranker đồ thị
+
+Sinh bởi `src.data.train_groups` và `scripts/build_graph_data.py`; các giá trị dưới đây chờ reviewer chạy đủ dữ liệu (`TODO(run)`).
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/splits/vg_coco_train_groups.json` | TODO(run) | TODO(run) |
+| `data/graphs/vg_coco_scene_graphs.jsonl` | TODO(run) | TODO(run) |
+| `data/processed/query_graphs_{train,val,test}.json` | TODO(run) | TODO(run) |
+| `data/features/vg_coco_graph_parts.npy` + `.ids.json` | TODO(run) | TODO(run) |
+| `data/processed/candidates_train.npz` | TODO(run) | TODO(run) |
+| `data/processed/candidates_val.npz` | TODO(run) | TODO(run) |

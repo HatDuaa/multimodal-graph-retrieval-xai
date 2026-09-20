@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-20",
+  "config": {
+    "seed": 0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "paths": {
+      "raw": "data/raw",
+      "splits": "data/splits",
+      "features": "data/features",
+      "graphs": "data/graphs",
+      "processed": "data/processed",
+      "experiments": "experiments"
+    },
+    "clip": {
+      "model": "ViT-B-32-quickgelu",
+      "pretrained": "openai",
+      "batch_size": 256,
+      "concept_prompt": "a photo of a {}"
+    },
+    "retrieval": {
+      "top_k": 50
+    }
+  },
+  "seed": 0,
+  "split_sha256": {
+    "train": "3216c07c437a1d028a0a9c5067ef05d0ddb36fab50d1b6575d5dc3d85e671dfb",
+    "val": "b649f11d65641ff2aa4a586e9ef6417f666904aee9520093ba56bb61930d2d12",
+    "test": "ada90b6b1417840ae054b260accf820f2146d31cbbe1c5dc2ebe948b91e81d7c"
+  },
+  "output_sha256": {
+    "/home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/level1/data_packaging/part_counts_limit2000.json": "dc7f6346bed49af238996574803404d1e1350a65d798dab2544e0c5f5f769fce"
+  },
+  "runtime_seconds": 81.04,
+  "leakage": "dev and groups derive from train only; no statistic crosses images or splits."
+}
