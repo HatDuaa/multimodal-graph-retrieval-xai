@@ -84,7 +84,7 @@ def main() -> None:
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--lr", type=float, default=1e-3)
-    parser.add_argument("--adaptive-weights", action="store_true")
+    parser.add_argument("--adaptive-weights", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--use-gat", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--use-triple-channel", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--use-edges", action=argparse.BooleanOptionalAction, default=True)
@@ -100,10 +100,12 @@ def main() -> None:
         model.load_state_dict(torch.load(args.eval_only, map_location=device)["model"])
     train_arrays, val_arrays = store.candidates("train"), store.candidates("val")
     run_dir = resolve(cfg, "experiments") / "level1" / "gat" / args.run_name
+    if run_dir.exists() and any(run_dir.iterdir()) and not args.eval_only:
+        raise FileExistsError(f"run directory already contains artifacts: {run_dir}")
     run_dir.mkdir(parents=True, exist_ok=True)
     if args.eval_only:
         model.eval(); print(json.dumps(evaluate_val(model, store, val_arrays, device))); return
-    if args.adaptive_weights:
+    if not args.adaptive_weights:
         model.weight_map.requires_grad_(False)
     model.weight_bias.requires_grad_(False)
     decay, no_decay = [], []
