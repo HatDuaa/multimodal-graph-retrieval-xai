@@ -74,3 +74,4 @@ Sinh bởi `src.data.train_groups` và `scripts/build_graph_data.py`; các giá 
 | `data/features/vg_coco_graph_parts.npy` + `.ids.json` | TODO(run) | TODO(run) |
 | `data/processed/candidates_train.npz` | TODO(run) | TODO(run) |
 | `data/processed/candidates_val.npz` | TODO(run) | TODO(run) |
+| `data/raw/visual_genome/attributes.json.zip` | 83280561 | `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7` |

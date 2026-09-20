@@ -25,6 +25,7 @@ FILES = [
     (VG + "image_data.json.zip", "visual_genome", True),      # has the coco_id field used for the join
     (VG + "objects.json.zip", "visual_genome", True),
     (VG + "relationships.json.zip", "visual_genome", True),
+    (VG + "attributes.json.zip", "visual_genome", True),
     (VG + "object_alias.txt", "visual_genome", False),
     (VG + "relationship_alias.txt", "visual_genome", False),
     (VG150 + "object_list.txt", "vg150", False),

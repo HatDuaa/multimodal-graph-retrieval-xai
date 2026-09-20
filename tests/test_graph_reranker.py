@@ -18,6 +18,20 @@ def test_training_order_is_deterministic_but_changes_each_epoch():
     assert first != shuffled_rows(rows, 7, 2)
 
 
+def test_microbatch_mean_loss_has_full_batch_weighting():
+    torch.manual_seed(3)
+    logits = torch.randn(256, 50, requires_grad=True)
+    targets = torch.arange(256) % 50
+    full = F.cross_entropy(logits, targets)
+    full.backward()
+    full_grad = logits.grad.detach().clone()
+    logits.grad.zero_()
+    for start in range(0, 256, 32):
+        part = F.cross_entropy(logits[start:start + 32], targets[start:start + 32])
+        (part * (32 / 256)).backward()
+    torch.testing.assert_close(logits.grad, full_grad, atol=1e-6, rtol=1e-6)
+
+
 def graph(n=4, edges=True):
     x = F.normalize(torch.randn(n, 512), dim=-1)
     pairs = torch.tensor([[0, 1, 2], [1, 2, 3]]) if edges and n >= 4 else torch.empty((2, 0), dtype=torch.long)
