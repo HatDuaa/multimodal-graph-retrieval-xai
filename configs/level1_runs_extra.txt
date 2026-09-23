@@ -1,0 +1,9 @@
+# Level 1 extra rows, run after configs/level1_runs.txt with the same recipe.
+# rewire: train and validate on degree-preserving rewired image graphs (rewiring seed = run seed).
+# lambda: LambdaRank-style loss weighted by reciprocal-rank change instead of cross-entropy.
+rewire_r3_seed0 0 --rewire-seed 0
+rewire_r3_seed1 1 --rewire-seed 1
+rewire_r3_seed2 2 --rewire-seed 2
+lambda_r3_seed0 0 --loss lambda_mrr
+lambda_r3_seed1 1 --loss lambda_mrr
+lambda_r3_seed2 2 --loss lambda_mrr
