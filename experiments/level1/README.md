@@ -21,7 +21,7 @@ Kết quả lần chạy kiểm tra được ghi trong log của script; kết q
 `GraphStore` tính sẵn một lần, cho mọi ảnh và câu truy vấn của train/val, chỉ số dòng trong bảng vector phần tử
 và `edge_index` cục bộ (mảng số nguyên). Bảng vector nằm hẳn trong RAM (không memory-map), được chép một lần lên GPU,
 và mỗi batch chỉ lấy vector bằng torch indexing. Val được chấm theo batch 256 câu. Kiểm tra bước 0 chạy trên
-đúng đường mới: R@1 val = 0,43496661337346, 200 truy vấn đầu lệch tối đa 5,9e-6 (ngưỡng 1e-4), thứ tự giống hệt.
+đúng đường mới: R@1 val = 0,43496661337346, 200 truy vấn đầu lệch tối đa 1,96e-5 ở `z_objects` và 5,9e-6 ở điểm trộn (ngưỡng 1e-4), thứ tự giống hệt.
 
 Giây mỗi epoch (gồm cả chấm val), batch hiệu dụng 256:
 
