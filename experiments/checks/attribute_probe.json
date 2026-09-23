@@ -1,0 +1,98 @@
+{
+  "split": "val",
+  "fixed": {
+    "alpha": 0.6,
+    "beta": 0.7,
+    "temperature": 0.05
+  },
+  "results": {
+    "A_none": {
+      "fixed": {
+        "n_queries": 10633,
+        "recall@1": 0.43496661337346,
+        "recall@5": 0.7094893256841908,
+        "recall@10": 0.815856296435625,
+        "mrr": 0.561038752409518
+      },
+      "best": {
+        "alpha": 0.6,
+        "beta": 0.7,
+        "n_queries": 10633,
+        "recall@1": 0.43496661337346,
+        "recall@5": 0.7094893256841908,
+        "recall@10": 0.815856296435625,
+        "mrr": 0.561038752409518
+      },
+      "distinct_texts": 42715,
+      "vector_rows": 42715,
+      "query_adjective_r1": 0.46876162142060246
+    },
+    "B_concat": {
+      "fixed": {
+        "n_queries": 10633,
+        "recall@1": 0.4250916956644409,
+        "recall@5": 0.6980156117746638,
+        "recall@10": 0.8027837863255901,
+        "mrr": 0.5506568410522802
+      },
+      "best": {
+        "alpha": 0.6,
+        "beta": 0.6,
+        "n_queries": 10633,
+        "recall@1": 0.4260321640176808,
+        "recall@5": 0.6997084548104956,
+        "recall@10": 0.8053230508793379,
+        "mrr": 0.5522915464579805
+      },
+      "distinct_texts": 57413,
+      "vector_rows": 57413,
+      "query_adjective_r1": 0.46615842320565265
+    },
+    "C_parts": {
+      "fixed": {
+        "n_queries": 10633,
+        "recall@1": 0.43854039311577164,
+        "recall@5": 0.7161666509921941,
+        "recall@10": 0.8211229192137685,
+        "mrr": 0.565762812850649
+      },
+      "best": {
+        "alpha": 0.5,
+        "beta": 0.8,
+        "n_queries": 10633,
+        "recall@1": 0.44305464121132326,
+        "recall@5": 0.7135333396031224,
+        "recall@10": 0.8167027179535409,
+        "mrr": 0.5661317531089332
+      },
+      "distinct_texts": 59989,
+      "vector_rows": 59989,
+      "query_adjective_r1": 0.476013387876534
+    },
+    "D_parts_triples": {
+      "fixed": {
+        "n_queries": 10633,
+        "recall@1": 0.4251857424997649,
+        "recall@5": 0.6989560801279037,
+        "recall@10": 0.803630207843506,
+        "mrr": 0.5509950929793643
+      },
+      "best": {
+        "alpha": 0.6,
+        "beta": 0.4,
+        "n_queries": 10633,
+        "recall@1": 0.42941785008934447,
+        "recall@5": 0.7026239067055393,
+        "recall@10": 0.8097432521395656,
+        "mrr": 0.5553989322175112
+      },
+      "distinct_texts": 100665,
+      "vector_rows": 100665,
+      "query_adjective_r1": 0.46801785050204536
+    }
+  },
+  "coverage": {
+    "image_graphs_train_val_only": true
+  },
+  "runtime_seconds": null
+}
