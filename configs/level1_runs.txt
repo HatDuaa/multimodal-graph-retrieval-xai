@@ -1,5 +1,5 @@
 # Level 1 validation chain (proposal, not started): one recipe for every row, fast data path,
-# effective batch 256, micro-batch 64, shuffle, gate warm-up epoch 1. Test split is never scored.
+# effective batch 256, micro-batch 128, shuffle, gate warm-up epoch 1. Test split is never scored.
 # <run_name> <seed> [extra flags]
 main_r3_seed0 0
 main_r3_seed1 1

@@ -44,5 +44,5 @@ Bộ nhớ theo micro-batch, 30 bước tối ưu của epoch 1 (`scripts/checks
 | 128 | 4,95 GB | 14,92 GB | 22,91 GB | 17,70 GB | 0,338 |
 | 256 | — | tràn bộ nhớ GPU (OOM) | — | — | — |
 
-Script huấn luyện giờ mặc định dùng `expandable_segments` và micro-batch 64: nhanh gần bằng 128 nhưng chỉ chiếm
-khoảng 10 GB trên máy dùng chung. Batch hiệu dụng vẫn là 256.
+Script huấn luyện giờ mặc định dùng `expandable_segments` và micro-batch 128, mức lớn nhất không tràn bộ nhớ
+(~17,7 GB trên 24 GB; GPU không có người khác dùng nên không cần chừa). Batch hiệu dụng vẫn là 256.

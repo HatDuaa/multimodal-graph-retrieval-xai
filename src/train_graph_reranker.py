@@ -102,7 +102,7 @@ def build_parser():
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--micro-batch-size", type=int, default=64,
+    parser.add_argument("--micro-batch-size", type=int, default=128,
                         help="Per-forward micro batch; gradients accumulate to the effective batch-size.")
     parser.add_argument("--eval-batch-size", type=int, default=256)
     parser.add_argument("--lr", type=float, default=1e-3)
