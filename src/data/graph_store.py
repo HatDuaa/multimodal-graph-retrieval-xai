@@ -1,14 +1,92 @@
-"""Indexed graph structures and memory-mapped frozen vectors for train/val only."""
+"""Graph structures for train/val, precomputed once as integer rows into the frozen part table."""
 import json
-from functools import lru_cache
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import torch
-from torch_geometric.data import Batch, Data
 
 from src.graph.soft_match import PRONOUNS
 from src.utils.config import REPO_ROOT, load_config
+
+
+@dataclass
+class PackedBatch:
+    """The attributes of a PyG ``Batch`` that the reranker reads, built by index arithmetic."""
+    x: torch.Tensor
+    edge_index: torch.Tensor
+    edge_attr: torch.Tensor
+    triple_f: torch.Tensor
+    part_mask: torch.Tensor
+    batch: torch.Tensor
+    num_graphs: int
+
+
+def _flat_positions(starts, counts):
+    """Concatenated positions start_i, ..., start_i + count_i - 1 for every selected graph."""
+    before = np.cumsum(counts) - counts
+    return np.repeat(starts - before, counts) + np.arange(int(counts.sum()), dtype=np.int64)
+
+
+class GraphIndex:
+    """Many small graphs as flat int arrays: part-table rows per node / relation / triple and local edges."""
+
+    NODE_FIELDS = ('node_rows', 'part_mask')
+    EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows')
+
+    def __init__(self, node_counts, edge_counts, **fields):
+        self.node_counts = np.asarray(node_counts, dtype=np.int64)
+        self.edge_counts = np.asarray(edge_counts, dtype=np.int64)
+        self.fields = fields
+        self.node_start = np.cumsum(self.node_counts) - self.node_counts
+        self.edge_start = np.cumsum(self.edge_counts) - self.edge_counts
+
+    def __len__(self):
+        return len(self.node_counts)
+
+    @classmethod
+    def build(cls, parts_list, part_row):
+        node_rows, part_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], []
+        node_counts, edge_counts = [], []
+        for parts in parts_list:
+            node_rows.extend(part_row[f'node:{x}'] for x in parts['node_labels'])
+            part_mask.extend(parts['part_mask'])
+            edge_src.extend(e[0] for e in parts['edges'])
+            edge_dst.extend(e[1] for e in parts['edges'])
+            relation_rows.extend(part_row[f'rel:{x}'] for x in parts['relation_labels'])
+            triple_rows.extend(part_row[f'triple:{x}'] for x in parts['triple_labels'])
+            node_counts.append(len(parts['node_labels']))
+            edge_counts.append(len(parts['edges']))
+        as_int = lambda values: np.asarray(values, dtype=np.int64)  # noqa: E731
+        return cls(node_counts, edge_counts, node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
+                   edge_src=as_int(edge_src), edge_dst=as_int(edge_dst), relation_rows=as_int(relation_rows),
+                   triple_rows=as_int(triple_rows))
+
+    def select(self, indices):
+        indices = np.asarray(indices, dtype=np.int64)
+        node_counts, edge_counts = self.node_counts[indices], self.edge_counts[indices]
+        nodes = _flat_positions(self.node_start[indices], node_counts)
+        edges = _flat_positions(self.edge_start[indices], edge_counts)
+        fields = {k: self.fields[k][nodes] for k in self.NODE_FIELDS}
+        fields.update({k: self.fields[k][edges] for k in self.EDGE_FIELDS})
+        return GraphIndex(node_counts, edge_counts, **fields)
+
+    @staticmethod
+    def concat(items):
+        return GraphIndex(np.concatenate([i.node_counts for i in items]), np.concatenate([i.edge_counts for i in items]),
+                          **{k: np.concatenate([i.fields[k] for i in items])
+                             for k in GraphIndex.NODE_FIELDS + GraphIndex.EDGE_FIELDS})
+
+    def to_batch(self, table, device):
+        """Same tensors as ``Batch.from_data_list`` over per-graph ``Data`` objects, gathered from ``table``."""
+        offsets = np.repeat(self.node_start, self.edge_counts)
+        edge_index = np.stack((self.fields['edge_src'] + offsets, self.fields['edge_dst'] + offsets))
+        graph_of_node = np.repeat(np.arange(len(self), dtype=np.int64), self.node_counts)
+        to = lambda array: torch.from_numpy(array).to(device, non_blocking=True)  # noqa: E731
+        rows = lambda key: table[to(self.fields[key])]  # noqa: E731
+        return PackedBatch(x=rows('node_rows'), edge_index=to(edge_index), edge_attr=rows('relation_rows'),
+                           triple_f=rows('triple_rows'), part_mask=to(self.fields['part_mask']),
+                           batch=to(graph_of_node), num_graphs=len(self))
 
 
 class GraphStore:
@@ -19,6 +97,7 @@ class GraphStore:
         self.base = Path(root) if root else REPO_ROOT
         self.input_paths = []
         features = self.base / self.cfg['paths']['features']
+        # Both tables are read fully into RAM (1.2 GB + 0.5 GB); no memory map on the training path.
         self.part_vectors, self.part_row = self._table(features / 'vg_coco_graph_parts')
         self.part_dim = self.part_vectors.shape[1]
         self.caption_vectors, self.caption_row = self._table(features / 'vg_coco_caption')
@@ -50,10 +129,8 @@ class GraphStore:
     def _table(self, stem):
         self.input_paths.extend([stem.with_suffix('.npy'), stem.with_suffix('.ids.json')])
         meta = json.loads(stem.with_suffix('.ids.json').read_text(encoding='utf-8'))
-        return np.load(stem.with_suffix('.npy'), mmap_mode='r'), {key: row for row, key in enumerate(meta['ids'])}
-
-    def _vectors(self, keys):
-        return torch.from_numpy(np.array(self.part_vectors[[self.part_row[key] for key in keys]], dtype=np.float32))
+        vectors = np.ascontiguousarray(np.load(stem.with_suffix('.npy')), dtype=np.float32)
+        return vectors, {key: row for row, key in enumerate(meta['ids'])}
 
     @staticmethod
     def _graph_parts(graph, query=False):
@@ -77,51 +154,59 @@ class GraphStore:
                     relation_indices=relation_indices,
                     part_mask=[bool(obj['name']) if query else True for obj in kept])
 
-    def tensor_graph(self, raw, query=False):
-        parts = self._graph_parts(raw, query)
-        parts['node_f'] = self._vectors([f'node:{x}' for x in parts['node_labels']])
-        parts['relation_f'] = self._vectors([f'rel:{x}' for x in parts['relation_labels']])
-        parts['triple_f'] = self._vectors([f'triple:{x}' for x in parts['triple_labels']])
-        return parts
+    def precompute(self):
+        """Index every loaded image and query graph once; later batches only gather rows."""
+        if getattr(self, 'image_index', None) is not None:
+            return
+        image_ids = sorted(self.graphs)
+        self.image_position = {image_id: i for i, image_id in enumerate(image_ids)}
+        self.image_index = GraphIndex.build((self._graph_parts(self.graphs[i]) for i in image_ids), self.part_row)
+        caption_ids = list(self.queries)
+        self.query_position = {cid: i for i, cid in enumerate(caption_ids)}
+        self.query_index = GraphIndex.build((self._graph_parts(self.queries[c], query=True) for c in caption_ids),
+                                            self.part_row)
+        self._device_tables = {}
 
-    def image(self, image_id):
-        return self.tensor_graph(self.graphs[int(image_id)])
-
-    def query(self, caption_id):
-        return self.tensor_graph(self.queries[str(caption_id)], query=True)
-
-    def sentence(self, caption_id):
-        return torch.from_numpy(np.array(self.caption_vectors[self.caption_row[str(caption_id)]], dtype=np.float32))
+    def part_table(self, device):
+        """The part vector table as one tensor per device, gathered with torch indexing."""
+        device = torch.device(device)
+        tables = self.__dict__.setdefault('_device_tables', {})
+        if device not in tables:
+            tables[device] = torch.as_tensor(self.part_vectors, dtype=torch.float32).to(device)
+        return tables[device]
 
     def candidates(self, split):
         if split not in self.arrays:
             raise ValueError('Only loaded train/val splits may be requested')
         return self.arrays[split]
 
-    @staticmethod
-    def batch_graphs(graphs, device=None):
-        rows = []
-        for graph in graphs:
-            edges = torch.tensor([[e[0] for e in graph['edges']], [e[1] for e in graph['edges']]], dtype=torch.long)
-            rows.append(Data(x=graph['node_f'], edge_index=edges.reshape(2, -1), edge_attr=graph['relation_f'],
-                             triple_f=graph['triple_f'],
-                             part_mask=torch.tensor(graph.get('part_mask', [True] * len(graph['node_f'])), dtype=torch.bool)))
-        return Batch.from_data_list(rows).to(device)
-
     def batch(self, caption_ids, device='cpu', overrides=None):
-        """Return PyG batches for unique images and all queries, plus index-only candidate maps."""
-        locations = [self.caption_location[str(cid)] for cid in caption_ids]
+        """Query and unique-image batches plus index-only candidate maps; overrides replace stored image graphs."""
+        self.precompute()
+        device = torch.device(device)
+        table = self.part_table(device)
+        caption_ids = [str(cid) for cid in caption_ids]
+        locations = [self.caption_location[cid] for cid in caption_ids]
         candidates = np.stack([self.arrays[split]['candidate_ids'][row] for split, row in locations])
         if np.any(candidates < 0):
             raise ValueError('Model training requires full unpadded candidate pools')
         unique, inverse = np.unique(candidates, return_inverse=True)
-        image_graphs = [self.tensor_graph(overrides[int(i)]) if overrides and int(i) in overrides
-                        else self.image(int(i)) for i in unique]
-        return {'queries': self.batch_graphs([self.query(cid) for cid in caption_ids], device),
-                'images': self.batch_graphs(image_graphs, device),
-                'candidate_index': torch.from_numpy(inverse.reshape(candidates.shape)).to(device),
-                'candidate_ids': candidates, 'image_ids': unique,
-                'clip': torch.tensor(np.stack([self.arrays[s]['clip_scores'][r] for s, r in locations]), device=device),
-                'sentence': torch.stack([self.sentence(cid) for cid in caption_ids]).to(device),
+        overrides = overrides or {}
+        stored = [int(i) for i in unique if int(i) not in overrides]
+        replaced = [int(i) for i in unique if int(i) in overrides]
+        images = self.image_index.select([self.image_position[i] for i in stored])
+        if replaced:
+            images = GraphIndex.concat([images, GraphIndex.build([self._graph_parts(overrides[i]) for i in replaced],
+                                                                  self.part_row)])
+        order = {image_id: row for row, image_id in enumerate(stored + replaced)}
+        candidate_index = np.array([order[int(i)] for i in unique], dtype=np.int64)[inverse.reshape(candidates.shape)]
+        queries = self.query_index.select([self.query_position[cid] for cid in caption_ids])
+        sentence_rows = [self.caption_row[cid] for cid in caption_ids]
+        return {'queries': queries.to_batch(table, device),
+                'images': images.to_batch(table, device),
+                'candidate_index': torch.from_numpy(candidate_index).to(device),
+                'candidate_ids': candidates, 'image_ids': np.array(stored + replaced, dtype=np.int64),
+                'clip': torch.from_numpy(np.stack([self.arrays[s]['clip_scores'][r] for s, r in locations])).to(device),
+                'sentence': torch.from_numpy(self.caption_vectors[sentence_rows]).to(device),
                 'target': torch.tensor([int(self.arrays[s]['gold_rank'][r]) - 1 for s, r in locations], device=device),
                 'gold': [int(self.arrays[s]['gold'][r]) for s, r in locations]}

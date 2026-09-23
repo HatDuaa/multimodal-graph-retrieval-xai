@@ -158,3 +158,36 @@ def test_explanations_use_candidate_context_and_remove_indexed_parts():
     assert len(store.graphs[1]['objects']) == 2
     remaining = remove_parts(store.graphs[1], [0], [])
     assert remaining['objects'][0]['id'] == 8 and remaining['relations'] == []
+
+
+def test_packed_batch_equals_pyg_batch_of_per_graph_data():
+    store = fake_store()
+    store.graphs[3] = {'objects': [], 'relations': []}
+    store.arrays['val']['candidate_ids'] = np.array([[2, 3, 1]])
+    store.arrays['val']['clip_scores'] = np.array([[.5, .2, .1]], dtype='float32')
+    packed = store.batch(['q'])
+    table = torch.from_numpy(store.part_vectors)
+    expected = []
+    for image_id in packed['image_ids']:
+        parts = store._graph_parts(store.graphs[int(image_id)])
+        rows = lambda prefix, labels: table[[store.part_row[f'{prefix}:{x}'] for x in labels]].reshape(-1, 512)  # noqa: E731
+        expected.append(Data(x=rows('node', parts['node_labels']),
+                             edge_index=torch.tensor([[e[0] for e in parts['edges']], [e[1] for e in parts['edges']]],
+                                                     dtype=torch.long).reshape(2, -1),
+                             edge_attr=rows('rel', parts['relation_labels']),
+                             triple_f=rows('triple', parts['triple_labels']),
+                             part_mask=torch.tensor(parts['part_mask'], dtype=torch.bool)))
+    expected = Batch.from_data_list(expected)
+    for key in ('x', 'edge_index', 'edge_attr', 'triple_f', 'part_mask', 'batch'):
+        torch.testing.assert_close(getattr(packed['images'], key), getattr(expected, key), rtol=0, atol=0)
+    assert packed['images'].num_graphs == expected.num_graphs == 3
+    assert packed['image_ids'][packed['candidate_index'][0].numpy()].tolist() == [2, 3, 1]
+
+
+def test_override_graph_keeps_candidate_mapping():
+    store = fake_store()
+    modified = remove_parts(store.graphs[1], [1], [])
+    packed = store.batch(['q'], overrides={1: modified})
+    assert packed['image_ids'][packed['candidate_index'][0].numpy()].tolist() == [1, 2]
+    row = int(packed['candidate_index'][0, 0])
+    assert int((packed['images'].batch == row).sum()) == 1
