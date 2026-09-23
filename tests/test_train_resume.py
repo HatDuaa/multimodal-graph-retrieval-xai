@@ -84,3 +84,23 @@ def test_existing_run_is_refused_without_resume(tmp_path):
     except FileExistsError:
         return
     raise AssertionError('second run into the same folder must be refused')
+
+
+def test_lambda_mrr_loss_prefers_gold_on_top_and_weights_by_reciprocal_rank():
+    from src.train_graph_reranker import lambda_mrr_loss
+    target = torch.tensor([0, 0])
+    good = torch.tensor([[3., 1., 0., -1.], [3., 1., 0., -1.]])
+    bad = torch.tensor([[0., 3., 1., -1.], [0., 3., 1., -1.]])
+    assert lambda_mrr_loss(good, target) < lambda_mrr_loss(bad, target)
+    scores = bad.clone().requires_grad_(True)
+    lambda_mrr_loss(scores, target).backward()
+    assert scores.grad[0, 0] < 0 and scores.grad[0, 1] > 0  # push gold up, the top impostor down
+    assert scores.grad[0, 1] > scores.grad[0, 3]  # the pair that costs most reciprocal rank weighs most
+
+
+def test_lambda_loss_run_trains(tmp_path):
+    cfg = write_tiny_dataset(tmp_path)
+    store = GraphStore(cfg, root=tmp_path)
+    args = ['--run-name', 'x', '--epochs', '1', '--batch-size', '4', '--micro-batch-size', '2', '--loss', 'lambda_mrr']
+    result = train(build_parser().parse_args(args), store, tmp_path / 'lambda', torch.device('cpu'), cfg)
+    assert result['last']['n_queries'] == 4

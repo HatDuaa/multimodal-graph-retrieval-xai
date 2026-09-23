@@ -49,9 +49,26 @@ def shuffled_rows(rows, seed, epoch):
     return [rows[index] for index in rng.permutation(len(rows))]
 
 
-def batch_loss(model, store, caption_ids, device):
+def lambda_mrr_loss(scores, target):
+    """LambdaRank-style pairwise loss for one relevant candidate, weighted by the change in reciprocal rank.
+
+    Each (gold, other) pair costs log(1 + exp(-(s_gold - s_other))), weighted by |1/rank_gold - 1/rank_other|
+    under the current ranking (no gradient through the weights); weights are normalised per query.
+    """
+    ranks = scores.detach().argsort(-1, descending=True).argsort(-1).float() + 1
+    gold_rank = ranks.gather(1, target[:, None])
+    weights = (1 / gold_rank - 1 / ranks).abs()
+    weights = weights.scatter(1, target[:, None], 0.)
+    margins = scores.gather(1, target[:, None]) - scores
+    pair = F.softplus(-margins) * weights
+    return (pair.sum(-1) / weights.sum(-1).clamp_min(1e-12)).mean()
+
+
+def batch_loss(model, store, caption_ids, device, loss="cross_entropy"):
     batch = store.batch(caption_ids, device)
     scores, _ = model(batch)
+    if loss == "lambda_mrr":
+        return lambda_mrr_loss(scores / model.loss_temperature(), batch['target'])
     return F.cross_entropy(scores / model.loss_temperature(), batch['target'])
 
 
@@ -95,6 +112,16 @@ def save_atomic(payload, path: Path):
     os.replace(tmp, path)
 
 
+def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt"):
+    """Rebuild a finished run's model from its config.json flags and load one of its checkpoints."""
+    options = json.loads((run_dir / "config.json").read_text(encoding="utf-8"))["args"]
+    model = GraphReranker(options["adaptive_weights"], options["use_gat"], options["use_triple_channel"],
+                          options["use_edges"], options["query_graph_encoder"]).to(device)
+    state = torch.load(run_dir / checkpoint, map_location=device, weights_only=False)
+    model.load_state_dict(state["model"])
+    return model.eval(), state["epoch"], state["metrics"]
+
+
 def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=0)
@@ -111,6 +138,9 @@ def build_parser():
     parser.add_argument("--use-triple-channel", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--use-edges", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--query-graph-encoder", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--loss", choices=("cross_entropy", "lambda_mrr"), default="cross_entropy")
+    parser.add_argument("--rewire-seed", type=int,
+                        help="Train and validate on image graphs with degree-preserving rewired edges (control).")
     parser.add_argument("--resume", action="store_true",
                         help="Continue this run from its checkpoint_last.pt (start fresh if it has none).")
     parser.add_argument("--stop-after-epoch", type=int,
@@ -184,7 +214,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
             micro = max(1, min(args.micro_batch_size, len(batch)))
             for micro_start in range(0, len(batch), micro):
                 part = batch[micro_start:micro_start + micro]
-                loss = batch_loss(model, store, [caption_id for _, caption_id in part], device)
+                loss = batch_loss(model, store, [caption_id for _, caption_id in part], device,
+                                  getattr(args, "loss", "cross_entropy"))
                 (loss * (len(part) / len(batch))).backward()
                 del loss
             optimizer.step()
@@ -229,6 +260,8 @@ def main() -> None:
     cfg = load_config()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     store = GraphStore(cfg)
+    if args.rewire_seed is not None:
+        store.use_rewired_graphs(args.rewire_seed)
     run_dir = resolve(cfg, "experiments") / "level1" / "gat" / args.run_name
     if args.eval_only:
         set_seed(args.seed)

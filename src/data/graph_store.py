@@ -167,6 +167,32 @@ class GraphStore:
                                             self.part_row)
         self._device_tables = {}
 
+    def replace_image_graphs(self, graphs, extra_vectors=None, extra_keys=()):
+        """Swap in other image graphs (corruption controls); extra part vectors are appended to the table."""
+        if extra_vectors is not None and len(extra_keys):
+            missing = [key for key in extra_keys if key not in self.part_row]
+            keep = [row for row, key in enumerate(extra_keys) if key not in self.part_row]
+            offset = len(self.part_vectors)
+            self.part_vectors = np.concatenate([self.part_vectors, np.asarray(extra_vectors, dtype=np.float32)[keep]])
+            self.part_row.update({key: offset + row for row, key in enumerate(missing)})
+        self.graphs = dict(graphs)
+        self.image_index = None
+        self._device_tables = {}
+
+    def use_rewired_graphs(self, seed):
+        """Replace every loaded image graph by its degree-preserving rewiring for ``seed``.
+
+        Rewired triple phrases that the main table lacks come from
+        ``vg_coco_graph_parts_rewire_seed<seed>`` (``scripts/build_rewired_parts.py``).
+        """
+        from src.graph.corruption import rewire_graphs
+        rewired = rewire_graphs(self.graphs, seed)
+        stem = self.base / self.cfg['paths']['features'] / f'vg_coco_graph_parts_rewire_seed{seed}'
+        vectors, rows = self._table(stem)
+        keys = sorted(rows, key=rows.get)
+        self.replace_image_graphs(rewired, vectors, keys)
+        self.precompute()  # fails loudly if a rewired phrase has no vector
+
     def part_table(self, device):
         """The part vector table as one tensor per device, gathered with torch indexing."""
         device = torch.device(device)
