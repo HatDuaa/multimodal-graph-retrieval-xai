@@ -1,4 +1,9 @@
-"""Verify the fresh graph reranker reproduces the frozen three-channel reference on val."""
+"""Verify the fresh graph reranker reproduces the frozen three-channel reference on val.
+
+Runs through the same precomputed batch path (``GraphStore.batch``) and batched validation
+(``evaluate_val``) that training uses, on the training device unless ``--device`` says otherwise.
+"""
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -8,62 +13,45 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.graph_store import GraphStore  # noqa: E402
-from src.eval.metrics import evaluate  # noqa: E402
 from src.models.graph_reranker import GraphReranker  # noqa: E402
+from src.train_graph_reranker import evaluate_val  # noqa: E402
 
 
 def main() -> None:
-    cfg = json.loads((Path("configs") / "default.yaml").read_text()) if False else None
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--batch-size", type=int, default=256)
+    args = parser.parse_args()
+    device = torch.device(args.device)
     store = GraphStore()
-    model = GraphReranker(adaptive_weights=False).eval()
+    model = GraphReranker(adaptive_weights=False).to(device).eval()
     reference = np.load("experiments/checks/three_channel_probe_reference_scores.npz")
-    candidate = {str(caption): ids.tolist() for caption, ids in zip(reference["caption_ids"], reference["candidate_ids"])}
-    max_diff = {key: 0.0 for key in ("objects", "triples", "z_objects", "z_triples", "graph", "fused")}
-    for row, caption_id in enumerate(reference["caption_ids"]):
-        caption_id = str(caption_id)
-        ids = candidate[caption_id]
-        query = store.query(caption_id)
-        images = [store.image(int(image_id)) for image_id in ids]
-        clip = torch.from_numpy(reference["clip"][row])
-        with torch.no_grad():
-            batch = {'queries': store.batch_graphs([query]), 'images': store.batch_graphs(images),
-                     'candidate_index': torch.arange(len(ids), dtype=torch.long)[None], 'clip': clip[None],
-                     'sentence': store.sentence(caption_id)[None]}
-            fused, details = model(batch)
-            fused = fused.squeeze(0)
-        checks = {"objects": details["objects"].numpy(), "triples": details["triples"].numpy(),
-                  "z_objects": details["z_objects"].numpy(), "z_triples": details["z_triples"].numpy(),
-                  "graph": details["graph"].numpy(), "fused": fused.numpy()}
-        for key, actual in checks.items():
-            expected = reference[key][row]
-            max_diff[key] = max(max_diff[key], float(np.nanmax(np.abs(actual - expected))))
-            if not np.allclose(actual, expected, atol=1e-4, equal_nan=True):
-                raise SystemExit(f"first-200 mismatch: caption={caption_id}, row={row}, channel={key}, "
-                                 f"max_abs={np.nanmax(np.abs(actual - expected))}")
-        if not np.array_equal(np.argsort(-checks["fused"], kind="stable"),
+    caption_ids = [str(caption) for caption in reference["caption_ids"]]
+    with torch.no_grad():
+        batch = store.batch(caption_ids, device)
+        if not np.array_equal(batch["candidate_ids"], reference["candidate_ids"]):
+            raise SystemExit("first-200 candidate ids differ from the reference")
+        # The reference was scored with its own CLIP column; use it so only the graph path is compared.
+        batch["clip"] = torch.from_numpy(reference["clip"]).to(device)
+        fused, details = model(batch)
+    checks = {"objects": details["objects"], "triples": details["triples"], "z_objects": details["z_objects"],
+              "z_triples": details["z_triples"], "graph": details["graph"], "fused": fused}
+    checks = {key: value.cpu().numpy() for key, value in checks.items()}
+    max_diff = {}
+    for key, actual in checks.items():
+        expected = reference[key]
+        max_diff[key] = float(np.nanmax(np.abs(actual - expected)))
+        for row in range(len(caption_ids)):
+            if not np.allclose(actual[row], expected[row], atol=1e-4, equal_nan=True):
+                raise SystemExit(f"first-200 mismatch: caption={caption_ids[row]}, row={row}, channel={key}, "
+                                 f"max_abs={np.nanmax(np.abs(actual[row] - expected[row]))}")
+    for row in range(len(caption_ids)):
+        if not np.array_equal(np.argsort(-checks["fused"][row], kind="stable"),
                               np.argsort(-reference["fused"][row], kind="stable")):
-            raise SystemExit(f"first-200 order mismatch: caption={caption_id}, row={row}")
+            raise SystemExit(f"first-200 order mismatch: caption={caption_ids[row]}, row={row}")
     print("first_200_max_abs_diff", json.dumps(max_diff))
     print("reference_first_200_order", "identical")
-    arrays = store.candidates("val")
-    ranked, golds = [], []
-    for row in range(len(arrays["caption_ids"])):
-        caption_id = str(arrays["caption_ids"][row])
-        ids = [int(image_id) for image_id in arrays["candidate_ids"][row]]
-        images = [store.image(image_id) for image_id in ids]
-        with torch.no_grad():
-            batch = {'queries': store.batch_graphs([store.query(caption_id)]), 'images': store.batch_graphs(images),
-                     'candidate_index': torch.arange(len(ids), dtype=torch.long)[None],
-                     'clip': torch.from_numpy(arrays["clip_scores"][row])[None],
-                     'sentence': store.sentence(caption_id)[None]}
-            scores, _ = model(batch)
-            scores = scores.squeeze(0)
-        order = torch.argsort(scores, descending=True, stable=True).tolist()
-        ranked.append([ids[index] for index in order])
-        golds.append(int(arrays["gold"][row]))
-        if (row + 1) % 1000 == 0:
-            print(f"scored {row + 1}/{len(arrays['caption_ids'])}", flush=True)
-    metrics = evaluate(ranked, golds)
+    metrics = evaluate_val(model, store, store.candidates("val"), device, args.batch_size)
     print("full_val_metrics", json.dumps(metrics))
     if abs(metrics["recall@1"] - 0.434967) > 1e-6:
         raise SystemExit(f"full-val R@1 mismatch: {metrics['recall@1']}, expected 0.434967 +/- 1e-6")
