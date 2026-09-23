@@ -14,6 +14,9 @@ import sys
 import time
 from pathlib import Path
 
+# Variable-size graph batches fragment the default CUDA cache (reserved ~1.5x allocated without this).
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+
 import numpy as np
 import torch
 from torch.nn import functional as F
@@ -99,7 +102,7 @@ def build_parser():
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--micro-batch-size", type=int, default=256,
+    parser.add_argument("--micro-batch-size", type=int, default=64,
                         help="Per-forward micro batch; gradients accumulate to the effective batch-size.")
     parser.add_argument("--eval-batch-size", type=int, default=256)
     parser.add_argument("--lr", type=float, default=1e-3)
@@ -134,7 +137,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
     log = run_dir / "log.jsonl"
     best, stale, best_metrics, last_metrics, start_epoch = -1.0, 0, None, None, 1
     if args.resume and last_path.exists():
-        state = torch.load(last_path, map_location=device, weights_only=False)
+        # RNG states must stay CPU byte tensors; the model and optimizer copy their tensors to the device.
+        state = torch.load(last_path, map_location="cpu", weights_only=False)
         model.load_state_dict(state["model"])
         optimizer.load_state_dict(state["optimizer"])
         best, stale = state["best"], state["stale"]
