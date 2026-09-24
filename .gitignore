@@ -29,3 +29,9 @@ data/processed/
 
 # per-query rankings are large; metrics files stay in git
 experiments/**/top*_*.json
+
+# smoke and size-limited debug artifacts (not part of reported results)
+data/splits/*_limit*.json
+experiments/level1/gat/smoke-*/
+experiments/level1/data_packaging/*_limit*.json
+experiments/level1/data_packaging/archive-smoke/

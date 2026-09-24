@@ -60,3 +60,18 @@ data/
 Ảnh của tập con, đặc trưng CLIP, đồ thị và checkpoint đặt trên Google Drive của nhóm, cấu trúc thư mục giống hệt `data/` và `experiments/` để tải về là đặt đúng chỗ. Link Drive: <https://drive.google.com/drive/folders/11xG7r4oX884RmKfmLjtFQeLVpcSrv6cV?usp=sharing>.
 
 Quy tắc: file trên Drive **không sửa tại chỗ**. Khi cần đổi thì tạo tên mới (ví dụ `image_feats_v2.npy`) và cập nhật `MANIFEST.md`, để mọi người luôn chạy trên cùng một bản.
+
+## Gói dữ liệu re-ranker đồ thị
+
+Script `scripts/build_graph_data.py` sinh đồ thị không lọc VG150, đồ thị truy vấn, bảng đếm nhãn, bảng vector CLIP của các mảnh và ứng viên top-50 theo nhóm train cùng ứng viên val lấy từ baseline đã có. Không có tập dev; val dùng để dừng sớm và chọn mô hình, test không được chạm tới. Các file lớn được lưu ngoài Git; kích thước và SHA-256 sẽ được điền sau lần chạy đầy đủ (`TODO(run)`).
+
+| File | Kích thước | SHA-256 |
+|---|---:|---|
+| `data/splits/vg_coco_train_groups.json` | TODO(run) | TODO(run) |
+| `data/graphs/vg_coco_scene_graphs.jsonl` | TODO(run) | TODO(run) |
+| `data/processed/query_graphs_{train,val,test}.json` | TODO(run) | TODO(run) |
+| `data/features/vg_coco_graph_parts.npy` + `.ids.json` | TODO(run) | TODO(run) |
+| `data/processed/candidates_train.npz` | TODO(run) | TODO(run) |
+| `data/processed/candidates_val.npz` | TODO(run) | TODO(run) |
+
+Visual Genome `attributes.json.zip` (SHA-256 `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7`, 83 280 561 bytes) được tải bởi `scripts/download_data.py` để bổ sung thuộc tính màu/kích thước cho phép thử. File giải nén khoảng 0,46 GB và không commit.

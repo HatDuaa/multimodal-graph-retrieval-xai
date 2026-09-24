@@ -61,3 +61,31 @@ Sinh bởi `scripts/checks/soft_graph_rerank_probe.py` ngày 2026-09-19; khoá t
 | `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176825 | `5dc2be646f18a0d11025842e171f56315197e6871bfe5d68a13610e1f31e5543` |
 
 Ghi chú: các file trước đó (encoder `ViT-B-32/openai`) được lưu trữ trên máy GPU tại `data/features/archive-vit-b-32-gelu/`. Ai đã tải feature từ Drive trước thay đổi này cần tải lại.
+
+### Gói dữ liệu re-ranker đồ thị
+
+Sinh bởi `src.data.train_groups` và `scripts/build_graph_data.py`; kích thước và SHA-256 đo trên máy GPU ngày 2026-09-23 (nhiều file trong một dòng thì theo đúng thứ tự tên).
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/splits/vg_coco_train_groups.json` | 703407 | `235ddfdde7c65e711a1e1f34232743cef071b4fca8b977602c41cfc64944547e` |
+| `data/graphs/vg_coco_scene_graphs.jsonl` | 91246921 | `1f65f3e24e4f2bcb9e390e1092aa12f764154a398d3e163fffc237b837f41788` |
+| `data/processed/query_graphs_{train,val,test}.json` | 110566228<br>4999446<br>5026707 | `fb79548ba4565fa6a7d3f141bebed3edd62f6891e0de1d38c6da14929107bb04`<br>`f2f18a871e9cf001ad8b8ec2712b911cf64cfb5ea148525e08ab35ec83c32412`<br>`e5972020e319891c05253c39bf91ca35b103740bbad7c3e505414745e8b4f84e` |
+| `data/features/vg_coco_graph_parts.npy` + `.ids.json` | 1192110208<br>17039232 | `555eebcfef67d57bdd56d4813abfa109186de910e12beb4b7266244ed1adc5d3`<br>`bec0332e783afd5566b5326af2625fe68de3b4e1e246b48361304593c884e929` |
+| `data/processed/candidates_train.npz` | 155954210 | `549083b1756df5a467887cc8d860a2d056f6f93878f088c819e0bffb6053f958` |
+| `data/processed/candidates_val.npz` | 7064252 | `ec4bc3432594d9923b1de7ac4ff33b1511d334690a8b681768fd9637ede91d79` |
+| `data/processed/candidates_test.npz` (`scripts/evaluate_test.py`, từ `top50_test.json` của baseline) | 7018626 | `75448b186b67e6cd98f36fcb418e15aabf7c3e587a6630a131cb9251eb759a86` |
+| `data/raw/visual_genome/attributes.json.zip` | 83280561 | `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7` |
+
+### Vector bộ ba của đồ thị nối lại cạnh (đối chứng)
+
+Sinh bởi `scripts/build_rewired_parts.py --seed k` (chỉ đồ thị train/val; chỉ gồm cụm bộ ba chưa có trong `vg_coco_graph_parts`), dùng cho `scripts/checks/graph_controls.py --control rewire` và các run `rewire_r3_seed<k>`.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/features/vg_coco_graph_parts_rewire_seed0.npy` | 719802496 | `c59e92ccb0313ce19f71166d67f249c36fc17acfc7191e2e3f887ff1700e226a` |
+| `data/features/vg_coco_graph_parts_rewire_seed0.ids.json` | 10606326 | `38e5b591d5367d0384128b74b91ecae3dd008ac67a699ec45d36d6da0082d497` |
+| `data/features/vg_coco_graph_parts_rewire_seed1.npy` | 721426560 | `7e4b3ca4da67f95440420f3f38473bdb709229c42693d61661b34d08a14c5875` |
+| `data/features/vg_coco_graph_parts_rewire_seed1.ids.json` | 10631284 | `1dc918602f801f58c011bdc8feae348886aa026184c670dd0157311812407a7e` |
+| `data/features/vg_coco_graph_parts_rewire_seed2.npy` | 721016960 | `fc1c076d410bc1b7ac8a67bfe3f0941459515ea2b18dcd78c767c5540da39e56` |
+| `data/features/vg_coco_graph_parts_rewire_seed2.ids.json` | 10622224 | `a3c2ed7fdaf63742a9d013047bac007aee3224828d8a9a9d9a6ab1c53de01a90` |

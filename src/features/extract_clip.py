@@ -51,13 +51,14 @@ class ClipEncoder:
         return (x / x.norm(dim=-1, keepdim=True)).cpu().numpy().astype(np.float32)
 
 
-def save_features(path: str | Path, feats: np.ndarray, ids: Sequence, encoder_name: str) -> None:
+def save_features(path: str | Path, feats: np.ndarray, ids: Sequence, encoder_name: str,
+                  dtype: np.dtype | type = np.float32) -> None:
     """Write <path>.npy plus <path>.ids.json; row i of the matrix belongs to ids[i]."""
     path = Path(path)
     assert len(ids) == len(feats), (len(ids), len(feats))
     assert len(set(ids)) == len(ids), "ids must be unique"
     path.parent.mkdir(parents=True, exist_ok=True)
-    np.save(path.with_suffix(".npy"), feats.astype(np.float32))
+    np.save(path.with_suffix(".npy"), feats.astype(dtype))
     meta = {"encoder": encoder_name, "dim": int(feats.shape[1]), "ids": list(ids)}
     path.with_suffix(".ids.json").write_text(json.dumps(meta), encoding="utf-8")
 
