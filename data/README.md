@@ -7,7 +7,7 @@ Dữ liệu lớn **không commit**. Git chỉ giữ: file split (`data/splits/`
 | Bộ | Dùng cho | Nguồn | Trạng thái |
 |---|---|---|---|
 | Visual Genome ∩ MS-COCO | Cấp độ 1 | Chú thích Visual Genome v1.4 (objects, relationships, alias) + split Karpathy của COCO (kèm 5 caption mỗi ảnh). Hai bộ dùng chung ảnh, nối bằng trường `coco_id` trong `image_data.json`. | Script tải đã có |
-| MKG-W | Cấp độ 2 | Kho mã của NativE / MMRNS | Chưa có script |
+| MKG-W | Cấp độ 2 | Kho mã của NativE / MMRNS + Wikidata (mô tả, ảnh) | Script đã có, xem dưới |
 | MMKG tiếng Việt | Cấp độ 3 | Nhóm tự xây | Chưa bắt đầu |
 
 ## Tải chú thích Visual Genome ∩ COCO
@@ -43,6 +43,25 @@ python scripts/download_images.py                        # cả 51 208 ảnh, ~7
 **Link Drive của nhóm:** <https://drive.google.com/drive/folders/11xG7r4oX884RmKfmLjtFQeLVpcSrv6cV?usp=sharing> → thư mục `data/features/`. Tải cả 4 file về đặt đúng vào `data/features/` trong repo, rồi đối chiếu checksum với `MANIFEST.md`.
 
 Chỉ chạy `scripts/extract_features.py` khi đổi encoder; khi đó phải tải đủ 51 208 ảnh trước (script từ chối chạy nếu thiếu ảnh) và phát hành file mới với tên mới.
+
+## MKG-W (cấp độ 2)
+
+NativE chỉ phát hành triple + URI Wikidata + feature trích sẵn, **không có mô tả text và ảnh gốc**; hai thứ đó lấy lại từ Wikidata bằng chính URI. Ba bước (Đạt phụ trách, chi tiết: `experiments/level2/native-repro/README.md`):
+
+```bash
+# 1. Clone zjukg/NativE về ~/work/NativE (đường dẫn chỉnh trong configs/default.yaml, mục mkgw),
+#    tải embeddings theo README của họ, rồi rebuild thư viện C: cd mmkgc && bash make.sh
+
+# 2. Lấy label / mô tả (en + vi) / alias / tên file ảnh P18 cho 15 000 thực thể (~20 phút, resumable)
+python scripts/fetch_mkgw_wikidata.py
+
+# 3. Dựng split retrieval: che tên thực thể trong mô tả làm truy vấn, chia 80/10/10 theo seed
+python -m src.data.build_mkgw_split
+```
+
+- Split ở **mức thực thể** (một thực thể chỉ nằm trong một split); triple KGC gốc của NativE được chép ra `data/processed/mkgw_triples.jsonl` kèm nhãn split gốc — cạnh/tín hiệu thống kê sau này chỉ được dùng phần `kgc_split == "train"`.
+- Ảnh thực thể là link Wikimedia Commons (trường `url` trong file split, ảnh thu nhỏ 640 px); tải bằng `scripts/download_images.py` khi cần (script dùng chung, đọc trường `url`).
+- Embedding thực thể từ checkpoint NativE đã train: `python scripts/export_native_embeddings.py --checkpoint <path> --what ent img_proj text_proj` → `data/features/mkgw_native_*.npy` theo format chung.
 
 ## Cấu trúc thư mục
 
