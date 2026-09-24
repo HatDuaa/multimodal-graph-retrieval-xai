@@ -61,3 +61,17 @@ Sinh bởi `scripts/checks/soft_graph_rerank_probe.py` ngày 2026-09-19; khoá t
 | `data/features/vg_coco_val_graph_parts.ids.json` | — | 1176825 | `5dc2be646f18a0d11025842e171f56315197e6871bfe5d68a13610e1f31e5543` |
 
 Ghi chú: các file trước đó (encoder `ViT-B-32/openai`) được lưu trữ trên máy GPU tại `data/features/archive-vit-b-32-gelu/`. Ai đã tải feature từ Drive trước thay đổi này cần tải lại.
+
+## MKG-W (gói cấp độ 2, Đạt)
+
+Sinh ngày 2026-09-24. Cache Wikidata: `scripts/fetch_mkgw_wikidata.py`; split + triple: `python -m src.data.build_mkgw_split` (seed 0). Hai file không commit (`wikidata_entities.jsonl`, `mkgw_triples.jsonl`) chia sẻ qua Drive, cấu trúc thư mục như dưới.
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `data/raw/mkgw/wikidata_entities.jsonl` | 3564691 | `8e1aa6387e9a21a5067b577b1d2deae1651232cba54d30f8232685908c689daf` |
+| `data/splits/mkgw_train.json` | 1576400 | `60df300d9c2253626a70d9459683aa0f096d9243d58c27589cdd12a5fbaa9ee0` |
+| `data/splits/mkgw_val.json` | 196433 | `14558c9d5212ddeb23d851f82f1815144ecfb75d79254270096c7e79d7108b50` |
+| `data/splits/mkgw_test.json` | 198249 | `0b171d52587730bb1993d1248a283b2f470a526ba32d5fe3a9baab7d9ea82b11` |
+| `data/processed/mkgw_triples.jsonl` | 2262289 | `40ccfa72ce54d9d2c6a23e9ed50ea571255425e20cf1b0cf6c2c5e2e3cecbedb` |
+
+Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.

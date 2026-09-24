@@ -12,3 +12,10 @@ Sinh bởi `python -m src.data.build_split`. Không sửa tay.
 | train | 46944 | 234854 |
 | val | 2126 | 10633 |
 | test | 2138 | 10696 |
+
+## MKG-W retrieval split (built {"seed": 0, "lang": "en"})
+
+- Cache: 15000 entities; usable (description + image + non-empty masked query): 5752
+- Dropped: {'missing': 0, 'no_desc': 62, 'no_image': 9186, 'empty_query': 0}
+- Split sizes: train 4602, val 575, test 575
+- KGC triples copied with their NativE split: 42746
