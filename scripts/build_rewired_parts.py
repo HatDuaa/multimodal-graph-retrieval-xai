@@ -1,4 +1,4 @@
-"""Encode the triple phrases created by degree-preserving edge rewiring (train/val image graphs only).
+"""Encode the triple phrases created by degree-preserving edge rewiring (train/val graphs, or test with --test).
 
 Writes data/features/vg_coco_graph_parts_rewire_seed<k>.npy/.ids.json holding only phrases that the main part
 table lacks, with the same frozen CLIP text encoder and the same raw-text convention as triples in that table.
@@ -20,16 +20,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--batch-size", type=int, default=256)
+    parser.add_argument("--test", action="store_true",
+                        help="Encode phrases of rewired TEST graphs into a separate *_test table (final evaluation only).")
     args = parser.parse_args()
     cfg = load_config()
-    stem = resolve(cfg, "features") / f"vg_coco_graph_parts_rewire_seed{args.seed}"
+    splits = ("test",) if args.test else ("train", "val")
+    stem = resolve(cfg, "features") / f"vg_coco_graph_parts_rewire_seed{args.seed}{'_test' if args.test else ''}"
     if stem.with_suffix(".npy").exists() or stem.with_suffix(".ids.json").exists():
         raise SystemExit(f"refusing to overwrite {stem}")
     graphs = {}
     with (resolve(cfg, "graphs") / "vg_coco_scene_graphs.jsonl").open(encoding="utf-8") as handle:
         for line in handle:
             graph = json.loads(line)
-            if graph["split"] in ("train", "val"):
+            if graph["split"] in splits:
                 graphs[int(graph["image_id"])] = graph
     known = set(json.loads((resolve(cfg, "features") / "vg_coco_graph_parts.ids.json").read_text(encoding="utf-8"))["ids"])
     texts = sorted(t for t in triple_texts(rewire_graphs(graphs, args.seed)) if f"triple:{t}" not in known)

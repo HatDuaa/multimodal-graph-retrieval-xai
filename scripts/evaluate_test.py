@@ -98,12 +98,17 @@ def main() -> None:
     if output.exists():
         raise SystemExit(f"{output} exists: test results are computed once and never recomputed")
     per_seed, checkpoints = {}, {}
+    original = dict(store.graphs)
     for run in args.runs:
         options = json.loads((RUNS / run / "config.json").read_text(encoding="utf-8"))["args"]
         model, epoch, val = load_run_model(RUNS / run, device)
+        # A model trained on rewired graphs is scored on rewired test graphs (same rewiring seed).
+        if options.get("rewire_seed") is not None:
+            store.use_rewired_graphs(options["rewire_seed"], "_test")
         metrics = evaluate_val(model, store, arrays, device)
+        store.replace_image_graphs(original)
         per_seed[int(options["seed"])] = scalars(metrics)
-        checkpoints[run] = {"epoch": epoch, "val_recall@1": val["recall@1"],
+        checkpoints[run] = {"epoch": epoch, "val_recall@1": val["recall@1"], "rewire_seed": options.get("rewire_seed"),
                             "checkpoint_sha256": sha256(RUNS / run / "checkpoint_best.pt")}
         print(run, "test", json.dumps({k: metrics[k] for k in METRICS}), flush=True)
     write_metrics(output, method=args.method, dataset="vg_coco", split="test", per_seed=per_seed,

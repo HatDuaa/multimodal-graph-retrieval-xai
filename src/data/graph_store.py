@@ -181,7 +181,7 @@ class GraphStore:
         self.image_index = None
         self._device_tables = {}
 
-    def use_rewired_graphs(self, seed):
+    def use_rewired_graphs(self, seed, table_suffix=''):
         """Replace every loaded image graph by its degree-preserving rewiring for ``seed``.
 
         Rewired triple phrases that the main table lacks come from
@@ -189,7 +189,7 @@ class GraphStore:
         """
         from src.graph.corruption import rewire_graphs
         rewired = rewire_graphs(self.graphs, seed)
-        stem = self.base / self.cfg['paths']['features'] / f'vg_coco_graph_parts_rewire_seed{seed}'
+        stem = self.base / self.cfg['paths']['features'] / f'vg_coco_graph_parts_rewire_seed{seed}{table_suffix}'
         vectors, rows = self._table(stem)
         keys = sorted(rows, key=rows.get)
         self.replace_image_graphs(rewired, vectors, keys)
