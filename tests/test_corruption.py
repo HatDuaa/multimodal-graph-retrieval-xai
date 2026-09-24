@@ -53,3 +53,12 @@ def test_replacing_image_graphs_changes_the_batch_and_extends_the_table():
     assert store.part_row['triple:new phrase'] == rows_before
     corrupted = store.batch(['q'])
     assert clean['images'].x.shape != corrupted['images'].x.shape or not np.allclose(clean['images'].x, corrupted['images'].x)
+
+
+def test_graph_store_opens_test_only_when_explicitly_allowed():
+    import pytest
+    from src.data.graph_store import GraphStore
+    for kwargs in ({'splits': ('test',)}, {'splits': ('train', 'test')}, {'splits': ('train', 'test'), 'allow_test': True},
+                   {'splits': ('val',), 'allow_test': True}, {'splits': ()}):
+        with pytest.raises(ValueError):
+            GraphStore(cfg={'paths': {}}, **kwargs)

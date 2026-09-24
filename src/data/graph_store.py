@@ -90,9 +90,11 @@ class GraphIndex:
 
 
 class GraphStore:
-    def __init__(self, cfg=None, root=None, splits=("train", "val")):
-        if not set(splits) <= {"train", "val"}:
-            raise ValueError("GraphStore permits train and val only")
+    def __init__(self, cfg=None, root=None, splits=("train", "val"), allow_test=False):
+        # Test is opened only by the one-time final evaluation (scripts/evaluate_test.py), never with train.
+        allowed = {"test"} if allow_test else {"train", "val"}
+        if not splits or not set(splits) <= allowed:
+            raise ValueError("GraphStore permits train and val only; test needs allow_test=True and splits=('test',)")
         self.cfg = cfg or load_config()
         self.base = Path(root) if root else REPO_ROOT
         self.input_paths = []
