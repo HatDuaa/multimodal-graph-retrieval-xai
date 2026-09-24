@@ -46,3 +46,71 @@ Bộ nhớ theo micro-batch, 30 bước tối ưu của epoch 1 (`scripts/checks
 
 Script huấn luyện giờ mặc định dùng `expandable_segments` và micro-batch 128, mức lớn nhất không tràn bộ nhớ
 (~17,7 GB trên 24 GB; GPU không có người khác dùng nên không cần chừa). Batch hiệu dụng vẫn là 256.
+
+## Kết quả r3 trên val (2026-09-24)
+
+Toàn bộ số dưới đây là của **val**, lấy ở epoch tốt nhất theo R@1 val, mean ± std (ddof=1) qua 3 seed (0, 1, 2), đi qua
+`src/eval/metrics.py`. Test chưa được chạm. Mọi dòng dùng cùng một công thức huấn luyện: code ở commit `268b5b6`,
+đường dữ liệu tính sẵn, batch hiệu dụng 256, micro-batch 128, xáo mỗi epoch, khoá cổng trong epoch 1, AdamW lr 1e-3,
+dừng sớm sau 2 epoch không tăng, tối đa 10 epoch. Mô tả mô hình: `docs/level1-model.md`. Tạo lại bảng bằng
+`python scripts/summarize_level1.py r3` (ghi `experiments/level1/summary_r3.json`). Cả 24 run xong ngay lần đầu
+(exit 0, không phải resume lần nào).
+
+| Cấu hình | Seed xong | R@1 | R@5 | R@10 | MRR | a / b / c | Epoch tốt nhất |
+|---|---|---|---|---|---|---|---|
+| CLIP thuần | — | 39,13 | 67,88 | 78,97 | 52,34 | 1 / 0 / 0 | — |
+| Ba kênh, không huấn luyện (bước 0) | — | 43,50 | 70,95 | 81,59 | 56,10 | 0,60 / 0,28 / 0,12 | — |
+| **Đầy đủ** (GAT, 3 kênh, a/b/c theo từng câu) | 3/3 | 46,48 ± 0,24 | 73,78 ± 0,16 | 83,44 ± 0,24 | 58,85 ± 0,18 | 0,485 / 0,355 / 0,160 | 8, 10, 6 |
+| a, b, c cố định (học trên train) | 3/3 | 46,13 ± 0,15 | 73,20 ± 0,13 | 83,20 ± 0,06 | 58,38 ± 0,10 | 0,488 / 0,368 / 0,144 | 6, 3, 7 |
+| Bỏ GAT | 3/3 | 46,71 ± 0,07 | 73,81 ± 0,29 | 83,56 ± 0,24 | 59,04 ± 0,09 | 0,473 / 0,353 / 0,174 | 5, 5, 3 |
+| Tắt kênh bộ ba (GAT vẫn dùng cạnh) | 3/3 | 45,99 ± 0,05 | 73,33 ± 0,13 | 82,84 ± 0,10 | 58,34 ± 0,05 | 0,504 / 0,496 / 0 | 4, 4, 6 |
+| Bỏ hẳn quan hệ | 3/3 | 45,98 ± 0,10 | 73,12 ± 0,05 | 82,90 ± 0,04 | 58,29 ± 0,04 | 0,499 / 0,501 / 0 | 5, 8, 6 |
+| Câu là text thuần (phía câu không qua GAT/MLP/U) | 3/3 | **46,92 ± 0,07** | **74,01 ± 0,04** | **83,74 ± 0,07** | **59,25 ± 0,03** | 0,486 / 0,348 / 0,166 | 5, 4, 6 |
+| Huấn luyện lại trên cạnh nối ngẫu nhiên (`rewire_r3`) | 3/3 | 46,24 ± 0,24 | 73,63 ± 0,37 | 83,30 ± 0,16 | 58,64 ± 0,25 | 0,492 / 0,349 / 0,159 | 2, 8, 9 |
+| Loss LambdaRank theo MRR thay cross-entropy (`lambda_r3`) | 3/3 | 45,18 ± 0,34 | 72,74 ± 0,23 | 82,81 ± 0,19 | 57,70 ± 0,23 | 0,524 / 0,345 / 0,132 | 1, 2, 3 |
+
+Hai dòng CLIP thuần và ba kênh không huấn luyện không có seed. R@5, R@10 và MRR của dòng ba kênh lấy từ phép thử 1b;
+chạy lại kiểm tra bước 0 cho R@5 70,95, R@10 81,59, MRR 56,10.
+
+**Đối chứng phá đồ thị, chỉ đánh giá** (`scripts/checks/graph_controls.py`; 3 checkpoint `main_r3` × 3 seed đối chứng
+= 9 lần chấm; kết quả trong `experiments/level1/controls/`):
+
+| Đối chứng | R@1 | MRR |
+|---|---|---|
+| Đồ thị đúng (cùng 3 checkpoint) | 46,48 | 58,85 |
+| Mỗi ảnh nhận scene graph của một ảnh val khác (hoán vị không điểm bất động) | 26,33 ± 0,39 | 39,71 ± 0,31 |
+| Nối lại cạnh giữ bậc vào/ra, nhãn quan hệ đi theo cạnh, cụm bộ ba mã hoá lại | 46,29 ± 0,19 | 58,72 ± 0,13 |
+
+**Quét α trên val cho dòng a, b, c cố định** (`scripts/checks/alpha_sweep.py`, chỉ đánh giá, giữ β = b/(b+c) đã học,
+lưới 0,05–0,95). α học được là 0,488 / 0,499 / 0,477, cho R@1 46,01 / 46,07 / 46,30. α tốt nhất trên lưới là
+0,45 / 0,50 / 0,45, cho 46,05 / 46,08 / 46,49. Số ở α chọn trên val bị lạc quan vì chính val đã chọn nó.
+
+### Số nói gì
+
+1. **Học có ích.** So với bước 0 không huấn luyện, mô hình đầy đủ tăng 2,98 điểm R@1 (43,50 → 46,48). So với CLIP thuần
+   là tăng 7,35 điểm.
+2. **GAT không giúp.** Bỏ GAT (46,71 ± 0,07) không thua mô hình đầy đủ (46,48 ± 0,24). Dòng tốt nhất là dòng câu không
+   qua bộ mã hoá đồ thị (46,92 ± 0,07). Lan truyền trên đồ thị câu còn làm kém đi khoảng 0,4 điểm.
+3. **Quan hệ giúp một chút, qua kênh bộ ba tường minh, không qua lan truyền.** Tắt kênh bộ ba (45,99) hay bỏ hẳn quan hệ
+   (45,98) đều thấp hơn mô hình đầy đủ khoảng 0,5 điểm, và hai dòng này bằng nhau. Nghĩa là cạnh quan hệ trong GAT không
+   thêm gì khi đã có kênh bộ ba.
+4. **Cấu trúc nối cạnh gần như không quan trọng.** Nối lại cạnh ngẫu nhiên lúc đánh giá chỉ làm giảm 0,19 điểm. Huấn
+   luyện lại trên đồ thị đã nối ngẫu nhiên cho 46,24 ± 0,24, kém 0,24 điểm, cỡ một độ lệch chuẩn. Sau khi nối lại, bộ ba
+   vẫn giữ đúng chủ thể và nhãn quan hệ, chỉ đổi đối tượng sang một vật thể khác có thật trong ảnh.
+5. **Mô hình thật sự dựa vào đồ thị của đúng ảnh.** Thay bằng đồ thị của ảnh khác thì R@1 rơi xuống 26,33, **thấp hơn
+   CLIP thuần 12,8 điểm**, chứ không phải rơi về gần 39,13 như dự đoán trước. Lý do: a ≈ 0,49, tức mô hình đặt khoảng
+   một nửa trọng số vào kênh đồ thị, và lúc đánh giá không tự hạ được trọng số này khi đồ thị sai.
+6. **a, b, c theo từng câu giúp ít.** Trọng số theo từng câu hơn trọng số cố định 0,35 điểm R@1 và 0,47 điểm MRR. α học
+   trên train đã gần điểm tốt nhất trên val (chọn lại α trên val chỉ thêm tối đa 0,19 điểm).
+7. **Loss LambdaRank theo MRR kém cross-entropy** 1,3 điểm R@1 và 1,15 điểm MRR, dù được thiết kế để tối ưu MRR. Nó
+   dừng sớm ở epoch 1–3. Chưa tinh chỉnh (dùng cùng lr và nhiệt độ), nên chỉ ghi nhận là kết quả âm.
+
+### Lưu ý khi đọc
+
+- Mọi so sánh là trên val, và val cũng dùng để dừng sớm, nên số hơi lạc quan như nhau cho mọi dòng. Số chính thức phải
+  lấy trên test, một lần.
+- Các chênh lệch dưới khoảng 0,3 điểm (đầy đủ so với bỏ GAT, đầy đủ so với rewire) chỉ cỡ 1–2 độ lệch chuẩn với 3 seed.
+  Chưa làm kiểm định theo cặp trên từng câu.
+- Dừng sớm sau 2 epoch không tăng khá nhạy với nhiễu của val. Ví dụ `rewire_r3_seed0` dừng ở epoch 4 với tốt nhất 45,96,
+  trong khi hai seed còn lại lên 46,37–46,38. Hai run (`main_r3_seed1`, `rewire_r3_seed1`) đạt tốt nhất đúng ở epoch 10,
+  tức trần 10 epoch có thể đã chặn chúng.
