@@ -114,3 +114,25 @@ lưới 0,05–0,95). α học được là 0,488 / 0,499 / 0,477, cho R@1 46,01
 - Dừng sớm sau 2 epoch không tăng khá nhạy với nhiễu của val. Ví dụ `rewire_r3_seed0` dừng ở epoch 4 với tốt nhất 45,96,
   trong khi hai seed còn lại lên 46,37–46,38. Hai run (`main_r3_seed1`, `rewire_r3_seed1`) đạt tốt nhất đúng ở epoch 10,
   tức trần 10 epoch có thể đã chặn chúng.
+
+## Kết quả trên test (2026-09-25, chạy một lần)
+
+Lộc chốt phương pháp chính là **mô hình đầy đủ** (có lan truyền GAT ở cả phía câu và phía ảnh), vì cách xử lý câu
+khớp với cách xử lý scene graph của ảnh. Quyết định đưa ra trước khi chạy test. Test được chấm đúng một lần bằng
+`scripts/evaluate_test.py --training-free` (commit `f738de3`), dùng `checkpoint_best.pt` (chọn theo val) của
+`main_r3_seed0..2`. Trước khi chấm, script kiểm tra ứng viên top-50 của test tái tạo đúng số CLIP thuần đã có.
+Kết quả ở `experiments/level1/test/`. Mỗi file chỉ ghi một lần, script từ chối chạy lại. Các ablation chưa được
+chấm trên test.
+
+| Phương pháp | R@1 | R@5 | R@10 | MRR | a / b / c |
+|---|---|---|---|---|---|
+| CLIP thuần | 39,32 | 66,39 | 77,32 | 52,00 | — |
+| Ba kênh, không huấn luyện | 42,54 | 70,04 | 80,35 | 55,05 | 0,60 / 0,28 / 0,12 |
+| **Đầy đủ (3 seed)** | **45,77 ± 0,23** | **72,87 ± 0,31** | **82,69 ± 0,31** | **58,14 ± 0,18** | 0,483 / 0,358 / 0,159 |
+
+10 696 truy vấn trên pool 2 138 ảnh test. Theo từng seed, R@1 là 45,93 / 45,88 / 45,50.
+
+So với CLIP thuần, mô hình đầy đủ tăng **+6,45 R@1**, +6,48 R@5, +5,37 R@10 và +6,14 MRR. So với bản ba kênh không
+huấn luyện, phần học thêm được +3,23 R@1. Số trên test thấp hơn trên val khoảng 0,7 điểm R@1 (46,48 → 45,77), đúng như
+dự đoán vì val đã được dùng để dừng sớm và chọn checkpoint. Mức tăng so với CLIP trên test (+6,45) gần bằng trên val
+(+7,35).
