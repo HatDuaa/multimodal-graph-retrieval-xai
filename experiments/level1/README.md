@@ -136,3 +136,33 @@ So với CLIP thuần, mô hình đầy đủ tăng **+6,45 R@1**, +6,48 R@5, +5
 huấn luyện, phần học thêm được +3,23 R@1. Số trên test thấp hơn trên val khoảng 0,7 điểm R@1 (46,48 → 45,77), đúng như
 dự đoán vì val đã được dùng để dừng sớm và chọn checkpoint. Mức tăng so với CLIP trên test (+6,45) gần bằng trên val
 (+7,35).
+
+### Các ablation trên test (chạy một lần, sau khi đã chốt phương pháp chính)
+
+Chấm bằng `scripts/evaluate_test.py --method <dòng>_r3` (commit `8b36243`), dùng checkpoint tốt nhất theo val của
+từng seed. Riêng dòng `rewire_r3` được chấm trên đồ thị test đã nối lại cạnh với cùng seed nối như lúc huấn luyện.
+Cụm bộ ba mới sinh ra khi nối lại được mã hoá vào `vg_coco_graph_parts_rewire_seed<k>_test`.
+
+| Cấu hình | R@1 | R@5 | R@10 | MRR | a / b / c |
+|---|---|---|---|---|---|
+| CLIP thuần | 39,32 | 66,39 | 77,32 | 52,00 | — |
+| Ba kênh, không huấn luyện | 42,54 | 70,04 | 80,35 | 55,05 | 0,60 / 0,28 / 0,12 |
+| **Đầy đủ (phương pháp chính)** | **45,77 ± 0,23** | 72,87 ± 0,31 | 82,69 ± 0,31 | 58,14 ± 0,18 | 0,483 / 0,358 / 0,159 |
+| a, b, c cố định | 45,13 ± 0,05 | 72,25 ± 0,19 | 82,15 ± 0,25 | 57,47 ± 0,11 | 0,488 / 0,368 / 0,144 |
+| Bỏ GAT | 45,95 ± 0,20 | 73,01 ± 0,07 | 82,78 ± 0,07 | 58,25 ± 0,09 | 0,471 / 0,356 / 0,173 |
+| Tắt kênh bộ ba | 45,07 ± 0,22 | 71,99 ± 0,06 | 82,00 ± 0,08 | 57,40 ± 0,13 | 0,502 / 0,498 / 0 |
+| Bỏ hẳn quan hệ | 45,26 ± 0,14 | 72,10 ± 0,08 | 82,05 ± 0,15 | 57,55 ± 0,11 | 0,497 / 0,503 / 0 |
+| Câu là text thuần (phía câu không qua GAT/MLP/U) | 45,61 ± 0,29 | 73,21 ± 0,03 | 82,93 ± 0,11 | 58,16 ± 0,24 | 0,484 / 0,351 / 0,165 |
+| Huấn luyện và chấm trên cạnh nối ngẫu nhiên | 45,50 ± 0,40 | 72,65 ± 0,43 | 82,67 ± 0,14 | 57,86 ± 0,36 | 0,490 / 0,352 / 0,158 |
+| Loss LambdaRank (MRR) | 44,28 ± 0,30 | 71,51 ± 0,23 | 81,81 ± 0,19 | 56,78 ± 0,26 | 0,523 / 0,346 / 0,132 |
+
+Test xác nhận phần lớn kết luận trên val:
+- Trọng số a, b, c theo từng câu có ích: +0,64 R@1 so với trọng số cố định. Mức này trên test rõ hơn trên val (+0,35).
+- Quan hệ có ích qua kênh bộ ba: +0,5 đến +0,7 R@1.
+- GAT không giúp: bỏ GAT cho 45,95, cao hơn bản đầy đủ 0,18, cỡ một độ lệch chuẩn.
+- Nối cạnh ngẫu nhiên chỉ làm giảm 0,27, dưới một độ lệch chuẩn.
+- Loss LambdaRank kém nhất trong các bản đã huấn luyện, thua bản đầy đủ 1,5 R@1.
+
+Có một chỗ **đổi thứ tự so với val**: dòng câu là text thuần tốt nhất trên val (46,92) nhưng trên test chỉ đạt 45,61,
+thấp hơn bản đầy đủ 0,16 R@1, trong khi R@5, R@10 và MRR vẫn ngang hoặc nhỉnh hơn. Các chênh lệch dưới khoảng 0,3 điểm
+giữa bản đầy đủ, bỏ GAT, câu là text thuần và rewire nằm trong nhiễu giữa các seed; chưa làm kiểm định theo cặp.
