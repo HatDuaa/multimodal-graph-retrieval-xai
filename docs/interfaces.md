@@ -1,6 +1,6 @@
 # Hợp đồng interface giữa các gói
 
-Bốn format thống nhất để các gói làm song song và tự tạo dữ liệu giả (mock) mà không phải chờ nhau (xem `plan.md`, mục 3). **Mục 1 và 2 do gói 1 phát hành, đã có code. Mục 3 và 4 là bản ĐỀ XUẤT, chốt trong buổi họp tuần 1** với gói 2 và gói 4.
+Bốn format thống nhất để các gói làm song song và tự tạo dữ liệu giả (mock) mà không phải chờ nhau (xem `plan.md`, mục 3). Mục 1 và 2 do gói 1 phát hành; mục 3 và 4 được cố định theo thiết kế ngày 2026-09-20.
 
 ## 1. File split — `data/splits/<dataset>_<split>.json`
 
@@ -56,9 +56,9 @@ Mọi con số trong báo cáo phải đi qua module này để so sánh đượ
 - `write_metrics(path, method=..., dataset=..., split=..., per_seed={seed: metrics}, config=...)` ghi `metrics.json` theo một schema duy nhất: `method`, `dataset`, `split`, `per_seed`, `aggregate`, `config`.
 - Lộc viết bản đầu (2026-09-18) để baseline không bị chặn; người nhận gói 4 giữ và mở rộng module này (nDCG, tách nhóm truy vấn trực tiếp / gián tiếp).
 
-## 3. Đồ thị — ĐỀ XUẤT (đổi 2026-09-19)
+## 3. Đồ thị (thiết kế cố định ngày 2026-09-20)
 
-Mỗi ảnh một đồ thị nhỏ riêng, truy vấn cũng được tách thành một đồ thị cùng dạng; **không** dựng một đồ thị chung chứa mọi ảnh. Lý do và các bài tham khảo: `docs/research/graph-enhanced-image-retrieval-approaches.md`; chi tiết từng bước: sheet "Cap do 1" của `task-assignment.xlsx`. Thiết kế còn chờ số đo độ phủ (`scripts/checks/scene_graph_coverage.py`). ConceptNet không dùng ở cấp độ 1.
+Mỗi ảnh một đồ thị nhỏ riêng, truy vấn cũng được tách thành một đồ thị cùng dạng; **không** dựng một đồ thị chung chứa mọi ảnh. Đồ thị dùng toàn bộ nhãn mở đã chuẩn hoá alias, không lọc VG150. Mỗi vật thể là một instance riêng, kể cả khi hai instance có cùng nhãn; quan hệ là có hướng và được gộp khi trùng cả hai đầu cùng nhãn quan hệ. ConceptNet không dùng ở cấp độ 1.
 
 Format JSON thuần, không phụ thuộc thư viện, để gói 4 và demo đọc được mà không cần PyTorch Geometric:
 
@@ -72,9 +72,9 @@ Format JSON thuần, không phụ thuộc thư viện, để gói 4 và demo đ�
 
 - `data/processed/query_graphs_<split>.json`: `{caption_id: {"objects": [...], "relations": [...]}}`, cùng cấu trúc như trên.
 
-Tên đối tượng và quan hệ của ảnh đã chuẩn hoá theo alias và lọc theo VG150. Đồ thị của ảnh nào chỉ chứa chú thích của chính ảnh đó, không có cạnh gộp từ nhiều ảnh.
+Tên đối tượng và quan hệ của ảnh đã chuẩn hoá theo alias, không lọc VG150. Đồ thị của ảnh nào chỉ chứa chú thích của chính ảnh đó, không có cạnh gộp từ nhiều ảnh. Script sinh dữ liệu là scripts/build_graph_data.py; các file chính gồm đồ thị ảnh, đồ thị truy vấn và bảng đếm part_counts.json.
 
-## 4. API điểm đồ thị — ĐỀ XUẤT
+## 4. API điểm đồ thị
 
 ```python
 def score(query: str, candidate_image_id: int) -> tuple[float, list[Match]]: ...
@@ -82,6 +82,8 @@ def score(query: str, candidate_image_id: int) -> tuple[float, list[Match]]: ...
 # Match = (bộ ba của truy vấn, bộ ba của ảnh, đóng góp vào điểm); bộ ba = (head, relation, tail)
 ```
 
-- Các cặp bộ ba trả về phải là thứ thật sự tham gia tính điểm (đề cấm tìm đường đi sau khi đã xếp hạng).
-- Cần thêm hàm `score_without(query, candidate, removed_triples)` để gói 4 đo fidelity và để demo có nút "bỏ bộ ba này".
+- Ba kênh là CLIP, vật thể và bộ ba. Với [a,b,c] = softmax(W q_câu + bias), điểm là Graph = z((b*z_obj + c*z_tri)/(b+c)), score = a*z(CLIP) + (1-a)*Graph; đây là công thức alpha của đề với alpha = a.
+- score trả về các cặp vật thể và cặp bộ ba thật sự tham gia attention, cùng đóng góp của chúng vào điểm.
+- score_without(query, candidate, removed_parts) chấm lại từ đầu sau khi bỏ vật thể theo chỉ số object hoặc quan hệ theo chỉ số relation; API này phục vụ fidelity và nút bỏ mảnh trong demo.
+- Gói dữ liệu huấn luyện gồm vg_coco_train_groups.json, vg_coco_graph_parts.npy/.ids.json, candidates_train.npz và candidates_val.npz. Không có tập dev; val dùng để dừng sớm và chọn mô hình, test chỉ dùng một lần cuối.
 - Demo và đánh giá chỉ gọi hai hàm này, không đọc trực tiếp bên trong mô hình.

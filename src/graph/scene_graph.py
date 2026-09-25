@@ -63,7 +63,7 @@ def _name(item: dict) -> str:
     return str(item.get("name", names[0] if names else ""))
 
 
-def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Vocab, vg150_only: bool = True) -> dict:
+def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Vocab, vg150_only: bool = True, include_source_ids: bool = False) -> dict:
     objects: list[dict] = []
     by_id: dict[int, int] = {}
     for obj in objects_entry.get("objects", []):
@@ -71,7 +71,9 @@ def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Voc
         if vg150_only and name not in vocab.objects:
             continue
         by_id[obj["object_id"]] = len(objects)
-        objects.append({"id": len(objects), "name": name})
+        item = {"id": len(objects), "name": name}
+        if include_source_ids: item["source_object_id"] = int(obj["object_id"])
+        objects.append(item)
     relations = []
     seen = set()
     for rel in relationships_entry.get("relationships", []):
@@ -87,7 +89,9 @@ def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Voc
                     endpoints.append(None)
                     continue
                 by_id[oid] = len(objects)
-                objects.append({"id": len(objects), "name": name})
+                item = {"id": len(objects), "name": name}
+                if include_source_ids: item["source_object_id"] = int(oid)
+                objects.append(item)
             endpoints.append(by_id[oid])
         if None in endpoints:
             continue

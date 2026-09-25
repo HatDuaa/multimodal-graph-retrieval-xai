@@ -1,0 +1,21 @@
+# Level 1 validation chain (proposal, not started): one recipe for every row, fast data path,
+# effective batch 256, micro-batch 128, shuffle, gate warm-up epoch 1. Test split is never scored.
+# <run_name> <seed> [extra flags]
+main_r3_seed0 0
+main_r3_seed1 1
+main_r3_seed2 2
+no_gat_r3_seed0 0 --no-use-gat
+no_gat_r3_seed1 1 --no-use-gat
+no_gat_r3_seed2 2 --no-use-gat
+no_triple_r3_seed0 0 --no-use-triple-channel
+no_triple_r3_seed1 1 --no-use-triple-channel
+no_triple_r3_seed2 2 --no-use-triple-channel
+no_edges_r3_seed0 0 --no-use-edges
+no_edges_r3_seed1 1 --no-use-edges
+no_edges_r3_seed2 2 --no-use-edges
+fixed_weights_r3_seed0 0 --no-adaptive-weights
+fixed_weights_r3_seed1 1 --no-adaptive-weights
+fixed_weights_r3_seed2 2 --no-adaptive-weights
+text_query_r3_seed0 0 --no-query-graph-encoder
+text_query_r3_seed1 1 --no-query-graph-encoder
+text_query_r3_seed2 2 --no-query-graph-encoder

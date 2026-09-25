@@ -1,0 +1,90 @@
+{
+  "seed": 0,
+  "limit": null,
+  "splits": {
+    "train": {
+      "images": {
+        "node": 46123,
+        "rel": 18357,
+        "triple": 295935
+      },
+      "queries": {
+        "node": 30015,
+        "rel": 3179,
+        "triple": 181638
+      },
+      "all": {
+        "node": 67254,
+        "rel": 19880,
+        "triple": 456104
+      }
+    },
+    "val": {
+      "images": {
+        "node": 5741,
+        "rel": 1983,
+        "triple": 22480
+      },
+      "queries": {
+        "node": 4044,
+        "rel": 670,
+        "triple": 13189
+      },
+      "all": {
+        "node": 8241,
+        "rel": 2368,
+        "triple": 34495
+      }
+    },
+    "test": {
+      "images": {
+        "node": 6138,
+        "rel": 2062,
+        "triple": 22891
+      },
+      "queries": {
+        "node": 4091,
+        "rel": 662,
+        "triple": 13229
+      },
+      "all": {
+        "node": 8648,
+        "rel": 2449,
+        "triple": 35030
+      }
+    }
+  },
+  "total": {
+    "node": 71388,
+    "rel": 21088,
+    "triple": 489609
+  },
+  "images": {
+    "train": 46944,
+    "val": 2126,
+    "test": 2138
+  },
+  "queries": {
+    "train": 234854,
+    "val": 10633,
+    "test": 10696
+  },
+  "unseen_in_train": {
+    "val": {
+      "node": 1957,
+      "rel": 586,
+      "triple": 16538
+    },
+    "test": {
+      "node": 2207,
+      "rel": 633,
+      "triple": 17129
+    }
+  },
+  "total_keys": 582085,
+  "projected_vector_bytes": {
+    "float32": 1192110080,
+    "float16": 596055040
+  },
+  "size_note": "Matrix payload only; NPY header and IDs JSON are additional."
+}

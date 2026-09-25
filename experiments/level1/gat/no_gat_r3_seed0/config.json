@@ -1,0 +1,51 @@
+{
+  "args": {
+    "seed": 0,
+    "run_name": "no_gat_r3_seed0",
+    "epochs": 10,
+    "limit_train": null,
+    "batch_size": 256,
+    "micro_batch_size": 128,
+    "eval_batch_size": 256,
+    "lr": 0.001,
+    "adaptive_weights": true,
+    "use_gat": false,
+    "use_triple_channel": true,
+    "use_edges": true,
+    "query_graph_encoder": true,
+    "loss": "cross_entropy",
+    "rewire_seed": null,
+    "resume": false,
+    "stop_after_epoch": null,
+    "eval_only": null
+  },
+  "config": {
+    "seed": 0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "paths": {
+      "raw": "data/raw",
+      "splits": "data/splits",
+      "features": "data/features",
+      "graphs": "data/graphs",
+      "processed": "data/processed",
+      "experiments": "experiments"
+    },
+    "clip": {
+      "model": "ViT-B-32-quickgelu",
+      "pretrained": "openai",
+      "batch_size": 256,
+      "concept_prompt": "a photo of a {}"
+    },
+    "retrieval": {
+      "top_k": 50
+    }
+  },
+  "device": "cuda",
+  "train_candidates_sha256": "549083b1756df5a467887cc8d860a2d056f6f93878f088c819e0bffb6053f958",
+  "val_candidates_sha256": "ec4bc3432594d9923b1de7ac4ff33b1511d334690a8b681768fd9637ede91d79",
+  "git_commit": "39ab2ce7e2320ee71eb85f999b3f9751f111162f"
+}
