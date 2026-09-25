@@ -22,3 +22,12 @@ clip:
 
 retrieval:
   top_k: 50
+
+mkgw:
+  # local clone of zjukg/NativE (never committed); holds benchmarks/MKG-W and embeddings/
+  native_repo: ~/work/NativE
+  wikidata_cache: data/raw/mkgw/wikidata_entities.jsonl
+  # entity-level split for the retrieval task (the KGC triple split of NativE is kept separately)
+  split_fractions: {train: 0.8, val: 0.1, test: 0.1}
+  query_lang: en
+  image_width: 640          # Wikimedia Commons thumbnail width used in split-file URLs

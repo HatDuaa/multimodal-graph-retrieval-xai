@@ -3,11 +3,12 @@
 Resumable: existing, readable files are skipped. Failed ids are written to
 data/raw/images_failed.txt so the run can be repeated until the list is empty.
 
-Usage:  python scripts/download_images.py [--splits test val train] [--workers 16]
+Usage:  python scripts/download_images.py [--splits test val train] [--workers 16] [--dataset vg_coco]
 """
 import argparse
 import json
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -32,15 +33,19 @@ def fetch(job: tuple[str, Path]) -> bool:
     url, dest = job
     if dest.exists() and is_valid(dest):
         return True
-    for _ in range(3):
+    for attempt in range(5):
         try:
-            r = requests.get(url, timeout=30)
+            r = requests.get(url, timeout=30,
+                             headers={"User-Agent": "mm-graph-retrieval-course-project/0.1 (academic use)"})
+            if r.status_code == 429:      # rate-limited (Wikimedia Commons): honour Retry-After
+                time.sleep(min(int(r.headers.get("Retry-After", 15 * (attempt + 1))), 600))
+                continue
             r.raise_for_status()
             dest.write_bytes(r.content)
             if is_valid(dest):
                 return True
         except requests.RequestException:
-            pass
+            time.sleep(2)
     dest.unlink(missing_ok=True)
     return False
 
@@ -49,6 +54,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--splits", nargs="+", default=["test", "val", "train"])
     ap.add_argument("--workers", type=int, default=16)
+    ap.add_argument("--dataset", default="vg_coco", help="split file prefix, e.g. vg_coco or mkgw")
     args = ap.parse_args()
 
     cfg = load_config()
@@ -58,7 +64,7 @@ def main() -> None:
 
     jobs = []
     for name in args.splits:
-        images = json.loads((split_dir / f"vg_coco_{name}.json").read_text(encoding="utf-8"))["images"]
+        images = json.loads((split_dir / f"{args.dataset}_{name}.json").read_text(encoding="utf-8"))["images"]
         jobs += [(im["url"], out / im["file_name"]) for im in images]
 
     with ThreadPoolExecutor(args.workers) as pool:

@@ -1,0 +1,39 @@
+{
+  "method": "clip",
+  "dataset": "mkgw",
+  "split": "val",
+  "per_seed": {
+    "0": {
+      "n_queries": 892,
+      "recall@1": 0.24327354260089687,
+      "recall@5": 0.44506726457399104,
+      "recall@10": 0.5369955156950673,
+      "mrr": 0.34243349790324185
+    }
+  },
+  "aggregate": {
+    "n_queries": 892,
+    "n_runs": 1,
+    "recall@1": {
+      "mean": 0.24327354260089687,
+      "std": 0.0
+    },
+    "recall@5": {
+      "mean": 0.44506726457399104,
+      "std": 0.0
+    },
+    "recall@10": {
+      "mean": 0.5369955156950673,
+      "std": 0.0
+    },
+    "mrr": {
+      "mean": 0.34243349790324185,
+      "std": 0.0
+    }
+  },
+  "config": {
+    "encoder": "ViT-B-32-quickgelu/openai",
+    "pool": 892,
+    "top_k": 50
+  }
+}

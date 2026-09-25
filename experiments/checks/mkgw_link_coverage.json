@@ -1,0 +1,22 @@
+{
+ "encoder": "NativE-AdvRelRotatE[smoke]/ent",
+ "n_train_triples": 34196,
+ "splits": {
+  "train": {
+   "queries": 7136,
+   "linked_ge_1": 5813,
+   "linked_ge_1_pct": 81.46,
+   "avg_links_per_linked_query": 1.54,
+   "gold_direct_train_edge": 3051,
+   "gold_direct_train_edge_pct": 42.76
+  },
+  "val": {
+   "queries": 892,
+   "linked_ge_1": 704,
+   "linked_ge_1_pct": 78.92,
+   "avg_links_per_linked_query": 1.54,
+   "gold_direct_train_edge": 403,
+   "gold_direct_train_edge_pct": 45.18
+  }
+ }
+}
