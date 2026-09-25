@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="vi" data-theme="dracula">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pipeline cấp độ 1</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/daisyui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/themes.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :where(.grid, .flex) > * { min-width: 0; }
+  :where(p, h1, h2, h3, li, td, th, .badge, figcaption) { overflow-wrap: anywhere; }
+  :where(svg) { max-width: 100%; height: auto; }
+  body { background: var(--color-base-100); color: var(--color-base-content); }
+  .src { font-size: .72rem; opacity: .6; font-family: ui-monospace, monospace; white-space: nowrap; }
+  .fig text { font-family: ui-sans-serif, system-ui, sans-serif; fill: var(--color-base-content); }
+  .fig .lane { fill: color-mix(in oklab, var(--color-base-content) 4%, transparent); stroke: color-mix(in oklab, var(--color-base-content) 15%, transparent); stroke-dasharray: 4 5; }
+  .fig .lane-t { font-size: 12px; font-weight: 700; letter-spacing: .06em; opacity: .7; }
+  .fig .box { fill: var(--color-base-200); stroke: color-mix(in oklab, var(--color-base-content) 35%, transparent); stroke-width: 1.2; }
+  .fig .box-p { fill: color-mix(in oklab, var(--color-primary) 20%, var(--color-base-200)); stroke: var(--color-primary); stroke-width: 1.6; }
+  .fig .box-s { fill: color-mix(in oklab, var(--color-secondary) 20%, var(--color-base-200)); stroke: var(--color-secondary); stroke-width: 1.6; }
+  .fig .box-a { fill: color-mix(in oklab, var(--color-accent) 16%, var(--color-base-200)); stroke: var(--color-accent); stroke-width: 1.4; }
+  .fig .edge { stroke: color-mix(in oklab, var(--color-base-content) 55%, transparent); stroke-width: 1.6; fill: none; }
+  .fig .edge-p { stroke: var(--color-primary); stroke-width: 2.2; fill: none; }
+  .fig .edge-s { stroke: var(--color-secondary); stroke-width: 1.8; fill: none; stroke-dasharray: 6 4; }
+  .fig .edge-a { stroke: var(--color-accent); stroke-width: 1.6; fill: none; stroke-dasharray: 3 4; }
+  .fig .edge-x { stroke: var(--color-error); stroke-width: 1.6; fill: none; stroke-dasharray: 4 4; }
+  .fig .num { font-size: 11px; font-weight: 700; fill: var(--color-base-100); }
+  .fig .numc { fill: var(--color-base-content); }
+  .fig .lbl { font-size: 13px; font-weight: 600; }
+  .fig .small { font-size: 11px; opacity: .78; }
+  .fig .mono { font-family: ui-monospace, monospace; font-size: 12px; }
+  .fig .ah { fill: color-mix(in oklab, var(--color-base-content) 55%, transparent); }
+  .fig .ah-p { fill: var(--color-primary); }
+  .fig .ah-s { fill: var(--color-secondary); }
+  .fig .ah-a { fill: var(--color-accent); }
+  .fig .node { fill: var(--color-base-200); stroke: var(--color-base-content); stroke-opacity: .5; }
+  .fig .node-q { fill: color-mix(in oklab, var(--color-primary) 30%, var(--color-base-200)); stroke: var(--color-primary); }
+  .fig .node-i { fill: color-mix(in oklab, var(--color-secondary) 30%, var(--color-base-200)); stroke: var(--color-secondary); }
+  .fig .step { cursor: pointer; outline: none; }
+  .fig .step rect { transition: stroke-width .12s, filter .12s; }
+  .fig .step:hover rect, .fig .step:focus-visible rect { stroke-width: 2.6; filter: brightness(1.15); }
+  .fig .step.active rect { stroke: var(--color-warning); stroke-width: 3; }
+  .fig .step.active circle { fill: var(--color-warning); }
+</style>
+</head>
+<body class="min-h-screen">
+<main class="max-w-5xl mx-auto px-4 py-8 space-y-10">
+
+<header class="space-y-3">
+  <div class="flex flex-wrap gap-2">
+    <span class="badge badge-primary">Cấp độ 1 · trần 7.0</span>
+    <span class="badge badge-outline">Chỉ nhánh A: text → image</span>
+  </div>
+  <h1 class="text-2xl md:text-3xl font-bold leading-tight">Pipeline cấp độ 1: <span class="text-primary">truy vấn văn bản</span> vào, <span class="text-secondary">ảnh xếp hạng lại</span> kèm <span class="text-accent">đường đi giải thích</span> ra</h1>
+</header>
+
+<div class="tabs tabs-lift">
+<input type="radio" name="main_tabs" class="tab" aria-label="Toàn cảnh" checked>
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="overview" class="space-y-3">
+  <h2 class="text-xl font-bold">Ba làn của pipeline</h2>
+  <p class="text-sm opacity-80"><strong>Offline</strong> chạy một lần để chuẩn bị. <strong>Online</strong> chạy cho mỗi truy vấn. <strong>Đánh giá</strong> chứng minh đồ thị có ích. <strong>Bấm vào một bước</strong> để xem kế hoạch làm bước đó.</p>
+
+  <figure class="card bg-base-200 card-border p-2 md:p-4">
+    <svg class="fig" viewBox="0 0 1010 630" width="100%" role="img" aria-labelledby="pl-t">
+      <title id="pl-t">Pipeline cấp độ 1: offline, online, đánh giá</title>
+      <defs>
+        <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>
+        <marker id="mp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-p" d="M0,0 L10,5 L0,10 z"/></marker>
+        <marker id="ms" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-s" d="M0,0 L10,5 L0,10 z"/></marker>
+        <marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-a" d="M0,0 L10,5 L0,10 z"/></marker>
+      </defs>
+
+      <!-- lanes -->
+      <rect class="lane" x="2" y="18" width="1004" height="215" rx="12"/>
+      <text class="lane-t" x="16" y="38">OFFLINE · CHẠY MỘT LẦN</text>
+      <rect class="lane" x="2" y="280" width="1004" height="176" rx="12"/>
+      <text class="lane-t" x="16" y="300">ONLINE · MỖI TRUY VẤN</text>
+      <rect class="lane" x="2" y="482" width="1004" height="140" rx="12"/>
+      <text class="lane-t" x="16" y="502">ĐÁNH GIÁ</text>
+
+      <!-- offline -->
+      <g id="o1" class="step" data-step="1" tabindex="0" role="button" aria-label="Bước 1"><title>1. Dữ liệu công khai + chia train/val/test cố định</title>
+        <rect class="box" x="10" y="100" width="148" height="70" rx="10"/>
+        <circle cx="26" cy="116" r="10" class="numc"/><text class="num" x="26" y="120" text-anchor="middle">1</text>
+        <text class="lbl" x="92" y="128" text-anchor="middle">Dữ liệu + split</text>
+        <text class="small" x="84" y="148" text-anchor="middle">train / val / test</text>
+      </g>
+      <g id="o2" class="step" data-step="2" tabindex="0" role="button" aria-label="Bước 2"><title>2. Trích đặc trưng ảnh bằng CLIP đóng băng</title>
+        <rect class="box" x="178" y="50" width="148" height="62" rx="10"/>
+        <circle cx="194" cy="66" r="10" class="numc"/><text class="num" x="194" y="70" text-anchor="middle">2</text>
+        <text class="lbl" x="260" y="78" text-anchor="middle">CLIP ảnh</text>
+        <text class="small" x="252" y="98" text-anchor="middle">đóng băng · lưu .npy</text>
+      </g>
+      <g id="o3" class="step" data-step="3" tabindex="0" role="button" aria-label="Bước 3"><title>3. Index FAISS trên vectơ ảnh</title>
+        <rect class="box" x="346" y="50" width="148" height="62" rx="10"/>
+        <circle cx="362" cy="66" r="10" class="numc"/><text class="num" x="362" y="70" text-anchor="middle">3</text>
+        <text class="lbl" x="428" y="78" text-anchor="middle">FAISS index</text>
+        <text class="small" x="420" y="98" text-anchor="middle">vectơ ảnh</text>
+      </g>
+      <g id="o4" class="step" data-step="4" tabindex="0" role="button" aria-label="Bước 4"><title>4. Dựng đồ thị tĩnh: ảnh, đối tượng, khái niệm</title>
+        <rect class="box-s" x="178" y="150" width="200" height="66" rx="10"/>
+        <circle cx="194" cy="166" r="10" class="numc"/><text class="num" x="194" y="170" text-anchor="middle">4</text>
+        <text class="lbl" x="284" y="176" text-anchor="middle">Dựng đồ thị</text>
+        <text class="small" x="278" y="196" text-anchor="middle">ảnh · đối tượng · khái niệm</text>
+      </g>
+      <g id="o5" class="step" data-step="5" tabindex="0" role="button" aria-label="Bước 5"><title>5. Huấn luyện GNN: ít nhất 1 trong GCN/GAT/GraphSAGE (nhóm dùng GAT), trên phần train</title>
+        <rect class="box-s" x="514" y="150" width="200" height="66" rx="10"/>
+        <circle cx="530" cy="166" r="10" class="numc"/><text class="num" x="530" y="170" text-anchor="middle">5</text>
+        <text class="lbl" x="620" y="176" text-anchor="middle">Huấn luyện GNN</text>
+        <text class="small" x="614" y="196" text-anchor="middle">≥1 trong GCN / GAT / SAGE</text>
+      </g>
+      <path class="edge" d="M158,122 C168,122 166,81 174,81" marker-end="url(#m)"/>
+      <path class="edge" d="M158,150 C168,150 166,183 174,183" marker-end="url(#m)"/>
+      <path class="edge" d="M326,81 H342" marker-end="url(#m)"/>
+      <path class="edge-s" d="M378,183 H510" marker-end="url(#ms)"/>
+      <text class="small" x="468" y="176" text-anchor="middle">cạnh từ train</text>
+
+      <!-- cross-lane -->
+      <path class="edge" d="M420,112 V316" marker-end="url(#m)"/>
+      <path class="edge-s" d="M614,216 V316" marker-end="url(#ms)"/>
+      <text class="small" x="622" y="262">nhúng đỉnh / trọng số</text>
+
+      <!-- online -->
+      <g id="n1" class="step" data-step="6" tabindex="0" role="button" aria-label="Bước 6"><title>6. Truy vấn văn bản</title>
+        <rect class="box-p" x="10" y="320" width="148" height="72" rx="10"/>
+        <circle cx="26" cy="336" r="10" class="numc"/><text class="num" x="26" y="340" text-anchor="middle">6</text>
+        <text class="lbl" x="92" y="350" text-anchor="middle">Truy vấn</text>
+        <text class="small" x="84" y="372" text-anchor="middle">“a child playing</text>
+        <text class="small" x="84" y="386" text-anchor="middle">football”</text>
+      </g>
+      <g id="n2" class="step" data-step="7" tabindex="0" role="button" aria-label="Bước 7"><title>7. Mã hóa truy vấn bằng CLIP văn bản (cùng mô hình)</title>
+        <rect class="box" x="178" y="320" width="148" height="72" rx="10"/>
+        <circle cx="194" cy="336" r="10" class="numc"/><text class="num" x="194" y="340" text-anchor="middle">7</text>
+        <text class="lbl" x="260" y="360" text-anchor="middle">CLIP văn bản</text>
+        <text class="small" x="252" y="378" text-anchor="middle">vectơ truy vấn</text>
+      </g>
+      <g id="n3" class="step" data-step="8" tabindex="0" role="button" aria-label="Bước 8"><title>8. FAISS lấy top-k ứng viên theo cosine = baseline CLIP thuần</title>
+        <rect class="box" x="346" y="320" width="148" height="72" rx="10"/>
+        <circle cx="362" cy="336" r="10" class="numc"/><text class="num" x="362" y="340" text-anchor="middle">8</text>
+        <text class="lbl" x="428" y="360" text-anchor="middle">Top-k (cos)</text>
+        <text class="small" x="420" y="378" text-anchor="middle">= baseline CLIP</text>
+      </g>
+      <g id="n4" class="step" data-step="9" tabindex="0" role="button" aria-label="Bước 9"><title>9. Điểm đồ thị g cho từng ứng viên</title>
+        <rect class="box-s" x="514" y="320" width="148" height="72" rx="10"/>
+        <circle cx="530" cy="336" r="10" class="numc"/><text class="num" x="530" y="340" text-anchor="middle">9</text>
+        <text class="lbl" x="596" y="360" text-anchor="middle">Điểm đồ thị g</text>
+        <text class="small" x="588" y="378" text-anchor="middle">cho mỗi ứng viên</text>
+      </g>
+      <g id="n5" class="step" data-step="10" tabindex="0" role="button" aria-label="Bước 10"><title>10. Kết hợp điểm và xếp hạng lại</title>
+        <rect class="box-p" x="682" y="320" width="148" height="72" rx="10"/>
+        <circle cx="698" cy="336" r="10" class="numc"/><text class="num" x="698" y="340" text-anchor="middle">10</text>
+        <text class="lbl" x="764" y="358" text-anchor="middle">Re-rank</text>
+        <text class="mono" x="756" y="378" text-anchor="middle">α·cos+(1−α)·g</text>
+      </g>
+      <g id="n6" class="step" data-step="11" tabindex="0" role="button" aria-label="Bước 11"><title>11. Kết quả: ảnh xếp hạng lại + đường đi giải thích</title>
+        <rect class="box-a" x="850" y="320" width="150" height="72" rx="10"/>
+        <circle cx="866" cy="336" r="10" class="numc"/><text class="num" x="866" y="340" text-anchor="middle">11</text>
+        <text class="lbl" x="932" y="358" text-anchor="middle">Ảnh top-k</text>
+        <text class="small" x="925" y="378" text-anchor="middle">+ đường đi giải thích</text>
+      </g>
+      <path class="edge-p" d="M158,356 H174" marker-end="url(#mp)"/>
+      <path class="edge-p" d="M326,356 H342" marker-end="url(#mp)"/>
+      <path class="edge-p" d="M494,356 H510" marker-end="url(#mp)"/>
+      <path class="edge-p" d="M662,356 H678" marker-end="url(#mp)"/>
+      <path class="edge-p" d="M830,356 H846" marker-end="url(#mp)"/>
+      <text class="small" x="502" y="410" text-anchor="middle">k ảnh + cos</text>
+      <!-- query concepts to graph -->
+      <path class="edge-s" d="M84,392 V436 H570 V396" marker-end="url(#ms)"/>
+      <text class="small" x="300" y="430" text-anchor="middle">khái niệm trong truy vấn → đỉnh đồ thị</text>
+
+      <!-- eval -->
+      <g id="e1" class="step" data-step="12" tabindex="0" role="button" aria-label="Bước 12"><title>12. Chọn α, k, siêu tham số trên validation</title>
+        <rect class="box" x="10" y="514" width="235" height="92" rx="10"/>
+        <circle cx="26" cy="530" r="10" class="numc"/><text class="num" x="26" y="534" text-anchor="middle">12</text>
+        <text class="lbl" x="135" y="544" text-anchor="middle">Chọn α, k trên val</text>
+        <text class="small" x="127" y="566" text-anchor="middle">không nhìn test</text>
+        <text class="small" x="127" y="584" text-anchor="middle">α ∈ [0, 1]</text>
+      </g>
+      <g id="e2" class="step" data-step="13" tabindex="0" role="button" aria-label="Bước 13"><title>13. So CLIP thuần vs CLIP + Graph trên test, 3 seed</title>
+        <rect class="box" x="262" y="514" width="235" height="92" rx="10"/>
+        <circle cx="278" cy="530" r="10" class="numc"/><text class="num" x="278" y="534" text-anchor="middle">13</text>
+        <text class="lbl" x="387" y="544" text-anchor="middle">CLIP vs CLIP + Graph</text>
+        <text class="small" x="379" y="566" text-anchor="middle">R@1 · R@5 · R@10 · MRR</text>
+        <text class="small" x="379" y="584" text-anchor="middle">mean ± std, ≥3 seed</text>
+      </g>
+      <g id="e3" class="step" data-step="14" tabindex="0" role="button" aria-label="Bước 14"><title>14. Ablation: bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên</title>
+        <rect class="box" x="514" y="514" width="235" height="92" rx="10"/>
+        <circle cx="530" cy="530" r="10" class="numc"/><text class="num" x="530" y="534" text-anchor="middle">14</text>
+        <text class="lbl" x="639" y="544" text-anchor="middle">Ablation cạnh</text>
+        <text class="small" x="631" y="566" text-anchor="middle">bỏ cạnh · cạnh ngẫu nhiên</text>
+        <text class="small" x="631" y="584" text-anchor="middle">cải thiện phải mất đi</text>
+      </g>
+      <g id="e4" class="step" data-step="15" tabindex="0" role="button" aria-label="Bước 15"><title>15. Hiển thị giải thích; phân tích 5 thành công + 5 thất bại</title>
+        <rect class="box-a" x="766" y="514" width="234" height="92" rx="10"/>
+        <circle cx="782" cy="530" r="10" class="numc"/><text class="num" x="782" y="534" text-anchor="middle">15</text>
+        <text class="lbl" x="891" y="544" text-anchor="middle">Giải thích cơ bản</text>
+        <text class="small" x="883" y="566" text-anchor="middle">hiển thị đường đi</text>
+        <text class="small" x="883" y="584" text-anchor="middle">5 thành công · 5 thất bại</text>
+      </g>
+      <path class="edge-a" d="M128,514 V466 H756 V396" marker-end="url(#ma)"/>
+      <text class="small" x="440" y="460" text-anchor="middle">α, k chọn trên validation đưa vào bước 10</text>
+      <path class="edge" d="M960,392 V510" marker-end="url(#m)"/>
+    </svg>
+    <figcaption class="text-sm opacity-70 pt-2">Mũi tên nét liền màu primary: luồng truy vấn. Nét đứt màu secondary: nơi đồ thị tham gia. Nét chấm màu accent: siêu tham số từ validation. Quy trình gốc trong đề: truy vấn → CLIP → top-k theo cosine → điểm đồ thị → xếp hạng lại → kết quả + đường đi → fidelity <span class="src">§4.2 · tr.2</span>. Ở cấp 1 chưa bắt buộc đo fidelity định lượng (đó là cấp 3).</figcaption>
+  </figure>
+
+  <div id="detail" class="card bg-base-200 border border-warning/50" aria-live="polite">
+    <div class="card-body p-4 md:p-5 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 id="d-title" class="text-lg font-bold">Bấm vào một bước trong sơ đồ</h3>
+        <div class="join">
+          <button id="d-prev" class="btn btn-sm join-item" aria-label="Bước trước">‹ Trước</button>
+          <button id="d-next" class="btn btn-sm join-item" aria-label="Bước sau">Sau ›</button>
+        </div>
+      </div>
+      <p id="d-goal" class="opacity-85"></p>
+      <div id="d-io" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
+      <div id="d-todo"></div>
+      <div id="d-note"></div>
+      <p id="d-src" class="src"></p>
+    </div>
+  </div>
+</section>
+
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Checklist cấp 1">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="checklist" class="space-y-4">
+  <div class="space-y-1">
+    <h2 class="text-xl font-bold">Checklist đầy đủ cho cấp 1</h2>
+    <p class="text-sm opacity-80">Mọi việc cần để đạt cấp 1 và nộp được bài, kể cả việc chưa có trong <code>task-assignment.xlsx</code>. Cột “Loại” tách việc đề bắt buộc với việc nên có. Theo thiết kế nhóm (sheet “Cap do 1”); tiến độ và người làm lấy từ sheet “Phan cong”. <strong>Bấm vào một việc</strong> để xem kết quả thật trong repo: file, thư mục, con số, lệnh chạy lại. Nhãn nhỏ cạnh tên việc cho biết repo có kết quả, có một phần, hay chưa có.</p>
+  </div>
+  <div id="ck-stats" class="stats stats-vertical sm:stats-horizontal bg-base-200 w-full"></div>
+  <div class="flex flex-wrap gap-2" role="group" aria-label="Lọc">
+    <button class="btn btn-sm btn-primary ck-f" data-f="all">Tất cả</button>
+    <button class="btn btn-sm ck-f" data-f="missing">Chưa có trong xlsx</button>
+    <button class="btn btn-sm ck-f" data-f="noowner">Chưa ai nhận</button>
+    <button class="btn btn-sm ck-f" data-f="must">Chỉ bắt buộc + cần nộp</button>
+    <button class="btn btn-sm ck-f" data-f="ext">Nhóm thêm (3 GNN)</button>
+  </div>
+  <div class="flex flex-wrap gap-3 text-xs opacity-80">
+    <span><span class="badge badge-xs badge-error">Bắt buộc</span> đề yêu cầu cho cấp 1</span>
+    <span><span class="badge badge-xs badge-warning">Cần nộp</span> sản phẩm/quy định chung (§8, §9)</span>
+    <span><span class="badge badge-xs badge-info">Nên có</span> giảm rủi ro, không bị chấm trực tiếp</span>
+    <span><span class="badge badge-xs badge-ghost">Tùy chọn</span> điểm cộng / mở rộng</span>
+    <span><span class="badge badge-xs badge-secondary">Nhóm thêm</span> ngoài yêu cầu đề: chạy đủ GCN, GAT, GraphSAGE</span>
+  </div>
+  <div id="ck-body" class="space-y-4"></div>
+</section>
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Offline">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="offline" class="space-y-3">
+  <h2 class="text-xl font-bold">Offline: chuẩn bị một lần</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div id="c1" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-neutral mr-1">1</span>Dữ liệu + split</h3>
+      <p class="text-sm opacity-85">≥1 tập công khai có sẵn đồ thị: Visual Genome (scene graph) hoặc FB15k-237-IMG, hoặc đồ thị dựng từ nhãn <span class="src">§5</span>. Chia train/val/test <strong>một lần</strong>, lưu file; mọi mô hình dùng chung <span class="src">§6</span>.</p>
+      <p class="text-sm opacity-70"><span class="badge badge-xs badge-soft badge-warning">gợi ý</span> Mỗi mẫu test = (câu truy vấn, ảnh đúng). Với Visual Genome cần nguồn câu, vd. region description hoặc caption COCO cho phần ảnh giao nhau.</p>
+    </div></div>
+    <div id="c23" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-neutral mr-1">2</span><span class="badge badge-sm badge-neutral mr-1">3</span>CLIP ảnh + FAISS</h3>
+      <p class="text-sm opacity-85">Đặc trưng ảnh trích <strong>một lần</strong> bằng CLIP/OpenCLIP <strong>đóng băng</strong> (không fine-tune), lưu lại, rồi dựng index FAISS để tìm láng giềng gần <span class="src">§4.1</span>.</p>
+      <p class="text-sm opacity-70">Chuẩn hóa L2 vectơ để tích vô hướng = cosine.</p>
+    </div></div>
+    <div id="c4" class="card bg-base-200 card-border md:col-span-2"><div class="card-body p-4 space-y-2">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-secondary mr-1">4</span>Dựng đồ thị tĩnh <span class="src">§4.2</span></h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <svg class="fig" viewBox="0 0 420 200" width="100%" role="img" aria-labelledby="g-t">
+          <title id="g-t">Ví dụ đồ thị: ảnh, đối tượng, khái niệm</title>
+          <g id="g-edges">
+            <line class="edge" x1="70" y1="100" x2="190" y2="50"/>
+            <line class="edge" x1="70" y1="100" x2="190" y2="150"/>
+            <line class="edge" x1="190" y1="50" x2="190" y2="150"/>
+            <line class="edge-s" x1="190" y1="50" x2="340" y2="50"/>
+            <line class="edge-s" x1="340" y1="50" x2="340" y2="150"/>
+          </g>
+          <text class="small" x="112" y="64">contains</text>
+          <text class="small" x="112" y="146">contains</text>
+          <text class="small" x="196" y="104">on</text>
+          <text class="small" x="248" y="42">RelatedTo</text>
+          <text class="small" x="346" y="104">plays</text>
+          <g id="g-img"><title>Đỉnh ảnh</title><rect class="node-i" x="20" y="78" width="100" height="44" rx="8"/><text class="lbl" x="70" y="105" text-anchor="middle">ảnh #i</text></g>
+          <g id="g-ball"><title>Đỉnh đối tượng</title><circle class="node" cx="190" cy="50" r="28"/><text class="lbl" x="190" y="55" text-anchor="middle">ball</text></g>
+          <g id="g-field"><title>Đỉnh đối tượng</title><circle class="node" cx="190" cy="150" r="28"/><text class="lbl" x="190" y="155" text-anchor="middle">field</text></g>
+          <g id="g-fb"><title>Đỉnh khái niệm (KG ngoài)</title><circle class="node-q" cx="340" cy="50" r="32"/><text class="lbl" x="340" y="55" text-anchor="middle">football</text></g>
+          <g id="g-child"><title>Đỉnh khái niệm (KG ngoài)</title><circle class="node-q" cx="340" cy="150" r="28"/><text class="lbl" x="340" y="155" text-anchor="middle">child</text></g>
+        </svg>
+        <div class="text-sm space-y-2">
+          <p><strong>Đỉnh:</strong> ảnh, đối tượng/thực thể, khái niệm.</p>
+          <p><strong>Cạnh:</strong> ảnh–<em>contains</em>–đối tượng; quan hệ giữa đối tượng trong scene graph (<em>ball on field</em>); quan hệ khái niệm từ KG ngoài như ConceptNet (nét đứt).</p>
+          <p class="opacity-70">Cấp 1 chỉ cần đồ thị <strong>tĩnh</strong>. Nếu có cạnh suy từ thống kê (đồng xuất hiện), chỉ tính trên train <span class="src">§6</span>. Nhãn cạnh trong hình là minh họa.</p>
+        </div>
+      </div>
+    </div></div>
+    <div id="c5" class="card bg-base-200 card-border md:col-span-2"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-secondary mr-1">5</span>Huấn luyện GNN</h3>
+      <p class="text-sm opacity-85">Áp dụng ≥1 mô hình đã học: GCN, GAT hoặc GraphSAGE, để tạo nhúng đỉnh và điểm đồ thị <span class="src">§5</span>. Chỉ dùng tín hiệu từ train; test không được dùng để huấn luyện lớp chiếu hay chọn siêu tham số <span class="src">§6</span>.</p>
+      <p class="text-sm opacity-70"><span class="badge badge-xs badge-soft badge-warning">gợi ý</span> GAT có attention trên cạnh, nên dễ lấy trọng số cạnh làm giải thích hơn GCN.</p>
+    </div></div>
+  </div>
+</section>
+
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Online">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="online" class="space-y-3">
+  <h2 class="text-xl font-bold">Online: một truy vấn đi qua hệ thống</h2>
+  <ul class="steps steps-vertical md:steps-horizontal w-full text-sm">
+    <li class="step step-primary">Truy vấn</li>
+    <li class="step step-primary">CLIP văn bản</li>
+    <li class="step step-primary">Top-k</li>
+    <li class="step step-secondary">Điểm g</li>
+    <li class="step step-primary">Re-rank</li>
+    <li class="step step-accent">Kết quả + giải thích</li>
+  </ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div id="c678" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-primary mr-1">6–8</span>Từ câu tới k ứng viên</h3>
+      <p class="text-sm opacity-85">Mã hóa câu bằng phần văn bản của <strong>cùng</strong> mô hình CLIP, tìm top-k ảnh theo cosine trong FAISS. Dừng ở đây và xếp theo cos là <strong>baseline CLIP thuần</strong>.</p>
+      <p class="text-sm opacity-70">Re-rank chỉ đảo thứ tự trong k ảnh này: ảnh đúng nằm ngoài top-k thì đồ thị không cứu được. Chọn k trên val.</p>
+    </div></div>
+    <div id="c9" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-secondary mr-1">9</span>Điểm đồ thị g</h3>
+      <p class="text-sm opacity-85">Đề cho hai cách: nhúng GNN, hoặc đường đi nối truy vấn với ứng viên <span class="src">§4.2</span>. Cả hai đều cần nối truy vấn vào đồ thị: tách khái niệm trong câu (child, football) rồi khớp với đỉnh.</p>
+      <p class="text-sm opacity-70"><span class="badge badge-xs badge-soft badge-warning">gợi ý</span> Cách khớp (so chuỗi, lemma, hay nhúng văn bản) là quyết định của nhóm; đề không nói.</p>
+    </div></div>
+    <div id="c10" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-primary mr-1">10</span>Kết hợp điểm</h3>
+      <p class="font-mono text-center py-2 text-lg">s = α · cos + (1 − α) · g</p>
+      <p class="text-sm opacity-85">α = 1 là CLIP thuần; α = 0 là chỉ đồ thị. α chọn trên validation <span class="src">§4.2, §6</span>.</p>
+      <p class="text-sm opacity-70"><span class="badge badge-xs badge-soft badge-warning">gợi ý</span> cos và g cần cùng thang (vd. min-max trong k ứng viên), nếu không α mất ý nghĩa.</p>
+    </div></div>
+    <div id="c11" class="card bg-base-200 card-border"><div class="card-body p-4 space-y-1">
+      <h3 class="font-semibold"><span class="badge badge-sm badge-accent mr-1">11</span>Kết quả + giải thích</h3>
+      <p class="text-sm opacity-85">Mỗi ảnh kèm các quan hệ/đường đi <strong>đã đóng góp vào g</strong> của chính ảnh đó <span class="src">§4.2</span>, vd. <code>child –plays→ football –RelatedTo→ ball ←contains– ảnh #i</code>.</p>
+      <p class="text-sm text-error">Không được: xếp hạng xong rồi mới đi tìm một đường đi “hợp lý” <span class="src">§2</span>.</p>
+    </div></div>
+  </div>
+
+  <div role="alert" class="alert alert-soft alert-warning text-sm">
+    <span><strong>Điểm thiết kế quan trọng nhất:</strong> nếu g chỉ là cosine giữa hai nhúng GNN, không đọc ra được đường đi nào đóng góp bao nhiêu. <span class="badge badge-xs badge-soft badge-warning">gợi ý</span> Nên viết g thành tổng theo đường đi, vd. g = Σ<sub>p</sub> w(p) với w học bởi GNN/attention. Khi đó giải thích = các p có w(p) lớn nhất, và bỏ p thì g giảm đúng w(p).</span>
+  </div>
+</section>
+
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Đánh giá">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="eval" class="space-y-3">
+  <h2 class="text-xl font-bold">Đánh giá cấp 1</h2>
+  <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-200">
+    <table class="table table-sm">
+      <thead><tr><th>#</th><th>Việc</th><th>Làm trên</th><th>Chứng minh điều gì</th></tr></thead>
+      <tbody>
+        <tr id="r12"><td>12</td><td>Chọn α, k, siêu tham số GNN</td><td>validation</td><td class="text-sm opacity-80">Không rò rỉ từ test <span class="src">§6</span></td></tr>
+        <tr id="r13"><td>13</td><td>CLIP thuần vs CLIP + Graph: Recall@1/5/10, MRR, mean ± std ≥3 seed</td><td>test, cùng split</td><td class="text-sm opacity-80">Đồ thị có cải thiện xếp hạng không <span class="src">§5, §7</span></td></tr>
+        <tr id="r14"><td>14</td><td>Ablation: bỏ cạnh / thay bằng cạnh ngẫu nhiên, chạy lại pipeline</td><td>test</td><td class="text-sm opacity-80">Cải thiện đến từ <strong>cấu trúc quan hệ</strong>, không phải thêm tham số <span class="src">§5</span></td></tr>
+        <tr id="r15"><td>15</td><td>Hiển thị đường đi cho một số truy vấn; phân tích 5 thành công, 5 thất bại</td><td>test</td><td class="text-sm opacity-80">Giải thích mức cơ bản <span class="src">§5, §7</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="card bg-base-200 card-border p-3 md:p-4">
+    <svg class="fig" viewBox="0 0 900 190" width="100%" role="img" aria-labelledby="ab-t">
+      <title id="ab-t">Ba biến thể đồ thị dùng cho ablation</title>
+      <g id="ab-full"><title>Đồ thị đầy đủ</title>
+        <text class="lbl" x="150" y="22" text-anchor="middle">Đầy đủ</text>
+        <line class="edge-s" x1="60" y1="60" x2="150" y2="60"/><line class="edge-s" x1="150" y1="60" x2="240" y2="60"/><line class="edge-s" x1="150" y1="60" x2="150" y2="140"/><line class="edge-s" x1="60" y1="140" x2="150" y2="140"/>
+        <circle class="node-q" cx="60" cy="60" r="14"/><circle class="node" cx="150" cy="60" r="14"/><circle class="node" cx="240" cy="60" r="14"/><circle class="node" cx="150" cy="140" r="14"/><circle class="node-i" cx="60" cy="140" r="14"/>
+        <text class="small" x="150" y="178" text-anchor="middle">CLIP + Graph</text>
+      </g>
+      <g id="ab-drop"><title>Bỏ cạnh</title>
+        <text class="lbl" x="450" y="22" text-anchor="middle">Bỏ cạnh</text>
+        <line class="edge-x" x1="360" y1="60" x2="450" y2="60"/><line class="edge-x" x1="450" y1="60" x2="450" y2="140"/>
+        <line class="edge-s" x1="450" y1="60" x2="540" y2="60"/>
+        <circle class="node-q" cx="360" cy="60" r="14"/><circle class="node" cx="450" cy="60" r="14"/><circle class="node" cx="540" cy="60" r="14"/><circle class="node" cx="450" cy="140" r="14"/><circle class="node-i" cx="360" cy="140" r="14"/>
+        <text class="small" x="450" y="178" text-anchor="middle">mất đường nối truy vấn → ảnh</text>
+      </g>
+      <g id="ab-rand"><title>Cạnh ngẫu nhiên, giữ số cạnh</title>
+        <text class="lbl" x="750" y="22" text-anchor="middle">Cạnh ngẫu nhiên</text>
+        <line class="edge" x1="660" y1="60" x2="840" y2="60"/><line class="edge" x1="660" y1="60" x2="750" y2="140"/><line class="edge" x1="750" y1="60" x2="660" y2="140"/><line class="edge" x1="840" y1="60" x2="750" y2="140"/>
+        <circle class="node-q" cx="660" cy="60" r="14"/><circle class="node" cx="750" cy="60" r="14"/><circle class="node" cx="840" cy="60" r="14"/><circle class="node" cx="750" cy="140" r="14"/><circle class="node-i" cx="660" cy="140" r="14"/>
+        <text class="small" x="750" y="178" text-anchor="middle">giữ số cạnh, phá ngữ nghĩa</text>
+      </g>
+    </svg>
+    <figcaption class="text-sm opacity-70 pt-2">Kỳ vọng: nếu đồ thị thật sự có ích, hai biến thể bên phải phải kém hơn bản đầy đủ. Hình minh họa, không phải kết quả.</figcaption>
+  </figure>
+
+  <div role="alert" class="alert alert-soft alert-info text-sm">
+    <span><strong>Về 3 seed:</strong> CLIP đóng băng cho cùng một kết quả ở mọi seed (std = 0). Seed chỉ đổi phần ngẫu nhiên: huấn luyện GNN và cạnh ngẫu nhiên trong ablation. Nên ghi rõ điều này trong báo cáo.</span>
+  </div>
+</section>
+
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Thiết kế nhóm">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="team" class="space-y-5">
+  <div class="space-y-1">
+    <h2 class="text-xl font-bold">Thiết kế cấp 1 nhóm đang làm</h2>
+    <p class="text-sm opacity-80">Nguồn: sheet <strong>“Cap do 1”</strong> trong <code>task-assignment.xlsx</code>, đổi thiết kế ngày 2026-09-19. Khác sơ đồ ở tab Toàn cảnh (theo gợi ý chung của đề): <strong>không có một đồ thị chung</strong>, mà mỗi ảnh một scene graph riêng, so với một đồ thị nhỏ tách từ câu truy vấn.</p>
+  </div>
+
+  <figure class="card bg-base-200 card-border p-3 md:p-4">
+    <svg class="fig" viewBox="0 0 960 300" width="100%" role="img" aria-labelledby="tm-t">
+      <title id="tm-t">Thiết kế nhóm: khớp bộ ba giữa đồ thị truy vấn và scene graph của ảnh</title>
+      <defs><marker id="tmp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-p" d="M0,0 L10,5 L0,10 z"/></marker>
+            <marker id="tms" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-s" d="M0,0 L10,5 L0,10 z"/></marker><marker id="tmn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>
+            <marker id="tma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-a" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+      <text class="lane-t" x="12" y="24">TRUY VẤN</text>
+      <g id="tm-cap"><title>Caption COCO làm truy vấn</title>
+        <rect class="box-p" x="10" y="36" width="190" height="56" rx="10"/>
+        <text class="small" x="105" y="60" text-anchor="middle">“a child playing</text><text class="small" x="105" y="76" text-anchor="middle">with a ball”</text></g>
+      <path class="edge-p" d="M200,64 H246" marker-end="url(#tmp)"/><text class="small" x="223" y="56" text-anchor="middle">tách</text>
+      <g id="tm-qg"><title>Đồ thị truy vấn: bộ ba (child, playing with, ball)</title>
+        <rect class="box" x="250" y="30" width="250" height="68" rx="10"/>
+        <circle class="node-q" cx="300" cy="64" r="22"/><text class="small" x="300" y="68" text-anchor="middle">child</text>
+        <circle class="node-q" cx="450" cy="64" r="22"/><text class="small" x="450" y="68" text-anchor="middle">ball</text>
+        <path class="edge-p" d="M322,64 H424" marker-end="url(#tmp)"/><text class="small" x="373" y="56" text-anchor="middle">playing with</text></g>
+
+      <text class="lane-t" x="12" y="146">ẢNH ỨNG VIÊN (TRONG TOP-50 CLIP)</text>
+      <g id="tm-img"><title>Ảnh ứng viên</title>
+        <rect class="box-s" x="10" y="176" width="190" height="56" rx="10"/>
+        <text class="lbl" x="105" y="200" text-anchor="middle">ảnh #i</text><text class="small" x="105" y="218" text-anchor="middle">scene graph VG150</text></g>
+      <path class="edge-s" d="M200,204 H246" marker-end="url(#tms)"/>
+      <g id="tm-sg"><title>Scene graph riêng của ảnh #i</title>
+        <rect class="box" x="250" y="160" width="250" height="118" rx="10"/>
+        <circle class="node" cx="300" cy="196" r="22"/><text class="small" x="300" y="200" text-anchor="middle">child</text>
+        <circle class="node" cx="450" cy="196" r="22"/><text class="small" x="450" y="200" text-anchor="middle">ball</text>
+        <circle class="node" cx="450" cy="254" r="20"/><text class="small" x="450" y="258" text-anchor="middle">grass</text>
+        <path class="edge-s" d="M322,196 H424" marker-end="url(#tms)"/><text class="small" x="373" y="188" text-anchor="middle">holding</text>
+        <path class="edge-s" d="M450,218 V230" marker-end="url(#tms)"/><text class="small" x="458" y="228">on</text></g>
+
+      <g id="tm-gat"><title>Một GAT dùng chung chạy trong từng đồ thị nhỏ, ra vectơ cho mỗi bộ ba</title>
+        <rect class="box-s" x="560" y="110" width="150" height="70" rx="10"/>
+        <text class="lbl" x="635" y="138" text-anchor="middle">GAT dùng chung</text><text class="small" x="635" y="158" text-anchor="middle">vectơ cho mỗi bộ ba</text></g>
+      <path class="edge" d="M500,64 C530,64 530,130 556,130" marker-end="url(#tmn)"/>
+      <path class="edge" d="M500,210 C530,210 530,160 556,160" marker-end="url(#tmn)"/>
+      <g id="tm-g"><title>Điểm đồ thị = trung bình trên bộ ba truy vấn của cos lớn nhất với một bộ ba của ảnh</title>
+        <rect class="box-p" x="760" y="100" width="190" height="90" rx="10"/>
+        <text class="lbl" x="855" y="126" text-anchor="middle">Điểm g = độ khớp bộ ba</text>
+        <text class="small" x="855" y="146" text-anchor="middle">mỗi bộ ba truy vấn lấy</text>
+        <text class="small" x="855" y="162" text-anchor="middle">cos lớn nhất với ảnh,</text>
+        <text class="small" x="855" y="178" text-anchor="middle">rồi lấy trung bình</text></g>
+      <path class="edge-p" d="M710,145 H756" marker-end="url(#tmp)"/>
+      <g id="tm-exp"><title>Giải thích = các cặp bộ ba khớp và đóng góp của chúng</title>
+        <rect class="box-a" x="760" y="218" width="190" height="60" rx="10"/>
+        <text class="lbl" x="855" y="242" text-anchor="middle">Giải thích</text>
+        <text class="small" x="855" y="262" text-anchor="middle">cặp bộ ba khớp + đóng góp</text></g>
+      <path class="edge-a" d="M855,190 V214" marker-end="url(#tma)"/>
+    </svg>
+    <figcaption class="text-sm opacity-70 pt-2">Minh họa theo mô tả trong sheet (bước 1.5–1.10). Không có cạnh nào nối qua nhiều ảnh, nên không có thống kê của val/test lọt vào huấn luyện.</figcaption>
+  </figure>
+
+  <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-200">
+    <table class="table table-sm">
+      <thead><tr><th>Khía cạnh</th><th>Gợi ý chung của đề (tab Toàn cảnh)</th><th>Thiết kế nhóm (sheet “Cap do 1”)</th></tr></thead>
+      <tbody>
+        <tr><td class="font-semibold">Đồ thị</td><td>Một đồ thị chung: đỉnh ảnh, đối tượng, khái niệm</td><td>Mỗi ảnh một scene graph riêng + một đồ thị nhỏ cho mỗi truy vấn</td></tr>
+        <tr><td class="font-semibold">Truy vấn vào đồ thị</td><td>Khớp khái niệm trong câu với đỉnh</td><td>Tách caption thành bộ ba (chủ thể, quan hệ, đối tượng), chuẩn hóa theo alias VG150</td></tr>
+        <tr><td class="font-semibold">ConceptNet</td><td>Dùng ngay ở cấp 1 (tùy chọn)</td><td>Để sang cấp 2, như một lớp khái niệm bật/tắt</td></tr>
+        <tr><td class="font-semibold">GNN</td><td>GCN/GAT/GraphSAGE trên đồ thị chung</td><td>Một GAT 2 lớp dùng chung, chạy trong từng đồ thị nhỏ; loại quan hệ đưa vào attention</td></tr>
+        <tr><td class="font-semibold">Điểm g</td><td>Nhúng GNN hoặc đường đi truy vấn → ảnh</td><td>Trung bình (trên bộ ba truy vấn) của cos lớn nhất với bộ ba của ảnh</td></tr>
+        <tr><td class="font-semibold">Giải thích</td><td>Đường đi đóng góp vào g</td><td>Các cặp bộ ba khớp + đóng góp của từng cặp, lấy thẳng từ công thức g</td></tr>
+        <tr><td class="font-semibold">Ablation</td><td>Bỏ cạnh, cạnh ngẫu nhiên</td><td>(a) bỏ quan hệ, chỉ còn đối tượng; (b) xáo cạnh; (c) gán scene graph của ảnh khác</td></tr>
+        <tr><td class="font-semibold">Hạn chế sheet tự ghi</td><td>—</td><td>Scene graph của ảnh ứng viên là chú thích gán tay; ảnh mới ngoài đời không có sẵn. Tỉ lệ bộ ba khớp thấp thì phải xét lại thiết kế.</td></tr>
+        <tr><td class="font-semibold">Truy vấn gián tiếp <span class="badge badge-xs badge-soft badge-warning">suy luận</span></td><td>ConceptNet cho đường child–plays–football</td><td>Chưa có ở cấp 1 (không có KG ngoài). Đề chỉ bắt tách trực tiếp / gián tiếp từ cấp 2, nên không vi phạm.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-200">
+    <table class="table table-sm">
+      <thead><tr><th>Sheet</th><th>Việc</th><th>Đầu vào</th><th>Đầu ra (file đề xuất)</th><th>≈ bước trang</th></tr></thead>
+      <tbody class="text-sm">
+        <tr><td>1.1</td><td>Tải dữ liệu</td><td>VG v1.4 JSON (image_data, objects, relationships, alias); COCO 2014 captions; dataset_coco.json (Karpathy)</td><td>data/raw/…; data/README.md (link + checksum)</td><td>1</td></tr>
+        <tr><td>1.2</td><td>Join, tập con, split</td><td>coco_id trong image_data.json, split Karpathy, caption</td><td>data/splits/vg_coco_{train,val,test}.json; experiments/data_stats.md</td><td>1</td></tr>
+        <tr><td>1.3</td><td>Trích CLIP</td><td>Ảnh, caption, nhãn VG150</td><td>data/features/vg_coco_{image,caption,concept}.npy + .ids.json</td><td>2, 7</td></tr>
+        <tr><td>1.4</td><td>Baseline CLIP</td><td>Đặc trưng, split test</td><td>experiments/level1/clip_baseline/metrics.json, top50_{val,test}.npy</td><td>3, 8</td></tr>
+        <tr><td>1.5</td><td>Dựng đồ thị</td><td>objects, relationships, alias, VG150, split, caption</td><td>data/graphs/vg_coco_scene_graphs.jsonl; experiments/level1/graph_stats.md</td><td>4</td></tr>
+        <tr><td>1.6</td><td>Đồ thị truy vấn</td><td>Caption, alias, nhãn VG150</td><td>data/processed/query_graphs_{train,val,test}.json</td><td>6</td></tr>
+        <tr><td>1.7</td><td>GNN + điểm đồ thị</td><td>Scene graph, đồ thị truy vấn, top-50, split train/val</td><td>src/models/graph_matcher.py; experiments/level1/gat/seed_{0,1,2}/</td><td>5, 9</td></tr>
+        <tr><td>1.8</td><td>Xếp hạng lại</td><td>top-50, điểm đồ thị, split val/test</td><td>experiments/level1/rerank/metrics.json, alpha_sweep_val.csv</td><td>10, 12, 13</td></tr>
+        <tr><td>1.9</td><td>Ablation</td><td>Scene graph, pipeline 1.7–1.8</td><td>experiments/level1/ablation/{no_rel,shuffled,random}/</td><td>14</td></tr>
+        <tr><td>1.10</td><td>Giải thích</td><td>Checkpoint GAT, scene graph, đồ thị truy vấn</td><td>src/explain/path_explainer.py; notebooks/demo_retrieval.ipynb</td><td>11</td></tr>
+        <tr><td>1.11</td><td>5 + 5 ca</td><td>Kết quả test hai hệ thống, giải thích</td><td>report/analysis/level1_case_studies.md</td><td>15</td></tr>
+        <tr><td>1.12</td><td>Platform demo</td><td>Đặc trưng + FAISS; sau đó GAT, re-rank, giải thích</td><td>app/demo_app.py; src/service/search_service.py</td><td>11</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card bg-base-200 card-border"><div class="card-body p-4 text-sm space-y-1">
+    <h3 class="font-semibold">Sheet ghi “cần chốt”</h3>
+    <ul class="space-y-1">
+      <li><span class="badge badge-sm badge-success mr-1">đã chốt</span>Lấy toàn bộ phần giao VG ∩ COCO, không lấy mẫu (2026-09-18).</li>
+      <li><span class="badge badge-sm badge-success mr-1">đã chốt</span>Đồ thị riêng từng ảnh, khớp mức bộ ba; ConceptNet sang cấp 2 (2026-09-19).</li>
+      <li><span class="badge badge-sm badge-ghost mr-1">mở</span>Encoder: chờ thử CLIP đa ngữ (task B9, chưa ai nhận).</li>
+      <li><span class="badge badge-sm badge-ghost mr-1">mở</span>k của top-k (đề xuất 50) và cách chuẩn hóa điểm trước khi cộng.</li>
+      <li><span class="badge badge-sm badge-ghost mr-1">mở</span>Framework demo: Gradio hay Streamlit (đề xuất Gradio).</li>
+    </ul>
+  </div></div>
+</section>
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Phân công">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="assign" class="space-y-4">
+  <div class="space-y-1">
+    <h2 class="text-xl font-bold">Ai đã nhận việc gì</h2>
+    <p class="text-sm opacity-80">Đọc từ sheet <strong>“Phan cong”</strong> trong <code>task-assignment.xlsx</code> (33 việc, hàng B6–B38). Trạng thái là do nhóm tự điền, trang này chưa kiểm tra với code.</p>
+  </div>
+  <div class="stats stats-vertical sm:stats-horizontal bg-base-200 w-full">
+    <div class="stat"><div class="stat-title">Lộc</div><div class="stat-value text-primary">12</div><div class="stat-desc">Chính · 1 Hỗ trợ</div></div>
+    <div class="stat"><div class="stat-title">Đạt</div><div class="stat-value text-primary">4</div><div class="stat-desc">Chính (cấp 2)</div></div>
+    <div class="stat"><div class="stat-title">Khoa · Nhi · Khang</div><div class="stat-value">0</div><div class="stat-desc">chưa nhận việc</div></div>
+    <div class="stat"><div class="stat-title">Chưa có người Chính</div><div class="stat-value text-warning">17</div><div class="stat-desc">trên 33 việc</div></div>
+  </div>
+  <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-200">
+    <table class="table table-sm">
+      <thead><tr><th>Hàng</th><th>Việc (giai đoạn 0 + cấp 1)</th><th>Chính</th><th>Trạng thái</th><th>Bước trang</th></tr></thead>
+      <tbody class="text-sm">
+        <tr><td class="src">B6</td><td>Khung repo, config theo seed, requirements, script tải dữ liệu</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-success">Xong</span></td><td>1</td></tr>
+        <tr><td class="src">B7</td><td>Module trích đặc trưng CLIP, lưu .npy, index FAISS</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-success">Xong</span></td><td>2, 3, 7</td></tr>
+        <tr><td class="src">B8</td><td>Module đánh giá: R@1/5/10, MRR, mean ± std</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-success">Xong</span></td><td>13</td></tr>
+        <tr class="bg-warning/10"><td class="src">B9</td><td>Thử CLIP đa ngữ, chốt encoder</td><td><span class="badge badge-sm badge-warning">chưa ai</span></td><td><span class="badge badge-sm badge-soft badge-ghost">Chưa bắt đầu</span></td><td>2, 7</td></tr>
+        <tr><td class="src">B10</td><td>Dữ liệu: join coco_id, split Karpathy, lưu file split</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-success">Xong</span></td><td>1</td></tr>
+        <tr><td class="src">B11</td><td>Baseline CLIP thuần: caption → top-k</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-success">Xong</span></td><td>8</td></tr>
+        <tr><td class="src">B12</td><td>Dựng đồ thị: VG150, scene graph từng ảnh, thống kê</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>4</td></tr>
+        <tr><td class="src">B13</td><td>Đồ thị truy vấn: tách caption thành bộ ba</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>6</td></tr>
+        <tr><td class="src">B14</td><td>GAT trong từng đồ thị nhỏ; điểm = độ khớp bộ ba</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>5, 9</td></tr>
+        <tr><td class="src">B15</td><td>Re-rank, chọn α trên val</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>10, 12</td></tr>
+        <tr><td class="src">B16</td><td>Ablation: bỏ / xáo cạnh, scene graph ngẫu nhiên</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>14</td></tr>
+        <tr><td class="src">B17</td><td>Giải thích cơ bản: cặp bộ ba khớp + đóng góp</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>11</td></tr>
+        <tr><td class="src">B18</td><td>Platform demo (web app)</td><td><span class="badge badge-sm badge-primary">Lộc</span></td><td><span class="badge badge-sm badge-soft badge-info">Đang làm</span></td><td>11</td></tr>
+        <tr class="bg-warning/10"><td class="src">B19</td><td>Phân tích 5 thành công + 5 thất bại</td><td><span class="badge badge-sm badge-warning">chưa ai</span></td><td><span class="badge badge-sm badge-soft badge-ghost">Chưa bắt đầu</span></td><td>15</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card bg-base-200 card-border"><div class="card-body p-4 text-sm space-y-1">
+    <h3 class="font-semibold">Ngoài cấp 1, còn trống người Chính</h3>
+    <ul class="list-disc pl-4 space-y-1">
+      <li>Cấp 2: B21 chạy lại CLIP / CLIP + GNN trên MKG-W; B24 soạn bộ ≥20 truy vấn; B25 báo cáo trực tiếp / gián tiếp. (Đạt đã nhận B20, B22, B23, B26.)</li>
+      <li>Cấp 3: toàn bộ B27–B32 (fidelity / validity / sparsity, MMKG tiếng Việt, chuyển giao).</li>
+      <li>Cấp 4: B33, B34.</li>
+      <li>Sản phẩm nộp: B35 báo cáo, B36 slide, B37 demo + video, B38 README / chống rò rỉ / khai báo AI (Lộc chỉ Hỗ trợ).</li>
+    </ul>
+  </div></div>
+</section>
+</div>
+<input type="radio" name="main_tabs" class="tab" aria-label="Ngoài phạm vi">
+<div class="tab-content bg-base-100 border-base-300 p-4 md:p-6">
+<section id="scope" class="text-sm opacity-85 space-y-1">
+  <h2 class="text-base font-bold opacity-100">Ngoài phạm vi trang này</h2>
+  <p>Image → text (nhánh B), tập công khai thứ hai, phương pháp 2024, bộ 20 truy vấn (cấp 2); fidelity/validity/sparsity định lượng và MMKG tiếng Việt (cấp 3).</p>
+</section>
+</div>
+</div>
+
+</main>
+<script>
+const EV = {
+ dataset:{s:'done',sum:'Chọn Visual Genome v1.4 ∩ MS-COCO: ảnh Visual Genome có coco_id nằm trong split Karpathy của COCO. Cấp 1 dùng đúng một tập này.',
+  items:['Visual Genome: ảnh + scene graph (objects, relationships, alias); COCO: 5 caption mỗi ảnh (split Karpathy)','Hai bộ dùng chung ảnh, nối bằng trường coco_id trong image_data.json','Danh sách VG150 (150 lớp, 50 quan hệ) tải từ repo danfeiX/scene-graph-TF-release ngày 2026-09-19','MKG-W (cấp 2) chưa có script; MMKG tiếng Việt chưa bắt đầu'],
+  nums:[['Ảnh Visual Genome','108 077'],['Có coco_id trong Karpathy','51 498'],['Bỏ vì trùng coco_id','290'],['Giữ lại','51 208']],
+  files:['data/README.md','data/MANIFEST.md','experiments/data_stats.md']},
+ pairs:{s:'done',sum:'Mỗi ảnh trong file split mang mảng captions; mỗi caption là một truy vấn, đáp án đúng là chính ảnh chứa nó.',
+  items:['Trường của mỗi ảnh: image_id, coco_id, file_name, url, width, height, captions[]','caption_id = <coco_id>_<thứ tự>, vd. 248774_1','Ví dụ (test): ảnh 61512 ↔ “Two horses standing inside a fence on the grass.”','Định dạng mô tả ở docs/interfaces.md mục 1'],
+  files:['data/splits/vg_coco_{train,val,test}.json','docs/interfaces.md']},
+ split:{s:'done',sum:'Ba file split đã commit vào git và là nguồn chân lý duy nhất; mọi script đọc đường dẫn từ configs/default.yaml.',
+  items:['Theo split Karpathy có sẵn, restval gộp vào train, không lấy mẫu','Code tự kiểm: không ảnh nào nằm ở hai split','Ảnh tải theo url trong file split vào data/raw/images/<image_id>.jpg'],
+  nums:[['train','46 944 ảnh · 234 854 caption'],['val','2 126 ảnh · 10 633 caption'],['test','2 138 ảnh · 10 696 caption']],
+  files:['data/splits/','src/data/build_split.py','configs/default.yaml (paths.splits)','experiments/data_stats.md'],cmd:'python -m src.data.build_split'},
+ seed:{s:'done',sum:'Split không phụ thuộc seed vì lấy nguyên split Karpathy, không lấy mẫu; chỉ cần mã tạo split để tái lập.',
+  items:['Mã tạo split: src/data/build_split.py','Seed cho thực nghiệm chính khai báo sẵn: seeds [0, 1, 2] trong configs/default.yaml','Checksum file gốc ghi ở data/MANIFEST.md'],
+  files:['src/data/build_split.py','configs/default.yaml','src/utils/seed.py'],cmd:'python -m src.data.build_split'},
+ repo:{s:'done',sum:'Khung repo có config chung, seed, requirements và bộ test.',
+  items:['configs/default.yaml: seed 0, seeds [0, 1, 2], đường dẫn, tên encoder, top_k = 50','requirements.txt','tests/: metrics, features + index, scene graph, soft match, search service, ba kênh'],
+  files:['configs/default.yaml','requirements.txt','src/utils/config.py','src/utils/seed.py','tests/']},
+ download:{s:'done',sum:'Script tải chú thích (~170 MB) và script tải ảnh theo split, có checksum SHA-256.',
+  items:['Tải ngày 2026-09-18; SHA-256 từng file ở data/MANIFEST.md','Ảnh không tải cả bộ ~15 GB, chỉ tải 51 208 ảnh của tập con (~7,3 GB)','Hầu hết mọi người chỉ cần --splits test val (4 264 ảnh, ~600 MB)','Đặc trưng CLIP chia sẻ qua Google Drive của nhóm (link trong data/README.md)'],
+  files:['scripts/download_data.py','scripts/download_images.py','data/README.md','data/MANIFEST.md'],cmd:'python scripts/download_data.py\npython scripts/download_images.py --splits test val'},
+ stats:{s:'done',sum:'Bảng thống kê sinh tự động khi tạo split.',nums:[['train','46 944 ảnh · 234 854 caption'],['val','2 126 ảnh · 10 633 caption'],['test','2 138 ảnh · 10 696 caption']],files:['experiments/data_stats.md']},
+ license:{s:'none',sum:'Chưa thấy ghi chép nào về giấy phép / điều khoản sử dụng Visual Genome và COCO trong repo.'},
+ clip:{s:'done',sum:'Đặc trưng CLIP đóng băng đã trích cho toàn bộ ảnh và caption, chuẩn hóa L2.',
+  items:['Encoder ViT-B-32-quickgelu / openai (open_clip 3.3.0, torch 2.14.0), trích ngày 2026-09-19 trên RTX 4090','Đã sửa lỗi tên cấu hình: ViT-B-32 → ViT-B-32-quickgelu, baseline tăng ~1 điểm; số cũ ở experiments/archive-vit-b-32-gelu/','Không tự trích lại: tải từ Drive, đối chiếu checksum'],
+  nums:[['Vectơ ảnh','51 208 × 512'],['Vectơ caption','256 183 × 512']],
+  files:['data/features/vg_coco_image.npy + .ids.json (Drive)','data/features/vg_coco_caption.npy + .ids.json (Drive)','scripts/extract_features.py','src/features/extract_clip.py','data/MANIFEST.md'],cmd:'python scripts/extract_features.py   # chỉ khi đổi encoder'},
+ faiss:{s:'done',sum:'Tìm kiếm cosine chính xác bằng FAISS IndexFlatIP; tự kiểm vectơ đã chuẩn hóa L2.',
+  items:['Pool ứng viên = toàn bộ ảnh của split đang đánh giá (val 2 126, test 2 138)'],files:['src/retrieval/faiss_index.py','tests/test_features_and_index.py']},
+ metrics:{s:'done',sum:'Module metrics dùng chung cho mọi thực nghiệm.',
+  items:['Recall@k, MRR (MRR@độ dài danh sách, ở đây @50)','Hạng tính từ 1; đáp án không có trong danh sách = trượt','Std qua seed là độ lệch chuẩn mẫu (ddof = 1); một lần chạy thì std = 0'],
+  files:['src/eval/metrics.py','tests/test_metrics.py']},
+ baseline:{s:'done',sum:'Baseline CLIP thuần đã chạy trên val và test, kết quả xác định (std = 0). Đã chạy lại trên máy thứ hai ra đúng số.',
+  nums:[['val R@1 / R@5 / R@10','39,13 / 67,88 / 78,97'],['val MRR@50','52,34'],['test R@1 / R@5 / R@10','39,32 / 66,39 / 77,32'],['test MRR@50','52,00']],
+  items:['top50_<split>.json (đầu vào của re-rank) không commit, sinh lại trong vài giây'],
+  files:['experiments/level1/clip_baseline/metrics_{val,test}.json','experiments/level1/README.md','src/retrieval/clip_baseline.py'],cmd:'python -m src.retrieval.clip_baseline'},
+ sanity:{s:'done',sum:'Chạy đúng pipeline trên pool MSCOCO 5K chuẩn: khớp số đã công bố, lệch tối đa 0,03 điểm.',
+  nums:[['Nhóm (text→ảnh R@1/5/10)','30,45 / 55,97 / 66,86'],['Công bố (open_clip)','30,44 / 55,94 / 66,87']],
+  items:['Thêm phép thử cách đưa ảnh về hình vuông trên val: ba cách gần như ngang nhau, giữ cắt giữa'],
+  files:['experiments/checks/README.md (mục 1, 2)','experiments/checks/coco5k_zero_shot.json','scripts/checks/coco5k_zero_shot.py']},
+ r50:{s:'done',sum:'Recall@50 của baseline đã có: khoảng 3,3% truy vấn có đáp án ngoài top-50, re-rank không cứu được.',nums:[['val R@50','96,72'],['test R@50','96,66']],files:['experiments/level1/README.md']},
+ topk:{s:'partial',sum:'K = 50 được giữ sau phép thử độ nhạy K trên val (không huấn luyện): K = 50, 100, 200 cho R@1 gần như bằng nhau.',
+  nums:[['K = 50','R@1 43,50'],['K = 100','R@1 43,55'],['K = 200','R@1 43,52']],files:['experiments/checks/README.md (mục 6)','experiments/checks/three_channel_probe.json']},
+ encoder:{s:'partial',sum:'Encoder đang dùng là ViT-B-32-quickgelu / openai (configs/default.yaml). Chưa thấy phép thử CLIP đa ngữ.',files:['configs/default.yaml']},
+ sg:{s:'partial',sum:'Đã có code dựng scene graph từng ảnh; chưa thấy file đồ thị dựng sẵn (data/graphs/) trong repo.',
+  items:['Nhãn chuẩn hóa theo alias; lọc VG150 là tùy chọn','Mỗi đồ thị chỉ chứa chú thích của chính ảnh đó, không gộp qua ảnh hay split','Phép đo mục 3 khuyến nghị KHÔNG lọc VG150 (open_vocab), vì VG150 bỏ mất water, grass, field'],
+  files:['src/graph/scene_graph.py','tests/test_scene_graph.py','experiments/checks/README.md (mục 3)']},
+ concept:{s:'partial',sum:'Có kế hoạch nhưng chưa làm cho cấp 1: docs/interfaces.md ghi vg_coco_concept.npy là “chưa trích”. Hiện chỉ có vectơ các phần đồ thị của riêng split val, sinh trong phép thử không huấn luyện.',
+  items:['Kế hoạch: sheet “Cap do 1” bước 1.3 và 1.5; đối tượng theo mẫu “a photo of a {tên}”, quan hệ mã hoá nguyên văn','Mẫu đã có trong config: clip.concept_prompt = "a photo of a {}"','Đã có (chỉ val, chỉ trên máy chạy): data/features/vg_coco_val_graph_parts.npy, 42 736 × 512','Thiếu: vectơ cho train (để huấn luyện GAT) và test','Task B7 (Xong) chỉ gồm vectơ ảnh và caption, không gồm việc này; chưa có dòng nào trong task-assignment.xlsx'],
+  files:['docs/interfaces.md','configs/default.yaml','scripts/checks/soft_graph_rerank_probe.py','scripts/checks/three_channel_probe.py','src/features/extract_clip.py']},
+ gnn_loader:{s:'none',sum:'Chưa có. Định dạng nguồn đã chốt ở docs/interfaces.md mục 3 (JSON thuần: objects, relations cho mỗi ảnh và mỗi truy vấn). PyTorch Geometric 2.8.0.post1 đã có trong requirements.txt.',files:['docs/interfaces.md','requirements.txt','src/graph/scene_graph.py','src/graph/parse_query.py']},
+ gnn_rel:{s:'none',sum:'Chưa có. GCNConv chỉ nhận một trọng số vô hướng cho mỗi cạnh, SAGEConv không nhận đặc trưng cạnh; nếu không biến đổi đồ thị thì hai mô hình này không thấy nhãn quan hệ.',items:['Cách 1: mỗi quan hệ thành một đỉnh riêng mang vectơ của nhãn quan hệ','Cách 2: bỏ nhãn quan hệ, chỉ giữ cạnh; khi đó so sánh gần giống ablation “bỏ quan hệ” (B16), phải ghi rõ trong báo cáo']},
+ gnn_feat:{s:'none',sum:'Phụ thuộc cách B14 lấy đặc trưng đỉnh / cạnh. Hiện chỉ có vectơ các phần đồ thị của val trong phép thử (data/features/vg_coco_val_graph_parts.npy, chỉ trên máy chạy).'},
+ gnn_iface:{s:'none',sum:'Chưa có: src/models/ còn trống. API điểm đồ thị đã đề xuất ở docs/interfaces.md mục 4: score(query, candidate_image_id) → (điểm, danh sách cặp bộ ba khớp) và score_without(...).',files:['docs/interfaces.md','configs/default.yaml']},
+ gnn_gcn:{s:'none',sum:'Chưa có.'},
+ gnn_sage:{s:'none',sum:'Chưa có.'},
+ gnn_hp:{s:'none',sum:'Chưa có.'},
+ gnn_seeds:{s:'none',sum:'Chưa có. Seed đã khai báo trong configs/default.yaml: seeds [0, 1, 2].',files:['configs/default.yaml']},
+ gnn_eval:{s:'none',sum:'Chưa có. Mốc phải vượt trên val: điểm đồ thị ba kênh không huấn luyện, R@1 = 43,50 (CLIP thuần 39,13).',files:['experiments/checks/README.md (mục 6)']},
+ gnn_table:{s:'none',sum:'Chưa có.'},
+ gnn_explain:{s:'none',sum:'Chưa có: src/explain/ còn trống. Giải thích lấy từ các cặp bộ ba khớp nên về nguyên tắc dùng chung được cho cả 3 mô hình.'},
+ gnn_demo:{s:'none',sum:'Chưa có. Demo có sẵn chỗ cắm add_mode trong src/service/search_service.py.',files:['src/service/search_service.py','app/demo_app.py']},
+ kg:{s:'none',sum:'Không làm ở cấp 1: thiết kế nhóm để ConceptNet sang cấp 2 (task B26).'},
+ coverage:{s:'done',sum:'Đã đo độ phủ trên val (khớp nhãn chính xác): khớp bộ ba chính xác phủ quá ít, mức thực thể là tín hiệu mạnh; cần khớp mềm.',
+  nums:[['Đối tượng / quan hệ mỗi ảnh (open_vocab)','26,43 / 17,90'],['Caption có ≥1 thực thể trúng ảnh gốc','80,62%'],['Caption có ≥1 bộ ba trúng','5,58%']],
+  files:['experiments/checks/README.md (mục 3)','experiments/checks/scene_graph_coverage.json','scripts/checks/scene_graph_coverage.py'],cmd:'python scripts/checks/scene_graph_coverage.py --workers 24'},
+ parse:{s:'partial',sum:'Đã có bộ tách caption (SceneGraphParser 0.1.0 trên spaCy 3.8.16). Đồ thị truy vấn mới sinh cho phép thử (train mẫu, val), chưa có cho test.',
+  nums:[['Caption val có ≥1 thực thể','99,98%'],['Caption val có ≥1 quan hệ','88,38%']],
+  files:['src/graph/parse_query.py','data/processed/query_graphs_check_{train,val}.json (chỉ trên máy chạy)']},
+ manual30:{s:'none',sum:'Chưa thấy kết quả kiểm tra tay ~30 truy vấn. Phép đo mục 3 có liệt kê nhiễu của bộ tách (that, it, group…) nhưng là thống kê tự động.'},
+ gat:{s:'partial',sum:'Chưa có code GAT (src/models/ còn trống). Đã có mốc tham chiếu không huấn luyện mà GAT phải vượt.',
+  items:['Ba kênh (CLIP + vật thể + bộ ba), α = 0,6, β = 0,7, τ = 0,05: val R@1 = 43,50','GAT khởi tạo đúng ba giá trị này, bước 0 phải tái tạo con số trên (file điểm tham chiếu .npz)','Lưu ý: α, β trong phép thử được chọn trên chính val dùng để báo cáo'],
+  files:['experiments/checks/README.md (mục 4, 6)','experiments/checks/three_channel_probe_reference_scores.npz','src/graph/soft_match.py']},
+ seeds3:{s:'none',sum:'Chưa có lần chạy nhiều seed nào (chưa có mô hình học). Config đã khai báo seeds [0, 1, 2].',files:['configs/default.yaml']},
+ gcn:{s:'none',sum:'Chưa có; việc này không có trong task-assignment.xlsx.'},
+ rerank:{s:'partial',sum:'Công thức re-rank đã chạy trong phép thử không huấn luyện: điểm = α·z(CLIP) + (1−α)·Graph, z-score trong top-50 của từng truy vấn.',
+  nums:[['CLIP thuần (val R@1)','39,13'],['CLIP + vật thể','43,21'],['Ba kênh','43,50'],['Đối chứng: scene graph ảnh khác','39,13']],
+  files:['src/graph/soft_match.py','scripts/checks/three_channel_probe.py','experiments/checks/README.md (mục 4, 6)']},
+ alpha:{s:'partial',sum:'Đã quét α (và β) từ 0 đến 1 bước 0,1 trên val trong phép thử. Chưa có bước khóa α rồi chạy test một lần.',
+  nums:[['α tốt nhất (vật thể)','0,6'],['α, β tốt nhất (ba kênh)','0,6 · 0,7']],files:['experiments/checks/soft_graph_rerank_probe.json','experiments/checks/three_channel_probe.json']},
+ table:{s:'none',sum:'Chưa có bảng CLIP + Graph trên test. Các số CLIP + Graph hiện có đều trên val, từ phép thử không huấn luyện.'},
+ alpha_curve:{s:'partial',sum:'Đường quét α trên val đã có trong JSON của phép thử (mức vật thể): R@1 26,34 (α = 0) → 42,99 (α = 0,6) → 39,13 (α = 1). Chưa vẽ thành hình, chưa có trên test.',files:['experiments/checks/soft_graph_rerank_probe.json']},
+ abl_rel:{s:'partial',sum:'Chưa có ablation trên mô hình học. Phép thử không huấn luyện cho thấy kênh bộ ba chỉ thêm 0,29 điểm R@1 so với chỉ dùng vật thể.',files:['experiments/checks/README.md (mục 6)']},
+ abl_rand:{s:'partial',sum:'Đối chứng “gán scene graph của ảnh khác” đã chạy trong phép thử trên val: kết quả rơi đúng về CLIP thuần (α tốt nhất = 1). Chưa làm trên mô hình học.',files:['experiments/checks/README.md (mục 4, 6)']},
+ abl_table:{s:'none',sum:'Chưa có bảng ablation 4 hàng (cần mô hình GAT trước).'},
+ explain:{s:'none',sum:'Chưa có code giải thích: src/explain/ còn trống.'},
+ remove:{s:'none',sum:'Chưa có hàm bỏ bộ ba rồi tính lại điểm.'},
+ demo:{s:'partial',sum:'Demo Gradio đã chạy được ở chế độ CLIP thuần. Chế độ CLIP + Đồ thị có sẵn chỗ cắm (add_mode) nhưng chưa có re-ranker đăng ký.',
+  items:['Giao diện chỉ gọi SearchService.search(query, mode, k)','Chạy offline khi đã có đặc trưng và ảnh val/test'],
+  files:['app/demo_app.py','src/service/search_service.py','tests/test_search_service.py'],cmd:'python app/demo_app.py --split test --port 7860'},
+ cases:{s:'none',sum:'Chưa bắt đầu; chưa ai nhận (B19).'},
+ readme:{s:'partial',sum:'README.md có mục “Cài đặt và chạy thử” và data/README.md hướng dẫn tải dữ liệu. Chưa có ghi chép chạy thử trên máy sạch.',files:['README.md','data/README.md']},
+ leak:{s:'partial',sum:'Quy tắc chống rò rỉ có trong CONTRIBUTING.md; các phép thử ghi rõ không đọc test. Chưa có bản mô tả gộp để nộp.',files:['CONTRIBUTING.md','experiments/checks/README.md']},
+ ai:{s:'none',sum:'Chưa có mục khai báo dùng AI / mã nguồn mở.'},
+ assign:{s:'partial',sum:'Khung phân công ở task-assignment.xlsx; bảng cuối để nộp chưa có.',files:['task-assignment.xlsx']},
+ report:{s:'none',sum:'Thư mục report/ mới có .gitkeep.'},
+ slides:{s:'none',sum:'Chưa có.'},
+ video:{s:'none',sum:'Chưa có video dự phòng.'},
+ env:{s:'none',sum:'Chưa có kế hoạch môi trường chạy lại tại buổi chấm.'},
+ oral:{s:'none',sum:'Chưa có tài liệu ôn vấn đáp.'}
+};
+const EVS = {done:['Có kết quả','badge-success'],partial:['Có một phần','badge-warning'],none:['Chưa có trong repo','badge-ghost']};
+window.evHTML = id => {
+  const v = EV[id]; if (!v) return '';
+  const h = x => x.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  return `<div class="space-y-2 text-sm py-1">
+    <div class="flex flex-wrap items-center gap-2"><span class="badge badge-sm ${EVS[v.s][1]}">${EVS[v.s][0]}</span><span>${h(v.sum)}</span></div>
+    ${v.nums ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">${v.nums.map(([k, x]) => `<div class="rounded-box bg-base-300/60 px-3 py-2"><div class="text-xs opacity-60">${h(k)}</div><div class="font-mono font-semibold">${h(x)}</div></div>`).join('')}</div>` : ''}
+    ${v.items ? `<ul class="list-disc pl-5 space-y-0.5 opacity-90">${v.items.map(x => `<li>${h(x)}</li>`).join('')}</ul>` : ''}
+    ${v.files ? `<div><span class="text-xs font-semibold opacity-60 mr-1">FILE / THƯ MỤC</span>${v.files.map(f => `<code class="inline-block text-xs bg-base-300/60 rounded px-1.5 py-0.5 m-0.5">${h(f)}</code>`).join('')}</div>` : ''}
+    ${v.cmd ? `<pre class="text-xs bg-base-300/60 rounded-box p-2 overflow-x-auto"><code>${h(v.cmd)}</code></pre>` : ''}
+  </div>`;
+};
+window.evBadge = id => { const v = EV[id]; return v ? `<span class="badge badge-xs ${EVS[v.s][1]} badge-outline whitespace-nowrap">${EVS[v.s][0]}</span>` : ''; };
+document.addEventListener('click', ev => {
+  const tr = ev.target.closest('tr[data-ev]'); if (!tr) return;
+  const nx = tr.nextElementSibling;
+  if (nx && nx.classList.contains('ev-row')) { nx.remove(); tr.classList.remove('ev-open'); return; }
+  const row = document.createElement('tr'); row.className = 'ev-row';
+  row.innerHTML = `<td colspan="${tr.children.length}" class="bg-base-300/30">${window.evHTML(tr.dataset.ev)}</td>`;
+  tr.after(row); tr.classList.add('ev-open');
+});
+
+const OPT = '(tùy chọn) ';
+const S = {
+ 1:{t:'Dữ liệu + split',g:'Có một tập công khai kèm đồ thị, các cặp (câu truy vấn, ảnh đúng), và một file chia train/val/test cố định mà mọi mô hình dùng chung.',
+    i:['Visual Genome: ảnh + scene graph (đối tượng, quan hệ) + alias tên đối tượng/quan hệ','Caption MS-COCO cho phần ảnh Visual Genome có coco_id: làm câu truy vấn, ảnh gốc của caption là đáp án đúng','Một split chuẩn có sẵn (vd. Karpathy cho COCO) để không phải tự chia',OPT+'FB15k-237-IMG / WN18-IMG: KG có ảnh gắn thực thể, thay cho VG nếu đi từ phía KG (§10)',OPT+'Nhãn đối tượng có sẵn hoặc detector tiền huấn luyện nếu ảnh không có scene graph; không huấn luyện detector (§4.1)'],
+    o:['Ba file split: danh sách id ảnh và id caption của train / val / test','Bảng ánh xạ caption → ảnh đúng (ground truth cho Recall, MRR)','Seed + mã tạo split để người khác chạy lại ra đúng danh sách','Bảng thống kê: số ảnh, số caption mỗi split','Ghi phiên bản dữ liệu và ngày tải (đề dặn thống kê đổi theo phiên bản)'],
+    todo:[['Chọn ≥1 tập công khai có sẵn đồ thị','B10','dataset'],['Xác định mỗi mẫu là cặp (câu truy vấn, ảnh đúng)','B10','pairs'],['Chia một lần, lưu file; mọi script đọc từ file này','B10','split'],['Nộp kèm seed + mã tạo split để tái lập','B10','seed']],
+    note:[['warn','Ảnh và truy vấn test không được dùng cho huấn luyện, chọn siêu tham số, hay xây cạnh thống kê.']],
+    src:'§4.1 · §5 · §6 · §10'},
+ 2:{t:'CLIP ảnh',g:'Biến mỗi ảnh thành một vectơ bằng CLIP/OpenCLIP đóng băng, trích một lần rồi lưu lại.',
+    i:['Ảnh của mọi split (file ảnh theo id trong split)','Một checkpoint CLIP/OpenCLIP cố định (tên model + pretrained tag)'],
+    o:['Ma trận vectơ ảnh N × d, lưu .npy, đã chuẩn hóa L2','File id đi kèm: dòng thứ n của .npy là ảnh nào','Config ghi tên model để tái lập'],
+    todo:[['Chọn một checkpoint CLIP/OpenCLIP và ghi lại tên','B7','clip'],['Trích đặc trưng một lần, lưu ra đĩa','B7','clip'],['Chuẩn hóa L2 để tích vô hướng = cosine','B7','clip']],
+    note:[['warn','Cấp 1 yêu cầu CLIP đóng băng: không fine-tune encoder.']],
+    src:'§4.1 · §5'},
+ 3:{t:'FAISS index',g:'Dựng chỉ mục để tìm nhanh các ảnh gần vectơ truy vấn nhất.',
+    i:['Vectơ ảnh (bước 2)','File split: chỉ lấy ảnh của split đang đánh giá làm pool ứng viên'],
+    o:['Một index FAISS cho mỗi pool (val, test)','Ánh xạ vị trí trong index → id ảnh'],
+    todo:[['Dựng index trên vectơ đã chuẩn hóa','B7','faiss'],['Pool ứng viên của val và test tách riêng, không lẫn ảnh train','B11','faiss']],
+    note:[['hint','Index tích vô hướng (vd. IndexFlatIP) trên vectơ chuẩn hóa cho cosine chính xác; vài nghìn ảnh thì không cần index xấp xỉ.']],
+    src:'§4.1'},
+ 4:{t:'Dựng đồ thị',g:'Một đồ thị tĩnh nối ảnh với đối tượng và khái niệm, để truy vấn có thể đi tới ảnh qua quan hệ.',
+    i:['Scene graph Visual Genome: đối tượng + quan hệ của từng ảnh','Alias để chuẩn hóa tên (kid → child)','File split (để biết cạnh thống kê nào được phép tính)',OPT+'ConceptNet / Wikidata: quan hệ giữa khái niệm, cho truy vấn gián tiếp (§4.1, §10)'],
+    o:['Danh sách đỉnh có kiểu: ảnh, đối tượng, khái niệm','Danh sách cạnh có nhãn: ảnh–contains–đối tượng, đối tượng–quan hệ–đối tượng, khái niệm–quan hệ–khái niệm','Bảng thống kê: số đỉnh, số cạnh theo loại (nên có; đã đo trên val)',OPT+'Chuyển sang tensor PyTorch Geometric khi nạp; không bắt buộc lưu sẵn theo định dạng này'],
+    todo:[['Đỉnh: ảnh, đối tượng/thực thể, khái niệm','B12','sg'],['Cạnh ảnh–contains–đối tượng','B12','sg'],['Cạnh quan hệ giữa đối tượng trong scene graph','B12','sg'],['Cạnh giữa khái niệm từ KG ngoài','B26','kg'],['Ghi lại số đỉnh, số cạnh theo từng loại','B12','coverage'],['Chuyển scene graph + đồ thị truy vấn (JSON) sang tensor PyG dùng chung cho cả 3 GNN: x, edge_index, edge_attr','EXT','gnn_loader'],['Cách giữ quan hệ cho GCN / GraphSAGE: biến mỗi quan hệ thành một đỉnh (chủ thể → quan hệ → đối tượng) hoặc bỏ nhãn quan hệ; cài phép biến đổi đồ thị','EXT','gnn_rel'],['Dùng chung vectơ đặc trưng đỉnh / cạnh với GAT (B14), không trích riêng, để so sánh công bằng','EXT','gnn_feat']],
+    note:[['warn','Nếu có cạnh suy từ thống kê (đồng xuất hiện, tần suất), chỉ tính trên train.'],['hint','Cấp 1 chỉ cần đồ thị tĩnh; MMKG dị thể đầy đủ là hướng mở rộng. Nhóm đang dùng thiết kế khác (xem tab “Thiết kế nhóm”).']],
+    src:'§4.2 · §6'},
+ 5:{t:'Huấn luyện GNN',g:'Dùng ≥1 mô hình đã học (GCN, GAT hoặc GraphSAGE) để tạo nhúng đỉnh và điểm đồ thị.',
+    i:['Đồ thị bước 4','Cặp (caption, ảnh đúng) của train làm tín hiệu huấn luyện','Val để dừng sớm và chọn siêu tham số'],
+    o:['Checkpoint GAT, GCN, GraphSAGE cho từng seed (≥3 mỗi mô hình)','Bảng so sánh ba kiến trúc trên cùng split','Nhúng đỉnh; trọng số attention trên cạnh nếu dùng GAT','Log huấn luyện + config (siêu tham số, seed)'],
+    todo:[['Chọn kiến trúc GNN','B14','gat'],['Định nghĩa mục tiêu huấn luyện chỉ dùng dữ liệu train','B14','gat'],['Chọn siêu tham số trên validation','B14','gat'],['Chạy ≥3 seed','B14','seeds3'],['Thống nhất interface bộ mã hóa GNN với B14: chọn bằng config gnn: gat | gcn | sage; cùng readout bộ ba, loss, cách lấy mẫu âm','EXT','gnn_iface'],['Cài biến thể GCN (GCNConv), cùng số lớp và chiều ẩn với GAT','EXT','gnn_gcn'],['Cài biến thể GraphSAGE (SAGEConv, gộp mean), cùng số lớp và chiều ẩn','EXT','gnn_sage'],['Chọn siêu tham số cho từng mô hình trên val, cùng ngân sách số lần thử','EXT','gnn_hp'],['Huấn luyện GCN và GraphSAGE, mỗi mô hình 3 seed (0, 1, 2) → experiments/level1/{gcn,sage}/seed_*/','EXT','gnn_seeds'],['Re-rank, chọn α trên val cho từng mô hình, chạy test đúng một lần','EXT','gnn_eval'],['Bảng so sánh: CLIP · điểm đồ thị không huấn luyện · GCN · GAT · GraphSAGE, mean ± std; ghi rõ GCN / GraphSAGE mất nhãn quan hệ nếu không biến đổi','EXT','gnn_table'],['Kiểm tra hàm giải thích và score_without chạy được với cả 3 mô hình','EXT','gnn_explain'],['(tùy chọn) Đăng ký chế độ clip_gcn, clip_sage vào demo bằng add_mode','EXT','gnn_demo']],
+    note:[['warn','Không dùng truy vấn hay ảnh test để huấn luyện hay chọn siêu tham số.'],['hint','Đề chỉ cần ≥1 mô hình. Nhóm làm cả GCN, GAT, GraphSAGE để có bảng so sánh kiến trúc và chia việc cho nhiều người. Các việc “Nhóm thêm” phụ thuộc interface của B14 (GAT), nên chốt interface trước.'],['hint','GAT có attention trên cạnh, dễ lấy làm giải thích hơn GCN.']],
+    src:'§5 · §6'},
+ 6:{t:'Truy vấn',g:'Nhận một câu văn bản (nhánh A) và chuẩn bị nó cho cả CLIP lẫn đồ thị.',
+    i:['Câu truy vấn tiếng Anh, vd. “a child playing football” (caption COCO khi đánh giá)','Danh sách tên đỉnh + alias (bước 4) để khớp khái niệm'],
+    o:['Câu gốc, đưa nguyên cho CLIP (bước 7)','Danh sách khái niệm (child, football) đã chuẩn hóa','Khái niệm nào khớp được đỉnh nào; khái niệm không khớp được đánh dấu'],
+    todo:[['Giữ nguyên câu để đưa vào CLIP','B11','clip'],['Tách các khái niệm trong câu','B13','parse'],['Khớp khái niệm với đỉnh đồ thị','B13','coverage']],
+    note:[['hint','Cách tách (danh từ, lemma, bộ ba chủ thể–quan hệ–đối tượng) là quyết định của nhóm; đề không quy định.']],
+    src:'§2 · §3'},
+ 7:{t:'CLIP văn bản',g:'Biến câu truy vấn thành vectơ trong cùng không gian với vectơ ảnh.',
+    i:['Câu truy vấn','Phần văn bản của đúng checkpoint CLIP ở bước 2'],
+    o:['Vectơ truy vấn d chiều, chuẩn hóa L2','Khi đánh giá: vectơ của mọi caption val/test, lưu .npy'],
+    todo:[['Dùng đúng checkpoint của bước 2','B7','clip'],['Chuẩn hóa L2','B7','clip']],
+    note:[],src:'§4.2'},
+ 8:{t:'Top-k theo cosine',g:'Lấy k ảnh gần truy vấn nhất. Xếp theo cosine và dừng ở đây chính là baseline CLIP thuần.',
+    i:['Vectơ truy vấn (bước 7)','FAISS index của pool đang đánh giá (bước 3)','k (chọn ở bước 12)'],
+    o:['Cho mỗi truy vấn: k id ảnh + điểm cos, lưu ra file để bước 9–10 dùng lại','Metrics của baseline CLIP thuần: R@1/5/10, MRR','Recall@k: tỉ lệ ảnh đúng lọt vào top-k (trần của re-rank)'],
+    todo:[['Truy vấn FAISS lấy top-k','B11','baseline'],['Lưu kết quả CLIP thuần làm baseline','B11','baseline'],['Chọn k trên validation','B15','topk']],
+    note:[['warn','Re-rank chỉ đảo thứ tự trong k ảnh: ảnh đúng nằm ngoài top-k thì đồ thị không cứu được.']],
+    src:'§4.2 · §5'},
+ 9:{t:'Điểm đồ thị g',g:'Cho mỗi ứng viên một điểm đo mức truy vấn nối được tới ảnh đó qua đồ thị.',
+    i:['Khái niệm của truy vấn đã khớp với đỉnh (bước 6)','k ứng viên (bước 8)','Đồ thị (bước 4) + checkpoint GNN (bước 5)'],
+    o:['g cho từng ứng viên','Danh sách thành phần đóng góp vào g: cạnh / đường đi + trọng số của mỗi cái','Cờ “không có đường nối” khi g = 0 (chỉ còn điểm CLIP)'],
+    todo:[['Nối khái niệm truy vấn vào đỉnh đồ thị','B13','coverage'],['Tính g bằng nhúng GNN hoặc đường đi truy vấn → ảnh','B14','rerank'],['Ghi lại thành phần nào đóng góp bao nhiêu vào g','B14','explain']],
+    note:[['warn','Giải thích phải đến từ chính g. Không được xếp hạng xong mới đi tìm đường đi.'],['hint','Cosine giữa hai nhúng GNN không tách được theo đường đi. Nên viết g = Σ w(p) trên các đường đi p, với w học bởi GNN/attention.']],
+    src:'§2 · §4.2'},
+ 10:{t:'Re-rank',g:'Kết hợp điểm CLIP và điểm đồ thị rồi xếp hạng lại k ứng viên.',
+    i:['cos của k ứng viên (bước 8)','g của k ứng viên (bước 9)','α đã khóa (bước 12)'],
+    o:['Thứ hạng mới của k ảnh + điểm s','Hạng trước / sau của ảnh đúng (dùng cho phân tích bước 15)'],
+    todo:[['Đưa cos và g về cùng thang','B15','rerank'],['Tính s = α·cos + (1−α)·g','B15','rerank'],['Sắp xếp giảm dần theo s','B15','rerank']],
+    note:[['hint','α = 1 là CLIP thuần, α = 0 là chỉ đồ thị. Chuẩn hóa min-max hoặc z-score trong k ứng viên để α có nghĩa.']],
+    src:'§4.2'},
+ 11:{t:'Ảnh top-k + giải thích',g:'Trả về ảnh đã xếp hạng lại, mỗi ảnh kèm quan hệ/đường đi đã đóng góp vào g của nó.',
+    i:['Thứ hạng (bước 10)','Thành phần đóng góp (bước 9)'],
+    o:['Danh sách top-k ảnh, mỗi ảnh có: điểm cos, g, s, hạng CLIP thuần','Đường đi giải thích dạng chữ, vd. child –plays→ football ←contains– ảnh','Đồ thị con để vẽ','Notebook hoặc giao diện nhỏ hiển thị tất cả (§8)'],
+    todo:[['Hiển thị top-k ảnh','B18','demo'],['Hiển thị đường đi kèm trọng số','B17','explain'],['Cho so sánh với thứ hạng CLIP thuần','B18','demo']],
+    note:[['hint','Không cần web hoàn chỉnh; notebook hoặc giao diện nhỏ chạy được là đủ.']],
+    src:'§3 · §4.2 · §8'},
+ 12:{t:'Chọn α, k trên validation',g:'Chốt α, k và siêu tham số bằng validation trước khi chạm vào test.',
+    i:['Caption val + pool ảnh val','Pipeline bước 7–10'],
+    o:['Bảng quét α (và k) trên val, lưu .csv','Giá trị α, k đã khóa, ghi vào config trước khi chạy test'],
+    todo:[['Quét α trong [0, 1] và vài giá trị k','B15','alpha'],['Chọn theo một metric trên val (vd. MRR)','B15','alpha'],['Khóa giá trị rồi mới chạy test','B15','alpha']],
+    note:[['warn','Không chọn trên test.']],
+    src:'§4.2 · §6'},
+ 13:{t:'CLIP vs CLIP + Graph',g:'So sánh bắt buộc: CLIP thuần với CLIP + Graph trên cùng split.',
+    i:['Caption test + pool ảnh test','Kết quả bước 8 (CLIP thuần) và bước 10 (CLIP + Graph)','≥3 checkpoint GNN (3 seed)'],
+    o:['Bảng R@1, R@5, R@10, MRR cho hai hệ thống, mean ± std','File metrics + log từng seed trong experiments/'],
+    todo:[['Tính metrics cho cả hai','B8','metrics'],['Chạy ≥3 seed','B8','seeds3'],['Dùng đúng một file split','B10','split']],
+    note:[['hint','CLIP đóng băng cho cùng kết quả ở mọi seed (std = 0); seed chỉ đổi phần GNN. Nên ghi rõ.']],
+    src:'§5 · §7'},
+ 14:{t:'Ablation cạnh',g:'Chứng minh cải thiện đến từ cấu trúc quan hệ chứ không phải từ việc thêm mô hình.',
+    i:['Đồ thị bước 4','Cùng pipeline, cùng quy trình chọn trên val'],
+    o:['Đồ thị biến thể: bỏ cạnh; cạnh ngẫu nhiên (giữ số cạnh)','Bảng: bản đầy đủ + các biến thể × 4 metric, mean ± std'],
+    todo:[['Tạo biến thể bỏ cạnh','B16','abl_rel'],['Tạo biến thể cạnh ngẫu nhiên','B16','abl_rand'],['Chạy lại toàn pipeline','B16','abl_rand'],['So với bản đầy đủ và báo cáo đúng kết quả, kể cả khi không khác','B16','abl_table']],
+    note:[],
+    src:'§5 · §7'},
+ 15:{t:'Giải thích cơ bản',g:'Cho thấy hệ thống dùng quan hệ nào khi xếp hạng, và hiểu vì sao nó đúng hoặc sai.',
+    i:['Kết quả test của cả hai hệ thống','Đường đi giải thích (bước 11)'],
+    o:['Hình đường đi cho một số truy vấn','10 ca phân tích: truy vấn, hạng trước / sau, đường đi, nguyên nhân','Tổng kết 2–3 loại lỗi chính'],
+    todo:[['Chọn 5 ca thành công, 5 ca thất bại theo tiêu chí ghi trước','B19','cases'],['Phân tích nguyên nhân từng ca','B19','cases']],
+    note:[['hint','Nguyên nhân thường gặp: ảnh đúng ngoài top-k, khái niệm không khớp đỉnh nào, đồ thị thiếu cạnh.']],
+    src:'§5 · §7 · §8'}
+};
+const R = {
+ B6:['Khung repo, config theo seed, requirements, script tải dữ liệu','Lộc','Xong'],
+ B7:['Module trích đặc trưng CLIP (ảnh + text), lưu .npy, index FAISS','Lộc','Xong'],
+ B8:['Module đánh giá: Recall@1/5/10, MRR, mean ± std qua ≥3 seed','Lộc','Xong'],
+ B10:['Dữ liệu: join coco_id, toàn bộ phần giao, split Karpathy, lưu file split','Lộc','Xong'],
+ B11:['Baseline CLIP thuần: caption → top-k','Lộc','Xong'],
+ B12:['Dựng đồ thị: lọc VG150, mỗi ảnh một scene graph; thống kê, tỉ lệ bộ ba khớp','Lộc','Đang làm'],
+ B13:['Đồ thị truy vấn: tách caption thành bộ ba, chuẩn hoá alias VG150','Lộc','Đang làm'],
+ B14:['GAT trong từng đồ thị nhỏ; điểm đồ thị = độ khớp bộ ba','Lộc','Đang làm'],
+ B15:['Re-rank α·cos + (1−α)·điểm đồ thị, chọn α trên val','Lộc','Đang làm'],
+ B16:['Ablation: bỏ cạnh quan hệ, xáo cạnh, scene graph ngẫu nhiên','Lộc','Đang làm'],
+ B17:['Giải thích cơ bản: cặp bộ ba khớp + đóng góp vào điểm','Lộc','Đang làm'],
+ B18:['Platform demo (web app)','Lộc','Đang làm'],
+ B19:['Phân tích 5 truy vấn thành công + 5 thất bại','','Chưa bắt đầu'],
+ B26:['Cấp 2 · mở rộng: độ nhạy α, cách tạo cạnh, lớp khái niệm ConceptNet','Đạt','Chưa bắt đầu'],
+ '—':['Việc mới, chưa có trong task-assignment.xlsx','','Chưa có trong xlsx'],
+ EXT:['Nhóm thêm: chạy đủ 3 GNN, chưa có trong task-assignment.xlsx','','Nhóm thêm']
+};
+const ST = {'Xong':'badge-success','Đang làm':'badge-info','Chưa bắt đầu':'badge-ghost','Chưa có trong xlsx':'badge-error','Nhóm thêm':'badge-secondary'};
+const N = 15;
+let cur = null;
+const $ = id => document.getElementById(id);
+const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function show(n) {
+  cur = n; const d = S[n];
+  document.querySelectorAll('.fig .step').forEach(g => g.classList.toggle('active', +g.dataset.step === n));
+  $('d-title').innerHTML = `<span class="badge badge-warning mr-2">${n}</span>${esc(d.t)}`;
+  $('d-goal').textContent = d.g;
+  const li = x => x.startsWith(OPT)
+    ? `<li class="opacity-75"><span class="badge badge-xs badge-outline mr-1">tùy chọn</span>${esc(x.slice(OPT.length))}</li>`
+    : `<li>${esc(x)}</li>`;
+  $('d-io').innerHTML = `<div class="rounded-box bg-base-100 p-3"><div class="text-xs font-semibold opacity-60 mb-1">ĐẦU VÀO</div><ul class="list-disc pl-4 space-y-1">${d.i.map(li).join('')}</ul></div>
+    <div class="rounded-box bg-base-100 p-3"><div class="text-xs font-semibold opacity-60 mb-1">ĐẦU RA</div><ul class="list-disc pl-4 space-y-1">${d.o.map(li).join('')}</ul></div>`;
+  $('d-todo').innerHTML = `<div class="text-xs font-semibold opacity-60 mb-1">VIỆC CẦN LÀM · PHÂN CÔNG <span class="font-normal">(task-assignment.xlsx)</span></div>
+    <div class="overflow-x-auto rounded-box bg-base-100"><table class="table table-sm">
+    <thead><tr><th class="w-32">Tiến độ</th><th>Việc <span class="font-normal opacity-60">(bấm để xem kết quả)</span></th><th class="w-36">Người làm</th></tr></thead><tbody>${d.todo.map(([x, k, ev]) => { const [rt, o, st] = R[k];
+      return `<tr data-ev="${ev}" class="cursor-pointer hover:bg-base-200" title="${esc(k + ': ' + rt)} · bấm để xem kết quả"><td><span class="badge badge-sm badge-soft ${ST[st]} whitespace-nowrap">${esc(st)}</span></td>
+        <td><span class="opacity-50 mr-1">▸</span>${esc(x)} ${k.startsWith('B') ? `<span class="src ml-1">${k}</span>` : ''} ${window.evBadge(ev)}</td>
+        <td>${o ? `<span class="badge badge-sm badge-primary whitespace-nowrap">${esc(o)}</span>` : '<span class="badge badge-sm badge-warning whitespace-nowrap">chưa ai nhận</span>'}</td></tr>`; }).join('')}</tbody></table></div>`;
+  $('d-note').innerHTML = d.note.map(([k, x]) => k === 'warn'
+    ? `<div role="alert" class="alert alert-soft alert-error text-sm mb-2"><span>${esc(x)}</span></div>`
+    : `<div class="alert alert-soft alert-warning text-sm mb-2"><span><span class="badge badge-xs badge-warning mr-1">gợi ý</span>${esc(x)}</span></div>`).join('');
+  $('d-src').textContent = 'Nguồn trong đề: ' + d.src;
+}
+document.querySelectorAll('.fig .step').forEach(g => {
+  g.addEventListener('click', () => show(+g.dataset.step));
+  g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(+g.dataset.step); } });
+});
+$('d-prev').addEventListener('click', () => show(cur ? (cur + N - 2) % N + 1 : N));
+$('d-next').addEventListener('click', () => show(cur ? cur % N + 1 : 1));
+show(1);
+</script>
+<script>
+(() => {
+const RR = {
+ B6:['Lộc','Xong'],B7:['Lộc','Xong'],B8:['Lộc','Xong'],B9:['','Chưa bắt đầu'],B10:['Lộc','Xong'],B11:['Lộc','Xong'],
+ B12:['Lộc','Đang làm'],B13:['Lộc','Đang làm'],B14:['Lộc','Đang làm'],B15:['Lộc','Đang làm'],B16:['Lộc','Đang làm'],
+ B17:['Lộc','Đang làm'],B18:['Lộc','Đang làm'],B19:['','Chưa bắt đầu'],B26:['Đạt','Chưa bắt đầu'],
+ B35:['','Chưa bắt đầu'],B36:['','Chưa bắt đầu'],B37:['','Chưa bắt đầu'],B38:['','Chưa bắt đầu']
+};
+const T = {ext:['Nhóm thêm','badge-secondary'],must:['Bắt buộc','badge-error'],sub:['Cần nộp','badge-warning'],rec:['Nên có','badge-info'],opt:['Tùy chọn','badge-ghost']};
+const G = [
+ ['A. Chuẩn bị và dữ liệu',[
+  ['Khung repo, config theo seed, requirements','sub','§8','B6','repo'],
+  ['Script tải dữ liệu + data/README (link, checksum, phiên bản, ngày tải)','sub','§8 · §10','B6','download'],
+  ['Join VG ∩ COCO theo coco_id, split Karpathy, lưu file split cố định','must','§5 · §6','B10','split'],
+  ['Thống kê dữ liệu: số ảnh, caption mỗi split','rec','§8','B10','stats'],
+  ['Kiểm tra giấy phép / điều khoản dùng Visual Genome và COCO, ghi vào báo cáo','sub','§9',null,'license']]],
+ ['B. Đặc trưng và baseline',[
+  ['Trích CLIP đóng băng cho ảnh + caption, lưu .npy','must','§4.1 · §5','B7','clip'],
+  ['Index FAISS cho pool val / test','must','§4.1','B7','faiss'],
+  ['Module metrics: R@1/5/10, MRR, mean ± std','must','§7','B8','metrics'],
+  ['Baseline CLIP thuần trên val / test, lưu top-50','must','§5','B11','baseline'],
+  ['Đối chiếu baseline với số zero-shot CLIP đã công bố (kiểm tra pipeline)','rec','—','B11','sanity'],
+  ['Báo cáo Recall@50 của baseline (trần của re-rank)','rec','—','B15','r50'],
+  ['Chốt encoder: giữ CLIP tiếng Anh hay đổi đa ngữ (đổi muộn = chạy lại toàn bộ cấp 1)','rec','—','B9','encoder']]],
+ ['C. Đồ thị',[
+  ['Scene graph từng ảnh: lọc VG150, chuẩn hóa alias','must','§4.2 · §5','B12','sg'],
+  ['Đo độ phủ: tỉ lệ bộ ba của caption có trong scene graph ảnh gốc (go / no-go cho thiết kế)','rec','—','B12','coverage'],
+  ['Tách caption thành đồ thị truy vấn (bộ ba)','must','§4.2','B13','parse'],
+  ['Kiểm tra tay ~30 truy vấn đã tách, ghi tỉ lệ tách sai','rec','—','B13','manual30'],
+  ['Chuyển scene graph + đồ thị truy vấn (JSON) sang tensor PyG dùng chung cho cả 3 GNN: x, edge_index, edge_attr','ext','§5 (≥1 là đủ)',null,'gnn_loader'],
+  ['Cách giữ quan hệ cho GCN / GraphSAGE: biến mỗi quan hệ thành một đỉnh (chủ thể → quan hệ → đối tượng) hoặc bỏ nhãn quan hệ; cài phép biến đổi đồ thị','ext','§5 (≥1 là đủ)',null,'gnn_rel'],
+  ['Dùng chung vectơ đặc trưng đỉnh / cạnh với GAT (B14), không trích riêng, để so sánh công bằng','ext','§5 (≥1 là đủ)',null,'gnn_feat']]],
+ ['D. GNN và xếp hạng lại',[
+  ['GAT + điểm đồ thị (độ khớp bộ ba)','must','§5','B14','gat'],
+  ['Huấn luyện chỉ trên train, dừng sớm theo val, ≥3 seed, lưu checkpoint + log','must','§6','B14','seeds3'],
+  ['Thống nhất interface bộ mã hóa GNN với B14: chọn bằng config gnn: gat | gcn | sage; cùng readout bộ ba, loss, cách lấy mẫu âm','ext','§5 (≥1 là đủ)',null,'gnn_iface'],
+  ['Cài biến thể GCN (GCNConv), cùng số lớp và chiều ẩn với GAT','ext','§5 (≥1 là đủ)',null,'gnn_gcn'],
+  ['Cài biến thể GraphSAGE (SAGEConv, gộp mean), cùng số lớp và chiều ẩn','ext','§5 (≥1 là đủ)',null,'gnn_sage'],
+  ['Chọn siêu tham số cho từng mô hình trên val, cùng ngân sách số lần thử','ext','§5 (≥1 là đủ)',null,'gnn_hp'],
+  ['Huấn luyện GCN và GraphSAGE, mỗi mô hình 3 seed (0, 1, 2) → experiments/level1/{gcn,sage}/seed_*/','ext','§5 (≥1 là đủ)',null,'gnn_seeds'],
+  ['Re-rank, chọn α trên val cho từng mô hình, chạy test đúng một lần','ext','§5 (≥1 là đủ)',null,'gnn_eval'],
+  ['Bảng so sánh: CLIP · điểm đồ thị không huấn luyện · GCN · GAT · GraphSAGE, mean ± std; ghi rõ GCN / GraphSAGE mất nhãn quan hệ nếu không biến đổi','ext','§5 (≥1 là đủ)',null,'gnn_table'],
+  ['Kiểm tra hàm giải thích và score_without chạy được với cả 3 mô hình','ext','§5 (≥1 là đủ)',null,'gnn_explain'],
+  ['(tùy chọn) Đăng ký chế độ clip_gcn, clip_sage vào demo bằng add_mode','ext','§5 (≥1 là đủ)',null,'gnn_demo'],
+  ['Chuẩn hóa cos và g cùng thang, re-rank α·cos + (1−α)·g','must','§4.2','B15','rerank'],
+  ['Quét α, k trên val, khóa giá trị trước khi chạy test','must','§6','B15','alpha'],
+  ['Bảng CLIP thuần vs CLIP + Graph trên test, mean ± std','must','§5 · §7','B15','table'],
+  ['Đường cong độ nhạy theo α','opt','§7 mở rộng','B26','alpha_curve']]],
+ ['E. Ablation',[
+  ['Bỏ cạnh quan hệ (chỉ còn đối tượng)','must','§5','B16','abl_rel'],
+  ['Xáo cạnh / scene graph ngẫu nhiên, cùng seed và siêu tham số','must','§5','B16','abl_rand'],
+  ['Bảng ablation 4 hàng × 4 metric, mean ± std','must','§5 · §7','B16','abl_table']]],
+ ['F. Giải thích và demo',[
+  ['Hàm giải thích: cặp bộ ba khớp + đóng góp vào g','must','§5','B17','explain'],
+  ['Hàm “bỏ bộ ba rồi tính lại điểm” (dùng lại cho fidelity cấp 3)','rec','§5 cấp 3','B17','remove'],
+  ['Notebook / giao diện: truy vấn → top-k + đường đi giải thích','must','§8','B18','demo'],
+  ['Ghi trước tiêu chí chọn ca, rồi phân tích 5 thành công + 5 thất bại','must','§5 · §8','B19','cases']]],
+ ['G. Nộp bài và vấn đáp',[
+  ['README chạy lại trên máy sạch','sub','§8','B38','readme'],
+  ['Mô tả cách chống rò rỉ dữ liệu','sub','§8','B38','leak'],
+  ['Khai báo dùng AI / mã nguồn mở, ghi phần đã sửa','sub','§9','B38','ai'],
+  ['Bảng phân công + minh chứng commit của từng người','sub','§8 · §9','B38','assign'],
+  ['Phần cấp 1 trong báo cáo (phương pháp, bảng, hình)','sub','§8','B35','report'],
+  ['Slide ≤20 phút','sub','§8 · §9','B36','slides'],
+  ['Demo trực tiếp + video dự phòng ≤5 phút','sub','§8','B37','video'],
+  ['Môi trường chạy lại một thực nghiệm nhỏ ngay tại buổi chấm','sub','§9',null,'env'],
+  ['Mỗi thành viên ôn được toàn bộ pipeline để vấn đáp','sub','§9',null,'oral']]]
+];
+const ST2 = {'Xong':'badge-success','Đang làm':'badge-info','Chưa bắt đầu':'badge-ghost'};
+const e = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const all = G.flatMap(([, rows]) => rows);
+const cnt = f => all.filter(f).length;
+document.getElementById('ck-stats').innerHTML = [
+  ['Tổng việc', all.length, ''],
+  ['Chưa có trong xlsx', cnt(r => !r[3]), 'text-error'],
+  ['Có trong xlsx, chưa ai nhận', cnt(r => r[3] && !RR[r[3]][0]), 'text-warning'],
+  ['Bắt buộc chưa ai nhận', cnt(r => r[1] === 'must' && (!r[3] || !RR[r[3]][0])), 'text-error']
+].map(([t, v, c]) => `<div class="stat"><div class="stat-title">${t}</div><div class="stat-value ${c}">${v}</div></div>`).join('');
+function render(f) {
+  const keep = r => f === 'all' || (f === 'missing' && !r[3]) || (f === 'noowner' && (!r[3] || !RR[r[3]][0])) || (f === 'must' && (r[1] === 'must' || r[1] === 'sub')) || (f === 'ext' && r[1] === 'ext');
+  document.getElementById('ck-body').innerHTML = G.map(([g, rows]) => {
+    const rs = rows.filter(keep); if (!rs.length) return '';
+    return `<div><h3 class="font-semibold mb-1">${e(g)}</h3><div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-200"><table class="table table-sm">
+      <thead><tr><th class="w-28">Tiến độ</th><th>Việc</th><th class="w-24">Loại</th><th class="w-24">Đề</th><th class="w-24">xlsx</th><th class="w-32">Người làm</th></tr></thead><tbody>${rs.map(([t, k, src, row, ev]) => {
+        const [o, st] = row ? RR[row] : ['', ''];
+        return `<tr data-ev="${ev}" title="Bấm để xem kết quả" class="cursor-pointer hover:bg-base-300/40 ${!row ? 'bg-error/10' : ''}">
+          <td>${row ? `<span class="badge badge-sm badge-soft ${ST2[st]} whitespace-nowrap">${st}</span>` : '<span class="opacity-50">—</span>'}</td>
+          <td><span class="opacity-50 mr-1">▸</span>${e(t)} ${window.evBadge(ev)}</td>
+          <td><span class="badge badge-sm ${T[k][1]} whitespace-nowrap">${T[k][0]}</span></td>
+          <td class="src">${e(src)}</td>
+          <td>${row ? `<span class="src">${row}</span>` : '<span class="badge badge-sm badge-error badge-outline whitespace-nowrap">thiếu</span>'}</td>
+          <td>${o ? `<span class="badge badge-sm badge-primary">${e(o)}</span>` : '<span class="badge badge-sm badge-warning whitespace-nowrap">chưa ai nhận</span>'}</td></tr>`; }).join('')}</tbody></table></div></div>`;
+  }).join('');
+  document.querySelectorAll('.ck-f').forEach(b => b.classList.toggle('btn-primary', b.dataset.f === f));
+}
+document.querySelectorAll('.ck-f').forEach(b => b.addEventListener('click', () => render(b.dataset.f)));
+render('all');
+})();
+</script>
+</body>
+</html>
