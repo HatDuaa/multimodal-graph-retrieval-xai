@@ -77,11 +77,12 @@ Metric bắt buộc: Recall@1/5/10, MRR; so CLIP thuần với CLIP + Graph trê
 
 ## Cài đặt và chạy thử
 
-Cần Python 3.11 hoặc 3.12 (bộ phiên bản trong `requirements.txt` đã kiểm tra trên Ubuntu 24.04 + RTX 4090; máy không có GPU NVIDIA vẫn cài được, chạy bằng CPU).
+Cần Python 3.12 (bộ phiên bản trong `requirements.txt` đã kiểm tra trên Ubuntu 24.04 + RTX 4090; máy không có GPU NVIDIA vẫn cài được, chạy bằng CPU).
 
 ```bash
 python3.12 -m venv ~/venvs/mgrx && source ~/venvs/mgrx/bin/activate
 pip install -r requirements.txt
+python -m spacy download en_core_web_sm   # mô hình tiếng Anh để tách đồ thị từ truy vấn
 pytest                              # kiểm tra các module dùng chung
 python scripts/download_data.py     # tải chú thích Visual Genome + split Karpathy (~170 MB, chưa có ảnh)
 python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh: join → tải ảnh → CLIP → FAISS → top-k
