@@ -58,3 +58,18 @@ Kết luận: kênh đồ thị phủ tốt (81% truy vấn), và gần 1/3 truy
 (vd "commune in Pyrénées-Atlantiques, France" → Bayonne —country→ France). Đủ điều kiện
 tiếp tục bước b sau khi có embedding từ checkpoint train thật. Kênh embedding hiện đo bằng
 checkpoint smoke (2 epoch) nên chưa nói lên gì; chỉ kênh cấu trúc (link + cạnh) là kết luận được.
+
+## Đổi nguồn ảnh: Wikimedia Commons → kho tác giả MMRNS (2026-09-25)
+
+Kế hoạch ban đầu tải ảnh P18 từ Wikimedia Commons bị chặn rate-limit theo IP
+(HTTP 429, `Retry-After: 600`, ngân sách ~55 request/cửa sổ — đo trong
+`scripts/download_images.py`, các commit fix backoff). Thay bằng kho phát hành của
+chính nhóm xây MKG-W (MMRNS, `MKG-W_img.zip` 6,4 GB + `ent_links` trên Drive của họ):
+
+- 37 192 ảnh của 8 961 thực thể (ánh xạ DBpedia ↔ QID qua `ent_links`, 340 folder không khớp).
+- **Nhất quán với embedding chính thức**: `MKG-W-visual.pth` của NativE được trích từ đúng bộ ảnh này.
+- Split dựng lại với tiêu chí "mô tả + ảnh tác giả": **8 920 thực thể → train 7 136 / val 892 / test 892**
+  (bản cũ theo P18: 5 752). Mỗi thực thể lấy ảnh đầu theo thứ tự tên, thu về 640px JPEG
+  (`scripts/extract_mkgw_images.py`).
+- Coverage check chạy lại trên split mới: link ≥1 thực thể 81,5% (train) / 78,9% (val);
+  **đáp án có cạnh KGC-train trực tiếp 42,8% / 45,2%** (bản cũ: ~30%).

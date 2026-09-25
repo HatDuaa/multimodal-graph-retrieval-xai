@@ -3,20 +3,20 @@
  "n_train_triples": 34196,
  "splits": {
   "train": {
-   "queries": 4602,
-   "linked_ge_1": 3735,
-   "linked_ge_1_pct": 81.16,
-   "avg_links_per_linked_query": 1.67,
-   "gold_direct_train_edge": 1386,
-   "gold_direct_train_edge_pct": 30.12
+   "queries": 7136,
+   "linked_ge_1": 5813,
+   "linked_ge_1_pct": 81.46,
+   "avg_links_per_linked_query": 1.54,
+   "gold_direct_train_edge": 3051,
+   "gold_direct_train_edge_pct": 42.76
   },
   "val": {
-   "queries": 575,
-   "linked_ge_1": 468,
-   "linked_ge_1_pct": 81.39,
-   "avg_links_per_linked_query": 1.66,
-   "gold_direct_train_edge": 173,
-   "gold_direct_train_edge_pct": 30.09
+   "queries": 892,
+   "linked_ge_1": 704,
+   "linked_ge_1_pct": 78.92,
+   "avg_links_per_linked_query": 1.54,
+   "gold_direct_train_edge": 403,
+   "gold_direct_train_edge_pct": 45.18
   }
  }
 }

@@ -63,3 +63,9 @@ def test_export_projection_matches_torch_sequential():
     sd = {f"p.{k}": v for k, v in seq.state_dict().items()}
     x = torch.randn(5, 8)
     assert torch.allclose(project(x, sd, "p"), seq(x), atol=1e-6)
+
+
+def test_to_image_entry_url_is_none_without_p18():
+    row = _fake_rows(1)[0]
+    row["image"] = None
+    assert to_image_entry(row, "en", 640)["url"] is None

@@ -92,14 +92,19 @@ Sinh bởi `scripts/build_rewired_parts.py --seed k` (chỉ đồ thị train/va
 
 ## MKG-W (gói cấp độ 2, Đạt)
 
-Sinh ngày 2026-09-24. Cache Wikidata: `scripts/fetch_mkgw_wikidata.py`; split + triple: `python -m src.data.build_mkgw_split` (seed 0). Hai file không commit (`wikidata_entities.jsonl`, `mkgw_triples.jsonl`) chia sẻ qua Drive, cấu trúc thư mục như dưới.
+Bản 2026-09-25 (v2 — ảnh lấy từ kho tác giả MMRNS thay vì Wikimedia Commons; bản v1 ngày 24/09 với 5 752 thực thể theo P18 đã bỏ). Cache Wikidata: `scripts/fetch_mkgw_wikidata.py` + `scripts/fetch_mkgw_relations.py`; ảnh: `scripts/extract_mkgw_images.py`; split + triple: `python -m src.data.build_mkgw_split` (seed 0); đặc trưng CLIP: `scripts/extract_features.py --dataset mkgw`. File không commit chia sẻ qua Drive nhóm, cấu trúc thư mục như dưới (riêng `mkgw_img.zip` tải từ Drive của MMRNS, link trong README repo `quqxui/MMRNS`).
 
 | File | Bytes | SHA-256 |
 |---|---|---|
 | `data/raw/mkgw/wikidata_entities.jsonl` | 3564691 | `8e1aa6387e9a21a5067b577b1d2deae1651232cba54d30f8232685908c689daf` |
-| `data/splits/mkgw_train.json` | 1576400 | `60df300d9c2253626a70d9459683aa0f096d9243d58c27589cdd12a5fbaa9ee0` |
-| `data/splits/mkgw_val.json` | 196433 | `14558c9d5212ddeb23d851f82f1815144ecfb75d79254270096c7e79d7108b50` |
-| `data/splits/mkgw_test.json` | 198249 | `0b171d52587730bb1993d1248a283b2f470a526ba32d5fe3a9baab7d9ea82b11` |
+| `data/raw/mkgw/ent_links.tsv` (MMRNS) | 1299610 | `4aa7e9f5ff3bbeea7dee3124669edba7903e65b22844529999325c6bec624511` |
+| `data/raw/mkgw/mkgw_img.zip` (MMRNS `MKG-W_img.zip`) | 6422519900 | `0178f7bb3b6199309a56fad23c595c252f79506deb5dbecece58d814d5f0aede` |
+| `data/raw/mkgw/author_images_index.json` | 624758 | `0727dafebdf3d9c3fd988778e34f574d324eb3bf9dd9e144ce15c19631dd45bd` |
+| `data/splits/mkgw_train.json` | 2020637 | `d731488f6618bf24937457f6deee75d849ab79bf20ec074f4ca56795264ba89a` |
+| `data/splits/mkgw_val.json` | 251533 | `4762f9c0731ffcc164baf8642a130b0e30d478f5998f812be4c3414646a2c0b2` |
+| `data/splits/mkgw_test.json` | 254576 | `6416ff37d6ab1e0e921fb21a74655e3a2654a72d497eaf07151bd6ab3c198886` |
 | `data/processed/mkgw_triples.jsonl` | 2262289 | `40ccfa72ce54d9d2c6a23e9ed50ea571255425e20cf1b0cf6c2c5e2e3cecbedb` |
+| `data/features/mkgw_image.npy` (8 920 × 512) | 18268288 | `fe9739e40478cf58e87e6a720ceba9bf3ec4deee9bef9e92107a99f7ba2da827` |
+| `data/features/mkgw_caption.npy` (8 920 × 512) | 18268288 | `59de0cf337a14ae3c468131bb9ca6952d85d3f4be577f971303a2c042de17d2d` |
 
-Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.
+Ảnh chuẩn hoá `data/raw/images/<qid>.jpg` (8 961 file, 476 MB, JPEG cạnh dài 640) sinh lại được từ zip + index nên không cần checksum từng file. Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.

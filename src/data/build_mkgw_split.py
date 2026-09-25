@@ -1,15 +1,19 @@
 """Build the MKG-W retrieval split files (format: docs/interfaces.md, section 1).
 
 The retrieval task on MKG-W: the query is an entity description with the entity
-name masked out, the answer is the entity's image. Only entities that have both
-an English description and a Commons image are kept. Entities are split
-train/val/test by a seeded shuffle (fractions in configs/default.yaml); this is
-an entity-level split, so no query in val/test describes a train candidate.
-NativE's own KGC triple split is copied out separately to
-data/processed/mkgw_triples.jsonl so that graph-derived signals can be
-restricted to KGC-train triples later (anti-leakage, assignment section 6).
+name masked out, the answer is the entity's image. Images come from the dataset
+authors' own archive (MMRNS MKG-W_img.zip, extracted by
+scripts/extract_mkgw_images.py) — the same images the official visual
+embeddings were computed from. Only entities with an English description AND an
+author image are kept. Entities are split train/val/test by a seeded shuffle
+(fractions in configs/default.yaml); this is an entity-level split, so no query
+in val/test describes a train candidate. NativE's own KGC triple split is
+copied out separately to data/processed/mkgw_triples.jsonl so that
+graph-derived signals can be restricted to KGC-train triples later
+(anti-leakage, assignment section 6).
 
-Prerequisite: scripts/fetch_mkgw_wikidata.py has filled the Wikidata cache.
+Prerequisites: scripts/fetch_mkgw_wikidata.py (Wikidata cache) and
+scripts/extract_mkgw_images.py (author image index) have both run.
 Usage:  python -m src.data.build_mkgw_split
 Output: data/splits/mkgw_{train,val,test}.json, data/processed/mkgw_triples.jsonl
         and a statistics block appended to experiments/data_stats.md.
@@ -70,7 +74,8 @@ def to_image_entry(row: dict, lang: str, width: int) -> dict:
         "qid": row["qid"],
         "label": row.get(f"label_{lang}"),
         "file_name": f"{row['qid']}.jpg",
-        "url": commons_url(row["image"], width),
+        # local file comes from the author archive; url is a Commons fallback (P18), when one exists
+        "url": commons_url(row["image"], width) if row.get("image") else None,
         "captions": [{"caption_id": f"{row['qid']}_0", "text": query}],
     }
 
@@ -94,15 +99,17 @@ def main() -> None:
     mcfg = cfg["mkgw"]
     lang, width = mcfg["query_lang"], mcfg["image_width"]
     cache = load_cache(REPO_ROOT / mcfg["wikidata_cache"])
+    author_index = json.loads(
+        (REPO_ROOT / "data" / "raw" / "mkgw" / "author_images_index.json").read_text(encoding="utf-8"))
 
-    usable, dropped = [], {"missing": 0, "no_desc": 0, "no_image": 0, "empty_query": 0}
+    usable, dropped = [], {"missing": 0, "no_desc": 0, "no_author_image": 0, "empty_query": 0}
     for row in cache:
         if row.get("missing"):
             dropped["missing"] += 1
         elif not row.get(f"desc_{lang}"):
             dropped["no_desc"] += 1
-        elif not row.get("image"):
-            dropped["no_image"] += 1
+        elif row["qid"] not in author_index:
+            dropped["no_author_image"] += 1
         elif not mask_name(row[f"desc_{lang}"], [row.get(f"label_{lang}")] + row.get(f"aliases_{lang}", [])):
             dropped["empty_query"] += 1
         else:
@@ -121,7 +128,7 @@ def main() -> None:
 
     stats = [
         f"\n## MKG-W retrieval split (built {json.dumps(dict(seed=cfg['seed'], lang=lang))})\n",
-        f"- Cache: {len(cache)} entities; usable (description + image + non-empty masked query): {len(usable)}",
+        f"- Cache: {len(cache)} entities; usable (description + author image + non-empty masked query): {len(usable)}",
         f"- Dropped: {dropped}",
         f"- Split sizes: " + ", ".join(f"{s} {len(r)}" for s, r in splits.items()),
         f"- KGC triples copied with their NativE split: {n_triples}",
