@@ -38,7 +38,7 @@ def fetch(job: tuple[str, Path]) -> bool:
             r = requests.get(url, timeout=30,
                              headers={"User-Agent": "mm-graph-retrieval-course-project/0.1 (academic use)"})
             if r.status_code == 429:      # rate-limited (Wikimedia Commons): wait and retry
-                time.sleep(int(r.headers.get("Retry-After", 15 * (attempt + 1))))
+                time.sleep(min(int(r.headers.get("Retry-After", 15 * (attempt + 1))), 60))
                 continue
             r.raise_for_status()
             dest.write_bytes(r.content)
