@@ -38,3 +38,23 @@ Người làm: Đạt. Việc: dòng 22 bảng phân công (tái lập bước a
 1. Chạy đủ config gốc `scripts/run_mkgw.sh` (epoch=1000, margin=4, dim=250, neg_num=128, lr=1e-4) trên máy GPU, seed gốc 42.
 2. So MRR / Hits@1/3/10 với bảng MKG-W trong bài báo; chênh ≤ ~1 điểm coi là tái lập được.
 3. Ghi log + metrics vào folder này (`metrics.json` theo schema `write_metrics()` khi vào pipeline nhóm; log train giữ nguyên của tác giả).
+
+## Kiểm tra trước khi train — kênh đồ thị cho bước b (2026-09-25)
+
+Thiết kế bước b: truy vấn (mô tả đã che tên) thường nhắc tên các thực thể KHÁC → `EntityLinker`
+khớp label/alias trong truy vấn, rồi hai kênh điểm trên thực thể ứng viên: (1) cosine embedding
+NativE với thực thể được nhắc, (2) đếm cạnh KGC-train trực tiếp — các match dùng để tính điểm
+chính là giải thích (không hậu kiểm). Trộn theo đúng khung cấp 1: `α·z(CLIP) + (1−α)·z(β·z(emb) + (1−β)·z(triple))`.
+
+Số đo (`scripts/checks/mkgw_link_coverage.py`, chỉ train+val, không đọc test; kết quả
+`experiments/checks/mkgw_link_coverage.json`):
+
+| Split | Truy vấn | Link ≥1 thực thể | Đáp án có cạnh train trực tiếp |
+|---|---|---|---|
+| train | 4 602 | 81,16% | 30,12% |
+| val | 575 | 81,39% | 30,09% |
+
+Kết luận: kênh đồ thị phủ tốt (81% truy vấn), và gần 1/3 truy vấn có giải thích dạng triple
+(vd "commune in Pyrénées-Atlantiques, France" → Bayonne —country→ France). Đủ điều kiện
+tiếp tục bước b sau khi có embedding từ checkpoint train thật. Kênh embedding hiện đo bằng
+checkpoint smoke (2 epoch) nên chưa nói lên gì; chỉ kênh cấu trúc (link + cạnh) là kết luận được.
