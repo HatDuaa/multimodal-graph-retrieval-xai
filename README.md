@@ -89,7 +89,7 @@ python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh
 
 ### Chạy platform demo
 
-Cần các file sau (tải từ Drive, xem [data/README.md](data/README.md); checksum ở `data/MANIFEST.md`):
+Cần các file sau (checksum ở `data/MANIFEST.md`). Tất cả nằm trên Drive nhóm, thư mục `DLDT/multimodal-graph-retrieval-xai-data/`, cùng cấu trúc `data/` và `experiments/` như repo; tải về đặt đúng đường dẫn (xem thêm [data/README.md](data/README.md)):
 
 - `data/features/vg_coco_image.npy` và `vg_coco_caption.npy`, mỗi file kèm `.ids.json`: cho chế độ CLIP thuần.
 - Thêm cho chế độ **CLIP + Đồ thị**:
