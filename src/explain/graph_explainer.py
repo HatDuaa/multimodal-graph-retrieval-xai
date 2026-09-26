@@ -52,7 +52,9 @@ def score(model, store, query, image_id, overrides=None):
             attention = torch.softmax(sims / tau, -1)
             w = torch.softmax(q @ u, -1)
             best = sims.argmax(-1)
-            q_indices = query_parts['node_indices'] if channel == 'objects' else query_parts['relation_indices']
+            # Encoded query objects keep only scorable parts (part_mask), so the index list must be masked the same way.
+            q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
+                         if channel == 'objects' else query_parts['relation_indices'])
             p_indices = image_parts['node_indices'] if channel == 'objects' else image_parts['relation_indices']
             for i, j in enumerate(best.tolist()):
                 result[channel].append({'query_index': q_indices[i], 'image_index': p_indices[j],
