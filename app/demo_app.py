@@ -39,14 +39,35 @@ footer { display: none !important; }
 """
 
 
+def graph_explanation(info: dict) -> list[str]:
+    """Matched part pairs exactly as the reranker scored them (src/explain/graph_explainer.matched_pairs)."""
+    a, b, c = info["weights_abc"]
+    lines = [f"- Trọng số của câu này: CLIP **{a:.0%}**, vật thể **{b:.0%}**, bộ ba **{c:.0%}**",
+             "- Đồ thị câu: " + ", ".join(f"`{o}`" for o in info["query_graph"]["objects"])
+             + ("; " + ", ".join(f"`{h} –{r}→ {t}`" for h, r, t in info["query_graph"]["relations"])
+                if info["query_graph"]["relations"] else ""),
+             "", "| Phần của câu | Phần khớp trong ảnh | w | a | sim | đóng góp |", "|---|---|---|---|---|---|"]
+
+    def part(value):
+        return f"{value[0]} –{value[1]}→ {value[2]}" if isinstance(value, (list, tuple)) else value
+
+    for item in sorted(info["objects"] + info["triples"], key=lambda item: -item["contribution"]):
+        lines.append(f"| `{part(item['query_part'])}` | `{part(item['image_part'])}` | {item['w_i']:.2f} | "
+                     f"{item['a_ij']:.2f} | {item['sim_ij']:.2f} | {item['contribution']:.4f} |")
+    lines.append("\n_đóng góp = trọng số kênh × w × a × sim, trước z-score trong top-50; sắp theo đóng góp._")
+    return lines
+
+
 def describe(hit: Hit, mode: str) -> str:
     lines = [f"### Hạng {hit.rank} · ảnh `{hit.image_id}`",
              f"- Điểm cuối: **{hit.score:.4f}**",
              f"- Điểm CLIP (cosine): {hit.clip_score:.4f}"]
     if hit.graph_score is not None:
-        lines.append(f"- Điểm đồ thị: {hit.graph_score:.4f}")
+        lines.append(f"- Điểm đồ thị (z-score trong top-50): {hit.graph_score:.4f}")
     lines.append("\n**Giải thích**")
-    if hit.explanation:
+    if hit.explanation and isinstance(hit.explanation[0], dict):
+        lines += graph_explanation(hit.explanation[0])
+    elif hit.explanation:
         for path in hit.explanation:
             lines.append("- " + " ; ".join(f"{h} –{r}→ {t}" for h, r, t in path))
     elif mode == "clip":
@@ -111,10 +132,16 @@ def main() -> None:
     ap.add_argument("--split", default="test", choices=["test", "val"])
     ap.add_argument("--port", type=int, default=7860)
     ap.add_argument("--host", default="127.0.0.1")
+    ap.add_argument("--run", default="main_r3_seed0", help="trained graph reranker run for the CLIP + Đồ thị mode")
+    ap.add_argument("--no-graph", action="store_true", help="CLIP mode only (no model checkpoint needed)")
+    ap.add_argument("--device", default=None, help="cuda or cpu (default: cuda if available)")
     args = ap.parse_args()
 
     cfg = load_config()
     service = SearchService.from_config(split=args.split, cfg=cfg)
+    if not args.no_graph:
+        from src.service.graph_mode import GraphRerankMode
+        service.add_mode("clip_graph", GraphRerankMode(cfg, args.split, service.encoder, args.run, args.device))
     missing = [m["path"].name for m in service.meta.values() if not m["path"].exists()]
     if missing:
         sys.exit(f"{len(missing)} images missing; run: python scripts/download_images.py --splits {args.split}")

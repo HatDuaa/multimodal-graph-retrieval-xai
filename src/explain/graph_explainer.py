@@ -19,6 +19,37 @@ def remove_parts(graph, object_indices=(), relation_indices=()):
     return out
 
 
+def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=0):
+    """Per channel, each query part's most similar image part with the quantities the ranking used.
+
+    detail must come from model(batch, return_encoded=True); image_row indexes the encoded images of that batch.
+    contribution = channel weight (b or c) * w_i * a_ij * sim_ij, before the candidate-wise z-score.
+    """
+    weights = detail['weights'][query_row]
+    result = {'objects': [], 'triples': []}
+    for channel, offset, tau, u, weight in (('objects', 0, model.tau_objects(), model.u_objects, weights[1]),
+                                           ('triples', 2, model.tau_triples(), model.u_triples, weights[2])):
+        qs, qm = detail['encoded_query'][offset:offset + 2]
+        ps, pm = detail['encoded_images'][offset:offset + 2]
+        q, p = qs[query_row, qm[query_row]], ps[image_row, pm[image_row]]
+        if len(q) == 0 or len(p) == 0:
+            continue
+        sims = q @ p.T
+        attention = torch.softmax(sims / tau, -1)
+        w = torch.softmax(q @ u, -1)
+        best = sims.argmax(-1)
+        # Encoded query objects keep only scorable parts (part_mask), so the index list must be masked the same way.
+        q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
+                     if channel == 'objects' else query_parts['relation_indices'])
+        p_indices = image_parts['node_indices'] if channel == 'objects' else image_parts['relation_indices']
+        for i, j in enumerate(best.tolist()):
+            result[channel].append({'query_index': q_indices[i], 'image_index': p_indices[j],
+                                    'w_i': float(w[i]), 'a_ij': float(attention[i, j]),
+                                    'sim_ij': float(sims[i, j]),
+                                    'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])})
+    return result
+
+
 @torch.no_grad()
 def score(model, store, query, image_id, overrides=None):
     """Query is a packaged caption ID; scores retain the complete top-50 z-score context."""
@@ -41,24 +72,7 @@ def score(model, store, query, image_id, overrides=None):
                   'weights': weights.cpu().tolist(), 'objects': [], 'triples': [],
                   'contribution_definition': 'channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; '
                                              'these terms do not sum to the final normalized score.'}
-        for channel, offset, tau, u, weight in (('objects', 0, model.tau_objects(), model.u_objects, weights[1]),
-                                               ('triples', 2, model.tau_triples(), model.u_triples, weights[2])):
-            qs, qm = detail['encoded_query'][offset:offset + 2]
-            ps, pm = detail['encoded_images'][offset:offset + 2]
-            q, p = qs[0, qm[0]], ps[image_row, pm[image_row]]
-            if len(q) == 0 or len(p) == 0:
-                continue
-            sims = q @ p.T
-            attention = torch.softmax(sims / tau, -1)
-            w = torch.softmax(q @ u, -1)
-            best = sims.argmax(-1)
-            q_indices = query_parts['node_indices'] if channel == 'objects' else query_parts['relation_indices']
-            p_indices = image_parts['node_indices'] if channel == 'objects' else image_parts['relation_indices']
-            for i, j in enumerate(best.tolist()):
-                result[channel].append({'query_index': q_indices[i], 'image_index': p_indices[j],
-                                        'w_i': float(w[i]), 'a_ij': float(attention[i, j]),
-                                        'sim_ij': float(sims[i, j]),
-                                        'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])})
+        result.update(matched_pairs(model, detail, query_parts, image_parts, image_row))
         return result
     finally:
         model.train(was_training)

@@ -32,7 +32,7 @@ Giảng viên hướng dẫn: **TS. Lê Ngọc Thành**.
 | Giai đoạn | Bộ dữ liệu | Việc chính |
 |---|---|---|
 | 0. Nền chung | — | Khung repo + config theo seed; trích đặc trưng CLIP + FAISS; module đánh giá (Recall@1/5/10, MRR, ≥3 seed); thử CLIP đa ngữ cho truy vấn tiếng Việt để chốt encoder. |
-| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng đồ thị (VG150 + ConceptNet) → nối truy vấn vào đồ thị → GAT + điểm đồ thị → re-rank, chọn α trên validation → ablation bỏ/xáo cạnh → hiển thị đường đi → platform demo (web app nhỏ: nhập truy vấn → top-k, so CLIP với CLIP + Graph, đường đi giải thích; Lộc phụ trách) → phân tích 5 thành công / 5 thất bại. |
+| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng scene graph từng ảnh (nhãn mở của Visual Genome, không lọc VG150, không ConceptNet) → tách truy vấn thành đồ thị → GAT + hai kênh khớp vật thể / bộ ba → re-rank với trọng số a, b, c học theo từng câu (quét α trên validation cho dòng trọng số cố định) → ablation và đối chứng bỏ/xáo cạnh → hiển thị đường đi → platform demo (web app nhỏ: nhập truy vấn → top-k, so CLIP với CLIP + Graph, đường đi giải thích; Lộc phụ trách) → phân tích 5 thành công / 5 thất bại. |
 | 2. Cấp độ 2 | + MKG-W | Sinh truy vấn từ mô tả thực thể, chia truy vấn và triple theo split → chạy lại CLIP và CLIP + GNN → tái lập NativE/AdaMF-MAT (a: link prediction gốc, so với bài báo; b: embedding thay GNN trong điểm đồ thị) → bộ ≥20 truy vấn mỗi tập, báo cáo tách trực tiếp / gián tiếp. |
 | 3. Cấp độ 3 | + MMKG tiếng Việt | Chốt định nghĩa và cài đặt fidelity / validity / sparsity trên ≥10 truy vấn → xây MMKG tiếng Việt (50–150 thực thể, 300–1.000 triple, 200–500 ảnh) + data card → chạy phương pháp tốt nhất, phân tích chuyển giao. |
 | 4. Mở rộng | 2 tập công khai | Ưu tiên hướng (a): α thích nghi theo truy vấn hoặc cách chọn đường đi giải thích. Hướng (c) khảo sát người dùng nếu còn thời gian. Bỏ hướng video. |
@@ -57,7 +57,7 @@ Metric bắt buộc: Recall@1/5/10, MRR; so CLIP thuần với CLIP + Graph trê
 
 - **Nhánh A (text-to-image)** là bắt buộc. Image-to-text làm sau nếu còn thời gian.
 - **Ba bộ dữ liệu (chốt 2026-09-17), mỗi bộ chạy riêng, chung một pipeline:**
-  1. **Visual Genome, phần giao với MS-COCO** (join theo `coco_id`): truy vấn = caption COCO (split Karpathy), đồ thị = scene graph Visual Genome (lọc kiểu VG150) + cạnh tri thức ConceptNet. Tính là **một** tập. Dùng cho cấp độ 1. Thay cho FB15k-237-IMG vì bộ này có sẵn cả truy vấn lẫn đồ thị gán tay; FB15k-237-IMG không có caption, phải tự sinh truy vấn.
+  1. **Visual Genome, phần giao với MS-COCO** (join theo `coco_id`): truy vấn = caption COCO (split Karpathy), đồ thị = scene graph Visual Genome của từng ảnh, nhãn mở đã chuẩn hoá alias, không lọc VG150, không dùng ConceptNet ở cấp độ 1 (thiết kế cuối, xem `docs/level1-model.md`). Tính là **một** tập. Dùng cho cấp độ 1. Thay cho FB15k-237-IMG vì bộ này có sẵn cả truy vấn lẫn đồ thị gán tay; FB15k-237-IMG không có caption, phải tự sinh truy vấn.
   2. **MKG-W** (tải từ kho NativE / MMRNS): truy vấn sinh từ mô tả thực thể + bộ ≥20 câu soạn tay; đồ thị = triple. Dùng cho cấp độ 2.
   3. **MMKG tiếng Việt tự xây**: cấp độ 3.
 - **Phương pháp tái lập cấp độ 2:** ưu tiên **NativE (SIGIR 2024)** hoặc **AdaMF-MAT (LREC-COLING 2024)**, chọn theo cái nào chạy lại được trước. Embedding thực thể của nó thay embedding GNN trong điểm đồ thị.
@@ -89,14 +89,33 @@ python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh
 
 ### Chạy platform demo
 
-Cần: 4 file đặc trưng trong `data/features/` (tải từ Drive, xem [data/README.md](data/README.md)) và ảnh của split muốn xem.
+Cần các file sau (checksum ở `data/MANIFEST.md`). Tất cả nằm trên Drive nhóm, thư mục `DLDT/multimodal-graph-retrieval-xai-data/`, cùng cấu trúc `data/` và `experiments/` như repo; tải về đặt đúng đường dẫn (xem thêm [data/README.md](data/README.md)):
+
+- `data/features/vg_coco_image.npy` và `vg_coco_caption.npy`, mỗi file kèm `.ids.json`: cho chế độ CLIP thuần.
+- Thêm cho chế độ **CLIP + Đồ thị**:
+  - `data/features/vg_coco_graph_parts.npy` và `.ids.json` (1,2 GB);
+  - `data/graphs/vg_coco_scene_graphs.jsonl`;
+  - checkpoint `experiments/level1/gat/main_r3_seed0/checkpoint_best.pt` (4,2 MB, SHA-256 `7575951f…991e6d`) cùng file `config.json` đã có sẵn trong git.
+- Mô hình spaCy cho parser: `python -m spacy download en_core_web_sm`.
+- Ảnh của split muốn xem.
 
 ```bash
 python scripts/download_images.py --splits test    # 2 138 ảnh, một lần
 python app/demo_app.py --split test                 # mở http://localhost:7860
+python app/demo_app.py --split test --no-graph      # chỉ CLIP thuần, không cần checkpoint
 ```
 
-Nhập truy vấn tiếng Anh rồi bấm **Tìm** → lưới top-k ảnh kèm hạng và điểm; bấm vào một ảnh để xem điểm, giải thích và caption gốc. Nút **Lấy ngẫu nhiên một caption của pool** lấy một truy vấn có sẵn đáp án và báo ảnh đúng đứng hạng mấy. Chạy offline, có GPU hay không đều được. Hiện có chế độ **CLIP thuần**; chế độ CLIP + Đồ thị sẽ tự hiện trong mục "Chế độ xếp hạng" khi bộ xếp hạng lại được đăng ký vào `SearchService.add_mode()` (`src/service/search_service.py`).
+Nhập một câu tiếng Anh rồi bấm **Tìm**, chọn chế độ **CLIP thuần** hoặc **CLIP + Đồ thị**. Bấm vào một ảnh trong lưới để xem:
+điểm cuối, điểm CLIP, điểm đồ thị, trọng số a / b / c của câu, đồ thị câu do parser tách ra, và bảng các cặp khớp giữa câu
+và ảnh (w, a, sim, đóng góp). Bảng này lấy từ chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không
+phải tìm đường đi sau khi đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng
+đứng hạng mấy.
+
+Chế độ đồ thị (`src/service/graph_mode.py`) lấy top-50 của CLIP, tách câu bằng `sng_parser`, mã hoá ngay bằng CLIP những
+nhãn chưa có trong bảng vector, rồi xếp lại bằng mô hình chính `main_r3_seed0`. Đã kiểm tra trên máy không GPU
+(`CUDA_VISIBLE_DEVICES=""`): khởi động khoảng 2 giây, mỗi truy vấn dưới 1 giây. Trên val, chế độ này cho top-10 giống hệt
+đường đánh giá đã đóng gói (điểm lệch khoảng 1e-4 do mã hoá câu lại lúc chạy). Kịch bản video dự phòng:
+[docs/demo-video-script.md](docs/demo-video-script.md).
 
 Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
 
