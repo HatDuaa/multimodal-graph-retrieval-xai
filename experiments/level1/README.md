@@ -61,7 +61,7 @@ dừng sớm sau 2 epoch không tăng, tối đa 10 epoch. Mô tả mô hình: `
 | CLIP thuần | — | 39,13 | 67,88 | 78,97 | 52,34 | 1 / 0 / 0 | — |
 | Ba kênh, không huấn luyện (bước 0) | — | 43,50 | 70,95 | 81,59 | 56,10 | 0,60 / 0,28 / 0,12 | — |
 | **Đầy đủ** (GAT, 3 kênh, a/b/c theo từng câu) | 3/3 | 46,48 ± 0,24 | 73,78 ± 0,16 | 83,44 ± 0,24 | 58,85 ± 0,18 | 0,485 / 0,355 / 0,160 | 8, 10, 6 |
-| a, b, c cố định (học trên train) | 3/3 | 46,13 ± 0,15 | 73,20 ± 0,13 | 83,20 ± 0,06 | 58,38 ± 0,10 | 0,488 / 0,368 / 0,144 | 6, 3, 7 |
+| a, b, c cố định (a, b, c học trên train qua bias, dùng chung cho mọi câu) | 3/3 | 46,13 ± 0,15 | 73,20 ± 0,13 | 83,20 ± 0,06 | 58,38 ± 0,10 | 0,488 / 0,368 / 0,144 | 6, 3, 7 |
 | Bỏ GAT | 3/3 | 46,71 ± 0,07 | 73,81 ± 0,29 | 83,56 ± 0,24 | 59,04 ± 0,09 | 0,473 / 0,353 / 0,174 | 5, 5, 3 |
 | Tắt kênh bộ ba (GAT vẫn dùng cạnh) | 3/3 | 45,99 ± 0,05 | 73,33 ± 0,13 | 82,84 ± 0,10 | 58,34 ± 0,05 | 0,504 / 0,496 / 0 | 4, 4, 6 |
 | Bỏ hẳn quan hệ | 3/3 | 45,98 ± 0,10 | 73,12 ± 0,05 | 82,90 ± 0,04 | 58,29 ± 0,04 | 0,499 / 0,501 / 0 | 5, 8, 6 |
@@ -83,7 +83,7 @@ chạy lại kiểm tra bước 0 cho R@5 70,95, R@10 81,59, MRR 56,10.
 
 **Quét α trên val cho dòng a, b, c cố định** (`scripts/checks/alpha_sweep.py`, chỉ đánh giá, giữ β = b/(b+c) đã học,
 lưới 0,05–0,95). α học được là 0,488 / 0,499 / 0,477, cho R@1 46,01 / 46,07 / 46,30. α tốt nhất trên lưới là
-0,45 / 0,50 / 0,45, cho 46,05 / 46,08 / 46,49. Số ở α chọn trên val bị lạc quan vì chính val đã chọn nó.
+0,45 / 0,50 / 0,45, cho 46,05 / 46,08 / 46,49. Số ở α chọn trên val bị lạc quan vì chính val đã chọn nó. Dòng này dùng a, b, c học trên train, **không** dùng α chọn trên val. Plan v7 định chọn α trên val cho dòng này, nhưng bước quét α chỉ được báo trên val, và test không chấm lại với α chọn trên val (như vậy là chạm test thêm một lần sau khi đã thấy số). Trên val, α học được kém α tốt nhất trên lưới tối đa 0,19 điểm R@1. Mô hình học α (tức a) thay vì chọn tay, đúng tinh thần "điều chỉnh cách kết hợp điểm nếu giải thích được cơ chế" của đề.
 
 ### Số nói gì
 
@@ -148,13 +148,15 @@ Cụm bộ ba mới sinh ra khi nối lại được mã hoá vào `vg_coco_grap
 | CLIP thuần | 39,32 | 66,39 | 77,32 | 52,00 | — |
 | Ba kênh, không huấn luyện | 42,54 | 70,04 | 80,35 | 55,05 | 0,60 / 0,28 / 0,12 |
 | **Đầy đủ (phương pháp chính)** | **45,77 ± 0,23** | 72,87 ± 0,31 | 82,69 ± 0,31 | 58,14 ± 0,18 | 0,483 / 0,358 / 0,159 |
-| a, b, c cố định | 45,13 ± 0,05 | 72,25 ± 0,19 | 82,15 ± 0,25 | 57,47 ± 0,11 | 0,488 / 0,368 / 0,144 |
+| a, b, c cố định (a, b, c học trên train qua bias, dùng chung cho mọi câu) | 45,13 ± 0,05 | 72,25 ± 0,19 | 82,15 ± 0,25 | 57,47 ± 0,11 | 0,488 / 0,368 / 0,144 |
 | Bỏ GAT | 45,95 ± 0,20 | 73,01 ± 0,07 | 82,78 ± 0,07 | 58,25 ± 0,09 | 0,471 / 0,356 / 0,173 |
 | Tắt kênh bộ ba | 45,07 ± 0,22 | 71,99 ± 0,06 | 82,00 ± 0,08 | 57,40 ± 0,13 | 0,502 / 0,498 / 0 |
 | Bỏ hẳn quan hệ | 45,26 ± 0,14 | 72,10 ± 0,08 | 82,05 ± 0,15 | 57,55 ± 0,11 | 0,497 / 0,503 / 0 |
 | Câu là text thuần (phía câu không qua GAT/MLP/U) | 45,61 ± 0,29 | 73,21 ± 0,03 | 82,93 ± 0,11 | 58,16 ± 0,24 | 0,484 / 0,351 / 0,165 |
 | Huấn luyện và chấm trên cạnh nối ngẫu nhiên | 45,50 ± 0,40 | 72,65 ± 0,43 | 82,67 ± 0,14 | 57,86 ± 0,36 | 0,490 / 0,352 / 0,158 |
 | Loss LambdaRank (MRR) | 44,28 ± 0,30 | 71,51 ± 0,23 | 81,81 ± 0,19 | 56,78 ± 0,26 | 0,523 / 0,346 / 0,132 |
+
+Dòng "a, b, c cố định" trên test dùng a, b, c học trên train, không dùng α chọn trên val (xem mục quét α ở trên).
 
 Test xác nhận phần lớn kết luận trên val:
 - Trọng số a, b, c theo từng câu có ích: +0,64 R@1 so với trọng số cố định. Mức này trên test rõ hơn trên val (+0,35).

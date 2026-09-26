@@ -105,7 +105,7 @@ bảng đủ 4 chỉ số ở `experiments/level1/README.md`.
 | Cấu hình | Val | Test |
 |---|---|---|
 | Mô hình chính | 46,48 ± 0,24 | 45,77 ± 0,23 |
-| a, b, c cố định (dùng chung cho mọi câu, học trên train) | 46,13 ± 0,15 | 45,13 ± 0,05 |
+| a, b, c cố định (a, b, c học trên train qua bias, dùng chung cho mọi câu) | 46,13 ± 0,15 | 45,13 ± 0,05 |
 | Bỏ GAT (mỗi nhãn được biến đổi riêng, không lan truyền) | 46,71 ± 0,07 | 45,95 ± 0,20 |
 | Tắt kênh bộ ba (GAT vẫn dùng cạnh) | 45,99 ± 0,05 | 45,07 ± 0,22 |
 | Bỏ hẳn quan hệ (không kênh bộ ba, GAT không cạnh) | 45,98 ± 0,10 | 45,26 ± 0,14 |
@@ -117,7 +117,7 @@ bảng đủ 4 chỉ số ở `experiments/level1/README.md`.
 - Mỗi ảnh nhận scene graph của một ảnh khác: R@1 rơi xuống 26,33 ± 0,39, thấp hơn CLIP thuần 12,8 điểm.
 - Nối lại cạnh ngẫu nhiên: R@1 46,29 ± 0,19.
 
-**Quét α trên val** cho dòng a, b, c cố định: α học được (0,48–0,50) cách α tốt nhất trên lưới không quá 0,19 điểm R@1.
+**Quét α trên val** cho dòng a, b, c cố định (chỉ đánh giá, giữ β đã học): α học được (0,48–0,50) cách α tốt nhất trên lưới không quá 0,19 điểm R@1. Dòng này dùng a, b, c học trên train, **không** dùng α chọn trên val. Plan v7 định chọn α trên val cho dòng này, nhưng bước quét α chỉ được báo trên val, và test không chấm lại với α chọn trên val (như vậy là chạm test thêm một lần sau khi đã thấy số). Trên val, α học được kém α tốt nhất trên lưới tối đa 0,19 điểm R@1. Mô hình học α (tức a) thay vì chọn tay, đúng tinh thần "điều chỉnh cách kết hợp điểm nếu giải thích được cơ chế" của đề.
 
 **Nhận xét:**
 1. Đồ thị có ích, và mô hình thật sự dựa vào đồ thị **của đúng ảnh**. Thay đồ thị của ảnh khác làm kết quả sụp dưới cả
@@ -174,6 +174,7 @@ Bảng đầy đủ, ảnh và phân tích từng ca: `experiments/level1/explan
   khoảng 0,97; vector vật thể thì tách xa nhau hơn (0,79 → khoảng 0,25) (`experiments/checks/part_similarity.json`). Vì thế
   kênh bộ ba chỉ xếp hạng nhờ khác biệt rất nhỏ, và giải thích ở kênh bộ ba thường ghép các cặp không liên quan. Một nguyên
   nhân có thể là lớp `U` dùng chung cho vật thể và bộ ba. Chưa sửa vì thiết kế đã chốt trước khi chạy test.
+- Dòng "a, b, c cố định" không đúng plan v7 ở chỗ chọn α: a, b, c học trên train thay vì chọn trên val; bước quét α chỉ báo trên val (α học được kém α tốt nhất tối đa 0,19 điểm), test không chấm lại.
 - Chênh lệch giữa các cấu hình mạnh nhất chỉ cỡ 1–2 độ lệch chuẩn với 3 seed; chưa làm kiểm định theo cặp trên từng câu.
 - Dừng sớm với patience 2 nhạy với nhiễu của val. Hai run đạt tốt nhất đúng ở epoch 10, là trần số epoch.
 - Kết quả phụ thuộc chất lượng parser và độ phủ nhãn VG. Không dùng thuộc tính (tính từ, màu): phép thử không huấn luyện
