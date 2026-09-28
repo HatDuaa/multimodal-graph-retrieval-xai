@@ -50,38 +50,25 @@ footer { display: none !important; }
 #detail th { white-space: nowrap; font-weight: 600; }
 #detail th.text { white-space: normal; }
 #detail .num { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
-/* channel colours, shared by the weight bar, the section headers and the w bars */
-#detail .ch-clip { --ch: #2563eb; }
-#detail .ch-obj { --ch: #ea580c; }
-#detail .ch-tri { --ch: #9333ea; }
-#detail .wbar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; margin: 4px 0 2px; }
-#detail .wbar > span { background: var(--ch); color: #fff; font-size: 0.8rem; font-weight: 600; display: flex;
-                       align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; }
-#detail .legend { display: flex; gap: 14px; font-size: 0.85rem; flex-wrap: wrap; }
-#detail .legend > span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 5px;
-                                 border-radius: 2px; background: var(--ch); }
-#detail .channel { border-left: 4px solid var(--ch); padding: 2px 0 2px 10px; margin: 12px 0; }
-#detail .channel-head { color: var(--ch); font-weight: 700; margin-bottom: 2px; }
-#detail .channel-head .pct { font-variant-numeric: tabular-nums; }
-#detail .wcell { display: inline-flex; align-items: center; gap: 6px; }
-#detail .wmini { display: inline-block; width: 48px; height: 8px; border-radius: 4px;
-                 background: var(--neutral-200, #e5e7eb); overflow: hidden; }
-#detail .wmini > span { display: block; height: 100%; background: var(--ch); }
+/* one table, one row group per channel; a light tint of the channel colour tells the groups apart */
+#detail .ch-clip { --ch: #2563eb; --tint: rgba(37, 99, 235, 0.06); }
+#detail .ch-obj { --ch: #ea580c; --tint: rgba(234, 88, 12, 0.06); }
+#detail .ch-tri { --ch: #9333ea; --tint: rgba(147, 51, 234, 0.06); }
+#detail tbody tr { background: var(--tint); }
+#detail tbody tr.group-start > td { border-top: 2px solid var(--neutral-300, #d1d5db); }
+#detail td.channel { border-left: 3px solid var(--ch); vertical-align: top; white-space: nowrap; }
+#detail td.channel b { color: var(--ch); }
 #detail .muted { color: var(--body-text-color-subdued, #6b7280); font-size: 0.85rem; margin: 2px 0; }
-#detail .missing { font-size: 0.85rem; margin: 4px 0 0; padding: 4px 8px; border-radius: 4px;
-                   background: var(--neutral-50, #f9fafb); }
 """
 
-# Why a query part has no row in a channel; codes come from src.service.graph_mode.unmatched_parts.
+# Short reason shown in place of the matched image part; codes come from src.service.graph_mode.unmatched_parts.
 UNMATCHED_REASONS = {
-    "pronoun": {"objects": "là đại từ; đại từ (he, it, they…) bị loại khỏi đồ thị truy vấn trước khi xếp hạng "
-                           "nên không được so khớp",
-                "triples": "chứa đại từ; đại từ (he, it, they…) bị loại khỏi đồ thị truy vấn trước khi xếp hạng, "
-                           "kéo theo mọi quan hệ nối với nó, nên bộ ba này không được so khớp"},
-    "empty_label": "nhãn rỗng, bị part_mask che khi so khớp",
-    "dangling": "một đầu của quan hệ không có trong đồ thị truy vấn",
-    "image_empty": {"objects": "đồ thị ảnh không có vật thể nào", "triples": "đồ thị ảnh không có bộ ba nào"},
+    "pronoun": {"objects": "đại từ, bị loại", "triples": "chứa đại từ, bị loại"},
+    "empty_label": "nhãn rỗng, bị che",
+    "dangling": "thiếu một đầu quan hệ",
+    "image_empty": {"objects": "ảnh không có vật thể", "triples": "ảnh không có bộ ba"},
 }
+NO_QUERY_PARTS = {"objects": "câu không có vật thể", "triples": "câu không có quan hệ"}
 CHANNELS = (("objects", "Vật thể", "ch-obj"), ("triples", "Bộ ba", "ch-tri"))
 
 
@@ -93,68 +80,49 @@ def part_text(value) -> str:
     return f"{value[0]} –{value[1]}→ {value[2]}" if isinstance(value, (list, tuple)) else str(value)
 
 
-def weight_bar(a: float, b: float, c: float) -> str:
-    """Stacked bar of the channel weights (a, b, c) the sentence encoder gave this query."""
-    parts = (("CLIP", a, "ch-clip"), ("Vật thể", b, "ch-obj"), ("Bộ ba", c, "ch-tri"))
-    segments = "".join(f'<span class="{cls}" style="width:{w * 100:.2f}%" title="{name} {w:.0%}">'
-                       f'{w:.0%}</span>' for name, w, cls in parts if w > 0)
-    legend = "".join(f'<span class="{cls}">{name} <b>{w:.0%}</b></span>' for name, w, cls in parts)
-    return f'<div class="wbar">{segments}</div><div class="legend">{legend}</div>'
+def num(value: float | None, digits: int) -> str:
+    return f'<td class="num">{"" if value is None else f"{value:.{digits}f}"}</td>'
 
 
-def channel_section(key: str, title: str, cls: str, weight: float, info: dict) -> str:
-    """One channel: its matched rows (w as a small bar), then every query part without a row and why."""
-    rows = sorted(info[key], key=lambda item: -item["contribution"])
-    unmatched = info.get("unmatched", {}).get(key, [])
-    has_query_parts = bool(info["query_graph"]["relations"] if key == "triples" else info["query_graph"]["objects"])
-    active = info.get("channel_active", [True, True])[0 if key == "objects" else 1]
-    out = [f'<div class="channel {cls}"><div class="channel-head">{title} · '
-           f'<span class="pct">{weight:.0%}</span></div>']
-    if rows:
-        out.append('<table><thead><tr><th class="text">Phần của câu</th><th class="text">Phần khớp trong ảnh</th>'
-                   '<th class="num">w</th><th class="num">a</th><th class="num">sim</th>'
-                   '<th class="num">đóng góp</th></tr></thead><tbody>')
-        for item in rows:
-            out.append(f'<tr><td><code>{esc(part_text(item["query_part"]))}</code></td>'
-                       f'<td><code>{esc(part_text(item["image_part"]))}</code></td>'
-                       f'<td class="num"><span class="wcell"><span class="wmini">'
-                       f'<span style="width:{item["w_i"] * 100:.1f}%"></span></span>{item["w_i"]:.2f}</span></td>'
-                       f'<td class="num">{item["a_ij"]:.2f}</td><td class="num">{item["sim_ij"]:.2f}</td>'
-                       f'<td class="num">{item["contribution"]:.4f}</td></tr>')
-        out.append("</tbody></table>")
-        out.append('<p class="muted">w: trọng số của từng phần trong kênh (tổng các w của kênh = 1).</p>')
-    elif not has_query_parts:
-        noun = "quan hệ" if key == "triples" else "vật thể"
-        out.append(f'<p class="missing">Đồ thị câu không có {noun} nào, nên kênh này không có phần để so khớp.</p>')
-    for item in unmatched:
+def channel_rows(key: str, title: str, cls: str, weight: float, info: dict) -> list[str]:
+    """Row group of one channel: matched parts by contribution, then query parts without a match and why."""
+    cells = []
+    for item in sorted(info[key], key=lambda item: -item["contribution"]):
+        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code></td>'
+                     f'<td><code>{esc(part_text(item["image_part"]))}</code></td>'
+                     + num(item["w_i"], 2) + num(item["a_ij"], 2) + num(item["sim_ij"], 2)
+                     + num(item["contribution"], 4))
+    for item in info.get("unmatched", {}).get(key, []):
         reason = UNMATCHED_REASONS.get(item["reason"], item["reason"])
         reason = reason[key] if isinstance(reason, dict) else reason
-        out.append(f'<p class="missing">Không có dòng cho <code>{esc(part_text(item["query_part"]))}</code>: '
-                   f'{esc(reason)}.</p>')
-    if not active:
-        other = "vật thể" if key == "triples" else "bộ ba"
-        out.append(f'<p class="missing">Kênh này không hoạt động với truy vấn này (không có phần nào so khớp được, '
-                   f'hoặc điểm kênh như nhau trên cả top-50), nên nó bị bỏ khỏi điểm đồ thị: trọng số {weight:.0%} '
-                   f'không được dùng và điểm đồ thị chỉ lấy từ kênh {other}.</p>')
-    out.append("</div>")
-    return "".join(out)
+        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code></td>'
+                     f'<td>— <span class="muted">{esc(reason)}</span></td>' + num(None, 0) * 4)
+    if not cells:
+        cells.append(f'<td>—</td><td>— <span class="muted">{NO_QUERY_PARTS[key]}</span></td>' + num(None, 0) * 4)
+    active = info.get("channel_active", [True, True])[0 if key == "objects" else 1]
+    unused = "" if active else '<br><span class="muted">(không dùng)</span>'
+    head = f'<td class="channel" rowspan="{len(cells)}"><b>{title}</b> {weight:.0%}{unused}</td>'
+    return [f'<tr class="{cls}{" group-start" if i == 0 else ""}">{head if i == 0 else ""}{row}</tr>'
+            for i, row in enumerate(cells)]
 
 
 def graph_explanation(info: dict, clip_score: float) -> str:
     """Matched part pairs exactly as the reranker scored them (src/explain/graph_explainer.matched_pairs)."""
     a, b, c = info["weights_abc"]
-    graph = info["query_graph"]
-    query_parts = [f"<code>{esc(o)}</code>" for o in graph["objects"]]
-    query_parts += [f"<code>{esc(part_text(r))}</code>" for r in graph["relations"]]
-    out = [f'<p class="muted" style="margin-top:0">Trọng số kênh của câu này (a, b, c):</p>{weight_bar(a, b, c)}',
-           f'<p class="muted">Đồ thị câu: {", ".join(query_parts) or "(rỗng)"}</p>',
-           f'<div class="channel ch-clip"><div class="channel-head">CLIP · <span class="pct">{a:.0%}</span></div>'
-           '<table><tbody><tr><td>Cosine giữa cả câu và ảnh (CLIP nhìn cả câu, không chia phần nên không có w)</td>'
-           f'<td class="num">{clip_score:.4f}</td></tr></tbody></table></div>']
-    out += [channel_section(key, title, cls, weight, info) for (key, title, cls), weight in zip(CHANNELS, (b, c))]
-    out.append('<p class="muted"><i>đóng góp = trọng số kênh × w × a × sim, trước z-score trong top-50; '
-               'trong mỗi kênh sắp theo đóng góp.</i></p>')
-    return "".join(out)
+    rows = ['<tr class="ch-clip group-start"><td class="channel"><b>CLIP</b> ' f"{a:.0%}</td>"
+            '<td>cả câu</td><td>cả ảnh</td>' + num(None, 0) * 2 + num(clip_score, 4) + num(None, 0) + "</tr>"]
+    for (key, title, cls), weight in zip(CHANNELS, (b, c)):
+        rows += channel_rows(key, title, cls, weight, info)
+    notes = ["CLIP so cả câu với cả ảnh nên chỉ có sim (= cosine CLIP), không có w, a.",
+             "w: trọng số của từng phần trong kênh (tổng các w của kênh = 1).",
+             "<i>đóng góp = trọng số kênh × w × a × sim, trước z-score trong top-50; trong mỗi kênh sắp theo đóng góp.</i>"]
+    if not all(info.get("channel_active", [True, True])):
+        notes.append("(không dùng): kênh không có phần nào so khớp được hoặc điểm kênh như nhau trên cả top-50, "
+                     "nên bị bỏ khỏi điểm đồ thị; điểm đồ thị chỉ lấy từ kênh còn lại.")
+    return ('<table><thead><tr><th>Kênh</th><th class="text">Phần của câu</th><th class="text">Phần khớp trong ảnh</th>'
+            '<th class="num">w</th><th class="num">a</th><th class="num">sim</th><th class="num">đóng góp</th></tr>'
+            "</thead><tbody>" + "".join(rows) + "</tbody></table>"
+            + "".join(f'<p class="muted">{note}</p>' for note in notes))
 
 
 def describe(hit: Hit, mode: str) -> str:
