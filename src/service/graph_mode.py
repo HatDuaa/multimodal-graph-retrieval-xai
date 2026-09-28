@@ -14,8 +14,38 @@ import torch
 from src.data.graph_store import GraphIndex, GraphStore
 from src.explain.graph_explainer import matched_pairs
 from src.graph.parse_query import parse_caption
+from src.graph.soft_match import PRONOUNS
 from src.train_graph_reranker import load_run_model
 from src.utils.config import resolve
+
+
+def unmatched_parts(query_graph, query_parts, image_parts):
+    """Query parts that get no explanation row in each channel, with the reason the ranking skipped them.
+
+    Mirrors GraphStore._graph_parts(query=True) and matched_pairs: pronoun objects are dropped from the query graph
+    together with every relation touching them, empty object labels are hidden by part_mask, and a channel whose
+    image side is empty yields no rows. Reason codes: pronoun, empty_label, dangling, image_empty.
+    """
+    names = {o["id"]: o["name"] for o in query_graph["objects"]}
+    scorable = {i for i, keep in zip(query_parts["node_indices"], query_parts["part_mask"]) if keep}
+    kept_relations = set(query_parts["relation_indices"])
+    out = {"objects": [], "triples": []}
+    for index, obj in enumerate(query_graph["objects"]):
+        if index in scorable:
+            reason = None if image_parts["node_indices"] else "image_empty"
+        else:
+            reason = "pronoun" if obj["name"] in PRONOUNS else "empty_label"
+        if reason:
+            out["objects"].append({"query_part": obj["name"], "reason": reason})
+    for index, rel in enumerate(query_graph["relations"]):
+        part = (names.get(rel["subject"], "?"), rel["predicate"].lower(), names.get(rel["object"], "?"))
+        if index in kept_relations:
+            reason = None if image_parts["relation_indices"] else "image_empty"
+        else:
+            reason = "pronoun" if part[0] in PRONOUNS or part[2] in PRONOUNS else "dangling"
+        if reason:
+            out["triples"].append({"query_part": part, "reason": reason})
+    return out
 
 
 class GraphRerankMode:
@@ -70,6 +100,9 @@ class GraphRerankMode:
                  "sentence": sentence}
         fused, detail = self.model(batch, return_encoded=True)
         weights = detail["weights"][0].cpu().tolist()
+        # fuse_tensor leaves a channel out of the graph score when it is inactive for this query (no scorable parts,
+        # or constant over the pool); the demo states this instead of implying the channel weight was used
+        active = [bool(detail["object_active"][0]), bool(detail["triple_active"][0])]
         names = lambda graph: {o["id"]: o["name"] for o in graph["objects"]}  # noqa: E731
         for row, (hit, parts) in enumerate(zip(hits, image_parts)):
             pairs = matched_pairs(self.model, detail, query_parts, parts, row)
@@ -84,6 +117,8 @@ class GraphRerankMode:
             hit.score = float(fused[0, row])
             hit.graph_score = float(detail["graph"][0, row])
             hit.explanation = [{"weights_abc": weights, **pairs,
+                                "channel_active": active,
+                                "unmatched": unmatched_parts(query_graph, query_parts, parts),
                                 "query_graph": {"objects": [o["name"] for o in query_graph["objects"]],
                                                 "relations": [(qnames[r["subject"]], r["predicate"].lower(), qnames[r["object"]])
                                                               for r in query_graph["relations"]
