@@ -35,7 +35,8 @@ footer { display: none !important; }
 #gallery .gallery-container { height: 100% !important; display: flex; flex-direction: column; }
 #gallery .grid-wrap { height: 100% !important; max-height: none !important; flex: 1 1 0; min-height: 0; overflow-y: auto !important; }
 #gallery .thumbnail-item { background: var(--neutral-100, #f3f4f6); }
-#detail { height: 100% !important; overflow-y: auto; padding-right: 6px; }
+#detail-col { display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important; overflow: hidden; }
+#detail { flex: 1 1 0 !important; height: auto !important; min-height: 0 !important; overflow-y: auto; padding-right: 6px; }
 /* explanation table: Gradio's markdown sets word-break: break-word on tables, which splits numbers
    mid-value; text cells wrap only between words, numeric cells (w, a, sim, đóng góp) never wrap */
 #detail table { display: table; width: 100%; table-layout: auto; word-break: normal !important; }
@@ -121,9 +122,11 @@ def build(service: SearchService, split: str) -> gr.Blocks:
                 lucky = gr.Button("Caption ngẫu nhiên của pool")
         note = gr.Markdown(elem_id="note")
         with gr.Row(elem_id="results"):
-            # 11:9 split gives the detail panel ~45% of the width so the explanation table fits unwrapped
+            # 11:9 split gives the detail panel ~45% of the width so the explanation table fits unwrapped;
+            # gr.Markdown ignores scale/min_width, so the panel sits in a Column that carries them
             gallery = gr.Gallery(label="Kết quả", columns=5, object_fit="contain", scale=11, elem_id="gallery")
-            detail = gr.Markdown("Nhập truy vấn để bắt đầu.", scale=9, min_width=480, elem_id="detail")
+            with gr.Column(scale=9, min_width=480, elem_id="detail-col"):
+                detail = gr.Markdown("Nhập truy vấn để bắt đầu.", elem_id="detail")
 
         outputs = [gallery, note, detail, hits_state]
         go.click(run, [query, mode, k, gold_state], outputs)
