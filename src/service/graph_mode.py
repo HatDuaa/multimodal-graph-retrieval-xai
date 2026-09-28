@@ -118,6 +118,8 @@ class GraphRerankMode:
             hit.graph_score = float(detail["graph"][0, row])
             hit.explanation = [{"weights_abc": weights, **pairs,
                                 "channel_active": active,
+                                # z-scored CLIP term of fused = a * z_clip + (1 - a) * graph (fuse_tensor)
+                                "z_clip": float(detail["z_clip"][0, row]),
                                 "unmatched": unmatched_parts(query_graph, query_parts, parts),
                                 "query_graph": {"objects": [o["name"] for o in query_graph["objects"]],
                                                 "relations": [(qnames[r["subject"]], r["predicate"].lower(), qnames[r["object"]])
