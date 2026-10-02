@@ -8,7 +8,6 @@ import hashlib
 import json
 import os
 import random
-import resource
 import subprocess
 import sys
 import time
@@ -28,6 +27,15 @@ from src.eval.metrics import evaluate
 from src.models.graph_reranker import GraphReranker
 from src.utils.config import load_config, resolve
 from src.utils.seed import set_seed
+
+try:
+    import resource
+except ImportError:  # Windows: no resource module; training stats record None
+    resource = None
+
+
+def peak_rss_bytes():
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024 if resource else None
 
 
 def sha256(path: Path) -> str:
@@ -205,7 +213,7 @@ def train(args, store, run_dir: Path, device, cfg=None):
         for start in range(0, len(epoch_rows), args.batch_size):
             batch = epoch_rows[start:start + args.batch_size]
             if os.environ.get("MGRX_DEBUG_BATCH_LOG") and start % (args.batch_size * 50) == 0:
-                rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+                rss = peak_rss_bytes()
                 print(json.dumps({"debug": "batch", "epoch": epoch, "start": start,
                                   "rss_bytes": rss,
                                   "gpu_bytes": torch.cuda.memory_allocated() if torch.cuda.is_available() else 0}),
@@ -229,7 +237,7 @@ def train(args, store, run_dir: Path, device, cfg=None):
         metrics.update({"epoch": epoch, "seconds": time.time() - started, "train_queries": len(rows),
                         "gradient_norms": gradient_norms,
                         "gpu_memory_peak_bytes": torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0,
-                        "rss_peak_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024})
+                        "rss_peak_bytes": peak_rss_bytes()})
         last_metrics = metrics
         with log.open("a", encoding="utf-8") as handle: handle.write(json.dumps(metrics) + "\n")
         print(json.dumps(metrics), flush=True)

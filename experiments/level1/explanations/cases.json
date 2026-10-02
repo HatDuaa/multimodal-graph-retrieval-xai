@@ -1,0 +1,1874 @@
+{
+  "rule": "Level 1 explanations: pick 5 success and 5 failure queries on VAL by a fixed rule and explain them.\n\nEverything comes from the ranking mechanism itself (src/explain/graph_explainer.py): the matched part pairs,\ntheir attention and weights are the ones the model used to score the image. For each case a deletion test\nremoves the image part with the largest contribution (score_without / remove_parts) and re-ranks the whole\ntop-50, against removing random parts of the same kind.\n\nSelection rule (fixed, reproducible): model = main_r3_seed0 (best-on-val checkpoint); a query is eligible when its\nparsed graph has at least one relation, so both channels can be shown. With numpy default_rng(2026):\n  success       5 queries where CLIP ranks the gold image > 1 and the model ranks it 1;\n  broken        3 queries where CLIP ranks the gold image 1 and the model ranks it > 1;\n  both_wrong    2 queries where both rank the gold image > 1.\nCounts of every category are reported over all val queries for the three main_r3 seeds.\n",
+  "model": "main_r3_seed0",
+  "counts": {
+    "main_r3_seed0": {
+      "success": 1235,
+      "broken": 434,
+      "both_wrong": 5237,
+      "both_right": 3727,
+      "n": 10633,
+      "model_better": 3987,
+      "model_worse": 1735
+    },
+    "main_r3_seed1": {
+      "success": 1241,
+      "broken": 451,
+      "both_wrong": 5231,
+      "both_right": 3710,
+      "n": 10633,
+      "model_better": 3978,
+      "model_worse": 1751
+    },
+    "main_r3_seed2": {
+      "success": 1186,
+      "broken": 434,
+      "both_wrong": 5286,
+      "both_right": 3727,
+      "n": 10633,
+      "model_better": 3975,
+      "model_worse": 1716
+    }
+  },
+  "eligible_share": 0.8837581115395466,
+  "cases": [
+    {
+      "category": "success",
+      "caption_id": "546569_2",
+      "caption": "A den with a chandelier, chairs, couch and a television.",
+      "query_graph": {
+        "objects": [
+          "den",
+          "chandelier",
+          "chair",
+          "couch",
+          "television"
+        ],
+        "relations": [
+          "den with chandelier",
+          "den with chair"
+        ]
+      },
+      "gold": 2375034,
+      "clip_rank": 4,
+      "model_rank": 1,
+      "weights_abc": [
+        0.43898189067840576,
+        0.45341426134109497,
+        0.10760392993688583
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2375034,
+          "score": 1.6802774667739868,
+          "clip_rank": 4,
+          "is_gold": true,
+          "thumbnail": "img/2375034.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2366702,
+          "score": 1.5310012102127075,
+          "clip_rank": 1,
+          "is_gold": false,
+          "thumbnail": "img/2366702.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2346424,
+          "score": 1.2336922883987427,
+          "clip_rank": 8,
+          "is_gold": false,
+          "thumbnail": "img/2346424.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2377918,
+          "score": 1.1105170249938965,
+          "clip_rank": 12,
+          "is_gold": false,
+          "thumbnail": "img/2377918.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2391316,
+          "score": 0.9169705510139465,
+          "clip_rank": 28,
+          "is_gold": false,
+          "thumbnail": "img/2391316.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2375034.jpg",
+      "explain_gold": {
+        "score": 1.6802771091461182,
+        "graph": 1.6386806964874268,
+        "weights": [
+          0.43898189067840576,
+          0.45341426134109497,
+          0.10760392993688583
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.19670212268829346,
+            "a_ij": 0.10246431827545166,
+            "sim_ij": 0.6475365161895752,
+            "contribution": 0.005917539354413748,
+            "query_part": "den",
+            "image_part": "ceiling"
+          },
+          {
+            "query_index": 1,
+            "image_index": 4,
+            "w_i": 0.3162307143211365,
+            "a_ij": 0.16714376211166382,
+            "sim_ij": 0.6271952390670776,
+            "contribution": 0.015031147748231888,
+            "query_part": "chandelier",
+            "image_part": "chandlier"
+          },
+          {
+            "query_index": 2,
+            "image_index": 2,
+            "w_i": 0.1733742505311966,
+            "a_ij": 0.23144713044166565,
+            "sim_ij": 1.0,
+            "contribution": 0.01819414272904396,
+            "query_part": "chair",
+            "image_part": "chair"
+          },
+          {
+            "query_index": 3,
+            "image_index": 11,
+            "w_i": 0.12371601909399033,
+            "a_ij": 0.430723637342453,
+            "sim_ij": 0.932129442691803,
+            "contribution": 0.022521434351801872,
+            "query_part": "couch",
+            "image_part": "living room"
+          },
+          {
+            "query_index": 4,
+            "image_index": 19,
+            "w_i": 0.18997691571712494,
+            "a_ij": 0.30980247259140015,
+            "sim_ij": 1.0,
+            "contribution": 0.026685839518904686,
+            "query_part": "television",
+            "image_part": "television"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 7,
+            "w_i": 0.6044498085975647,
+            "a_ij": 0.07199525833129883,
+            "sim_ij": 0.9957243204116821,
+            "contribution": 0.004662634804844856,
+            "query_part": "den with chandelier",
+            "image_part": "chandlier hanging from ceiling"
+          },
+          {
+            "query_index": 1,
+            "image_index": 5,
+            "w_i": 0.3955501616001129,
+            "a_ij": 0.06974294781684875,
+            "sim_ij": 0.9923661351203918,
+            "contribution": 0.00294579123146832,
+            "query_part": "den with chair",
+            "image_part": "chair in room"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2375034,
+        "removed_kind": "objects",
+        "removed_index": 19,
+        "removed_part": "television",
+        "removed_contribution": 0.026685839518904686,
+        "before": {
+          "rank": 1,
+          "score": 1.6802773475646973
+        },
+        "after_top_part": {
+          "rank": 1,
+          "score": 1.6588671207427979
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 1.6853105425834656
+        }
+      }
+    },
+    {
+      "category": "success",
+      "caption_id": "171351_3",
+      "caption": "A man riding his bike near the beach.",
+      "query_graph": {
+        "objects": [
+          "man",
+          "bike",
+          "beach"
+        ],
+        "relations": [
+          "man riding bike",
+          "man near beach"
+        ]
+      },
+      "gold": 2349944,
+      "clip_rank": 2,
+      "model_rank": 1,
+      "weights_abc": [
+        0.35888832807540894,
+        0.381024569272995,
+        0.26008713245391846
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2349944,
+          "score": 2.5879416465759277,
+          "clip_rank": 2,
+          "is_gold": true,
+          "thumbnail": "img/2349944.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2357349,
+          "score": 1.9837918281555176,
+          "clip_rank": 1,
+          "is_gold": false,
+          "thumbnail": "img/2357349.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2328865,
+          "score": 1.6865110397338867,
+          "clip_rank": 3,
+          "is_gold": false,
+          "thumbnail": "img/2328865.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2415278,
+          "score": 1.479989767074585,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/2415278.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2378834,
+          "score": 1.2243409156799316,
+          "clip_rank": 6,
+          "is_gold": false,
+          "thumbnail": "img/2378834.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2349944.jpg",
+      "explain_gold": {
+        "score": 2.5879416465759277,
+        "graph": 2.4249022006988525,
+        "weights": [
+          0.35888832807540894,
+          0.381024569272995,
+          0.26008713245391846
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 10,
+            "w_i": 0.27187830209732056,
+            "a_ij": 0.6207972764968872,
+            "sim_ij": 0.9999998807907104,
+            "contribution": 0.06430982053279877,
+            "query_part": "man",
+            "image_part": "man"
+          },
+          {
+            "query_index": 1,
+            "image_index": 23,
+            "w_i": 0.48090291023254395,
+            "a_ij": 0.3413310647010803,
+            "sim_ij": 0.9945449233055115,
+            "contribution": 0.06220289319753647,
+            "query_part": "bike",
+            "image_part": "bike"
+          },
+          {
+            "query_index": 2,
+            "image_index": 1,
+            "w_i": 0.2472187578678131,
+            "a_ij": 0.5121177434921265,
+            "sim_ij": 0.9999998807907104,
+            "contribution": 0.04823965206742287,
+            "query_part": "beach",
+            "image_part": "beach"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.6548987030982971,
+            "a_ij": 0.12965640425682068,
+            "sim_ij": 0.996356189250946,
+            "contribution": 0.02200399897992611,
+            "query_part": "man riding bike",
+            "image_part": "bald man riding bike"
+          },
+          {
+            "query_index": 1,
+            "image_index": 7,
+            "w_i": 0.3451012670993805,
+            "a_ij": 0.12474042177200317,
+            "sim_ij": 0.9485522508621216,
+            "contribution": 0.010620228946208954,
+            "query_part": "man near beach",
+            "image_part": "bald man wearing shirt"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2349944,
+        "removed_kind": "objects",
+        "removed_index": 10,
+        "removed_part": "man",
+        "removed_contribution": 0.06430982053279877,
+        "before": {
+          "rank": 1,
+          "score": 2.5879411697387695
+        },
+        "after_top_part": {
+          "rank": 1,
+          "score": 2.4108800888061523
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 2.6104684352874754
+        }
+      }
+    },
+    {
+      "category": "success",
+      "caption_id": "382557_4",
+      "caption": "Men standing around a sitting woman writing on table",
+      "query_graph": {
+        "objects": [
+          "man",
+          "woman",
+          "table"
+        ],
+        "relations": [
+          "man standing around woman",
+          "woman on table"
+        ]
+      },
+      "gold": 2328541,
+      "clip_rank": 6,
+      "model_rank": 1,
+      "weights_abc": [
+        0.393339067697525,
+        0.37664109468460083,
+        0.23001983761787415
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2328541,
+          "score": 1.5894412994384766,
+          "clip_rank": 6,
+          "is_gold": true,
+          "thumbnail": "img/2328541.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2327352,
+          "score": 1.3941997289657593,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2327352.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 1159280,
+          "score": 1.3847415447235107,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/1159280.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 285891,
+          "score": 1.3383128643035889,
+          "clip_rank": 1,
+          "is_gold": false,
+          "thumbnail": "img/285891.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2330619,
+          "score": 1.2774736881256104,
+          "clip_rank": 3,
+          "is_gold": false,
+          "thumbnail": "img/2330619.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2328541.jpg",
+      "explain_gold": {
+        "score": 1.5894408226013184,
+        "graph": 1.670005440711975,
+        "weights": [
+          0.393339067697525,
+          0.37664109468460083,
+          0.23001983761787415
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 23,
+            "w_i": 0.334246426820755,
+            "a_ij": 0.08700386434793472,
+            "sim_ij": 1.0,
+            "contribution": 0.010952997952699661,
+            "query_part": "man",
+            "image_part": "man"
+          },
+          {
+            "query_index": 1,
+            "image_index": 53,
+            "w_i": 0.4502900242805481,
+            "a_ij": 0.3842313587665558,
+            "sim_ij": 0.9999880194664001,
+            "contribution": 0.0651639848947525,
+            "query_part": "woman",
+            "image_part": "woman"
+          },
+          {
+            "query_index": 2,
+            "image_index": 54,
+            "w_i": 0.2154635339975357,
+            "a_ij": 0.29541322588920593,
+            "sim_ij": 0.9999852776527405,
+            "contribution": 0.023973148316144943,
+            "query_part": "table",
+            "image_part": "table"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 6,
+            "w_i": 0.5155586004257202,
+            "a_ij": 0.03862530365586281,
+            "sim_ij": 0.9895898699760437,
+            "contribution": 0.00453284103423357,
+            "query_part": "man standing around woman",
+            "image_part": "man wearing name tag"
+          },
+          {
+            "query_index": 1,
+            "image_index": 8,
+            "w_i": 0.484441339969635,
+            "a_ij": 0.038320668041706085,
+            "sim_ij": 0.9915919899940491,
+            "contribution": 0.00423421198502183,
+            "query_part": "woman on table",
+            "image_part": "man wearing tie"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2328541,
+        "removed_kind": "objects",
+        "removed_index": 53,
+        "removed_part": "woman",
+        "removed_contribution": 0.0651639848947525,
+        "before": {
+          "rank": 1,
+          "score": 1.5894417762756348
+        },
+        "after_top_part": {
+          "rank": 1,
+          "score": 1.502829909324646
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 1.5852574706077576
+        }
+      }
+    },
+    {
+      "category": "success",
+      "caption_id": "513497_4",
+      "caption": "An old classic church is in front a big blue sky.",
+      "query_graph": {
+        "objects": [
+          "church",
+          "front",
+          "sky"
+        ],
+        "relations": [
+          "church is sky"
+        ]
+      },
+      "gold": 2401726,
+      "clip_rank": 3,
+      "model_rank": 1,
+      "weights_abc": [
+        0.5070695281028748,
+        0.32218074798583984,
+        0.1707497537136078
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2401726,
+          "score": 2.1269001960754395,
+          "clip_rank": 3,
+          "is_gold": true,
+          "thumbnail": "img/2401726.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2393194,
+          "score": 1.9592028856277466,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/2393194.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2367339,
+          "score": 1.838776707649231,
+          "clip_rank": 1,
+          "is_gold": false,
+          "thumbnail": "img/2367339.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2380649,
+          "score": 1.833889365196228,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2380649.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2360229,
+          "score": 1.180448293685913,
+          "clip_rank": 5,
+          "is_gold": false,
+          "thumbnail": "img/2360229.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2401726.jpg",
+      "explain_gold": {
+        "score": 2.126899242401123,
+        "graph": 2.116830825805664,
+        "weights": [
+          0.5070695281028748,
+          0.32218074798583984,
+          0.1707497537136078
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.7180767059326172,
+            "a_ij": 0.5972246527671814,
+            "sim_ij": 0.9990832209587097,
+            "contribution": 0.13804154098033905,
+            "query_part": "church",
+            "image_part": "church"
+          },
+          {
+            "query_index": 1,
+            "image_index": 24,
+            "w_i": 0.12836363911628723,
+            "a_ij": 0.09073726832866669,
+            "sim_ij": 0.540778398513794,
+            "contribution": 0.0020293015986680984,
+            "query_part": "front",
+            "image_part": "side"
+          },
+          {
+            "query_index": 2,
+            "image_index": 27,
+            "w_i": 0.15355971455574036,
+            "a_ij": 0.45408153533935547,
+            "sim_ij": 0.9865551590919495,
+            "contribution": 0.022163180634379387,
+            "query_part": "sky",
+            "image_part": "sky"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 4,
+            "w_i": 1.0,
+            "a_ij": 0.03427881374955177,
+            "sim_ij": 0.9911947846412659,
+            "contribution": 0.005801560822874308,
+            "query_part": "church is sky",
+            "image_part": "steeple on building"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2401726,
+        "removed_kind": "objects",
+        "removed_index": 1,
+        "removed_part": "church",
+        "removed_contribution": 0.13804154098033905,
+        "before": {
+          "rank": 1,
+          "score": 2.126896381378174
+        },
+        "after_top_part": {
+          "rank": 4,
+          "score": 1.6733477115631104
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 2.1299406766891478
+        }
+      }
+    },
+    {
+      "category": "success",
+      "caption_id": "206684_2",
+      "caption": "A man sitting on a bench alongside the curb of a busy street.",
+      "query_graph": {
+        "objects": [
+          "man",
+          "bench",
+          "curb",
+          "street"
+        ],
+        "relations": [
+          "man sitting on bench",
+          "man alongside curb",
+          "curb of street"
+        ]
+      },
+      "gold": 1160012,
+      "clip_rank": 6,
+      "model_rank": 1,
+      "weights_abc": [
+        0.38475900888442993,
+        0.44704779982566833,
+        0.16819320619106293
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 1160012,
+          "score": 1.5452871322631836,
+          "clip_rank": 6,
+          "is_gold": true,
+          "thumbnail": "img/1160012.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2357478,
+          "score": 1.5154509544372559,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/2357478.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 1159280,
+          "score": 1.43182373046875,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/1159280.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2385230,
+          "score": 1.0917479991912842,
+          "clip_rank": 12,
+          "is_gold": false,
+          "thumbnail": "img/2385230.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2388707,
+          "score": 0.9902578592300415,
+          "clip_rank": 5,
+          "is_gold": false,
+          "thumbnail": "img/2388707.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/1160012.jpg",
+      "explain_gold": {
+        "score": 1.5452873706817627,
+        "graph": 1.4762989282608032,
+        "weights": [
+          0.38475900888442993,
+          0.44704779982566833,
+          0.16819320619106293
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 0,
+            "w_i": 0.27246108651161194,
+            "a_ij": 0.6856780052185059,
+            "sim_ij": 1.0,
+            "contribution": 0.08351772278547287,
+            "query_part": "man",
+            "image_part": "man"
+          },
+          {
+            "query_index": 1,
+            "image_index": 2,
+            "w_i": 0.2822577655315399,
+            "a_ij": 0.9726866483688354,
+            "sim_ij": 0.9663166999816895,
+            "contribution": 0.11860208213329315,
+            "query_part": "bench",
+            "image_part": "park bench"
+          },
+          {
+            "query_index": 2,
+            "image_index": 2,
+            "w_i": 0.23893854022026062,
+            "a_ij": 0.4128257930278778,
+            "sim_ij": 0.5426663160324097,
+            "contribution": 0.023929841816425323,
+            "query_part": "curb",
+            "image_part": "park bench"
+          },
+          {
+            "query_index": 3,
+            "image_index": 0,
+            "w_i": 0.20634254813194275,
+            "a_ij": 0.3705562651157379,
+            "sim_ij": 0.4513801038265228,
+            "contribution": 0.015429055318236351,
+            "query_part": "street",
+            "image_part": "man"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.2851097583770752,
+            "a_ij": 0.5038315653800964,
+            "sim_ij": 0.9545992612838745,
+            "contribution": 0.023063594475388527,
+            "query_part": "man sitting on bench",
+            "image_part": "man with pant"
+          },
+          {
+            "query_index": 1,
+            "image_index": 1,
+            "w_i": 0.3814643323421478,
+            "a_ij": 0.5083046555519104,
+            "sim_ij": 0.9930527210235596,
+            "contribution": 0.03238610923290253,
+            "query_part": "man alongside curb",
+            "image_part": "man with pant"
+          },
+          {
+            "query_index": 2,
+            "image_index": 0,
+            "w_i": 0.33342593908309937,
+            "a_ij": 0.507244884967804,
+            "sim_ij": 0.9589758515357971,
+            "contribution": 0.02727929688990116,
+            "query_part": "curb of street",
+            "image_part": "man with shirt"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 1160012,
+        "removed_kind": "objects",
+        "removed_index": 2,
+        "removed_part": "park bench",
+        "removed_contribution": 0.11860208213329315,
+        "before": {
+          "rank": 1,
+          "score": 1.5452868938446045
+        },
+        "after_top_part": {
+          "rank": 14,
+          "score": 0.5433337688446045
+        },
+        "after_random_parts": {
+          "n": 3,
+          "mean_rank": 3.0,
+          "mean_score": 1.3324880401293437
+        }
+      }
+    },
+    {
+      "category": "broken",
+      "caption_id": "290979_2",
+      "caption": "a child is standing outside in the grass",
+      "query_graph": {
+        "objects": [
+          "child",
+          "grass"
+        ],
+        "relations": [
+          "child in grass"
+        ]
+      },
+      "gold": 2331362,
+      "clip_rank": 1,
+      "model_rank": 2,
+      "weights_abc": [
+        0.45159581303596497,
+        0.342257559299469,
+        0.20614661276340485
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2380632,
+          "score": 2.1809659004211426,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2380632.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2331362,
+          "score": 1.7184784412384033,
+          "clip_rank": 1,
+          "is_gold": true,
+          "thumbnail": "img/2331362.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2374266,
+          "score": 1.5991415977478027,
+          "clip_rank": 5,
+          "is_gold": false,
+          "thumbnail": "img/2374266.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2322044,
+          "score": 1.043006181716919,
+          "clip_rank": 19,
+          "is_gold": false,
+          "thumbnail": "img/2322044.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2395918,
+          "score": 1.023699402809143,
+          "clip_rank": 7,
+          "is_gold": false,
+          "thumbnail": "img/2395918.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2331362.jpg",
+      "explain_gold": {
+        "score": 1.7184785604476929,
+        "graph": 0.6348603963851929,
+        "weights": [
+          0.45159581303596497,
+          0.342257559299469,
+          0.20614661276340485
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.7230560183525085,
+            "a_ij": 0.7887805104255676,
+            "sim_ij": 0.8891688585281372,
+            "contribution": 0.1735662966966629,
+            "query_part": "child",
+            "image_part": "boy"
+          },
+          {
+            "query_index": 1,
+            "image_index": 21,
+            "w_i": 0.27694395184516907,
+            "a_ij": 0.46520376205444336,
+            "sim_ij": 0.9994096159934998,
+            "contribution": 0.044068846851587296,
+            "query_part": "grass",
+            "image_part": "grass"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 15,
+            "w_i": 1.0,
+            "a_ij": 0.08666987717151642,
+            "sim_ij": 0.9838113188743591,
+            "contribution": 0.017577461898326874,
+            "query_part": "child in grass",
+            "image_part": "boy standing on grass"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "explain_top1": {
+        "score": 2.1809659004211426,
+        "graph": 1.771553635597229,
+        "weights": [
+          0.45159581303596497,
+          0.342257559299469,
+          0.20614661276340485
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 2,
+            "w_i": 0.7230560183525085,
+            "a_ij": 0.44139501452445984,
+            "sim_ij": 0.999698281288147,
+            "contribution": 0.10919968783855438,
+            "query_part": "child",
+            "image_part": "child"
+          },
+          {
+            "query_index": 1,
+            "image_index": 9,
+            "w_i": 0.27694395184516907,
+            "a_ij": 0.5479555130004883,
+            "sim_ij": 0.9979448318481445,
+            "contribution": 0.05183185636997223,
+            "query_part": "grass",
+            "image_part": "grass"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 9,
+            "w_i": 1.0,
+            "a_ij": 0.09798632562160492,
+            "sim_ij": 0.9630465507507324,
+            "contribution": 0.019453104585409164,
+            "query_part": "child in grass",
+            "image_part": "grass in field"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2380632,
+        "removed_kind": "objects",
+        "removed_index": 2,
+        "removed_part": "child",
+        "removed_contribution": 0.10919968783855438,
+        "before": {
+          "rank": 1,
+          "score": 2.1809659004211426
+        },
+        "after_top_part": {
+          "rank": 1,
+          "score": 2.104644775390625
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 2.1859269618988035
+        }
+      },
+      "deletion_gold": {
+        "image_id": 2331362,
+        "removed_kind": "objects",
+        "removed_index": 1,
+        "removed_part": "boy",
+        "removed_contribution": 0.1735662966966629,
+        "before": {
+          "rank": 2,
+          "score": 1.7184786796569824
+        },
+        "after_top_part": {
+          "rank": 3,
+          "score": 1.0968360900878906
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 2.0,
+          "mean_score": 1.7371754407882691
+        }
+      }
+    },
+    {
+      "category": "broken",
+      "caption_id": "503292_2",
+      "caption": "a couple of airplanes lifting off the ground",
+      "query_graph": {
+        "objects": [
+          "couple",
+          "airplane",
+          "ground"
+        ],
+        "relations": [
+          "couple of airplane",
+          "airplane lifting ground"
+        ]
+      },
+      "gold": 2366949,
+      "clip_rank": 1,
+      "model_rank": 2,
+      "weights_abc": [
+        0.37423306703567505,
+        0.37090274691581726,
+        0.2548641562461853
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2319085,
+          "score": 1.4885039329528809,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2319085.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2366949,
+          "score": 1.4313994646072388,
+          "clip_rank": 1,
+          "is_gold": true,
+          "thumbnail": "img/2366949.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2355290,
+          "score": 1.0408865213394165,
+          "clip_rank": 8,
+          "is_gold": false,
+          "thumbnail": "img/2355290.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 713032,
+          "score": 0.9644966125488281,
+          "clip_rank": 16,
+          "is_gold": false,
+          "thumbnail": "img/713032.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2417777,
+          "score": 0.9495255947113037,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/2417777.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2366949.jpg",
+      "explain_gold": {
+        "score": 1.4313994646072388,
+        "graph": 0.8596935868263245,
+        "weights": [
+          0.37423306703567505,
+          0.37090274691581726,
+          0.2548641562461853
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 13,
+            "w_i": 0.4133036732673645,
+            "a_ij": 0.12024074047803879,
+            "sim_ij": 0.43024638295173645,
+            "contribution": 0.007930456660687923,
+            "query_part": "couple",
+            "image_part": "runway"
+          },
+          {
+            "query_index": 1,
+            "image_index": 0,
+            "w_i": 0.3890827000141144,
+            "a_ij": 0.1357167810201645,
+            "sim_ij": 0.9998815655708313,
+            "contribution": 0.019583219662308693,
+            "query_part": "airplane",
+            "image_part": "airplane"
+          },
+          {
+            "query_index": 2,
+            "image_index": 8,
+            "w_i": 0.1976136714220047,
+            "a_ij": 0.5636956095695496,
+            "sim_ij": 0.9942743182182312,
+            "contribution": 0.04107975959777832,
+            "query_part": "ground",
+            "image_part": "ground"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 1,
+            "w_i": 0.4859989881515503,
+            "a_ij": 0.13219599425792694,
+            "sim_ij": 0.9876525402069092,
+            "contribution": 0.016172107309103012,
+            "query_part": "couple of airplane",
+            "image_part": "runway lined with plane"
+          },
+          {
+            "query_index": 1,
+            "image_index": 6,
+            "w_i": 0.5140009522438049,
+            "a_ij": 0.1306804120540619,
+            "sim_ij": 0.9771232604980469,
+            "contribution": 0.01672755740582943,
+            "query_part": "airplane lifting ground",
+            "image_part": "plane at gate"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "explain_top1": {
+        "score": 1.4885025024414062,
+        "graph": 1.1532889604568481,
+        "weights": [
+          0.37423306703567505,
+          0.37090274691581726,
+          0.2548641562461853
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 15,
+            "w_i": 0.4133036732673645,
+            "a_ij": 0.10904531180858612,
+            "sim_ij": 0.5323950052261353,
+            "contribution": 0.008899596519768238,
+            "query_part": "couple",
+            "image_part": "sign"
+          },
+          {
+            "query_index": 1,
+            "image_index": 1,
+            "w_i": 0.3890827000141144,
+            "a_ij": 0.07908594608306885,
+            "sim_ij": 0.9998648762702942,
+            "contribution": 0.011411496438086033,
+            "query_part": "airplane",
+            "image_part": "airplane"
+          },
+          {
+            "query_index": 2,
+            "image_index": 5,
+            "w_i": 0.1976136714220047,
+            "a_ij": 0.7037062644958496,
+            "sim_ij": 0.9975822567939758,
+            "contribution": 0.051453765481710434,
+            "query_part": "ground",
+            "image_part": "ground"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 15,
+            "w_i": 0.4859989881515503,
+            "a_ij": 0.04748118296265602,
+            "sim_ij": 0.989845335483551,
+            "contribution": 0.005821474362164736,
+            "query_part": "couple of airplane",
+            "image_part": "sign near plane"
+          },
+          {
+            "query_index": 1,
+            "image_index": 13,
+            "w_i": 0.5140009522438049,
+            "a_ij": 0.05124713480472565,
+            "sim_ij": 0.9859151840209961,
+            "contribution": 0.006618839222937822,
+            "query_part": "airplane lifting ground",
+            "image_part": "plane on ground"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2319085,
+        "removed_kind": "objects",
+        "removed_index": 5,
+        "removed_part": "ground",
+        "removed_contribution": 0.051453765481710434,
+        "before": {
+          "rank": 1,
+          "score": 1.4885022640228271
+        },
+        "after_top_part": {
+          "rank": 2,
+          "score": 1.2970242500305176
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 1.4907356262207032
+        }
+      },
+      "deletion_gold": {
+        "image_id": 2366949,
+        "removed_kind": "objects",
+        "removed_index": 8,
+        "removed_part": "ground",
+        "removed_contribution": 0.04107975959777832,
+        "before": {
+          "rank": 2,
+          "score": 1.4313994646072388
+        },
+        "after_top_part": {
+          "rank": 2,
+          "score": 1.331880807876587
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 2.0,
+          "mean_score": 1.4349257946014404
+        }
+      }
+    },
+    {
+      "category": "broken",
+      "caption_id": "245173_1",
+      "caption": "High stone tower with windows in an old village.",
+      "query_graph": {
+        "objects": [
+          "stone tower",
+          "window",
+          "village"
+        ],
+        "relations": [
+          "stone tower with window",
+          "stone tower in village"
+        ]
+      },
+      "gold": 2372939,
+      "clip_rank": 1,
+      "model_rank": 2,
+      "weights_abc": [
+        0.540922999382019,
+        0.31608110666275024,
+        0.1429959088563919
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2360229,
+          "score": 2.3998563289642334,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2360229.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2372939,
+          "score": 2.2941393852233887,
+          "clip_rank": 1,
+          "is_gold": true,
+          "thumbnail": "img/2372939.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2380649,
+          "score": 1.6713379621505737,
+          "clip_rank": 3,
+          "is_gold": false,
+          "thumbnail": "img/2380649.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2367339,
+          "score": 1.3314285278320312,
+          "clip_rank": 5,
+          "is_gold": false,
+          "thumbnail": "img/2367339.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2319024,
+          "score": 1.1550124883651733,
+          "clip_rank": 7,
+          "is_gold": false,
+          "thumbnail": "img/2319024.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2372939.jpg",
+      "explain_gold": {
+        "score": 2.294139862060547,
+        "graph": 0.6682562828063965,
+        "weights": [
+          0.540922999382019,
+          0.31608110666275024,
+          0.1429959088563919
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 39,
+            "w_i": 0.4364296793937683,
+            "a_ij": 0.19244153797626495,
+            "sim_ij": 0.7615904211997986,
+            "contribution": 0.020217761397361755,
+            "query_part": "stone tower",
+            "image_part": "building"
+          },
+          {
+            "query_index": 1,
+            "image_index": 35,
+            "w_i": 0.2510811984539032,
+            "a_ij": 0.23739482462406158,
+            "sim_ij": 0.999998152256012,
+            "contribution": 0.01884009689092636,
+            "query_part": "window",
+            "image_part": "window"
+          },
+          {
+            "query_index": 2,
+            "image_index": 42,
+            "w_i": 0.3124891221523285,
+            "a_ij": 0.20507240295410156,
+            "sim_ij": 0.8166253566741943,
+            "contribution": 0.016541067510843277,
+            "query_part": "village",
+            "image_part": "building"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 12,
+            "w_i": 0.5052896738052368,
+            "a_ij": 0.0658751055598259,
+            "sim_ij": 0.9945874810218811,
+            "contribution": 0.004734001122415066,
+            "query_part": "stone tower with window",
+            "image_part": "brick wall on brick building"
+          },
+          {
+            "query_index": 1,
+            "image_index": 14,
+            "w_i": 0.4947103261947632,
+            "a_ij": 0.06770385056734085,
+            "sim_ij": 0.9930809140205383,
+            "contribution": 0.0047563365660607815,
+            "query_part": "stone tower in village",
+            "image_part": "sun shining on top half of brick building"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "explain_top1": {
+        "score": 2.3998568058013916,
+        "graph": 1.0823743343353271,
+        "weights": [
+          0.540922999382019,
+          0.31608110666275024,
+          0.1429959088563919
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 19,
+            "w_i": 0.4364296793937683,
+            "a_ij": 0.19121339917182922,
+            "sim_ij": 0.7592074871063232,
+            "contribution": 0.02002588100731373,
+            "query_part": "stone tower",
+            "image_part": "roof tower"
+          },
+          {
+            "query_index": 1,
+            "image_index": 38,
+            "w_i": 0.2510811984539032,
+            "a_ij": 0.8706395626068115,
+            "sim_ij": 0.9999990463256836,
+            "contribution": 0.06909564882516861,
+            "query_part": "window",
+            "image_part": "window"
+          },
+          {
+            "query_index": 2,
+            "image_index": 36,
+            "w_i": 0.3124891221523285,
+            "a_ij": 0.1622043401002884,
+            "sim_ij": 0.8142499923706055,
+            "contribution": 0.013045287691056728,
+            "query_part": "village",
+            "image_part": "building"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 18,
+            "w_i": 0.5052896738052368,
+            "a_ij": 0.052206505089998245,
+            "sim_ij": 0.996956467628479,
+            "contribution": 0.0037606670521199703,
+            "query_part": "stone tower with window",
+            "image_part": "building with window"
+          },
+          {
+            "query_index": 1,
+            "image_index": 10,
+            "w_i": 0.4947103261947632,
+            "a_ij": 0.0528755784034729,
+            "sim_ij": 0.9954677224159241,
+            "contribution": 0.003723547328263521,
+            "query_part": "stone tower in village",
+            "image_part": "corner of building"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2360229,
+        "removed_kind": "objects",
+        "removed_index": 38,
+        "removed_part": "window",
+        "removed_contribution": 0.06909564882516861,
+        "before": {
+          "rank": 1,
+          "score": 2.399853467941284
+        },
+        "after_top_part": {
+          "rank": 2,
+          "score": 1.9945064783096313
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 2.399430584907532
+        }
+      },
+      "deletion_gold": {
+        "image_id": 2372939,
+        "removed_kind": "objects",
+        "removed_index": 39,
+        "removed_part": "building",
+        "removed_contribution": 0.020217761397361755,
+        "before": {
+          "rank": 2,
+          "score": 2.2941396236419678
+        },
+        "after_top_part": {
+          "rank": 2,
+          "score": 2.179262638092041
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 2.0,
+          "mean_score": 2.2967986822128297
+        }
+      }
+    },
+    {
+      "category": "both_wrong",
+      "caption_id": "401068_1",
+      "caption": "there is a man riding a bike up the road",
+      "query_graph": {
+        "objects": [
+          "man",
+          "bike",
+          "road"
+        ],
+        "relations": [
+          "man riding bike",
+          "man up road"
+        ]
+      },
+      "gold": 2392790,
+      "clip_rank": 51,
+      "model_rank": 51,
+      "weights_abc": [
+        0.35432446002960205,
+        0.43865323066711426,
+        0.2070222944021225
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2357349,
+          "score": 2.0878660678863525,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2357349.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2407430,
+          "score": 1.564539909362793,
+          "clip_rank": 12,
+          "is_gold": false,
+          "thumbnail": "img/2407430.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2355050,
+          "score": 1.1781824827194214,
+          "clip_rank": 16,
+          "is_gold": false,
+          "thumbnail": "img/2355050.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2366330,
+          "score": 1.0832902193069458,
+          "clip_rank": 4,
+          "is_gold": false,
+          "thumbnail": "img/2366330.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2328865,
+          "score": 1.0758146047592163,
+          "clip_rank": 10,
+          "is_gold": false,
+          "thumbnail": "img/2328865.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2392790.jpg",
+      "explain_gold": null,
+      "explain_top1": {
+        "score": 2.0878636837005615,
+        "graph": 2.0507900714874268,
+        "weights": [
+          0.35432446002960205,
+          0.43865323066711426,
+          0.2070222944021225
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 19,
+            "w_i": 0.2796877324581146,
+            "a_ij": 0.5577734112739563,
+            "sim_ij": 1.0,
+            "contribution": 0.06843094527721405,
+            "query_part": "man",
+            "image_part": "man"
+          },
+          {
+            "query_index": 1,
+            "image_index": 30,
+            "w_i": 0.4947163760662079,
+            "a_ij": 0.3064040243625641,
+            "sim_ij": 0.9995594620704651,
+            "contribution": 0.06646311283111572,
+            "query_part": "bike",
+            "image_part": "bike"
+          },
+          {
+            "query_index": 2,
+            "image_index": 32,
+            "w_i": 0.2255958765745163,
+            "a_ij": 0.15085501968860626,
+            "sim_ij": 0.9782488942146301,
+            "contribution": 0.014603656716644764,
+            "query_part": "road",
+            "image_part": "road"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 8,
+            "w_i": 0.5052511692047119,
+            "a_ij": 0.051715269684791565,
+            "sim_ij": 0.9921929240226746,
+            "contribution": 0.005367096047848463,
+            "query_part": "man riding bike",
+            "image_part": "man above bicycle"
+          },
+          {
+            "query_index": 1,
+            "image_index": 22,
+            "w_i": 0.4947488307952881,
+            "a_ij": 0.04819589853286743,
+            "sim_ij": 0.9866002202033997,
+            "contribution": 0.004870271775871515,
+            "query_part": "man up road",
+            "image_part": "man has leg"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2357349,
+        "removed_kind": "objects",
+        "removed_index": 19,
+        "removed_part": "man",
+        "removed_contribution": 0.06843094527721405,
+        "before": {
+          "rank": 1,
+          "score": 2.0878641605377197
+        },
+        "after_top_part": {
+          "rank": 1,
+          "score": 1.6504403352737427
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 1.0,
+          "mean_score": 2.0724366426467897
+        }
+      }
+    },
+    {
+      "category": "both_wrong",
+      "caption_id": "398534_1",
+      "caption": "a tennis player with a ball and a racket",
+      "query_graph": {
+        "objects": [
+          "tennis player",
+          "ball",
+          "racket"
+        ],
+        "relations": [
+          "tennis player with ball",
+          "racket with ball"
+        ]
+      },
+      "gold": 2325149,
+      "clip_rank": 17,
+      "model_rank": 14,
+      "weights_abc": [
+        0.3102248013019562,
+        0.5265083312988281,
+        0.1632668375968933
+      ],
+      "top": [
+        {
+          "rank": 1,
+          "image_id": 2389999,
+          "score": 0.9611330032348633,
+          "clip_rank": 5,
+          "is_gold": false,
+          "thumbnail": "img/2389999.jpg"
+        },
+        {
+          "rank": 2,
+          "image_id": 2368474,
+          "score": 0.9256033301353455,
+          "clip_rank": 1,
+          "is_gold": false,
+          "thumbnail": "img/2368474.jpg"
+        },
+        {
+          "rank": 3,
+          "image_id": 2415580,
+          "score": 0.9211340546607971,
+          "clip_rank": 3,
+          "is_gold": false,
+          "thumbnail": "img/2415580.jpg"
+        },
+        {
+          "rank": 4,
+          "image_id": 2369366,
+          "score": 0.873406171798706,
+          "clip_rank": 2,
+          "is_gold": false,
+          "thumbnail": "img/2369366.jpg"
+        },
+        {
+          "rank": 5,
+          "image_id": 2327671,
+          "score": 0.8201936483383179,
+          "clip_rank": 11,
+          "is_gold": false,
+          "thumbnail": "img/2327671.jpg"
+        }
+      ],
+      "gold_thumbnail": "img/2325149.jpg",
+      "explain_gold": {
+        "score": 0.3844071626663208,
+        "graph": 0.3635101020336151,
+        "weights": [
+          0.3102248013019562,
+          0.5265083312988281,
+          0.1632668375968933
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 14,
+            "w_i": 0.30488142371177673,
+            "a_ij": 0.33158639073371887,
+            "sim_ij": 0.9594108462333679,
+            "contribution": 0.05106666684150696,
+            "query_part": "tennis player",
+            "image_part": "racket"
+          },
+          {
+            "query_index": 1,
+            "image_index": 1,
+            "w_i": 0.34044936299324036,
+            "a_ij": 0.466519832611084,
+            "sim_ij": 0.9999637603759766,
+            "contribution": 0.08362037688493729,
+            "query_part": "ball",
+            "image_part": "ball"
+          },
+          {
+            "query_index": 2,
+            "image_index": 14,
+            "w_i": 0.3546691834926605,
+            "a_ij": 0.48014160990715027,
+            "sim_ij": 1.0000001192092896,
+            "contribution": 0.08965986967086792,
+            "query_part": "racket",
+            "image_part": "racket"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 12,
+            "w_i": 0.52110356092453,
+            "a_ij": 0.07472848892211914,
+            "sim_ij": 0.97441565990448,
+            "contribution": 0.006195159628987312,
+            "query_part": "tennis player with ball",
+            "image_part": "man has shoulder"
+          },
+          {
+            "query_index": 1,
+            "image_index": 12,
+            "w_i": 0.47889649868011475,
+            "a_ij": 0.07450848817825317,
+            "sim_ij": 0.9736130237579346,
+            "contribution": 0.005671942140907049,
+            "query_part": "racket with ball",
+            "image_part": "man has shoulder"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "explain_top1": {
+        "score": 0.9611358642578125,
+        "graph": 0.7185937166213989,
+        "weights": [
+          0.3102248013019562,
+          0.5265083312988281,
+          0.1632668375968933
+        ],
+        "objects": [
+          {
+            "query_index": 0,
+            "image_index": 3,
+            "w_i": 0.30488142371177673,
+            "a_ij": 0.8894553184509277,
+            "sim_ij": 0.9594013094902039,
+            "contribution": 0.13698111474514008,
+            "query_part": "tennis player",
+            "image_part": "racket"
+          },
+          {
+            "query_index": 1,
+            "image_index": 1,
+            "w_i": 0.34044936299324036,
+            "a_ij": 0.9453666806221008,
+            "sim_ij": 0.9999637603759766,
+            "contribution": 0.1694502979516983,
+            "query_part": "ball",
+            "image_part": "ball"
+          },
+          {
+            "query_index": 2,
+            "image_index": 3,
+            "w_i": 0.3546691834926605,
+            "a_ij": 0.940807580947876,
+            "sim_ij": 0.9999964237213135,
+            "contribution": 0.17568229138851166,
+            "query_part": "racket",
+            "image_part": "racket"
+          }
+        ],
+        "triples": [
+          {
+            "query_index": 0,
+            "image_index": 4,
+            "w_i": 0.52110356092453,
+            "a_ij": 0.13852687180042267,
+            "sim_ij": 0.9732217788696289,
+            "contribution": 0.01147011760622263,
+            "query_part": "tennis player with ball",
+            "image_part": "tattoo on wrist"
+          },
+          {
+            "query_index": 1,
+            "image_index": 4,
+            "w_i": 0.47889649868011475,
+            "a_ij": 0.1408785730600357,
+            "sim_ij": 0.9732826352119446,
+            "contribution": 0.010720711201429367,
+            "query_part": "racket with ball",
+            "image_part": "tattoo on wrist"
+          }
+        ],
+        "contribution_definition": "channel_weight * w_i * a_ij * sim_ij before candidate-wise z-score; these terms do not sum to the final normalized score."
+      },
+      "deletion_top1": {
+        "image_id": 2389999,
+        "removed_kind": "objects",
+        "removed_index": 3,
+        "removed_part": "racket",
+        "removed_contribution": 0.17568229138851166,
+        "before": {
+          "rank": 1,
+          "score": 0.9611328840255737
+        },
+        "after_top_part": {
+          "rank": 25,
+          "score": 0.052985310554504395
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 2.5,
+          "mean_score": 0.9276225119829178
+        }
+      },
+      "deletion_gold": {
+        "image_id": 2325149,
+        "removed_kind": "objects",
+        "removed_index": 14,
+        "removed_part": "racket",
+        "removed_contribution": 0.08965986967086792,
+        "before": {
+          "rank": 14,
+          "score": 0.3844074606895447
+        },
+        "after_top_part": {
+          "rank": 19,
+          "score": 0.25958678126335144
+        },
+        "after_random_parts": {
+          "n": 10,
+          "mean_rank": 15.3,
+          "mean_score": 0.36655066907405853
+        }
+      }
+    }
+  ]
+}
