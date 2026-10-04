@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="vi" data-theme="dracula">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kế hoạch xAI cấp độ 3</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/daisyui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/themes.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/contrib/auto-render.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => renderMathInElement(document.body, {
+    delimiters: [{ left: "\\[", right: "\\]", display: true }, { left: "\\(", right: "\\)", display: false }],
+    throwOnError: false,
+  }));
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :where(.grid, .flex) > * { min-width: 0; }
+  :where(p, h1, h2, h3, li, td, th, .badge, figcaption) { overflow-wrap: anywhere; }
+  body { background: var(--color-base-100); color: var(--color-base-content); }
+  code { font-size: .82em; }
+  .prose-p p { line-height: 1.7; }
+  .cite { font-size: .78em; opacity: .75; }
+  .katex { font-size: 1.05em; }
+  .eq .katex-display { margin: .35rem 0; padding: .1rem 0; overflow-x: auto; overflow-y: hidden; }
+  .fig-wrap { overflow-x: auto; }
+  .fig { min-width: 760px; width: 100%; height: auto; display: block; }
+  .fig text { font-family: ui-sans-serif, system-ui, sans-serif; fill: var(--color-base-content); }
+  .fig .box { fill: var(--color-base-200); stroke: color-mix(in oklab, var(--color-base-content) 35%, transparent); stroke-width: 1.2; }
+  .fig .box-p { fill: color-mix(in oklab, var(--color-primary) 18%, var(--color-base-200)); stroke: var(--color-primary); stroke-width: 1.6; }
+  .fig .box-a { fill: color-mix(in oklab, var(--color-accent) 14%, var(--color-base-200)); stroke: var(--color-accent); stroke-width: 1.4; }
+  .fig .edge { stroke: color-mix(in oklab, var(--color-base-content) 55%, transparent); stroke-width: 1.6; fill: none; }
+  .fig .edge-p { stroke: var(--color-primary); stroke-width: 1.8; fill: none; }
+  .fig .edge-a { stroke: var(--color-accent); stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; }
+  .fig .ah { fill: color-mix(in oklab, var(--color-base-content) 55%, transparent); }
+  .fig .ah-p { fill: var(--color-primary); }
+  .fig .ah-a { fill: var(--color-accent); }
+  .fig .lbl { font-size: 14px; font-weight: 700; }
+  .fig .small { font-size: 12px; opacity: .85; }
+  .fig .mono { font-family: ui-monospace, monospace; font-size: 12px; }
+  td.date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  tr.phase td { background: var(--color-base-200); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+  tr.pick td { background: color-mix(in oklab, var(--color-primary) 10%, transparent); }
+</style>
+</head>
+<body class="min-h-screen">
+<main class="max-w-4xl mx-auto px-4 py-8 space-y-12">
+
+<header class="space-y-4">
+  <div class="flex flex-wrap gap-2">
+    <span class="badge badge-primary">Cấp độ 3 (trần 10)</span>
+    <span class="badge badge-outline">Dòng 24, 27, 28, 29</span>
+    <span class="badge badge-outline">Phụ trách: Nhi (25C15055)</span>
+    <span class="badge badge-soft badge-warning">Hạn cấp 3: 12/11/2026</span>
+    <span class="badge badge-soft badge-info">Bản nháp chờ nhóm duyệt · 04/10</span>
+  </div>
+  <h1 class="text-2xl md:text-3xl font-bold leading-tight text-balance">Kế hoạch: Đánh giá giải thích đồ thị (Graph xAI) cho truy vấn văn bản - ảnh</h1>
+  <div class="card bg-base-200 card-border">
+    <div class="card-body p-4 text-sm prose-p">
+      <p>Giải thích bằng <strong>phân rã chính xác</strong> điểm xếp hạng: E là top-k cặp (phần câu, phần ảnh) đóng góp nhiều nhất. Ba metric chia vai rõ ràng: <strong>fidelity</strong> = vế "cần" (xoá E thì tụt), <strong>validity</strong> = vế "đủ" (chỉ giữ E vẫn đứng vững, theo Zorro và Singh), <strong>sparsity</strong> = trục để so. Đo trên mô hình <code>main_r3</code> (VG∩COCO, 3 seed), kèm bảng 10 ca lấy từ bộ 30 truy vấn tự xây.</p>
+      <p>Tài liệu này chốt định nghĩa cho dòng 27; dòng 28 cài đặt và dòng 29 chấm theo đúng các định nghĩa ở đây. Đề không định nghĩa validity và sparsity, nên mỗi lựa chọn đều kèm nguồn.</p>
+    </div>
+  </div>
+  <nav class="flex flex-wrap gap-2 text-sm" aria-label="Mục lục">
+    <a class="btn btn-xs btn-ghost" href="#related">1. Công trình liên quan</a>
+    <a class="btn btn-xs btn-ghost" href="#solution">2. Giải pháp đề xuất</a>
+    <a class="btn btn-xs btn-ghost" href="#tasks">3. Danh sách công việc</a>
+    <a class="btn btn-xs btn-ghost" href="#refs">Tài liệu tham khảo</a>
+  </nav>
+</header>
+
+<!-- 1. RELATED WORK -->
+<section id="related" class="space-y-5">
+  <h2 class="text-xl font-bold">1. Công trình liên quan</h2>
+
+  <div class="space-y-2">
+    <h3 class="font-bold">1.1 Chọn phương pháp giải thích</h3>
+    <div class="overflow-x-auto rounded-box border border-base-content/10">
+      <table class="table table-sm">
+        <thead><tr><th>Phương pháp</th><th>Loại</th><th>Trung thực</th><th>Ổn định</th><th>Hợp đề?</th></tr></thead>
+        <tbody>
+          <tr class="pick"><td><strong>Phân rã chính xác</strong> (chọn)</td><td>Nội tại, phân rã</td><td>Cộng đúng bằng điểm</td><td>Tất định</td><td>✅</td></tr>
+          <tr><td>Mỗi phần câu 1 dòng (demo hiện tại)</td><td>Phân rã rút gọn</td><td>Bỏ sót phần lớn đóng góp kênh triple</td><td>Tất định</td><td>✅</td></tr>
+          <tr><td>Attention \(a_{ij}\) thuần</td><td>Nội tại</td><td>Bị phê bình (Jain &amp; Wallace, NAACL 2019)</td><td>Đổi giữa các lần huấn luyện</td><td>Một phần</td></tr>
+          <tr><td>Occlusion</td><td>Nhiễu</td><td>Chuẩn tham chiếu</td><td>Tất định</td><td>✅ (hoãn)</td></tr>
+          <tr><td>GNNExplainer</td><td>Mặt nạ hậu kiểm</td><td>Thiên kiến hậu kiểm (GraphMask, ICLR 2021)</td><td>Kém nhất (GNNX-Bench, ICLR 2024)</td><td>Một phần</td></tr>
+          <tr><td>Example-based</td><td>Ví dụ</td><td>Không đo được bằng fidelity/sparsity</td><td>-</td><td>✗ không chỉ ra đồ thị con</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cite">Phân loại theo Yuan et al. (TPAMI): gradient, nhiễu, phân rã, mô hình thay thế. Example-based thắng chỉ trong đánh giá bằng người trên ảnh (Nguyen et al., NeurIPS 2021), và không đáp ứng yêu cầu "quan hệ, đường đi hoặc đồ thị con" của đề.</p>
+  </div>
+
+  <div class="space-y-2">
+    <h3 class="font-bold">1.2 Định nghĩa</h3>
+    <div class="overflow-x-auto rounded-box border border-base-content/10">
+      <table class="table table-sm">
+        <thead><tr><th>Ký hiệu</th><th>Nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td>\(q, I\)</td><td>Câu truy vấn và một ảnh trong top-5 của nó</td></tr>
+          <tr><td>\(E\)</td><td>Top-k cặp (phần câu, phần ảnh) theo đóng góp \(\varphi\), k = 1, 3, 5</td></tr>
+          <tr><td>\(I \setminus E,\; I_E\)</td><td>Ảnh đã xoá phần của \(E\); ảnh chỉ giữ phần của \(E\) (và hai đầu của mỗi quan hệ)</td></tr>
+          <tr><td>\(s(\cdot),\ \mathrm{rank}(\cdot)\)</td><td>Điểm cuối và hạng trong 50 ứng viên, theo đúng luật xếp hạng của mô hình</td></tr>
+          <tr><td>\(G\)</td><td>Đồ thị ảnh: số object + số quan hệ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <article id="m-decomp" class="card card-border bg-base-100 md:col-span-2">
+        <div class="card-body p-4 space-y-2 text-sm">
+          <div class="flex items-center justify-between gap-2"><h4 class="card-title text-base">Phân rã chính xác</h4><span class="badge badge-sm badge-soft badge-primary">cách tạo giải thích</span></div>
+          <p class="opacity-80">Điểm của mô hình vốn là một tổng, nên tách được đúng thành từng cặp (phần câu \(i\), phần ảnh \(j\)), cả hai kênh object và triple.</p>
+          <div class="eq">
+            \[ F_k = C_k + \sum_{ch \in \{o, t\}} \sum_{i} \sum_{j} \varphi^{ch}_{ijk}, \qquad \varphi^{ch}_{ijk} = \gamma_{ch}\, w_i\, a_{ijk}\, \mathrm{sim}_{ijk} \]
+            \[ \gamma_o = \frac{b}{(\sigma_o + \epsilon)(\sigma_{mix} + \epsilon)}, \qquad \gamma_t = \frac{c}{(\sigma_t + \epsilon)(\sigma_{mix} + \epsilon)} \]
+          </div>
+          <ul class="list-disc pl-5 space-y-1 opacity-90">
+            <li><strong>Vì sao tách đúng được:</strong> trong một truy vấn, mọi phép z-score là ánh xạ affine dùng chung cho cả 50 ứng viên (<code>zscore_tensor</code>, <code>graph_reranker.py:13-25</code>), và cổng \([a, b, c]\) chỉ phụ thuộc vectơ câu (<code>graph_reranker.py:141</code>).</li>
+            <li>\(\gamma_o\) gọn thành \(b/(\dots)\) vì <code>fuse_tensor</code> nhân \((1-a)\,b/(b+c)\) và \(a + b + c = 1\) (<code>graph_reranker.py:28-38</code>). \(\sigma\) là độ lệch chuẩn tổng thể trên các ứng viên có điểm, chặn dưới ở \(\epsilon = 10^{-6}\).</li>
+            <li><strong>Chỉ một kênh hoạt động:</strong> không có z-score lần hai, \(\gamma = (1-a)/(\sigma + \epsilon)\). <strong>Không kênh nào:</strong> \(F_k = a\, z_{\mathrm{clip},k}\), ảnh không có giải thích đồ thị.</li>
+            <li><strong>Chính xác:</strong> \(\sum \varphi + C_k = F_k\). <strong>Không chính xác:</strong> xoá một phần ảnh không chỉ trừ đi \(\varphi\) của nó, vì softmax chia lại trọng số, GAT mã hóa lại phần lân cận, và \(\mu, \sigma\) đổi theo. Do đó phép đo luôn chạy lại toàn bộ mô hình.</li>
+          </ul>
+          <p class="cite">\(C_k\): phần CLIP và hằng số trung bình. Rút từ code <code>graph_reranker.py</code>; nhóm "phân rã" theo Yuan et al. (TPAMI).</p>
+        </div>
+      </article>
+
+      <article id="m-fidelity" class="card card-border bg-base-100">
+        <div class="card-body p-4 space-y-2 text-sm">
+          <div class="flex items-center justify-between gap-2"><h4 class="card-title text-base">Fidelity</h4><span class="badge badge-sm badge-soft badge-primary">vế "cần"</span></div>
+          <p class="opacity-80">Xoá E rồi chạy lại mô hình: điểm và hạng phải tụt.</p>
+          <div class="eq">
+            \[ \mathrm{Fid}^{+} = \frac{1}{N}\sum_{i=1}^{N}\big(s(q_i, I_i) - s(q_i, I_i \setminus E_i)\big) \]
+            \[ \mathrm{PN@}K = \frac{\sum_i \mathbb{1}[\mathrm{rank}_i \le K]\;\mathbb{1}[\mathrm{rank}(q_i, I_i \setminus E_i) > K]}{\sum_i \mathbb{1}[\mathrm{rank}_i \le K]} \]
+          </div>
+          <p class="cite">Yuan et al., TPAMI; Pope et al., CVPR 2019; CountER, CIKM 2021. K = 1, 5, 10. Báo kèm Δrank.</p>
+        </div>
+      </article>
+
+      <article id="m-validity" class="card card-border bg-base-100">
+        <div class="card-body p-4 space-y-2 text-sm">
+          <div class="flex items-center justify-between gap-2"><h4 class="card-title text-base">Validity</h4><span class="badge badge-sm badge-soft badge-primary">vế "đủ"</span></div>
+          <p class="opacity-80">Chỉ giữ E: ảnh vẫn trong top-K, và cả danh sách giữ được thứ tự.</p>
+          <div class="eq">
+            \[ \mathrm{PS@}K = \frac{\sum_i \mathbb{1}[\mathrm{rank}_i \le K]\;\mathbb{1}[\mathrm{rank}(q_i, I_{E_i}) \le K]}{\sum_i \mathbb{1}[\mathrm{rank}_i \le K]} \]
+            \[ \tau@10 = \tau\big(R_{10}(q),\, R_{10}(q \mid I_E\ \forall I \in \text{top-5})\big) \]
+          </div>
+          <p class="cite">Zorro, TKDE 2023, Def. 1: validity = 1 nếu \(\Phi(S) = \Phi(X)\). Singh et al., ICTIR 2021, Def. 1: \(V = \tau(R(q,F'), R(q,F))\).</p>
+        </div>
+      </article>
+
+      <article id="m-sparsity" class="card card-border bg-base-100 md:col-span-2">
+        <div class="card-body p-4 space-y-2 text-sm">
+          <div class="flex items-center justify-between gap-2"><h4 class="card-title text-base">Sparsity</h4><span class="badge badge-sm badge-soft badge-primary">làm trục, không làm điểm</span></div>
+          <p class="opacity-80">Mỗi k cho một mức sparsity trung bình; vẽ fidelity và validity theo trục này để thấy "gọn đến mức nào vẫn còn trung thực". Báo kèm \(|E|\).</p>
+          <div class="eq">
+            \[ \mathrm{Sparsity}(k) = \frac{1}{N}\sum_{i=1}^{N}\left(1 - \frac{|E_i^{(k)}|}{|G_i|}\right) \]
+          </div>
+          <p class="cite">Pope et al., CVPR 2019; Yuan et al., TPAMI (so fidelity ở cùng sparsity); SubgraphX, ICML 2021; thư viện DIG.</p>
+        </div>
+      </article>
+    </div>
+
+    <div role="alert" class="alert alert-soft alert-info text-sm">
+      <span><strong>Lưu ý tên gọi:</strong> Zorro và Singh dùng "validity" = <em>giữ</em> được dự đoán (vế "đủ"). Văn liệu phản thực tế (DiCE, GRETEL) dùng "validity" = dự đoán <em>đổi</em>. Báo cáo sẽ ghi rõ nhóm theo nghĩa của Zorro và Singh.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2. SOLUTION -->
+<section id="solution" class="space-y-6">
+  <h2 class="text-xl font-bold">2. Giải pháp đề xuất</h2>
+
+  <div class="space-y-3">
+    <h3 class="font-bold">2.1 Xây 30 truy vấn (≥ 10 theo đề)</h3>
+    <div class="grid gap-3 md:grid-cols-3">
+      <div id="q-direct" class="card card-border bg-base-100"><div class="card-body p-4 text-sm space-y-1">
+        <h4 class="font-bold">Trực tiếp · 10</h4>
+        <p class="opacity-80">Từ trong câu có nguyên văn trong đồ thị ảnh.</p>
+        <p><code>man riding bike</code> → <code>bald man riding bike</code></p>
+        <p><span class="badge badge-sm badge-ghost">Nguồn</span> ECCV Caption (MIT): gold đã được người kiểm.</p>
+      </div></div>
+      <div id="q-indirect" class="card card-border bg-base-100"><div class="card-body p-4 text-sm space-y-1">
+        <h4 class="font-bold">Gián tiếp · 10</h4>
+        <p class="opacity-80">Không có từ nguyên văn, phải suy ra qua quan hệ.</p>
+        <p><code>child plays football</code> ← <code>boy kicking ball</code></p>
+        <p><span class="badge badge-sm badge-ghost">Nguồn</span> Tự viết theo mẫu Sherlock; gold tìm bằng đồ thị VG rồi xem tay.</p>
+      </div></div>
+      <div id="q-reversed" class="card card-border bg-base-100"><div class="card-body p-4 text-sm space-y-1">
+        <h4 class="font-bold">Đảo quan hệ · 10</h4>
+        <p class="opacity-80">Cùng từ, đổi chiều; CLIP gần như không phân biệt.</p>
+        <p><code>man riding horse</code> vs <code>horse riding man</code></p>
+        <p><span class="badge badge-sm badge-ghost">Nguồn</span> Cặp không gian GQA + câu hành động; chấm kiểu ARO: \(s(q_{\text{fwd}}, I) &gt; s(q_{\text{rev}}, I)\).</p>
+      </div></div>
+    </div>
+    <p class="text-sm opacity-80">Câu tiếng Anh. Nhi duyệt toàn bộ gold, một thành viên duyệt độc lập khoảng 1/3 để tính Cohen's κ. Bộ này chỉ dùng để đánh giá, không tinh chỉnh.</p>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="font-bold">2.2 Áp dụng xAI</h3>
+    <figure class="fig-wrap card card-border bg-base-100 p-3">
+      <svg class="fig" viewBox="0 0 940 405" role="img" aria-labelledby="fig1-title">
+        <title id="fig1-title">Luồng đo giải thích: từ truy vấn đến fidelity, validity và sparsity</title>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ah-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah-p" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ah-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah-a" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <g id="n-query"><title>Câu truy vấn</title><rect class="box" x="20" y="30" width="140" height="60" rx="10"/><text class="lbl" x="90" y="65" text-anchor="middle">Truy vấn q</text></g>
+        <g id="n-clip"><title>CLIP lấy 50 ứng viên</title><rect class="box" x="200" y="30" width="140" height="60" rx="10"/><text class="lbl" x="270" y="65" text-anchor="middle">CLIP top-50</text></g>
+        <g id="n-model"><title>Mô hình xếp hạng lại main_r3</title><rect class="box" x="380" y="30" width="140" height="60" rx="10"/><text class="lbl" x="450" y="56" text-anchor="middle">Mô hình</text><text class="small" x="450" y="76" text-anchor="middle">GAT + 3 kênh</text></g>
+        <g id="n-top5"><title>Năm ảnh xếp đầu</title><rect class="box" x="560" y="30" width="140" height="60" rx="10"/><text class="lbl" x="630" y="65" text-anchor="middle">Top-5 ảnh I</text></g>
+        <g id="n-decomp"><title>Phân rã chính xác điểm thành từng cặp</title><rect class="box-p" x="740" y="30" width="180" height="60" rx="10"/><text class="lbl" x="830" y="56" text-anchor="middle">Phân rã</text><text class="mono" x="830" y="76" text-anchor="middle">φ = γ·w·a·sim</text></g>
+        <path id="e1" class="edge" d="M160,60 L198,60" marker-end="url(#ah)"/>
+        <path id="e2" class="edge" d="M340,60 L378,60" marker-end="url(#ah)"/>
+        <path id="e3" class="edge" d="M520,60 L558,60" marker-end="url(#ah)"/>
+        <path id="e4" class="edge" d="M700,60 L738,60" marker-end="url(#ah)"/>
+
+        <g id="n-e"><title>Tập giải thích: top-k cặp theo phi</title><rect class="box-p" x="740" y="140" width="180" height="56" rx="10"/><text class="lbl" x="830" y="164" text-anchor="middle">E = top-k cặp</text><text class="small" x="830" y="184" text-anchor="middle">k = 1, 3, 5</text></g>
+        <path id="e5" class="edge-p" d="M830,90 L830,138" marker-end="url(#ah-p)"/>
+
+        <g id="n-sparsity"><title>Sparsity dùng làm trục so sánh</title><rect class="box-a" x="360" y="140" width="300" height="56" rx="10"/><text class="lbl" x="510" y="164" text-anchor="middle">Sparsity: làm trục</text><text class="small" x="510" y="184" text-anchor="middle">1 − |E|/|G| theo k = 1, 3, 5</text></g>
+        <path id="e6" class="edge-a" d="M740,168 L662,168" marker-end="url(#ah-a)"/>
+
+        <g id="n-del"><title>Xoá E khỏi đồ thị rồi chạy lại</title><rect class="box-p" x="420" y="245" width="240" height="56" rx="10"/><text class="lbl" x="540" y="269" text-anchor="middle">Xoá E</text><text class="small" x="540" y="289" text-anchor="middle">chạy lại GAT + z-score</text></g>
+        <g id="n-keep"><title>Chỉ giữ E rồi chạy lại</title><rect class="box-p" x="700" y="245" width="220" height="56" rx="10"/><text class="lbl" x="810" y="269" text-anchor="middle">Chỉ giữ E</text><text class="small" x="810" y="289" text-anchor="middle">cho cả top-5 cùng lúc</text></g>
+        <path id="e7" class="edge-p" d="M810,196 L810,243" marker-end="url(#ah-p)"/>
+        <path id="e8" class="edge-p" d="M780,196 L780,222 L540,222 L540,243" marker-end="url(#ah-p)"/>
+
+        <g id="n-fid"><title>Fidelity, vế cần</title><rect class="box" x="420" y="335" width="240" height="56" rx="10"/><text class="lbl" x="540" y="359" text-anchor="middle">Fidelity (cần)</text><text class="small" x="540" y="379" text-anchor="middle">Fid+, Δrank, PN@K</text></g>
+        <g id="n-val"><title>Validity, vế đủ</title><rect class="box" x="700" y="335" width="220" height="56" rx="10"/><text class="lbl" x="810" y="359" text-anchor="middle">Validity (đủ)</text><text class="small" x="810" y="379" text-anchor="middle">PS@K, τ@10</text></g>
+        <path id="e9" class="edge-p" d="M540,301 L540,333" marker-end="url(#ah-p)"/>
+        <path id="e10" class="edge-p" d="M810,301 L810,333" marker-end="url(#ah-p)"/>
+
+        <g id="n-fast"><title>Chấm lại nhanh, chỉ ảnh bị sửa</title><rect class="box" x="20" y="245" width="340" height="56" rx="10"/><text class="lbl" x="190" y="269" text-anchor="middle">Chấm lại nhanh</text><text class="mono" x="190" y="289" text-anchor="middle">PerturbationScorer</text></g>
+        <path id="e11" class="edge-a" d="M420,273 L362,273" marker-end="url(#ah-a)"/>
+      </svg>
+      <figcaption class="text-xs opacity-70 mt-2">Hình 1. Đường tím: luồng chính. Đường nét đứt: sparsity làm trục; chấm lại nhanh dùng chung cho cả hai nhánh.</figcaption>
+    </figure>
+    <ul class="list-disc pl-5 text-sm space-y-1">
+      <li><strong>Giải thích từ chính cơ chế:</strong> \(\varphi\) là đúng các số hạng mô hình cộng vào điểm, nên đáp ứng điều kiện "không sinh đường đi sau khi đã có kết quả" của đề.</li>
+      <li><strong>E là đồ thị con:</strong> cặp ở kênh object trỏ tới một vật thể của ảnh, cặp ở kênh triple trỏ tới một quan hệ (cạnh). \(|E|\) đếm theo phần ảnh không trùng.</li>
+      <li><strong>Xoá E:</strong> xoá phần ảnh của các cặp trong \(E\) bằng <code>remove_parts</code> (<code>graph_explainer.py:9</code>); xoá object thì mất luôn quan hệ dính vào nó (cách của Yuan, PyG, Pope).</li>
+      <li><strong>Chỉ giữ E:</strong> giữ phần ảnh của \(E\) và hai đầu object của mỗi quan hệ trong \(E\).</li>
+      <li><strong>Ca đặc biệt:</strong> xoá hết phần của một kênh thì mô hình đặt ảnh về mức trung bình (có thể làm ảnh tăng hạng). Giữ nguyên hành vi, gắn cờ, báo số ca, tính metric có và không có chúng.</li>
+      <li><strong>Thứ hạng:</strong> dùng đúng luật của mô hình, <code>argsort(-F, stable=True)</code> (<code>train_graph_reranker.py:90</code>).</li>
+      <li><strong>Chấm lại nhanh:</strong> chỉ mã hóa lại ảnh bị sửa rồi ghép với 49 ứng viên còn lại; có test bắt buộc khớp chính xác với chạy toàn bộ.</li>
+      <li><strong>Khác demo hiện tại:</strong> <code>matched_pairs</code> (<code>graph_explainer.py:22</code>) hiện mỗi phần câu một dòng, là trường hợp rút gọn của phân rã và bỏ qua phần lớn đóng góp ở kênh triple. Demo giữ nguyên; cập nhật sau nếu nhóm đồng ý.</li>
+    </ul>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="font-bold">2.3 Quy trình đánh giá</h3>
+    <div class="grid gap-3 md:grid-cols-3 text-sm">
+      <div class="card bg-base-200"><div class="card-body p-4 space-y-1"><h4 class="font-bold">Chống rò rỉ</h4><p>Phát triển trên VAL. TEST chạy đúng một lần, cả 3 seed <code>main_r3_seed{0,1,2}</code>, mean ± std.</p></div></div>
+      <div class="card bg-base-200"><div class="card-body p-4 space-y-1"><h4 class="font-bold">Bằng chứng ≥ 10 truy vấn</h4><p>Bảng 10 ca (đủ 3 nhóm): E, hạng trước/sau xoá E, hạng khi chỉ giữ E. Kèm số tổng hợp toàn bộ test.</p></div></div>
+      <div class="card bg-base-200"><div class="card-body p-4 space-y-1"><h4 class="font-bold">Cách báo cáo</h4><p>Tách theo kênh (object, triple) và nhóm truy vấn. Đường fidelity, validity theo sparsity.</p></div></div>
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="font-bold">2.4 Hoãn và rủi ro</h3>
+    <div class="space-y-2 text-sm">
+      <div role="alert" class="alert alert-soft"><span><strong>Hoãn (đề không yêu cầu, chỉ đòi mean ± std ≥ 3 seed):</strong> đối chứng (ngẫu nhiên, occlusion, GNNExplainer, attention), kiểm định thống kê, plausibility (người chấm), stability. Làm nếu còn thời gian trước 12/11.</span></div>
+      <div role="alert" class="alert alert-soft alert-warning"><span><strong>Không có đối chứng:</strong> giám khảo có thể hỏi "điểm tụt như vậy là hợp lý so với gì?". Nếu cần, đối chứng ngẫu nhiên là thứ rẻ nhất để thêm.</span></div>
+      <div role="alert" class="alert alert-soft alert-warning"><span><strong>Kênh triple gần như trùng vectơ:</strong> cosine trung bình giữa hai triple là 0,967 / 0,958 / 0,974 (ba seed), trong khi object chỉ 0,271 / 0,219 / 0,274 (<code>experiments/checks/part_similarity.json</code>). \(\varphi\) của kênh triple có thể dàn đều. Lộc đang xem lại; nếu mô hình được huấn luyện lại thì chạy lại bằng cùng lệnh.</span></div>
+      <div role="alert" class="alert alert-soft alert-warning"><span><strong>Đồ thị "lạ" (OOD):</strong> xoá phần tạo ra đồ thị mô hình chưa gặp khi huấn luyện, nên điểm có thể tụt vì đồ thị lạ chứ không chỉ vì phần bị xoá quan trọng (Zheng et al., ICLR 2024).</span></div>
+      <div role="alert" class="alert alert-soft alert-warning"><span><strong>\(\varphi\) gần như luôn dương</strong> vì cosine giữa các chữ trong CLIP vốn cao, nên top-k có thể ưu tiên cặp "giống" hơn cặp "phân biệt". Ghi thành hạn chế.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. TASKS -->
+<section id="tasks" class="space-y-4">
+  <h2 class="text-xl font-bold">3. Danh sách công việc</h2>
+  <ul class="steps steps-vertical lg:steps-horizontal w-full text-xs">
+    <li class="step step-primary">Chuẩn bị<br>03-10/10</li>
+    <li class="step step-primary">Code<br>10-17/10</li>
+    <li class="step step-primary">30 truy vấn<br>13-20/10</li>
+    <li class="step">Chạy TEST<br>20-24/10</li>
+    <li class="step">Bằng chứng<br>24-31/10</li>
+    <li class="step">Dự phòng<br>→ 12/11</li>
+  </ul>
+  <div class="overflow-x-auto rounded-box border border-base-content/10">
+    <table class="table table-sm">
+      <thead><tr><th>#</th><th>Việc</th><th>Input</th><th>Output mong đợi</th><th>Hạn</th></tr></thead>
+      <tbody>
+        <tr class="phase"><td colspan="5">0 · Chuẩn bị</td></tr>
+        <tr id="t01"><td>0.1</td><td>Nhận dòng 24</td><td><code>task-assignment.xlsx</code></td><td>G24 = "Chính", PR</td><td class="date">05/10</td></tr>
+        <tr id="t02"><td>0.2</td><td>Tải dữ liệu Drive</td><td><code>data/README.md</code>, <code>MANIFEST.md</code></td><td>Đồ thị, <code>processed/</code>, <code>graph_parts</code>, checkpoint; checksum khớp</td><td class="date">06/10</td></tr>
+        <tr id="t03"><td>0.3</td><td>Hỏi Lộc <span class="badge badge-xs badge-soft badge-info">đã hỏi</span></td><td><code>part_similarity.json</code></td><td>Quyết định về kênh triple; checkpoint seed 1, 2</td><td class="date">08/10</td></tr>
+        <tr id="t04"><td>0.4</td><td>Chốt định nghĩa</td><td>Tài liệu này</td><td><code>docs/level3-xai.html</code>, PR cả nhóm duyệt</td><td class="date">10/10</td></tr>
+        <tr class="phase"><td colspan="5">1 · Code (dòng 27, 28)</td></tr>
+        <tr id="t11"><td>1.1</td><td>Phân rã</td><td><code>graph_reranker.py</code></td><td><code>src/explain/decomposition.py</code>: \(\gamma\), \(\varphi\), \(C_k\)</td><td class="date">13/10</td></tr>
+        <tr id="t12"><td>1.2</td><td>Nhiễu + metric</td><td>1.1, <code>remove_parts</code></td><td><code>src/explain/xai_metrics.py</code>: top-k, xoá E, chỉ giữ E, chấm lại nhanh, Fid+, PN/PS@K, τ@10</td><td class="date">15/10</td></tr>
+        <tr id="t13"><td>1.3</td><td>Hàm đo chung</td><td><code>src/eval/metrics.py</code></td><td><code>pn_ps_at_k</code>, <code>kendall_tau</code></td><td class="date">15/10</td></tr>
+        <tr id="t14"><td>1.4</td><td>Script chạy</td><td>1.2, 1.3</td><td><code>scripts/evaluate_xai.py</code> → <code>experiments/level3/xai/</code></td><td class="date">16/10</td></tr>
+        <tr id="t15"><td>1.5</td><td>Test</td><td>Fake <code>GraphStore</code></td><td><code>pytest</code> xanh; \(\sum\varphi + C = F\); chấm lại nhanh khớp chạy toàn bộ</td><td class="date">16/10</td></tr>
+        <tr id="t16"><td>1.6</td><td>Chạy VAL seed 0</td><td>1.4</td><td>Fid+ tăng theo k; chốt định nghĩa</td><td class="date">17/10</td></tr>
+        <tr class="phase"><td colspan="5">2 · 30 truy vấn (dòng 24)</td></tr>
+        <tr id="t21"><td>2.1</td><td>Lọc câu trực tiếp</td><td>ECCV Caption, split test</td><td>10 câu + gold</td><td class="date">15/10</td></tr>
+        <tr id="t22"><td>2.2</td><td>Viết câu gián tiếp</td><td>Mẫu Sherlock, đồ thị VG test</td><td>10 câu + ứng viên gold</td><td class="date">17/10</td></tr>
+        <tr id="t23"><td>2.3</td><td>Cặp đảo quan hệ</td><td>GQA scene graphs</td><td>10 cặp đúng chiều / đảo chiều</td><td class="date">18/10</td></tr>
+        <tr id="t24"><td>2.4</td><td>Duyệt gold</td><td>Trang xem ảnh cục bộ</td><td>Nhãn gold; κ với người duyệt thứ hai</td><td class="date">20/10</td></tr>
+        <tr id="t25"><td>2.5</td><td>Đóng gói truy vấn</td><td><code>parse_caption</code>, CLIP</td><td><code>data/eval_queries/vg_coco_test_30.json</code>, vectơ, top-50</td><td class="date">20/10</td></tr>
+        <tr class="phase"><td colspan="5">3 · Chạy TEST</td></tr>
+        <tr id="t31"><td>3.1</td><td>Chạy TEST một lần</td><td>Định nghĩa đã chốt, 30 truy vấn, 3 checkpoint</td><td><code>experiments/level3/xai/test/</code>, mean ± std</td><td class="date">24/10</td></tr>
+        <tr class="phase"><td colspan="5">4 · Bằng chứng và tổng hợp (dòng 29)</td></tr>
+        <tr id="t41"><td>4.1</td><td>Bảng 10 ca</td><td>3.1, bộ 30</td><td><code>scripts/make_evidence_table.py</code>: E, hạng trước/sau</td><td class="date">28/10</td></tr>
+        <tr id="t42"><td>4.2</td><td>Tổng hợp</td><td>3.1, 4.1</td><td><code>experiments/level3/xai/README.md</code>: bảng, đường theo sparsity, ca đặc biệt, hạn chế</td><td class="date">31/10</td></tr>
+        <tr class="phase"><td colspan="5">5 · Dự phòng</td></tr>
+        <tr id="t51"><td>5.1</td><td>Mở rộng</td><td>Code bước 1</td><td>MKG-W (cùng Đạt), MMKG tiếng Việt; các mục đã hoãn nếu còn thời gian</td><td class="date">12/11</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="refs" class="space-y-2 text-sm">
+  <h2 class="text-xl font-bold">Tài liệu tham khảo</h2>
+  <ol class="list-decimal pl-5 space-y-1">
+    <li>Yuan, Yu, Gui, Ji. Explainability in Graph Neural Networks: A Taxonomic Survey. IEEE TPAMI 45(5), 2023. <a class="link" href="https://arxiv.org/abs/2012.15445">arXiv:2012.15445</a></li>
+    <li>Funke, Khosla, Rathee, Anand. Zorro: Valid, Sparse, and Stable Explanations in GNNs. IEEE TKDE 35(8), 2023. <a class="link" href="https://ar5iv.labs.arxiv.org/html/2105.08621">ar5iv</a></li>
+    <li>Singh, Khosla, Wang, Anand. Extracting per Query Valid Explanations for Blackbox Learning-to-Rank Models. ICTIR 2021. <a class="link" href="https://ar5iv.labs.arxiv.org/html/2004.13972">ar5iv (bản arXiv)</a></li>
+    <li>Pope et al. Explainability Methods for Graph Convolutional Neural Networks. CVPR 2019.</li>
+    <li>Tan et al. CountER: Counterfactual Explainable Recommendation. CIKM 2021. <a class="link" href="https://arxiv.org/abs/2108.10539">arXiv:2108.10539</a></li>
+    <li>Amara et al. GraphFramEx. LoG 2022. <a class="link" href="https://arxiv.org/abs/2206.09677">arXiv:2206.09677</a> · Yuan et al. SubgraphX. ICML 2021</li>
+    <li>Jain, Wallace. Attention is not Explanation. NAACL 2019 · Kosan et al. GNNX-Bench. ICLR 2024 · De Cao et al. GraphMask. ICLR 2021</li>
+    <li>Nguyen, Kim, Nguyen. The effectiveness of feature attribution methods... NeurIPS 2021. <a class="link" href="https://arxiv.org/abs/2105.14944">arXiv:2105.14944</a></li>
+    <li>Zheng et al. Towards Robust Fidelity for Evaluating Explainability of GNNs. ICLR 2024. <a class="link" href="https://arxiv.org/abs/2310.01820">arXiv:2310.01820</a></li>
+    <li>Chun et al. ECCV Caption. ECCV 2022 · Yuksekgonul et al. ARO. ICLR 2023 · Hessel et al. Sherlock. ECCV 2022</li>
+  </ol>
+</section>
+
+</main>
+</body>
+</html>
