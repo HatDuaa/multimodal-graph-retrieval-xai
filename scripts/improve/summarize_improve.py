@@ -62,12 +62,14 @@ def main() -> None:
     perturbation = json.loads((args.exp / "triple_perturbation.json").read_text(encoding="utf-8"))
     reference = json.loads(Path("experiments/improve/triple-perturbation/main_r3.json").read_text(encoding="utf-8"))
     for view, title in (("all", "toàn val"), ("with_triple", "câu có ≥1 bộ ba"),
-                        ("triple_only_with_triple", "chỉ xếp theo điểm kênh thứ ba, câu có ≥1 bộ ba")):
+                        ("triple_only_with_triple", "chỉ xếp theo điểm kênh thứ ba, câu có ≥1 bộ ba"),
+                        ("third_only_all", "chỉ xếp theo điểm kênh thứ ba, toàn val")):
         lines += ["", f"## Chẩn đoán nhiễu phía câu — {title}", "", "| Mô hình | Điều kiện | R@1 | R@5 | R@10 | MRR |",
                   "|---|---|---|---|---|---|"]
         for name, result in ((args.label, perturbation), ("main_r3", reference)):
             for condition, label in CONDITIONS.items():
-                lines.append(f"| {name} | {label} | {row(result['aggregate'][condition][view])} |")
+                if view in result["aggregate"][condition]:
+                    lines.append(f"| {name} | {label} | {row(result['aggregate'][condition][view])} |")
     spread = json.loads((args.exp / "part_similarity.json").read_text(encoding="utf-8"))
     level1_spread = json.loads(Path("experiments/checks/part_similarity.json").read_text(encoding="utf-8"))
     lines += ["", "## Độ dồn (cosine trung bình giữa các cặp ngẫu nhiên, 300 ảnh val)", ""]

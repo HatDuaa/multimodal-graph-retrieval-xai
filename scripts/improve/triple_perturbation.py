@@ -9,7 +9,8 @@ Three conditions on the sentence-side (query) graphs of val, image graphs untouc
   phrase becomes "<o> <p> <s>".
 Part texts missing from the frozen part table are encoded with the same frozen CLIP and the same conventions as
 src/service/graph_mode.py (relations and triples verbatim). Metrics are reported on all val queries and on the
-queries whose graph keeps at least one triple; "triple_only" ranks the top-50 by the triple channel score alone.
+queries whose graph keeps at least one triple; "triple_only" ranks the top-50 by the triple channel score alone
+(the third channel: graph-level cosine for --graph-channel models), "third_only_all" does so on all queries.
 """
 from __future__ import annotations
 
@@ -150,12 +151,13 @@ def main() -> None:
         for run, model in models.items():
             fused, triple, golds = rank_val(model, store, caption_ids, device)
             row = {"all": evaluate(fused, golds), "with_triple": subset_metrics(fused, golds, has_triple),
-                   "triple_only_with_triple": subset_metrics(triple, golds, has_triple)}
+                   "triple_only_with_triple": subset_metrics(triple, golds, has_triple),
+                   "third_only_all": evaluate(triple, golds)}
             result["per_run"].setdefault(run, {})[condition] = row
             print(condition, run, json.dumps({k: round(v["recall@1"], 4) for k, v in row.items()}), flush=True)
         result["aggregate"][condition] = {
             view: aggregate_seeds([result["per_run"][run][condition][view] for run in models])
-            for view in ("all", "with_triple", "triple_only_with_triple")}
+            for view in ("all", "with_triple", "triple_only_with_triple", "third_only_all")}
     result["seconds"] = time.time() - started
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2), encoding="utf-8")
