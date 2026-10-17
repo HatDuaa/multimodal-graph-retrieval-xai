@@ -35,7 +35,7 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
         if len(q) == 0 or len(p) == 0:
             continue
         # Same similarity and weights as channel_score; factorized triples carry (subject, predicate, object) slots.
-        sims = part_similarity(q[None], p[None, None])[0, 0]
+        sims = part_similarity(q[None], p[None], torch.zeros((1, 1), dtype=torch.long, device=p.device))[0, 0]
         attention = torch.softmax(sims / tau, -1)
         w = torch.softmax(part_summary(q[None])[0] @ u, -1)
         best = sims.argmax(-1)

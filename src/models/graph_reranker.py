@@ -49,18 +49,26 @@ def slot_similarity(cos):
     return (1 + cos) / 2
 
 
-def part_similarity(query, candidates):
-    """Similarity of every query part to every candidate part, shape (..., Tq, Ti).
+def gathered_cosine(query, images, candidate_index):
+    """query (B, Tq, D) . images[candidate_index] (B, K, Ti, D) -> (B, K, Tq, Ti)."""
+    return torch.matmul(query[:, None], images[candidate_index].transpose(-1, -2))
 
-    query is (B, Tq, D) and candidates (B, K, Ti, D), or factorized triples (B, Tq, 3, D) and (B, K, Ti, 3, D)
-    holding subject, predicate and object vectors; a factorized pair scores c(s) * c(p) * c(o), so one
-    mismatched slot pulls the whole pair down.
+
+def part_similarity(query, images, candidate_index):
+    """Similarity of every query part to every part of each candidate image, shape (B, K, Tq, Ti).
+
+    query is (B, Tq, D) and images (N, Ti, D), or factorized triples (B, Tq, 3, D) and (N, Ti, 3, D) holding
+    subject, predicate and object vectors; a factorized pair scores c(s) * c(p) * c(o), so one mismatched slot
+    pulls the whole pair down. Factorized slots are gathered one at a time, each under its own checkpoint, so the
+    (B, K, Ti, D) candidate copy exists for one slot at a time, as in the phrase match.
     """
     if query.dim() == 3:
-        return torch.matmul(query[:, None], candidates.transpose(-1, -2))
+        return gathered_cosine(query, images, candidate_index)
     sims = 1.
     for slot in range(query.shape[-2]):
-        sims = sims * slot_similarity(torch.matmul(query[:, None, :, slot], candidates[..., slot, :].transpose(-1, -2)))
+        args = (query[..., slot, :], images[..., slot, :], candidate_index)
+        cos = checkpoint(gathered_cosine, *args, use_reentrant=False) if torch.is_grad_enabled() else gathered_cosine(*args)
+        sims = sims * slot_similarity(cos)
     return sims
 
 
@@ -71,9 +79,8 @@ def part_summary(query):
 
 def channel_score(query, query_mask, images, image_mask, candidate_index, tau, u):
     """Match all B x K pairs together; no loop or materialized feature cache per candidate."""
-    candidates = images[candidate_index]
     masks = image_mask[candidate_index]
-    sims = part_similarity(query, candidates)
+    sims = part_similarity(query, images, candidate_index)
     attention = masked_softmax(sims / tau, masks[:, :, None, :], -1)
     per_part = (attention * sims).sum(-1)
     weights = masked_softmax(part_summary(query) @ u, query_mask, -1)
@@ -211,7 +218,9 @@ class GraphReranker(nn.Module):
             pooled.update(graph_query=query_graph, graph_images=image_graph)
         elif self.training:
             objects = checkpoint(channel_score, *args_obj, use_reentrant=False)
-            triples = checkpoint(channel_score, *args_tri, use_reentrant=False)
+            # Factorized slots are already checkpointed one by one inside part_similarity.
+            triples = (channel_score(*args_tri) if self.options['triple_match'] == 'factorized'
+                       else checkpoint(channel_score, *args_tri, use_reentrant=False))
         else:
             objects, triples = channel_score(*args_obj), channel_score(*args_tri)
         if not self.uses_third_channel():

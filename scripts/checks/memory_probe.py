@@ -41,13 +41,15 @@ def main():
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--steps", type=int, default=30)
     parser.add_argument("--output", type=Path, default=Path("experiments/checks/memory_probe.jsonl"))
+    parser.add_argument("--triple-match", default="phrase")
+    parser.add_argument("--graph-channel", action="store_true")
     args = parser.parse_args()
     before = machine_snapshot()
     set_seed(0)
     device = torch.device("cuda")
     store = GraphStore()
     store.precompute()
-    model = GraphReranker().to(device).train()
+    model = GraphReranker(triple_match=args.triple_match, graph_channel=args.graph_channel).to(device).train()
     model.set_epoch(1)
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
     rows = shuffled_rows(list(rows_for(store, store.candidates("train"))), 0, 1)
@@ -68,7 +70,8 @@ def main():
             during = machine_snapshot()
     torch.cuda.synchronize()
     seconds = time.time() - started
-    record = {"micro_batch_size": args.micro_batch_size, "batch_size": args.batch_size, "steps": args.steps,
+    record = {"triple_match": args.triple_match, "graph_channel": args.graph_channel,
+              "allocator": os.environ.get("PYTORCH_CUDA_ALLOC_CONF", ""), "micro_batch_size": args.micro_batch_size, "batch_size": args.batch_size, "steps": args.steps,
               "seconds_per_step": seconds / args.steps,
               "estimated_train_seconds_per_epoch": seconds / args.steps * len(rows) / args.batch_size,
               "rss_peak_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,

@@ -33,17 +33,29 @@ def test_default_model_keeps_level1_parameters_and_options():
 
 def test_factorized_similarity_is_the_product_of_slot_similarities():
     torch.manual_seed(0)
-    query, candidates = unit(2, 3, 3, 512), unit(2, 4, 5, 3, 512)
-    sims = part_similarity(query, candidates)
+    query, images = unit(2, 3, 3, 512), unit(6, 5, 3, 512)
+    candidate_index = torch.tensor([[0, 1, 2, 3], [5, 4, 3, 0]])
+    sims = part_similarity(query, images, candidate_index)
     assert sims.shape == (2, 4, 3, 5)
     b, k, i, j = 1, 2, 0, 3
     expected = 1.
     for slot in range(3):
-        expected *= (1 + query[b, i, slot] @ candidates[b, k, j, slot]) / 2
+        expected *= (1 + query[b, i, slot] @ images[candidate_index[b, k], j, slot]) / 2
     torch.testing.assert_close(sims[b, k, i, j], expected)
     assert ((sims >= 0) & (sims <= 1)).all()
-    phrase = part_similarity(query[..., 0, :], candidates[..., 0, :])
-    torch.testing.assert_close(phrase, torch.matmul(query[:, None, :, 0], candidates[..., 0, :].transpose(-1, -2)))
+    phrase = part_similarity(query[..., 0, :], images[..., 0, :], candidate_index)
+    candidates = images[candidate_index][..., 0, :]
+    torch.testing.assert_close(phrase, torch.matmul(query[:, None, :, 0], candidates.transpose(-1, -2)))
+    # The per-slot checkpoint gives the same gradients as the plain product.
+    query.requires_grad_(True)
+    part_similarity(query, images, candidate_index).sum().backward()
+    grad = query.grad.clone()
+    query.grad = None
+    plain = 1.
+    for slot in range(3):
+        plain = plain * (1 + torch.matmul(query[:, None, :, slot], images[candidate_index][..., slot, :].transpose(-1, -2))) / 2
+    plain.sum().backward()
+    torch.testing.assert_close(query.grad, grad)
 
 
 def test_factorized_encoding_at_init_uses_node_and_relation_vectors():
