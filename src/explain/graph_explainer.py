@@ -3,7 +3,7 @@ import copy
 
 import torch
 
-from src.models.graph_reranker import masked_softmax
+from src.models.graph_reranker import masked_softmax, part_similarity, part_summary, slot_similarity
 
 
 def remove_parts(graph, object_indices=(), relation_indices=()):
@@ -34,19 +34,34 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
         q, p = qs[query_row, qm[query_row]], ps[image_row, pm[image_row]]
         if len(q) == 0 or len(p) == 0:
             continue
-        sims = q @ p.T
+        # Same similarity and weights as channel_score; factorized triples carry (subject, predicate, object) slots.
+        sims = part_similarity(q[None], p[None, None])[0, 0]
         attention = torch.softmax(sims / tau, -1)
-        w = torch.softmax(q @ u, -1)
+        w = torch.softmax(part_summary(q[None])[0] @ u, -1)
         best = sims.argmax(-1)
+        slots = slot_similarity(torch.einsum('isd,jsd->ijs', q, p)) if q.dim() == 3 else None
         # Encoded query objects keep only scorable parts (part_mask), so the index list must be masked the same way.
         q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
                      if channel == 'objects' else query_parts['relation_indices'])
         p_indices = image_parts['node_indices'] if channel == 'objects' else image_parts['relation_indices']
         for i, j in enumerate(best.tolist()):
-            result[channel].append({'query_index': q_indices[i], 'image_index': p_indices[j],
-                                    'w_i': float(w[i]), 'a_ij': float(attention[i, j]),
-                                    'sim_ij': float(sims[i, j]),
-                                    'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])})
+            row = {'query_index': q_indices[i], 'image_index': p_indices[j],
+                   'w_i': float(w[i]), 'a_ij': float(attention[i, j]),
+                   'sim_ij': float(sims[i, j]),
+                   'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])}
+            if slots is not None:
+                row['slot_similarity'] = dict(zip(('subject', 'predicate', 'object'), slots[i, j].tolist()))
+            result[channel].append(row)
+    if 'pool_query' in detail:
+        # Graph-level channel: pooled-vector cosine, with the pooling weight of every scorable node on both sides.
+        qm, pm = detail['encoded_query'][1][query_row], detail['encoded_images'][1][image_row]
+        q_indices = [i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
+        cosine = float(detail['graph_query'][query_row] @ detail['graph_images'][image_row])
+        result['graph_level'] = {'cosine': cosine, 'contribution': float(weights[2] * cosine),
+                           'query_nodes': [{'query_index': i, 'alpha': float(a)}
+                                           for i, a in zip(q_indices, detail['pool_query'][query_row][qm])],
+                           'image_nodes': [{'image_index': i, 'alpha': float(a)}
+                                           for i, a in zip(image_parts['node_indices'], detail['pool_image'][image_row][pm])]}
     return result
 
 
