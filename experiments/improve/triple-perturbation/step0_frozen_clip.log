@@ -1,0 +1,8 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline step0_frozen_clip {"all": 0.435, "with_triple": 0.444, "triple_only_with_triple": 0.1884}
+verb_swap step0_frozen_clip {"all": 0.4321, "with_triple": 0.4408, "triple_only_with_triple": 0.1631}
+subject_object_swap step0_frozen_clip {"all": 0.4333, "with_triple": 0.4421, "triple_only_with_triple": 0.177}
+wrote experiments/improve/triple-perturbation/step0_frozen_clip.json in 20s
