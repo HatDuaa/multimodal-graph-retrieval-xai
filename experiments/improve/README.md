@@ -27,3 +27,29 @@ không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed
   batch hiệu dụng vẫn 256 (gradient cộng dồn đúng tỉ lệ). Mô hình không có batch-norm, z-score và loss tính theo
   từng câu, nên gradient mỗi bước tối ưu chỉ khác ở thứ tự cộng số thực và ở cách rút mặt nạ dropout.
   `microbatch-control/` kiểm tra lại điều này trên công thức main_r3.
+
+## Kết quả tổng hợp (val, 3 seed, mean ± std)
+
+| Mô hình | R@1 | R@5 | R@10 | MRR | kênh 3 đứng riêng, R@1 (c / a / b) | tương quan vật thể ~ kênh 3 |
+|---|---|---|---|---|---|---|
+| main_r3 | 46.48 ± 0.24 | 73.78 ± 0.16 | 83.44 ± 0.24 | 58.85 ± 0.18 | 6.24 / 4.77 / 4.69 | 0.197 |
+| no_triple_r3 | 45.99 ± 0.05 | 73.33 ± 0.13 | 82.84 ± 0.10 | 58.34 ± 0.05 | — | — |
+| no_gat_r3 | 46.71 ± 0.07 | 73.81 ± 0.29 | 83.56 ± 0.24 | 59.04 ± 0.09 | — | 0.209 |
+| A: factorized | 46.00 ± 0.02 | 73.33 ± 0.14 | 82.88 ± 0.02 | 58.35 ± 0.04 | 17.64 / 15.92 / 12.19 | 0.587 |
+| B: graph_channel | 46.23 ± 0.13 | 73.97 ± 0.18 | 83.55 ± 0.16 | 58.76 ± 0.06 | 15.43 / 15.33 / 15.43 | 0.518 |
+
+"Kênh 3 đứng riêng": xếp top-50 chỉ theo điểm kênh thứ ba, trên các câu có ≥1 bộ ba. c là giữ nguyên, a là đổi
+động từ, b là đổi chủ ngữ/tân ngữ. Mốc tham chiếu: cụm CLIP đóng băng ở step 0 đạt 18,84 / 16,31 / 17,70.
+Tương quan được tính theo từng câu, trên top-50 (`channel-correlation/`).
+
+Tóm tắt:
+
+- **Bước 1.** Kênh bộ ba của main_r3 có dùng vị từ và chiều, nhưng khi đứng riêng rất yếu (R@1 6,24, do vector dồn
+  về cosine 0,97). Toàn bộ 0,49 điểm R@1 nó đóng góp phụ thuộc vào vị từ và chiều đúng.
+- **Bước 2 (A).** Tách bộ ba theo thành phần đã gỡ được độ dồn, kênh đứng riêng mạnh gấp 3 và nhạy thứ tự gấp 3,5.
+  Nhưng điểm cuối giảm về mức no_triple, vì kênh mới lặp lại kênh vật thể (tương quan 0,59) và mô hình hạ trọng số
+  c xuống 0,07.
+- **Bước 3 (B).** Kênh mức đồ thị đứng giữa no_triple và main_r3 về R@1, nhỉnh hơn main_r3 một chút ở R@5/R@10.
+  Kênh này mù vị từ và thứ tự, lặp kênh vật thể (tương quan 0,52), và giải thích kém chi tiết hơn.
+- Trên val, chưa thí nghiệm nào trong phase này vượt main_r3 về R@1/MRR. Chọn mô hình nào để chấm test một lần cuối
+  là việc nhóm quyết định.

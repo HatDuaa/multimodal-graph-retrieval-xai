@@ -120,11 +120,11 @@ Hạ tầng: micro-batch 32, batch hiệu dụng 256 (xem `../README.md` và `..
 3. **Không còn dồn.** Similarity bộ ba trung bình giữa các cặp ngẫu nhiên là 0,48–0,56, so với 0,77 lúc khởi tạo;
    cosine cụm của main_r3 là 0,97. Cosine slot chủ ngữ và tân ngữ là 0,41–0,54. Khi đứng riêng, kênh bộ ba đạt R@1
    17,64 ± 0,21, gấp gần 3 lần main_r3 (6,24) và gần mức cụm CLIP đóng băng (18,84).
-4. **Vì sao một kênh tốt hơn lại không giúp điểm cuối (giả thuyết, chưa kiểm chứng):** chủ ngữ và tân ngữ dùng
+4. **Vì sao một kênh tốt hơn lại không giúp điểm cuối (đã kiểm chứng ở `../channel-correlation/REPORT.md`):** chủ ngữ và tân ngữ dùng
    chung vector node với kênh vật thể. Vì vậy sau z-score, kênh factorized phần lớn lặp lại kênh vật thể, và mô hình
    chuyển trọng số sang kênh vật thể (b = 0,43, so với 0,355 ở main_r3). Ngược lại, kênh cụm của main_r3 tuy yếu khi
-   đứng riêng nhưng lại mang tín hiệu khác kênh vật thể, nên vẫn giúp được 0,49 điểm. Đo tương quan giữa z_objects
-   và z_triples theo từng câu sẽ kiểm chứng điều này (xem `../channel-correlation/` nếu đã chạy).
+   đứng riêng nhưng lại mang tín hiệu khác kênh vật thể, nên vẫn giúp được 0,49 điểm. Tương quan theo câu giữa
+   z_objects và z_triples là 0,587 ± 0,004 ở factorized, so với 0,197 ± 0,009 ở main_r3.
 5. **Slot vị từ phân biệt kém.** Cosine trung bình giữa các vector CLIP `rel:` là 0,906 (p05 0,816), nên
    c(p) = (1+cos)/2 hầu như nằm trong [0,91; 1]. Thừa số vị từ vì thế chỉ đẩy điểm được rất ít. Đây là cái giá của
    lựa chọn "p không chiếu + (1+cos)/2". Một phép chiếu học được cho p, hoặc một ánh xạ sắc hơn cho c(p), là thí
