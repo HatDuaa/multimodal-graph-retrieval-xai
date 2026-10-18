@@ -1,0 +1,55 @@
+{
+  "args": {
+    "seed": 2,
+    "run_name": "main_factual_r3_seed2",
+    "epochs": 10,
+    "limit_train": null,
+    "batch_size": 256,
+    "micro_batch_size": 32,
+    "eval_batch_size": 256,
+    "lr": 0.001,
+    "adaptive_weights": true,
+    "use_gat": true,
+    "use_triple_channel": true,
+    "use_edges": true,
+    "query_graph_encoder": true,
+    "loss": "cross_entropy",
+    "triple_match": "phrase",
+    "graph_channel": false,
+    "runs_root": "improve/factual-retrain",
+    "rewire_seed": null,
+    "resume": true,
+    "stop_after_epoch": null,
+    "eval_only": null,
+    "config": "configs/factual_v1.yaml"
+  },
+  "config": {
+    "seed": 0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "paths": {
+      "raw": "data/raw",
+      "splits": "data/splits",
+      "features": "data/features/factual_v1",
+      "graphs": "data/graphs",
+      "processed": "data/processed/factual_v1",
+      "experiments": "experiments"
+    },
+    "clip": {
+      "model": "ViT-B-32-quickgelu",
+      "pretrained": "openai",
+      "batch_size": 256,
+      "concept_prompt": "a photo of a {}"
+    },
+    "retrieval": {
+      "top_k": 50
+    }
+  },
+  "device": "cuda",
+  "train_candidates_sha256": "549083b1756df5a467887cc8d860a2d056f6f93878f088c819e0bffb6053f958",
+  "val_candidates_sha256": "ec4bc3432594d9923b1de7ac4ff33b1511d334690a8b681768fd9637ede91d79",
+  "git_commit": "8e372f71403049a88ee7261d2f73e9ac66af1703"
+}

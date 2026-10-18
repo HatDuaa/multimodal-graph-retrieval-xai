@@ -13,6 +13,7 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `channel-correlation/` | Tương quan theo câu giữa các kênh (không train) |
 | `parser-compare/` | Đợt 2, phần 1: sng / FACTUAL-T5 base, large / Qwen2.5-3B trên val (nội tại, probe, main_r3) |
 | `geometry-channel/` | Đợt 2, phần 2: kênh số lượng + vị trí từ khung VG, cộng vào main_r3 (không train) |
+| `factual-retrain/` | Bước 1d: train lại công thức main_r3 với đồ thị câu FACTUAL-T5 large (dữ liệu `factual_v1`) |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -67,3 +68,10 @@ Tóm tắt:
 - **Kênh hình học** (`geometry-channel/REPORT.md`): kênh số lượng tăng R@1 trên 1 121 câu có số đếm thêm +0,74 (w
   chọn trên val) hoặc +0,44 (chọn 2-fold); trên toàn val chỉ +0,10 hoặc +0,05. Kênh vị trí không có bằng chứng giúp
   (2-fold −0,05 trên 756 câu).
+
+## Bước 1d: train lại với FACTUAL-T5 large (18/10/2026, branch `feat/factual-retrain`)
+
+`factual-retrain/REPORT.md`: chỉ đổi parser câu. Val R@1 đạt 47,23 ± 0,36, so với 46,48 ± 0,24 của main_r3 (+0,76);
+MRR 59,49 ± 0,29, so với 58,85 ± 0,18 (+0,64). Welch p ≈ 0,05 với 3 seed mỗi bên, và mọi seed đều cao hơn mọi seed
+của main_r3. Probe không train chỉ báo +0,12, nên lợi ích đến từ việc train trên đồ thị sạch hơn. Độ dồn của vector
+bộ ba vẫn còn (cosine 0,97–0,99). Test chưa chấm.
