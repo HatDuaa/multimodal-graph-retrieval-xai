@@ -1,0 +1,8 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+sng {"all": 0.4648, "with_triple": 0.4737, "with_sng_triple": 0.4737}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+factual-base {"all": 0.4636, "with_triple": 0.4684, "with_sng_triple": 0.4706}
+factual-large {"all": 0.4661, "with_triple": 0.4702, "with_sng_triple": 0.4729}
+qwen2.5-3b {"all": 0.4604, "with_triple": 0.4753, "with_sng_triple": 0.4667}

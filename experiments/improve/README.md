@@ -10,6 +10,9 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `microbatch-control/` | Đối chứng cho việc giảm micro-batch 128 → 32 (xem mục Hạ tầng) |
 | `triple-factorized/` | Bước 2, thí nghiệm A: so khớp bộ ba tách theo thành phần, `sim = c(s)·c(p)·c(o)` |
 | `graph-channel/` | Bước 3, thí nghiệm B: thay kênh bộ ba bằng kênh mức đồ thị (attention pooling + cosine) |
+| `channel-correlation/` | Tương quan theo câu giữa các kênh (không train) |
+| `parser-compare/` | Đợt 2, phần 1: sng / FACTUAL-T5 base, large / Qwen2.5-3B trên val (nội tại, probe, main_r3) |
+| `geometry-channel/` | Đợt 2, phần 2: kênh số lượng + vị trí từ khung VG, cộng vào main_r3 (không train) |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -53,3 +56,14 @@ Tóm tắt:
   Kênh này mù vị từ và thứ tự, lặp kênh vật thể (tương quan 0,52), và giải thích kém chi tiết hơn.
 - Trên val, chưa thí nghiệm nào trong phase này vượt main_r3 về R@1/MRR. Chọn mô hình nào để chấm test một lần cuối
   là việc nhóm quyết định.
+
+## Đợt 2: parser và kênh hình học (18/10/2026, branch `feat/parser-and-geometry`)
+
+- **Parser** (`parser-compare/REPORT.md`): FACTUAL-T5 sửa đúng các lỗi của sng. Node đại từ giảm 3,9% → 0,1%; câu
+  có ≥1 bộ ba tăng 85,8% → 97,2%; vật thể có trong ảnh đúng tăng 46,4% → 53,9%. Nhưng trên probe 3 kênh không train,
+  R@1 chỉ hơn sng +0,02 (base), +0,12 (large), +0,16 (Qwen2.5-3B), đều dưới ngưỡng +0,3. Vì vậy dừng ở 1c, không
+  parse train, không train lại. main_r3 với đồ thị FACTUAL-large đạt 46,61 ± 0,12, so với 46,48 ± 0,24 (nằm trong
+  nhiễu).
+- **Kênh hình học** (`geometry-channel/REPORT.md`): kênh số lượng tăng R@1 trên 1 121 câu có số đếm thêm +0,74 (w
+  chọn trên val) hoặc +0,44 (chọn 2-fold); trên toàn val chỉ +0,10 hoặc +0,05. Kênh vị trí không có bằng chứng giúp
+  (2-fold −0,05 trên 756 câu).
