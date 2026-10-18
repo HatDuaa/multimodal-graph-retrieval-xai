@@ -126,9 +126,10 @@ def main() -> None:
                         help="Score with the untrained model instead (frozen CLIP parts, fixed a/b/c, tau 0.05).")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--verb-seed", type=int, default=0)
+    parser.add_argument("--config", type=Path, help="Data configuration (default configs/default.yaml).")
     args = parser.parse_args()
     started = time.time()
-    cfg = load_config()
+    cfg = load_config(args.config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     store = GraphStore(cfg, splits=("val",))
     original = store.queries
@@ -139,7 +140,7 @@ def main() -> None:
     use_queries(store, original)
     caption_ids = [str(cid) for cid in store.candidates("val")["caption_ids"]]
     has_triple = [store.query_index.edge_counts[store.query_position[cid]] > 0 for cid in caption_ids]
-    result = {"split": "val", "verb_seed": args.verb_seed, "train_predicate_vocabulary": len(words),
+    result = {"split": "val", "verb_seed": args.verb_seed, "config": str(args.config or "configs/default.yaml"), "train_predicate_vocabulary": len(words),
               "new_part_vectors": added, "n_queries": len(caption_ids), "n_with_triple": int(sum(has_triple)),
               "runs": [str(r) for r in args.runs], "per_run": {}, "aggregate": {}}
     models = {str(run): load_run_model(Path(run), device)[0] for run in args.runs}

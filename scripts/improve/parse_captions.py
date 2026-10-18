@@ -2,7 +2,9 @@
 
 Writes data/processed/parsers/query_graphs_<split>_<parser>.json ({caption_id: graph}, gitignored like every
 processed file), the parser's raw output next to it, and experiments/improve/parser-compare/timing_<split>_<parser>.json.
-The sng run is also checked against the packaged level-1 query graphs.
+The sng run is also checked against the packaged level-1 query graphs. With --chunk-size, a long split is parsed in
+chunks saved under data/processed/parsers/chunks_<split>_<parser>/; a rerun skips finished chunks (resume). Names are
+normalised name by name, so per-chunk conversion gives the same graphs as one pass.
 """
 import argparse
 import json
@@ -27,7 +29,9 @@ def captions_of(cfg, split):
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--parser", choices=sorted(PARSERS), required=True)
-    parser.add_argument("--split", choices=("train", "val"), default="val")
+    parser.add_argument("--split", choices=("train", "val", "test"), default="val",
+                        help="test is parsed only to have the data ready; nothing here evaluates it")
+    parser.add_argument("--chunk-size", type=int, help="Parse in resumable chunks of this many captions.")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--workers", type=int, default=16, help="sng only: worker processes")
@@ -36,26 +40,55 @@ def main() -> None:
     captions = captions_of(cfg, args.split)[:args.limit]
     texts = [text for _, text in captions]
     started = time.time()
-    if args.parser == "sng":
+    out_dir = resolve(cfg, "processed") / "parsers"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    suffix = f"{args.split}_{args.parser}" + (f"_limit{args.limit}" if args.limit else "")
+    build = lambda: (FactualParser(PARSERS[args.parser], batch_size=args.batch_size)  # noqa: E731
+                     if args.parser.startswith("factual") else LLMParser(PARSERS[args.parser], batch_size=args.batch_size))
+    if args.chunk_size and args.parser != "sng":
+        chunk_dir = out_dir / f"chunks_{suffix}"
+        chunk_dir.mkdir(exist_ok=True)
+        model, graphs, raw_text, generate, failed, loaded = None, [], [], 0., 0, started
+        for k, start in enumerate(range(0, len(captions), args.chunk_size)):
+            path = chunk_dir / f"chunk_{k:04d}.json"
+            if not path.exists():
+                if model is None:
+                    model = build()
+                    loaded = time.time()
+                began = time.time()
+                raw, text = model.parse(texts[start:start + args.chunk_size])
+                payload = {"caption_ids": [c for c, _ in captions[start:start + args.chunk_size]], "graphs": convert(raw),
+                           "raw": text, "failed": sum(bool(r.get("failed")) for r in raw),
+                           "seconds_generate": time.time() - began}
+                tmp = path.with_name(path.name + ".tmp")
+                tmp.write_text(json.dumps(payload), encoding="utf-8")
+                tmp.replace(path)
+                print(json.dumps({"chunk": k, "captions": len(payload["graphs"]),
+                                  "seconds": payload["seconds_generate"]}), flush=True)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            assert payload["caption_ids"] == [c for c, _ in captions[start:start + args.chunk_size]], path
+            graphs += payload["graphs"]
+            raw_text += payload["raw"]
+            generate += payload["seconds_generate"]
+            failed += payload["failed"]
+        device, parsed = "cuda (RTX 4090)", loaded + generate
+    elif args.parser == "sng":
         graphs, raw_text = parse_many(texts, args.workers), None
         device = f"cpu, {args.workers} processes"
     else:
-        model = (FactualParser(PARSERS[args.parser], batch_size=args.batch_size) if args.parser.startswith("factual")
-                 else LLMParser(PARSERS[args.parser], batch_size=args.batch_size))
+        model = build()
         loaded = time.time()
         raw, raw_text = model.parse(texts)
         parsed = time.time()
         graphs = convert(raw)
         failed = sum(bool(r.get("failed")) for r in raw)
         device = "cuda (RTX 4090)"
-    seconds = time.time() - started
-    out_dir = resolve(cfg, "processed") / "parsers"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    suffix = f"{args.split}_{args.parser}" + (f"_limit{args.limit}" if args.limit else "")
+    seconds = time.time() - started if not args.chunk_size else parsed - started
     (out_dir / f"query_graphs_{suffix}.json").write_text(
         json.dumps({cid: g for (cid, _), g in zip(captions, graphs)}), encoding="utf-8")
     timing = {"parser": args.parser, "checkpoint": PARSERS[args.parser], "split": args.split, "captions": len(captions),
               "device": device, "batch_size": None if args.parser == "sng" else args.batch_size,
+              "chunk_size": args.chunk_size,
               "seconds_total": seconds, "seconds_per_1000": 1000 * seconds / len(captions)}
     if raw_text is not None:
         (out_dir / f"raw_{suffix}.json").write_text(

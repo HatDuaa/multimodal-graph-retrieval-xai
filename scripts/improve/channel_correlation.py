@@ -16,6 +16,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.graph_store import GraphStore  # noqa: E402
 from src.train_graph_reranker import load_run_model  # noqa: E402
+from src.utils.config import load_config  # noqa: E402
 
 PAIRS = (("objects", "third"), ("clip", "third"), ("clip", "objects"))
 
@@ -60,9 +61,10 @@ def main() -> None:
     parser.add_argument("--group", nargs="+", action="append", required=True,
                         help="NAME RUN_DIR [RUN_DIR ...]; repeat for each group.")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--config", type=Path, help="Data configuration (default configs/default.yaml).")
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    store = GraphStore(splits=("val",))
+    store = GraphStore(load_config(args.config), splits=("val",))
     caption_ids = [str(cid) for cid in store.candidates("val")["caption_ids"]]
     result = {"split": "val", "n_queries": len(caption_ids), "per_run": {}, "aggregate": {}}
     for name, *runs in args.group:

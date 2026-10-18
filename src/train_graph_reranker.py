@@ -168,6 +168,8 @@ def build_parser():
     parser.add_argument("--stop-after-epoch", type=int,
                         help="Testing only: exit after saving this epoch's checkpoint, as if interrupted.")
     parser.add_argument("--eval-only", type=Path)
+    parser.add_argument("--config", type=Path,
+                        help="Data configuration (default configs/default.yaml), e.g. a repackaged data version.")
     return parser
 
 
@@ -278,7 +280,7 @@ def train(args, store, run_dir: Path, device, cfg=None):
 def main() -> None:
     faulthandler.enable()
     args = build_parser().parse_args()
-    cfg = load_config()
+    cfg = load_config(args.config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     store = GraphStore(cfg)
     if args.rewire_seed is not None:

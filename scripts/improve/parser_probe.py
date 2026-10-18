@@ -42,9 +42,9 @@ def channel(queries, images, ranked, temperature, workers):
     return np.asarray(rows)
 
 
-def vectors_for(cfg, node_texts, triple_texts):
-    """Level-1 val part cache, extended in memory by frozen-CLIP vectors of the texts it lacks."""
-    base, keys, encoder_name = load_features(resolve(cfg, "features") / "vg_coco_val_graph_parts")
+def vectors_for(cfg, node_texts, triple_texts, table=None):
+    """Level-1 val part cache (or another table), extended in memory by frozen-CLIP vectors of the texts it lacks."""
+    base, keys, encoder_name = load_features(table or resolve(cfg, "features") / "vg_coco_val_graph_parts")
     row = {key: i for i, key in enumerate(keys)}
     missing_nodes = [t for t in node_texts if f"node:{t}" not in row]
     missing_triples = [t for t in triple_texts if f"triple:{t}" not in row]
@@ -67,10 +67,14 @@ def main() -> None:
     parser.add_argument("--parser", required=True)
     parser.add_argument("--workers", type=int, default=24)
     parser.add_argument("--temperatures", default="0.02,0.05,0.1")
+    parser.add_argument("--queries", type=Path, help="Query graphs JSON (default: the parser's val parse).")
+    parser.add_argument("--table", type=Path, help="Part vector table stem (default: the level-1 val part cache).")
+    parser.add_argument("--out-name", help="Output file name (default probe_<parser>.json).")
     args = parser.parse_args()
     started = time.time()
     cfg = load_config()
-    queries = json.loads((resolve(cfg, "processed") / "parsers" / f"query_graphs_val_{args.parser}.json").read_text(encoding="utf-8"))
+    queries_path = args.queries or resolve(cfg, "processed") / "parsers" / f"query_graphs_val_{args.parser}.json"
+    queries = json.loads(queries_path.read_text(encoding="utf-8"))
     rows = json.loads((REPO_ROOT / "experiments" / "level1" / "clip_baseline" / "top50_val.json").read_text(encoding="utf-8"))
     caption_ids = [r["caption_id"] for r in rows]
     ranked, clip = [r["ranked"] for r in rows], np.asarray([r["scores"] for r in rows])
@@ -87,12 +91,13 @@ def main() -> None:
     image_parts = {i: instance_parts(g) for i, g in graphs.items()}
     node_texts = sorted({p for nodes, _ in query_parts for p in nodes} | {p for nodes, _ in image_parts.values() for p in nodes})
     triple_texts = sorted({p for _, ts in query_parts for p in ts} | {p for _, ts in image_parts.values() for p in ts})
-    vectors, row, encoded = vectors_for(cfg, node_texts, triple_texts)
+    vectors, row, encoded = vectors_for(cfg, node_texts, triple_texts, args.table)
     q_nodes = [lookup(vectors, row, "node", n) for n, _ in query_parts]
     q_triples = [lookup(vectors, row, "triple", t) for _, t in query_parts]
     i_nodes = {i: lookup(vectors, row, "node", p[0]) for i, p in image_parts.items()}
     i_triples = {i: lookup(vectors, row, "triple", p[1]) for i, p in image_parts.items()}
     report = {"parser": args.parser, "split": "val", "queries": len(caption_ids), "newly_encoded_parts": encoded,
+              "query_graphs": str(queries_path), "table": str(args.table or "data/features/vg_coco_val_graph_parts"),
               "queries_without_objects": sum(not n for n, _ in query_parts),
               "queries_without_triples": sum(not t for _, t in query_parts),
               "clip_only": ranked_metrics(clip, ranked, golds)[0], "temperatures": {}}
@@ -114,7 +119,7 @@ def main() -> None:
                          key=lambda m: (m["recall@1"], m["mrr"]))
     report["runtime_seconds"] = time.time() - started
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"probe_{args.parser}.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (OUT / (args.out_name or f"probe_{args.parser}.json")).write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps({k: report[k] for k in ("best", "reference_point")}), flush=True)
 
 

@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.graph_store import GraphStore  # noqa: E402
 from src.models.graph_reranker import GraphReranker, attention_pool, slot_similarity  # noqa: E402
 from src.train_graph_reranker import load_run_model  # noqa: E402
+from src.utils.config import load_config  # noqa: E402
 
 RUNS = Path("experiments/level1/gat")
 LEVEL1_RUNS = [RUNS / f"main_r3_seed{k}" for k in range(3)] + [RUNS / f"no_gat_r3_seed{k}" for k in range(3)]
@@ -62,9 +63,10 @@ def main() -> None:
     parser.add_argument("--step0", nargs="*", choices=sorted(STEP0), default=["phrase"],
                         help="Untrained reference models (u = 0: frozen CLIP parts).")
     parser.add_argument("--out", type=Path, default=Path("experiments/checks/part_similarity.json"))
+    parser.add_argument("--config", type=Path, help="Data configuration (default configs/default.yaml).")
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    store = GraphStore(splits=("val",))
+    store = GraphStore(load_config(args.config), splits=("val",))
     store.precompute()
     image_ids = sorted(store.graphs)[:300]
     batch = store.image_index.select([store.image_position[i] for i in image_ids]).to_batch(store.part_table(device), device)
