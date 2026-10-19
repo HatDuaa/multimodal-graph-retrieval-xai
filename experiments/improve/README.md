@@ -14,6 +14,9 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `parser-compare/` | Đợt 2, phần 1: sng / FACTUAL-T5 base, large / Qwen2.5-3B trên val (nội tại, probe, main_r3) |
 | `geometry-channel/` | Đợt 2, phần 2: kênh số lượng + vị trí từ khung VG, cộng vào main_r3 (không train) |
 | `factual-retrain/` | Bước 1d: train lại công thức main_r3 với đồ thị câu FACTUAL-T5 large (dữ liệu `factual_v1`) |
+| `fusion/` | Đợt 3, thí nghiệm 1: bỏ z-score (1a) và sàn cho z-score (1b), mốc main_factual_r3 |
+| `graph-matching/` | Đợt 3, thí nghiệm 2: ghép cả đồ thị (FGW, nhất quán node chung), probe không train |
+| `graph-dedup-audit/` | Audit làm sạch đồ thị ảnh: gộp khung trùng, gom nhóm theo vai trò (CPU, không train) |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -75,3 +78,14 @@ Tóm tắt:
 MRR 59,49 ± 0,29, so với 58,85 ± 0,18 (+0,64). Welch p ≈ 0,05 với 3 seed mỗi bên, và mọi seed đều cao hơn mọi seed
 của main_r3. Probe không train chỉ báo +0,12, nên lợi ích đến từ việc train trên đồ thị sạch hơn. Độ dồn của vector
 bộ ba vẫn còn (cosine 0,97–0,99). Test chưa chấm.
+
+## Đợt 3: chuẩn hoá, ghép cả đồ thị, làm sạch đồ thị ảnh (19–20/10/2026, branch `feat/fusion-and-graph-matching`)
+
+Mốc: main_factual_r3, R@1 47,23 ± 0,36.
+
+- **Thí nghiệm 1** (`fusion/REPORT.md`): bỏ z-score cho 47,48 ± 0,10; sàn z-score cho 47,31 ± 0,17. Sàn gỡ được một
+  phần độ dồn của vector bộ ba (cosine 0,98 → 0,88), nhưng thứ hạng không đổi.
+- **Thí nghiệm 2** (`graph-matching/REPORT.md`): FGW và nhất quán node chung, không train, đều không giúp (tối đa
+  +0,12 R@1).
+- **Audit** (`graph-dedup-audit/REPORT.md`): 11,8% node train có khung trùng cùng loại ở IoU ≥ 0,7. Gộp lại làm đồ
+  thị liền hơn và tăng tỉ lệ khớp số lượng (24,9% → 30,2%). Điểm nhất quán gần như không đổi. Chưa train.
