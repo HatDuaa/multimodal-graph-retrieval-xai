@@ -4,7 +4,9 @@ The packaged graphs (data/graphs/vg_coco_scene_graphs.jsonl) keep labels only. T
 code (iter_scene_graphs, open vocabulary) plus the source VG object ids; the rebuilt objects and relations must
 equal the packaged ones, so object i of a packaged graph gets the box of its source object. Boxes come from
 objects.json, or from the relationship endpoint for objects that appear in relationships.json only.
-Writes data/processed/geometry/boxes_<split>.json: {image_id: {"width", "height", "boxes": [[x, y, w, h], ...]}}.
+Writes data/processed/geometry/boxes_<split>.json: {image_id: {"width", "height", "boxes": [[x, y, w, h], ...]}};
+with --synsets, data/processed/geometry/objects_<split>.json instead, which adds "synsets" (the first VG synset of each
+object, or null).
 """
 import argparse
 import json
@@ -20,6 +22,7 @@ from src.utils.config import load_config, resolve  # noqa: E402
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--split", choices=("train", "val"), default="val")
+    parser.add_argument("--synsets", action="store_true")
     args = parser.parse_args()
     started = time.time()
     cfg = load_config()
@@ -41,17 +44,22 @@ def main() -> None:
         reference = packaged[image_id]
         assert [(o["id"], o["name"]) for o in rebuilt["objects"]] == [(o["id"], o["name"]) for o in reference["objects"]], image_id
         assert rebuilt["relations"] == reference["relations"], image_id
-        box_of = {}
+        box_of, synset_of = {}, {}
         for rel in entry_rels.get("relationships", []):
             for endpoint in (rel.get("subject", {}), rel.get("object", {})):
                 if "x" in endpoint:
                     box_of.setdefault(endpoint["object_id"], [endpoint["x"], endpoint["y"], endpoint["w"], endpoint["h"]])
+                    synset_of.setdefault(endpoint["object_id"], (endpoint.get("synsets") or [None])[0])
         for obj in entry_objects.get("objects", []):
             box_of[obj["object_id"]] = [obj["x"], obj["y"], obj["w"], obj["h"]]
+            synset_of[obj["object_id"]] = (obj.get("synsets") or [None])[0]
         boxes = [box_of.get(o["source_object_id"]) for o in rebuilt["objects"]]
         missing_boxes += sum(b is None for b in boxes)
         out[image_id] = {"width": size[image_id][0], "height": size[image_id][1], "boxes": boxes}
-    path = resolve(cfg, "processed") / "geometry" / f"boxes_{args.split}.json"
+        if args.synsets:
+            out[image_id]["synsets"] = [synset_of.get(o["source_object_id"]) for o in rebuilt["objects"]]
+    name = f"objects_{args.split}.json" if args.synsets else f"boxes_{args.split}.json"
+    path = resolve(cfg, "processed") / "geometry" / name
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out), encoding="utf-8")
     print(json.dumps({"split": args.split, "images": len(out), "objects": sum(len(v["boxes"]) for v in out.values()),
