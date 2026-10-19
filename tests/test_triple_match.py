@@ -144,3 +144,48 @@ def test_explanations_follow_the_new_scoring():
     assert abs(level['cosine'] - 1) < 1e-5
     assert [n['alpha'] for n in level['query_nodes']] == pytest.approx([.5, .5])
     assert abs(slot_similarity(torch.tensor(1.)) - 1) < 1e-7
+
+
+def test_raw_fusion_is_a_weighted_sum_with_known_mean_fill():
+    from src.models.graph_reranker import fuse_raw
+    clip = torch.tensor([[.30, .28, .25]])
+    objects = torch.tensor([[.5, float('nan'), .3]])
+    triples = torch.full((1, 3), float('nan'))
+    weights = torch.tensor([[.5, .3, .2]])
+    fused, details = fuse_raw(clip, objects, triples, weights)
+    expected = .5 * clip + .3 * torch.tensor([[.5, .4, .3]])
+    torch.testing.assert_close(fused, expected)
+    assert details['object_active'].all() and not details['triple_active'].any()
+
+
+def test_zscore_floor_stops_stretching_flat_channels():
+    from src.models.graph_reranker import zscore_tensor
+    values = torch.tensor([[1.00, 1.01, 0.99]])
+    plain, _ = zscore_tensor(values)
+    floored, _ = zscore_tensor(values, floor=.1)
+    assert plain.abs().max() > 1 and floored.abs().max() < .2
+    torch.testing.assert_close(zscore_tensor(values, floor=0.)[0], plain)
+
+
+def test_raw_fusion_starts_like_the_zscore_fusion():
+    scale = (.02, .04, .01)
+    model = GraphReranker(fusion='raw', fusion_scale=scale)
+    raw = torch.tensor([.6, .28, .12]) / torch.tensor(scale)
+    torch.testing.assert_close(torch.softmax(model.weight_bias, -1), raw / raw.sum())
+    torch.testing.assert_close(model.loss_temperature(), 1 / raw.sum())
+    with torch.no_grad():
+        model.log_temperature.fill_(-10.)
+    assert abs(float(model.loss_temperature()) - .005) < 1e-9
+    assert abs(float(GraphReranker().loss_temperature()) - 1.) < 1e-9
+    with pytest.raises(ValueError):
+        GraphReranker(fusion='raw', zscore_floor=(.1, .1, .1))
+
+
+def test_fusion_options_train_with_finite_gradients():
+    for kwargs in (dict(fusion='raw', fusion_scale=(.02, .04, .01)), dict(zscore_floor=(.01, .01, .01))):
+        model, data = GraphReranker(dropout=0., **kwargs), batch()
+        model.set_epoch(2)
+        loss(model, data).backward()
+        grads = [p.grad for p in model.parameters() if p.grad is not None]
+        assert grads and all(torch.isfinite(g).all() for g in grads)
+        assert model.weight_bias.grad.norm() > 0 and model.u.weight.grad.norm() > 0

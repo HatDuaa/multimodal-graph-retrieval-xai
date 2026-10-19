@@ -10,8 +10,12 @@ from torch_geometric.nn import GATv2Conv
 from torch_geometric.utils import to_dense_batch
 
 
-def zscore_tensor(values, eps=1e-6):
-    """Population z-score with masked missing values and finite inactive gradients."""
+def zscore_tensor(values, eps=1e-6, floor=0.):
+    """Population z-score with masked missing values and finite inactive gradients.
+
+    floor > 0 divides by max(std, floor): a query whose candidates barely differ in this channel is no longer
+    stretched to unit spread.
+    """
     known = torch.isfinite(values)
     count = known.sum(-1, keepdim=True)
     clean = torch.where(known, values, 0.)
@@ -21,14 +25,40 @@ def zscore_tensor(values, eps=1e-6):
     active = (count >= 2) & (var >= eps ** 2)
     # sqrt(0) has an infinite derivative even behind a torch.where mask.
     std = var.clamp_min(eps ** 2).sqrt()
+    if floor:
+        std = std.clamp_min(floor)
     z = torch.where(active, centered / (std + eps), 0.)
     return z, active.squeeze(-1)
 
 
-def fuse_tensor(clip, objects, triples, weights):
-    z_clip, _ = zscore_tensor(clip)
-    z_obj, obj_active = zscore_tensor(objects)
-    z_tri, tri_active = zscore_tensor(triples)
+def fill_known_mean(values):
+    """Missing scores (nan) take the mean of the query's known scores; rows without any become 0."""
+    known = torch.isfinite(values)
+    clean = torch.where(known, values, 0.)
+    mean = clean.sum(-1, keepdim=True) / known.sum(-1, keepdim=True).clamp_min(1)
+    return torch.where(known, clean, mean)
+
+
+def fuse_raw(clip, objects, triples, weights):
+    """fused = a * CLIP + b * S_obj + c * S_tri on raw scores (no z-score).
+
+    Cross-entropy over a query's candidates ignores a constant added to all of them, so neither the missing-score
+    fill (the known mean, which z-scoring maps to 0 as well) nor an inactive channel moves the ranking.
+    """
+    _, obj_active = zscore_tensor(objects)
+    _, tri_active = zscore_tensor(triples)
+    obj, tri = fill_known_mean(objects), fill_known_mean(triples)
+    graph = weights[:, 1:2] * obj + weights[:, 2:3] * tri
+    fused = weights[:, :1] * clip + graph
+    center = lambda x: x - x.mean(-1, keepdim=True)  # noqa: E731
+    return fused, {"z_clip": center(clip), "z_objects": center(obj), "z_triples": center(tri), "graph": graph,
+                   "object_active": obj_active, "triple_active": tri_active, "weights": weights}
+
+
+def fuse_tensor(clip, objects, triples, weights, floors=(0., 0., 0.)):
+    z_clip, _ = zscore_tensor(clip, floor=floors[0])
+    z_obj, obj_active = zscore_tensor(objects, floor=floors[1])
+    z_tri, tri_active = zscore_tensor(triples, floor=floors[2])
     mix = (weights[:, 1:2] * z_obj + weights[:, 2:3] * z_tri) / weights[:, 1:].sum(-1, keepdim=True)
     graph_both, _ = zscore_tensor(mix)
     graph = torch.where((obj_active & tri_active)[:, None], graph_both,
@@ -103,6 +133,7 @@ def graph_level_score(query, query_mask, images, image_mask, candidate_index):
 
 
 TRIPLE_MATCHES = ("phrase", "factorized")
+FUSIONS = ("zscore", "raw")
 
 
 class GraphReranker(nn.Module):
@@ -115,8 +146,13 @@ class GraphReranker(nn.Module):
     """
 
     def __init__(self, adaptive_weights=True, use_gat=True, use_triple_channel=True,
-                 use_edges=True, query_graph_encoder=True, dropout=0.1, triple_match="phrase", graph_channel=False):
+                 use_edges=True, query_graph_encoder=True, dropout=0.1, triple_match="phrase", graph_channel=False,
+                 fusion="zscore", fusion_scale=None, zscore_floor=None):
         super().__init__()
+        if fusion not in FUSIONS:
+            raise ValueError(f"fusion must be one of {FUSIONS}")
+        if zscore_floor is not None and fusion != "zscore":
+            raise ValueError("zscore_floor applies to the z-score fusion only")
         if triple_match not in TRIPLE_MATCHES:
             raise ValueError(f"triple_match must be one of {TRIPLE_MATCHES}")
         if graph_channel and triple_match != "phrase":
@@ -124,7 +160,8 @@ class GraphReranker(nn.Module):
         self.options = dict(adaptive_weights=adaptive_weights, use_gat=use_gat,
                             use_triple_channel=use_triple_channel, use_edges=use_edges,
                             query_graph_encoder=query_graph_encoder, dropout=dropout,
-                            triple_match=triple_match, graph_channel=graph_channel)
+                            triple_match=triple_match, graph_channel=graph_channel, fusion=fusion,
+                            fusion_scale=fusion_scale, zscore_floor=zscore_floor)
         self.p_node = nn.Linear(512, 256)
         self.p_edge = nn.Linear(512, 256)
         self.gat1 = GATv2Conv(256, 64, heads=4, edge_dim=256, fill_value=0., dropout=dropout)
@@ -140,6 +177,13 @@ class GraphReranker(nn.Module):
         self.log_temperature = nn.Parameter(torch.tensor(0.))
         self.weight_map = nn.Parameter(torch.zeros(3, 512), requires_grad=adaptive_weights)
         self.weight_bias = nn.Parameter(torch.log(torch.tensor([.60, .28, .12])))
+        if fusion == "raw" and fusion_scale is not None:
+            # Step-0 equivalence with the z-score fusion: z_k = s_k / std_k, so raw weights proportional to
+            # base_k / std_k (std measured on train), and the overall scale 1 / sum(base_k / std_k) moves into T.
+            raw = torch.tensor([.60, .28, .12]) / torch.tensor(fusion_scale, dtype=torch.float32)
+            with torch.no_grad():
+                self.weight_bias.copy_(torch.log(raw / raw.sum()))
+                self.log_temperature.fill_(-math.log(float(raw.sum())))
         if graph_channel:
             # Zero init: both sides start from mean pooling of their node vectors.
             self.u_pool_query = nn.Parameter(torch.zeros(512))
@@ -152,7 +196,8 @@ class GraphReranker(nn.Module):
         return self.log_tau_triples.exp().clamp(.01, 1.)
 
     def loss_temperature(self):
-        return self.log_temperature.exp().clamp(.05, 5.)
+        # Raw CLIP cosines differ by about 0.02 inside a top-50, so the raw fusion needs a much lower floor.
+        return self.log_temperature.exp().clamp(.005 if self.options['fusion'] == 'raw' else .05, 5.)
 
     def set_epoch(self, epoch):
         self.weight_map.requires_grad_(epoch > 1 and self.options['adaptive_weights'])
@@ -230,7 +275,10 @@ class GraphReranker(nn.Module):
             weights = weights.clone()
             weights[:, 2] = 0.
             weights = weights / weights.sum(-1, keepdim=True)
-        fused, details = fuse_tensor(batch['clip'], objects, triples, weights)
+        if self.options['fusion'] == 'raw':
+            fused, details = fuse_raw(batch['clip'], objects, triples, weights)
+        else:
+            fused, details = fuse_tensor(batch['clip'], objects, triples, weights, self.options['zscore_floor'] or (0., 0., 0.))
         details.update(objects=objects, triples=triples, fused=fused, **pooled)
         if return_encoded:
             details.update(encoded_query=queries, encoded_images=images)

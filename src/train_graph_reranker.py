@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.graph_store import GraphStore
 from src.eval.metrics import evaluate
-from src.models.graph_reranker import TRIPLE_MATCHES, GraphReranker
+from src.models.graph_reranker import FUSIONS, TRIPLE_MATCHES, GraphReranker
 from src.utils.config import load_config, resolve
 from src.utils.seed import set_seed
 
@@ -126,7 +126,9 @@ def build_model(options, device):
     return GraphReranker(options["adaptive_weights"], options["use_gat"], options["use_triple_channel"],
                          options["use_edges"], options["query_graph_encoder"],
                          triple_match=options.get("triple_match", "phrase"),
-                         graph_channel=options.get("graph_channel", False)).to(device)
+                         graph_channel=options.get("graph_channel", False),
+                         fusion=options.get("fusion", "zscore"), fusion_scale=options.get("fusion_scale"),
+                         zscore_floor=options.get("zscore_floor")).to(device)
 
 
 def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt"):
@@ -159,6 +161,12 @@ def build_parser():
                         help="phrase: one vector per triple (level 1); factorized: c(s) * c(p) * c(o).")
     parser.add_argument("--graph-channel", action=argparse.BooleanOptionalAction, default=False,
                         help="Replace the triple channel by the cosine of attention-pooled graph vectors.")
+    parser.add_argument("--fusion", choices=FUSIONS, default="zscore",
+                        help="zscore: z-score every channel per query (level 1); raw: a*CLIP + b*S_obj + c*S_tri.")
+    parser.add_argument("--fusion-scale", type=float, nargs=3, metavar=("CLIP", "OBJ", "TRI"),
+                        help="raw fusion: per-channel train std at step 0, to start equivalent to the z-score fusion.")
+    parser.add_argument("--zscore-floor", type=float, nargs=3, metavar=("CLIP", "OBJ", "TRI"),
+                        help="z-score fusion: divide by max(std, floor) per channel (floors from train statistics).")
     parser.add_argument("--runs-root", default="level1/gat",
                         help="Run directory parent, relative to the experiments path.")
     parser.add_argument("--rewire-seed", type=int,
