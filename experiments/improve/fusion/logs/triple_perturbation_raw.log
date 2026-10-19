@@ -1,0 +1,12 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+baseline experiments/improve/fusion/raw/raw_factual_r3_seed0 {"all": 0.4736, "with_triple": 0.4779, "triple_only_with_triple": 0.0729, "third_only_all": 0.0799}
+baseline experiments/improve/fusion/raw/raw_factual_r3_seed1 {"all": 0.4756, "with_triple": 0.48, "triple_only_with_triple": 0.0751, "third_only_all": 0.0821}
+baseline experiments/improve/fusion/raw/raw_factual_r3_seed2 {"all": 0.4752, "with_triple": 0.479, "triple_only_with_triple": 0.0685, "third_only_all": 0.0756}
+verb_swap experiments/improve/fusion/raw/raw_factual_r3_seed0 {"all": 0.4647, "with_triple": 0.4687, "triple_only_with_triple": 0.0532, "third_only_all": 0.0608}
+verb_swap experiments/improve/fusion/raw/raw_factual_r3_seed1 {"all": 0.4667, "with_triple": 0.4708, "triple_only_with_triple": 0.0501, "third_only_all": 0.0577}
+verb_swap experiments/improve/fusion/raw/raw_factual_r3_seed2 {"all": 0.4654, "with_triple": 0.469, "triple_only_with_triple": 0.048, "third_only_all": 0.0557}
+subject_object_swap experiments/improve/fusion/raw/raw_factual_r3_seed0 {"all": 0.4643, "with_triple": 0.4683, "triple_only_with_triple": 0.0505, "third_only_all": 0.0581}
+subject_object_swap experiments/improve/fusion/raw/raw_factual_r3_seed1 {"all": 0.4671, "with_triple": 0.4713, "triple_only_with_triple": 0.0538, "third_only_all": 0.0613}
+subject_object_swap experiments/improve/fusion/raw/raw_factual_r3_seed2 {"all": 0.4671, "with_triple": 0.4707, "triple_only_with_triple": 0.0457, "third_only_all": 0.0535}
+wrote experiments/improve/fusion/raw/triple_perturbation.json in 28s
