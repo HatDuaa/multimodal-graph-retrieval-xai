@@ -128,12 +128,25 @@ def build_model(options, device):
                          triple_match=options.get("triple_match", "phrase"),
                          graph_channel=options.get("graph_channel", False),
                          fusion=options.get("fusion", "zscore"), fusion_scale=options.get("fusion_scale"),
-                         zscore_floor=options.get("zscore_floor")).to(device)
+                         zscore_floor=options.get("zscore_floor"), edge_geometry=options.get("edge_geometry", False),
+                         completion_edges=options.get("knn_edges", 0) > 0,
+                         global_node=options.get("global_node", False)).to(device)
 
 
-def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt"):
-    """Rebuild a finished run's model from its config.json flags and load one of its checkpoints."""
+def structure_options(options):
+    """GraphStore structure options of a run (argparse namespace or config.json args)."""
+    options = options if isinstance(options, dict) else vars(options)
+    return {"knn_edges": options.get("knn_edges", 0), "global_node": options.get("global_node", False)}
+
+
+def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt", store=None):
+    """Rebuild a finished run's model from its config.json flags and load one of its checkpoints.
+
+    With a GraphStore, also set the store's graph structure to the run's (completion edges, global node).
+    """
     options = json.loads((run_dir / "config.json").read_text(encoding="utf-8"))["args"]
+    if store is not None:
+        store.set_structure(**structure_options(options))
     model = build_model(options, device)
     state = torch.load(run_dir / checkpoint, map_location=device, weights_only=False)
     model.load_state_dict(state["model"])
@@ -167,6 +180,13 @@ def build_parser():
                         help="raw fusion: per-channel train std at step 0, to start equivalent to the z-score fusion.")
     parser.add_argument("--zscore-floor", type=float, nargs=3, metavar=("CLIP", "OBJ", "TRI"),
                         help="z-score fusion: divide by max(std, floor) per channel (floors from train statistics).")
+    parser.add_argument("--edge-geometry", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add an MLP of the six box-geometry numbers of each image edge to its edge vector.")
+    parser.add_argument("--knn-edges", type=int, default=0, metavar="K",
+                        help="Complete image graphs: each node receives an edge from its K nearest nodes (box "
+                             "centres), then bridges join the remaining components; added edges are not triples.")
+    parser.add_argument("--global-node", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add one global node per graph (image and sentence) linked both ways to every node.")
     parser.add_argument("--runs-root", default="level1/gat",
                         help="Run directory parent, relative to the experiments path.")
     parser.add_argument("--rewire-seed", type=int,
@@ -290,7 +310,7 @@ def main() -> None:
     args = build_parser().parse_args()
     cfg = load_config(args.config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    store = GraphStore(cfg)
+    store = GraphStore(cfg, structure=structure_options(args))
     if args.rewire_seed is not None:
         store.use_rewired_graphs(args.rewire_seed)
     run_dir = resolve(cfg, "experiments") / args.runs_root / args.run_name

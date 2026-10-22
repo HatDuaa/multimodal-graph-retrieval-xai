@@ -143,11 +143,23 @@ class GraphReranker(nn.Module):
     normalize(CLIP phrase + U triple_mlp([h_s; e; h_o])); "factorized" matches (subject node, CLIP relation,
     object node) slot by slot. graph_channel=True replaces the triple channel by the cosine of attention-pooled
     query and image graph vectors.
+
+    Full image graphs (experiment 3; batches from GraphStore with structure options):
+    - edge_geometry: the six box-geometry numbers of an edge (src/graph/structure.py) go through a small MLP and
+      are added to its edge vector e (GAT and triple_mlp); edges without boxes (sentence side, global links) add 0.
+      The MLP's last layer starts at zero, so step 0 equals the model without geometry.
+    - completion_edges: added edges (k-nearest, bridges) take a learned "[none]" predicate vector through p_edge
+      instead of a CLIP relation vector; they carry GAT messages only and are never triples.
+    - global_node: one node per graph, its input vector the normalized mean of the graph's scorable node vectors
+      (so it already summarizes the graph at the first GAT layer), linked both ways to every node by edges with a
+      learned "[global]" predicate vector; it is not an object for the object channel.
+    record_attention = True keeps the GAT attention of the last encode calls in self.attention.
     """
 
     def __init__(self, adaptive_weights=True, use_gat=True, use_triple_channel=True,
                  use_edges=True, query_graph_encoder=True, dropout=0.1, triple_match="phrase", graph_channel=False,
-                 fusion="zscore", fusion_scale=None, zscore_floor=None):
+                 fusion="zscore", fusion_scale=None, zscore_floor=None, edge_geometry=False, completion_edges=False,
+                 global_node=False):
         super().__init__()
         if fusion not in FUSIONS:
             raise ValueError(f"fusion must be one of {FUSIONS}")
@@ -161,7 +173,8 @@ class GraphReranker(nn.Module):
                             use_triple_channel=use_triple_channel, use_edges=use_edges,
                             query_graph_encoder=query_graph_encoder, dropout=dropout,
                             triple_match=triple_match, graph_channel=graph_channel, fusion=fusion,
-                            fusion_scale=fusion_scale, zscore_floor=zscore_floor)
+                            fusion_scale=fusion_scale, zscore_floor=zscore_floor, edge_geometry=edge_geometry,
+                            completion_edges=completion_edges, global_node=global_node)
         self.p_node = nn.Linear(512, 256)
         self.p_edge = nn.Linear(512, 256)
         self.gat1 = GATv2Conv(256, 64, heads=4, edge_dim=256, fill_value=0., dropout=dropout)
@@ -188,6 +201,16 @@ class GraphReranker(nn.Module):
             # Zero init: both sides start from mean pooling of their node vectors.
             self.u_pool_query = nn.Parameter(torch.zeros(512))
             self.u_pool_image = nn.Parameter(torch.zeros(512))
+        if edge_geometry:
+            self.geometry_mlp = nn.Sequential(nn.Linear(6, 64), nn.ReLU(), nn.Linear(64, 256))
+            nn.init.zeros_(self.geometry_mlp[2].weight)
+            nn.init.zeros_(self.geometry_mlp[2].bias)
+        # Learned predicate vectors of added edges, unit norm at start like the CLIP relation vectors they replace.
+        if completion_edges:
+            self.none_predicate = nn.Parameter(F.normalize(torch.randn(512), dim=0))
+        if global_node:
+            self.global_predicate = nn.Parameter(F.normalize(torch.randn(512), dim=0))
+        self.record_attention, self.attention = False, []
 
     def tau_objects(self):
         return self.log_tau_objects.exp().clamp(.01, 1.)
@@ -206,31 +229,68 @@ class GraphReranker(nn.Module):
     def uses_third_channel(self):
         return self.options['use_triple_channel'] and (self.options['use_edges'] or self.options['graph_channel'])
 
+    def edge_vectors(self, graphs):
+        """p_edge of every edge's predicate vector (+ geometry), and the labelled edges' positions (None: all)."""
+        kind, labelled = getattr(graphs, 'edge_kind', None), getattr(graphs, 'labelled_index', None)
+        edge_attr = self.p_edge(graphs.edge_attr)
+        if kind is not None:
+            # torch.where broadcasts the two learned vectors: their gradient is a plain sum over edges, unlike a
+            # gather of a 3-row table by edge kind, whose backward sorts ~300k duplicate indices per micro-batch.
+            added = edge_attr.new_zeros(256)
+            if self.options['completion_edges']:
+                added = torch.where((kind == 1)[:, None], self.p_edge(self.none_predicate), added)
+            if self.options['global_node']:
+                added = torch.where((kind == 2)[:, None], self.p_edge(self.global_predicate), added)
+            edge_attr = added.expand(len(kind), 256).index_put((labelled,), edge_attr)
+        geometry = getattr(graphs, 'edge_geometry', None)
+        if self.options['edge_geometry'] and geometry is not None:
+            known = torch.isfinite(geometry[:, :1])
+            edge_attr = edge_attr + torch.where(known, self.geometry_mlp(torch.nan_to_num(geometry)), 0.)
+        return edge_attr, labelled
+
+    def gat(self, layer, h, edges, attrs):
+        if not self.record_attention:
+            return layer(h, edges, attrs)
+        out, (index, alpha) = layer(h, edges, attrs, return_attention_weights=True)
+        self.attention.append((index.detach(), alpha.detach()))
+        return out
+
     def encode(self, graphs: Batch, query=False):
         nodes, triples = graphs.x, graphs.triple_f
+        global_mask = getattr(graphs, 'global_mask', None)
+        kind = getattr(graphs, 'edge_kind', None)
+        if (kind is not None and not (self.options['completion_edges'] or self.options['global_node'])) or \
+                (global_mask is not None and not self.options['global_node']):
+            raise ValueError('batch has added edges or global nodes that this model was not built for')
+        if global_mask is not None:
+            scorable = graphs.part_mask.to(nodes.dtype)[:, None]
+            sums = nodes.new_zeros((graphs.num_graphs, nodes.shape[1])).index_add(0, graphs.batch, nodes * scorable)
+            nodes = torch.where(global_mask[:, None], F.normalize(sums, dim=-1).index_select(0, graphs.batch), nodes)
         phrase = self.options['triple_match'] == 'phrase' and not self.options['graph_channel']
+        src, dst = graphs.edge_index
+        if kind is not None:
+            src, dst = src[graphs.labelled_index], dst[graphs.labelled_index]
         if not query or self.options['query_graph_encoder']:
             h = self.p_node(nodes)
-            edge_attr = self.p_edge(graphs.edge_attr)
+            edge_attr, labelled = self.edge_vectors(graphs)
             if self.options['use_gat']:
                 edges = graphs.edge_index if self.options['use_edges'] else graphs.edge_index[:, :0]
                 attrs = edge_attr if self.options['use_edges'] else edge_attr[:0]
-                h = self.dropout(F.elu(self.gat1(h, edges, attrs)))
-                h = self.dropout(F.elu(self.gat2(h, edges, attrs)))
+                h = self.dropout(F.elu(self.gat(self.gat1, h, edges, attrs)))
+                h = self.dropout(F.elu(self.gat(self.gat2, h, edges, attrs)))
             nodes = F.normalize(nodes + self.u(h), dim=-1)
             if phrase and self.options['use_triple_channel'] and self.options['use_edges']:
-                src, dst = graphs.edge_index
-                g = self.triple_mlp(torch.cat((h[src], edge_attr, h[dst]), -1))
+                e = edge_attr if labelled is None else edge_attr[labelled]
+                g = self.triple_mlp(torch.cat((h[src], e, h[dst]), -1))
                 triples = F.normalize(triples + self.u(g), dim=-1)
         if self.options['triple_match'] == 'factorized':
             # Subject and object take the same encoded node vectors as the object channel; the predicate keeps its
             # frozen CLIP relation vector (no learned projection, so it cannot collapse).
-            src, dst = graphs.edge_index
             triples = torch.stack((nodes[src], graphs.edge_attr, nodes[dst]), -2)
         node_batch = graphs.batch[graphs.part_mask]
         nodes, node_mask = to_dense_batch(nodes[graphs.part_mask], node_batch, batch_size=graphs.num_graphs)
         if len(triples):
-            edge_batch = graphs.batch[graphs.edge_index[0]]
+            edge_batch = graphs.batch[src]
             triples, triple_mask = to_dense_batch(triples, edge_batch, batch_size=graphs.num_graphs)
         else:
             triples = nodes.new_zeros((graphs.num_graphs, 1, *triples.shape[1:]))
