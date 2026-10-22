@@ -69,7 +69,7 @@ def main() -> None:
     result = {"split": "val", "n_queries": len(caption_ids), "per_run": {}, "aggregate": {}}
     for name, *runs in args.group:
         for run in runs:
-            result["per_run"][run] = run_correlations(load_run_model(Path(run), device)[0], store, caption_ids, device)
+            result["per_run"][run] = run_correlations(load_run_model(Path(run), device, store=store)[0], store, caption_ids, device)
             print(name, run, json.dumps(result["per_run"][run]), flush=True)
         keys = [k for k in result["per_run"][runs[0]] if "~" in k] + ["third_channel_active"]
         result["aggregate"][name] = {}

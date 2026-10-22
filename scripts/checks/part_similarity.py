@@ -67,15 +67,18 @@ def main() -> None:
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     store = GraphStore(load_config(args.config), splits=("val",))
-    store.precompute()
     image_ids = sorted(store.graphs)[:300]
-    batch = store.image_index.select([store.image_position[i] for i in image_ids]).to_batch(store.part_table(device), device)
     models = {("step0_frozen_clip" if kind == "phrase" else f"step0_{kind}"):
               GraphReranker(adaptive_weights=False, **STEP0[kind]).to(device).eval() for kind in args.step0}
-    for run in args.runs:
-        models[run.name] = load_run_model(run, device)[0]
+    models.update({run.name: run for run in args.runs})
     result = {"images": len(image_ids), "pairs": 3000}
     for name, model in models.items():
+        if isinstance(model, Path):
+            model = load_run_model(model, device, store=store)[0]  # also sets the run's graph structure
+        else:
+            store.set_structure()
+        store.precompute()
+        batch = store.image_index.select([store.image_position[i] for i in image_ids]).to_batch(store.part_table(device), device)
         result[name] = measure(model, batch)
         print(name, json.dumps(result[name]), flush=True)
     args.out.parent.mkdir(parents=True, exist_ok=True)

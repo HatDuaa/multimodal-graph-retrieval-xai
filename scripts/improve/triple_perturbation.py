@@ -139,11 +139,13 @@ def main() -> None:
     added = add_part_vectors(store, cfg, set().union(*(part_keys(v) for v in variants.values())), device)
     use_queries(store, original)
     caption_ids = [str(cid) for cid in store.candidates("val")["caption_ids"]]
-    has_triple = [store.query_index.edge_counts[store.query_position[cid]] > 0 for cid in caption_ids]
+    models = {str(run): load_run_model(Path(run), device, store=store)[0] for run in args.runs}  # sets the runs' graph structure
+    store.precompute()
+    labelled = store.query_index.labelled_counts()  # triples only, not the added edges of a global node
+    has_triple = [labelled[store.query_position[cid]] > 0 for cid in caption_ids]
     result = {"split": "val", "verb_seed": args.verb_seed, "config": str(args.config or "configs/default.yaml"), "train_predicate_vocabulary": len(words),
               "new_part_vectors": added, "n_queries": len(caption_ids), "n_with_triple": int(sum(has_triple)),
               "runs": [str(r) for r in args.runs], "per_run": {}, "aggregate": {}}
-    models = {str(run): load_run_model(Path(run), device)[0] for run in args.runs}
     if args.step0:
         models["step0_frozen_clip"] = GraphReranker(adaptive_weights=False).to(device).eval()
         result["runs"].append("step0_frozen_clip")
