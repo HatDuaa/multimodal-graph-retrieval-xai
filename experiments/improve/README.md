@@ -17,6 +17,7 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `fusion/` | Đợt 3, thí nghiệm 1: bỏ z-score (1a) và sàn cho z-score (1b), mốc main_factual_r3 |
 | `graph-matching/` | Đợt 3, thí nghiệm 2: ghép cả đồ thị (FGW, nhất quán node chung), probe không train |
 | `graph-dedup-audit/` | Audit làm sạch đồ thị ảnh: gộp khung trùng, gom nhóm theo vai trò (CPU, không train) |
+| `full-graph/` | Đợt 4, thí nghiệm 3: train trên graph ảnh gộp trùng + hình học cạnh + kNN liền + node tổng, mốc 1a |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -89,3 +90,22 @@ Mốc: main_factual_r3, R@1 47,23 ± 0,36.
   +0,12 R@1).
 - **Audit** (`graph-dedup-audit/REPORT.md`): 11,8% node train có khung trùng cùng loại ở IoU ≥ 0,7. Gộp lại làm đồ
   thị liền hơn và tăng tỉ lệ khớp số lượng (24,9% → 30,2%). Điểm nhất quán gần như không đổi. Chưa train.
+
+## Đợt 4: graph ảnh đầy đủ (22–23/10/2026, branch `feat/full-image-graph`)
+
+Mốc: 1a `raw_factual_r3`, R@1 47,48 ± 0,10. Theo kế hoạch Lộc chốt ngày 22/10, chỉ chạy một bản gộp cả 4 thay đổi:
+
+- gộp khung trùng (dữ liệu `merge_v1`);
+- 6 đặc trưng hình học trên mọi cạnh;
+- nối mỗi node tới 5 node gần nhất cùng cầu nối cho graph liền, các cạnh này mang vị từ `[none]` và không phải bộ ba;
+- một node tổng cho mỗi ảnh và mỗi câu.
+
+Kết quả (`full-graph/REPORT.md`):
+
+- `fullgraph_factual_r3` đạt R@1 48,38 ± 0,17 (+0,90, Welch p = 0,003) và MRR 60,51 ± 0,17 (+0,79). Mọi seed đều
+  cao hơn mọi seed của mốc.
+- GAT nhận gradient gấp 2,5 lần.
+- Vector bộ ba bớt dồn (cosine 0,96 → 0,87).
+- Kênh bộ ba đứng riêng mạnh gần gấp đôi (R@1 7,2 → 13,1).
+- Mỗi epoch chậm gấp khoảng 2,2 lần.
+- Chưa tách được phần nào có tác dụng (chưa có ablation, chưa có đối chứng tắt GAT). Test chưa chấm.

@@ -1,0 +1,5 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+experiments/improve/full-graph/fullgraph_factual_r3_seed0 [{"labelled": 0.05147840312281304, "completion": 0.22645126981048475, "global": 0.2705512197246365, "self": 0.45151910808935214}, {"labelled": 0.033706184353186563, "completion": 0.35099683046721103, "global": 0.12238571334073205, "self": 0.49291127198601326}]
+experiments/improve/full-graph/fullgraph_factual_r3_seed1 [{"labelled": 0.07248523820663769, "completion": 0.2026935459061594, "global": 0.2832108716669266, "self": 0.4416103463774009}, {"labelled": 0.03051098097293532, "completion": 0.29415448402054073, "global": 0.20445360577084506, "self": 0.47088092930890263}]
+experiments/improve/full-graph/fullgraph_factual_r3_seed2 [{"labelled": 0.04154189355235373, "completion": 0.15252504065049935, "global": 0.43913753223492225, "self": 0.36679553425439854}, {"labelled": 0.034865066675392964, "completion": 0.37805712944267184, "global": 0.12808616218527466, "self": 0.4589916418110208}]
