@@ -18,6 +18,7 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `graph-matching/` | Đợt 3, thí nghiệm 2: ghép cả đồ thị (FGW, nhất quán node chung), probe không train |
 | `graph-dedup-audit/` | Audit làm sạch đồ thị ảnh: gộp khung trùng, gom nhóm theo vai trò (CPU, không train) |
 | `full-graph/` | Đợt 4, thí nghiệm 3: train trên graph ảnh gộp trùng + hình học cạnh + kNN liền + node tổng, mốc 1a |
+| `group-count/` | Đợt 4, thí nghiệm 4: node nhóm + số lượng + bảng g trong kênh vật thể, trên nền fullgraph |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -109,3 +110,21 @@ Kết quả (`full-graph/REPORT.md`):
 - Kênh bộ ba đứng riêng mạnh gần gấp đôi (R@1 7,2 → 13,1).
 - Mỗi epoch chậm gấp khoảng 2,2 lần.
 - Chưa tách được phần nào có tác dụng (chưa có ablation, chưa có đối chứng tắt GAT). Test chưa chấm.
+
+### Thí nghiệm 4: node nhóm và số lượng (23–24/10/2026, branch `feat/group-count`)
+
+Nền là fullgraph_factual_r3, thêm ba thứ:
+
+- gom các vật cùng loại có cùng node neo và cùng quan hệ thành node nhóm, đặt tên theo nhãn chiếm đa số (dữ liệu
+  `group_v1`);
+- số lượng cho node ảnh (1 / 2 / 3–4 / ≥5) và node câu (luật trên câu FACTUAL);
+- bảng học được g[lớp số lượng câu, nhóm số lượng ảnh] cộng vào độ giống trong kênh vật thể.
+
+Kết quả (`group-count/REPORT.md`):
+
+- `groupcount_factual_r3` đạt R@1 47,75 ± 0,22, thấp hơn fullgraph 0,63 (p = 0,019).
+- g học đúng cấu trúc: đường chéo dương, các ô lệch số lượng âm.
+- Trên 1 235 câu có số nêu rõ, R@1 tăng +1,65 và MRR tăng +1,05 (p = 0,044).
+- Câu không có số lượng tụt −0,97, câu chỉ có số nhiều tụt −0,87. Nhiều khả năng do graph đã gom làm mất thông tin
+  (−24% node, khớp số lượng ở ảnh đúng 40,7% → 37,3%).
+- fullgraph vẫn là bản tốt nhất trên val. Test chưa chấm.

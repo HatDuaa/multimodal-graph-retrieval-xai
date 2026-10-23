@@ -142,7 +142,7 @@ Riêng lớp "2" thì tăng.
 | group_v1 | 18,8 | 7,3 | 55,8 |
 | group_v1 + kNN-5 + cầu nối + node tổng | 19,6 | 1,0 | 100 |
 
-Số liệu trên là của val; train gần như vậy. Sau khi gom, mỗi ảnh có khoảng 85 cạnh tự thêm (merge_v1: 114), và 0,8%
+Số liệu trên là của val; train gần như vậy. Sau khi gom, mỗi ảnh có khoảng 85 cạnh tự thêm (merge_v1: 114), và 0,4%
 ảnh cần cầu nối.
 
 **Hạ tầng.** Mỗi epoch mất 685–726 giây. Train 3 seed mất 4,79 giờ, từ 21:15 ngày 23/10 đến 02:04 ngày 24/10; peak
@@ -192,7 +192,7 @@ Hàng là lớp số lượng phía câu, cột là nhóm số lượng phía �
 | ≥2 | −0.053 ± 0.004 | +0.001 ± 0.003 | +0.034 ± 0.005 | +0.053 ± 0.008 |
 | ≥3 | −0.088 ± 0.018 | −0.054 ± 0.006 | +0.037 ± 0.009 | +0.087 ± 0.004 |
 
-Từng seed ở `count_subset.json`. Để so độ lớn: CLIP cosine giữa các node khác nhau dao động khoảng 0,6–0,95.
+Từng seed ở `count_subset.json`. Để so độ lớn: cosine CLIP đóng băng giữa hai node ảnh ngẫu nhiên trung bình là 0,79, khoảng p05–p95 là 0,69–0,87 (`part_similarity.json`, step 0).
 
 - Ba seed học ra gần như cùng một bảng (std ≤ 0,03).
 - Mọi ô trên đường chéo đều dương; các ô lệch số lượng âm, lệch càng xa càng âm.
