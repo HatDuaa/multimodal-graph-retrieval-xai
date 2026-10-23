@@ -32,6 +32,8 @@ class PackedBatch:
     labelled_index: torch.Tensor | None = None
     edge_geometry: torch.Tensor | None = None
     global_mask: torch.Tensor | None = None
+    # Count bucket (image nodes) or count class (caption nodes) per node, src/graph/counts.py; 0 when unknown.
+    count_index: torch.Tensor | None = None
 
 
 def _flat_positions(starts, counts):
@@ -43,7 +45,7 @@ def _flat_positions(starts, counts):
 class GraphIndex:
     """Many small graphs as flat int arrays: part-table rows per node / relation / triple and local edges."""
 
-    NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask')
+    NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask', 'count_index')
     EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows', 'edge_kind', 'edge_geometry')
 
     def __init__(self, node_counts, edge_counts, **fields):
@@ -59,6 +61,7 @@ class GraphIndex:
     @classmethod
     def build(cls, parts_list, part_row):
         node_rows, part_mask, global_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], [], []
+        count_index = []
         edge_kind, geometry, node_counts, edge_counts = [], [], [], []
         nan = [float('nan')] * len(GEOMETRY_FEATURES)
         for parts in parts_list:
@@ -66,12 +69,14 @@ class GraphIndex:
             node_rows.extend(part_row[f'node:{x}'] for x in parts['node_labels'])
             part_mask.extend(parts['part_mask'])
             global_mask.extend([False] * n)
+            count_index.extend(parts.get('count_index', [0] * n))
             added = list(parts.get('added_edges', ()))
             if parts.get('global_node'):
                 # Its vector is set by the model (mean of the graph's node vectors); row 0 is a placeholder.
                 node_rows.append(0)
                 part_mask.append(False)
                 global_mask.append(True)
+                count_index.append(0)
                 added += [(n, i, EDGE_GLOBAL) for i in range(n)] + [(i, n, EDGE_GLOBAL) for i in range(n)]
             edges = [(e[0], e[1]) for e in labelled] + [(e[0], e[1]) for e in added]
             edge_src.extend(e[0] for e in edges)
@@ -85,7 +90,8 @@ class GraphIndex:
             edge_counts.append(len(edges))
         as_int = lambda values: np.asarray(values, dtype=np.int64)  # noqa: E731
         return cls(node_counts, edge_counts, node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
-                   global_mask=np.asarray(global_mask, dtype=bool), edge_src=as_int(edge_src), edge_dst=as_int(edge_dst),
+                   global_mask=np.asarray(global_mask, dtype=bool), count_index=np.asarray(count_index, dtype=np.int8),
+                   edge_src=as_int(edge_src), edge_dst=as_int(edge_dst),
                    relation_rows=as_int(relation_rows), triple_rows=as_int(triple_rows),
                    edge_kind=np.asarray(edge_kind, dtype=np.int8),
                    edge_geometry=np.asarray(geometry, dtype=np.float32).reshape(-1, len(GEOMETRY_FEATURES)))
@@ -129,7 +135,8 @@ class GraphIndex:
                            edge_kind=None if every_edge_labelled else to(kind.astype(np.int64)),
                            labelled_index=None if every_edge_labelled else to(np.flatnonzero(labelled)),
                            edge_geometry=to(geometry) if len(geometry) and np.isfinite(geometry[:, 0]).any() else None,
-                           global_mask=to(self.fields['global_mask']) if has_global else None)
+                           global_mask=to(self.fields['global_mask']) if has_global else None,
+                           count_index=to(self.fields['count_index'].astype(np.int64)))
 
 
 class GraphStore:
@@ -211,7 +218,8 @@ class GraphStore:
         parts = dict(node_labels=[obj['name'] for obj in kept], relation_labels=relations, triple_labels=triples,
                      edges=edges, raw=graph, node_indices=[i for i, obj in enumerate(objects) if obj['id'] in remap],
                      relation_indices=relation_indices,
-                     part_mask=[bool(obj['name']) if query else True for obj in kept])
+                     part_mask=[bool(obj['name']) if query else True for obj in kept],
+                     count_index=[int(obj.get('count_class' if query else 'count_bucket', 0)) for obj in kept])
         boxes = [obj.get('box') for obj in kept]
         has_boxes = not query and all(box is not None for box in boxes)
         if knn_edges and not query:

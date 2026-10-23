@@ -214,4 +214,4 @@ def test_build_model_reads_the_new_flags_with_old_defaults():
     assert not hasattr(model, 'geometry_mlp') and not hasattr(model, 'none_predicate')
     model = build_model({**old, 'edge_geometry': True, 'knn_edges': 5, 'global_node': True}, 'cpu')
     assert hasattr(model, 'geometry_mlp') and hasattr(model, 'none_predicate') and hasattr(model, 'global_predicate')
-    assert GraphIndex.NODE_FIELDS[-1] == 'global_mask'
+    assert 'global_mask' in GraphIndex.NODE_FIELDS

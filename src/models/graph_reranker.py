@@ -107,10 +107,21 @@ def part_summary(query):
     return query if query.dim() == 3 else query.mean(-2)
 
 
-def channel_score(query, query_mask, images, image_mask, candidate_index, tau, u):
-    """Match all B x K pairs together; no loop or materialized feature cache per candidate."""
+def count_bias(table, query_class, image_class, candidate_index):
+    """table[query count class, image count bucket] for every query node / candidate node pair, (B, K, Tq, Ti)."""
+    return table[query_class[:, None, :, None], image_class[candidate_index][:, :, None, :]]
+
+
+def channel_score(query, query_mask, images, image_mask, candidate_index, tau, u, query_class=None, image_class=None,
+                  table=None):
+    """Match all B x K pairs together; no loop or materialized feature cache per candidate.
+
+    With a count table, sim_ij + table[class_i, bucket_j] replaces sim_ij in both the attention and the score.
+    """
     masks = image_mask[candidate_index]
     sims = part_similarity(query, images, candidate_index)
+    if table is not None:
+        sims = sims + count_bias(table, query_class, image_class, candidate_index)
     attention = masked_softmax(sims / tau, masks[:, :, None, :], -1)
     per_part = (attention * sims).sum(-1)
     weights = masked_softmax(part_summary(query) @ u, query_mask, -1)
@@ -130,6 +141,16 @@ def graph_level_score(query, query_mask, images, image_mask, candidate_index):
     scores = (query[:, None] * images[candidate_index]).sum(-1)
     valid = query_mask.any(-1)[:, None] & image_mask.any(-1)[candidate_index]
     return scores.masked_fill(~valid, torch.nan)
+
+
+def dense_counts(graphs, width):
+    """Count index of every scorable node in the dense (graph, node) layout of encode, padded to width with 0."""
+    mask = graphs.part_mask
+    values = getattr(graphs, 'count_index', None)
+    if values is None:
+        values = torch.zeros(len(mask), dtype=torch.long, device=mask.device)
+    dense, _ = to_dense_batch(values[mask], graphs.batch[mask], batch_size=graphs.num_graphs, fill_value=0)
+    return F.pad(dense, (0, width - dense.shape[1])) if dense.shape[1] < width else dense
 
 
 TRIPLE_MATCHES = ("phrase", "factorized")
@@ -153,13 +174,15 @@ class GraphReranker(nn.Module):
     - global_node: one node per graph, its input vector the normalized mean of the graph's scorable node vectors
       (so it already summarizes the graph at the first GAT layer), linked both ways to every node by edges with a
       learned "[global]" predicate vector; it is not an object for the object channel.
+    - count_table: a learned table g[caption count class, image count bucket] (src/graph/counts.py), zero at start,
+      added to every node pair similarity of the object channel; the row of unknown caption counts stays 0.
     record_attention = True keeps the GAT attention of the last encode calls in self.attention.
     """
 
     def __init__(self, adaptive_weights=True, use_gat=True, use_triple_channel=True,
                  use_edges=True, query_graph_encoder=True, dropout=0.1, triple_match="phrase", graph_channel=False,
                  fusion="zscore", fusion_scale=None, zscore_floor=None, edge_geometry=False, completion_edges=False,
-                 global_node=False):
+                 global_node=False, count_table=False):
         super().__init__()
         if fusion not in FUSIONS:
             raise ValueError(f"fusion must be one of {FUSIONS}")
@@ -174,7 +197,7 @@ class GraphReranker(nn.Module):
                             query_graph_encoder=query_graph_encoder, dropout=dropout,
                             triple_match=triple_match, graph_channel=graph_channel, fusion=fusion,
                             fusion_scale=fusion_scale, zscore_floor=zscore_floor, edge_geometry=edge_geometry,
-                            completion_edges=completion_edges, global_node=global_node)
+                            completion_edges=completion_edges, global_node=global_node, count_table=count_table)
         self.p_node = nn.Linear(512, 256)
         self.p_edge = nn.Linear(512, 256)
         self.gat1 = GATv2Conv(256, 64, heads=4, edge_dim=256, fill_value=0., dropout=dropout)
@@ -210,7 +233,15 @@ class GraphReranker(nn.Module):
             self.none_predicate = nn.Parameter(F.normalize(torch.randn(512), dim=0))
         if global_node:
             self.global_predicate = nn.Parameter(F.normalize(torch.randn(512), dim=0))
+        if count_table:
+            from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS
+            # Known caption classes only; the unknown row is prepended as a constant 0 in counts_table().
+            self.count_table = nn.Parameter(torch.zeros(len(CAPTION_CLASSES) - 1, len(IMAGE_BUCKETS)))
         self.record_attention, self.attention = False, []
+
+    def counts_table(self):
+        """g with its fixed zero row for unknown caption counts, (caption classes, image buckets)."""
+        return torch.cat((self.count_table.new_zeros((1, self.count_table.shape[1])), self.count_table))
 
     def tau_objects(self):
         return self.log_tau_objects.exp().clamp(.01, 1.)
@@ -312,6 +343,11 @@ class GraphReranker(nn.Module):
 
     def match_encoded(self, batch, queries, images, return_encoded=False):
         args_obj = (queries[0], queries[1], images[0], images[1], batch['candidate_index'], self.tau_objects(), self.u_objects)
+        counts = {}
+        if self.options['count_table']:
+            counts = {'count_query': dense_counts(batch['queries'], queries[0].shape[1]),
+                      'count_images': dense_counts(batch['images'], images[0].shape[1]), 'count_table': self.counts_table()}
+            args_obj = args_obj + (counts['count_query'], counts['count_images'], counts['count_table'])
         args_tri = (queries[2], queries[3], images[2], images[3], batch['candidate_index'], self.tau_triples(), self.u_triples)
         pooled = {}
         if self.options['graph_channel']:
@@ -339,7 +375,7 @@ class GraphReranker(nn.Module):
             fused, details = fuse_raw(batch['clip'], objects, triples, weights)
         else:
             fused, details = fuse_tensor(batch['clip'], objects, triples, weights, self.options['zscore_floor'] or (0., 0., 0.))
-        details.update(objects=objects, triples=triples, fused=fused, **pooled)
+        details.update(objects=objects, triples=triples, fused=fused, **pooled, **counts)
         if return_encoded:
             details.update(encoded_query=queries, encoded_images=images)
         return fused, details

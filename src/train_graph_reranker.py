@@ -130,7 +130,8 @@ def build_model(options, device):
                          fusion=options.get("fusion", "zscore"), fusion_scale=options.get("fusion_scale"),
                          zscore_floor=options.get("zscore_floor"), edge_geometry=options.get("edge_geometry", False),
                          completion_edges=options.get("knn_edges", 0) > 0,
-                         global_node=options.get("global_node", False)).to(device)
+                         global_node=options.get("global_node", False),
+                         count_table=options.get("count_table", False)).to(device)
 
 
 def structure_options(options):
@@ -187,6 +188,8 @@ def build_parser():
                              "centres), then bridges join the remaining components; added edges are not triples.")
     parser.add_argument("--global-node", action=argparse.BooleanOptionalAction, default=False,
                         help="Add one global node per graph (image and sentence) linked both ways to every node.")
+    parser.add_argument("--count-table", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add a learned g[caption count class, image count bucket] to object-channel similarities.")
     parser.add_argument("--runs-root", default="level1/gat",
                         help="Run directory parent, relative to the experiments path.")
     parser.add_argument("--rewire-seed", type=int,

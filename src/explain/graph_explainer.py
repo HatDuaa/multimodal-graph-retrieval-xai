@@ -3,6 +3,7 @@ import copy
 
 import torch
 
+from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS
 from src.models.graph_reranker import masked_softmax, part_similarity, part_summary, slot_similarity
 
 
@@ -23,7 +24,9 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
     """Per channel, each query part's most similar image part with the quantities the ranking used.
 
     detail must come from model(batch, return_encoded=True); image_row indexes the encoded images of that batch.
-    contribution = channel weight (b or c) * w_i * a_ij * sim_ij, before the candidate-wise z-score.
+    contribution = channel weight (b or c) * w_i * a_ij * sim_ij, before the candidate-wise z-score. For count-table
+    models, object rows also carry query_count, image_count and count_bias = g[query_count, image_count], which sim_ij
+    includes.
     """
     weights = detail['weights'][query_row]
     result = {'objects': [], 'triples': []}
@@ -36,6 +39,14 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
             continue
         # Same similarity and weights as channel_score; factorized triples carry (subject, predicate, object) slots.
         sims = part_similarity(q[None], p[None], torch.zeros((1, 1), dtype=torch.long, device=p.device))[0, 0]
+        counts = None
+        if channel == 'objects' and 'count_table' in detail:
+            # Count-table models: sim_ij + g[count class of query node i, count bucket of image node j].
+            q_class = detail['count_query'][query_row, qm[query_row]]
+            p_bucket = detail['count_images'][image_row, pm[image_row]]
+            bias = detail['count_table'][q_class[:, None], p_bucket[None, :]]
+            counts = (q_class, p_bucket, bias)
+            sims = sims + bias
         attention = torch.softmax(sims / tau, -1)
         w = torch.softmax(part_summary(q[None])[0] @ u, -1)
         best = sims.argmax(-1)
@@ -51,6 +62,10 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
                    'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])}
             if slots is not None:
                 row['slot_similarity'] = dict(zip(('subject', 'predicate', 'object'), slots[i, j].tolist()))
+            if counts is not None:
+                # e.g. caption "2 dog", image "2 dog": count_bias = g["2", "2"]; sim_ij already includes it.
+                row.update(query_count=CAPTION_CLASSES[int(counts[0][i])], image_count=IMAGE_BUCKETS[int(counts[1][j])],
+                           count_bias=float(counts[2][i, j]))
             result[channel].append(row)
     if 'pool_query' in detail:
         # Graph-level channel: pooled-vector cosine, with the pooling weight of every scorable node on both sides.

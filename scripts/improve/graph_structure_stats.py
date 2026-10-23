@@ -1,7 +1,8 @@
 """Connectivity of the graphs the GAT sees, per structure variant (experiment 3). CPU only, no model.
 
 Image graphs on train and val: level-1 graphs (factual_v1), merge_v1 (duplicates merged), merge_v1 with the
-5-nearest completion edges and bridges, and that plus the global node. Sentence graphs (FACTUAL, factual_v1) on
+5-nearest completion edges and bridges, and that plus the global node; group_v1 (group nodes, experiment 4) alone and
+with completion edges and the global node. Sentence graphs (FACTUAL, factual_v1) on
 train and val, without and with the global node. Per graph, edge direction ignored, isolated nodes counted as
 components: number of components, share of nodes in the largest one, share of isolated nodes; plus labelled,
 completion and bridge edges per graph and the share of image graphs that needed a bridge. Edges are built by
@@ -21,7 +22,8 @@ from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
 
 OUT = REPO_ROOT / "experiments" / "improve" / "full-graph"
 IMAGE_VARIANTS = {"level1_factual_v1": ("configs/factual_v1.yaml", 0, False), "merge_v1": ("configs/merge_v1.yaml", 0, False),
-                  "merge_v1+knn5": ("configs/merge_v1.yaml", 5, False), "merge_v1+knn5+global": ("configs/merge_v1.yaml", 5, True)}
+                  "merge_v1+knn5": ("configs/merge_v1.yaml", 5, False), "merge_v1+knn5+global": ("configs/merge_v1.yaml", 5, True),
+                  "group_v1": ("configs/group_v1.yaml", 0, False), "group_v1+knn5+global": ("configs/group_v1.yaml", 5, True)}
 
 
 def graph_record(parts):
@@ -56,9 +58,13 @@ def aggregate(records):
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--splits", nargs="+", default=["train", "val"])
+    parser.add_argument("--variants", nargs="+", default=list(IMAGE_VARIANTS), choices=list(IMAGE_VARIANTS))
+    parser.add_argument("--no-sentences", action="store_true")
+    parser.add_argument("--out", type=Path, default=OUT / "graph_structure.json")
     args = parser.parse_args()
     result = {"images": {}, "sentences": {}}
-    for name, (config, knn, global_node) in IMAGE_VARIANTS.items():
+    for name in args.variants:
+        config, knn, global_node = IMAGE_VARIANTS[name]
         cfg = load_config(REPO_ROOT / config)
         graphs = {}
         with (resolve(cfg, "graphs") / "vg_coco_scene_graphs.jsonl").open(encoding="utf-8") as handle:
@@ -71,14 +77,14 @@ def main() -> None:
             result["images"].setdefault(name, {})[split] = aggregate(records)
             print("image", name, split, json.dumps(result["images"][name][split]), flush=True)
     cfg = load_config(REPO_ROOT / "configs" / "factual_v1.yaml")
-    for split in args.splits:
+    for split in ([] if args.no_sentences else args.splits):
         queries = json.loads((resolve(cfg, "processed") / f"query_graphs_{split}.json").read_text(encoding="utf-8"))
         for name, global_node in (("factual_v1", False), ("factual_v1+global", True)):
             records = [graph_record(GraphStore._graph_parts(g, query=True, global_node=global_node)) for g in queries.values()]
             result["sentences"].setdefault(name, {})[split] = aggregate(records)
             print("sentence", name, split, json.dumps(result["sentences"][name][split]), flush=True)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "graph_structure.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(result, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

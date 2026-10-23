@@ -19,6 +19,7 @@ three "horse" nodes that each carry one edge, and chains such as man -riding-> h
 """
 from __future__ import annotations
 
+from collections import Counter
 from functools import lru_cache
 
 from src.graph.geometry import iou
@@ -86,22 +87,62 @@ def union_box(boxes):
     return [x0, y0, x1 - x0, y1 - y0]
 
 
-def collapse(graph, members, same_thing=False):
-    """New graph with one node per member list; label of the largest box, edges re-pointed.
+def largest_box_name(objects, group):
+    largest = max(group, key=lambda i: objects[i]["box"][2] * objects[i]["box"][3])
+    return objects[largest]["name"], objects[largest].get("synset"), "largest_box"
+
+
+def lowest_common_hypernym(names):
+    """Deepest WordNet hypernym shared by all synset names (a synset is its own hypernym), or None."""
+    synsets = [s for s in (_synset(n) for n in names) if s is not None]
+    if not synsets or len(synsets) < len(names):
+        return None
+    common = synsets[0]
+    for other in synsets[1:]:
+        shared = common.lowest_common_hypernyms(other)
+        if not shared:
+            return None
+        common = shared[0]
+    return common
+
+
+def majority_name(objects, group):
+    """Most frequent label among the members (one vote per member); a tie goes to the lowest common WordNet
+    hypernym of the tied labels' synsets, else to the alphabetically first tied label."""
+    votes = Counter(objects[i]["name"] for i in group)
+    top = max(votes.values())
+    tied = sorted(name for name, count in votes.items() if count == top)
+    synset_of = {}
+    for i in sorted(group):
+        synset_of.setdefault(objects[i]["name"], objects[i].get("synset"))
+    if len(tied) == 1:
+        return tied[0], synset_of[tied[0]], "majority"
+    synsets = sorted({synset_of[name] for name in tied if synset_of[name]})
+    common = lowest_common_hypernym(synsets) if len(synsets) == len(tied) else None
+    if common is not None:
+        return common.lemma_names()[0].replace("_", " "), common.name(), "hypernym"
+    return tied[0], synset_of[tied[0]], "tie_first"
+
+
+def collapse(graph, members, same_thing=False, naming=largest_box_name):
+    """New graph with one node per member list; label from naming (default: the largest box), edges re-pointed.
 
     same_thing=True (merging duplicates): the members are boxes of one thing, so count stays that of one member and
-    "boxes" adds up the boxes absorbed. Otherwise (grouping): count = number of distinct things in the group.
+    "boxes" adds up the boxes absorbed. Otherwise (grouping): count = number of distinct things in the group, and
+    a node made of two or more members is marked "group".
     """
     nodes, old_to_new = [], {}
     for new, group in enumerate(members):
-        largest = max(group, key=lambda i: graph["objects"][i]["box"][2] * graph["objects"][i]["box"][3])
-        source = graph["objects"][largest]
-        nodes.append({"id": new, "name": source["name"], "synset": source.get("synset"),
-                      "box": union_box([graph["objects"][i]["box"] for i in group]),
-                      "count": (max(graph["objects"][i].get("count", 1) for i in group) if same_thing
-                                else sum(graph["objects"][i].get("count", 1) for i in group)),
-                      "boxes": sum(graph["objects"][i].get("boxes", 1) for i in group),
-                      "members": sorted(m for i in group for m in graph["objects"][i].get("members", [i]))})
+        name, synset, rule = naming(graph["objects"], group)
+        node = {"id": new, "name": name, "synset": synset,
+                "box": union_box([graph["objects"][i]["box"] for i in group]),
+                "count": (max(graph["objects"][i].get("count", 1) for i in group) if same_thing
+                          else sum(graph["objects"][i].get("count", 1) for i in group)),
+                "boxes": sum(graph["objects"][i].get("boxes", 1) for i in group),
+                "members": sorted(m for i in group for m in graph["objects"][i].get("members", [i]))}
+        if not same_thing and len(group) > 1:
+            node.update(group=True, naming=rule)
+        nodes.append(node)
         old_to_new.update({i: new for i in group})
     relations, seen = [], set()
     for k, rel in enumerate(graph["relations"]):
@@ -185,8 +226,10 @@ def pair_relation(graph, role, i, j):
             len((both & same_geometry) - by_predicate))
 
 
-def group_by_role(graph, criterion="ab"):
-    """Group same-type nodes; criterion: a (annotated predicate), b (geometry class), ab (either), near (distance)."""
+def group_by_role(graph, criterion="ab", naming=largest_box_name):
+    """Group same-type nodes; criterion: a (annotated predicate), b (geometry class), ab (either), near (distance).
+
+    naming labels a group node: largest_box_name (the audit) or majority_name (experiment 4)."""
     objects, role = graph["objects"], roles(graph)
     uf = UnionFind(len(objects))
     for i in range(len(objects)):
@@ -201,7 +244,7 @@ def group_by_role(graph, criterion="ab"):
                 linked = {"a": by_a, "b": by_b, "ab": by_a or by_b}[criterion]
             if linked:
                 uf.union(i, j)
-    return collapse(graph, uf.groups())
+    return collapse(graph, uf.groups(), naming=naming)
 
 
 def role_pair_counts(graph) -> dict:
