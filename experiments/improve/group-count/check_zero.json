@@ -1,0 +1,35 @@
+{
+  "run": "experiments/improve/full-graph/fullgraph_factual_r3_seed0",
+  "metrics_json": {
+    "recall@1": 0.48208407787077967,
+    "recall@5": 0.7535032446158186,
+    "recall@10": 0.8470798457631901,
+    "mrr": 0.6038083943312654
+  },
+  "merge_v1_without_table": {
+    "recall@1": 0.48208407787077967,
+    "recall@5": 0.7535032446158186,
+    "recall@10": 0.8470798457631901,
+    "mrr": 0.6038083943312654
+  },
+  "group_v1_without_table": {
+    "recall@1": 0.4750305652214803,
+    "recall@5": 0.7420295307062917,
+    "recall@10": 0.8403084736198627,
+    "mrr": 0.596191960388748
+  },
+  "group_v1_zero_table": {
+    "recall@1": 0.4750305652214803,
+    "recall@5": 0.7420295307062917,
+    "recall@10": 0.8403084736198627,
+    "mrr": 0.596191960388748
+  },
+  "group_v1_zero_table_again": {
+    "recall@1": 0.4750305652214803,
+    "recall@5": 0.7420295307062917,
+    "recall@10": 0.8403084736198627,
+    "mrr": 0.596191960388748
+  },
+  "merge_v1_equals_metrics_json": true,
+  "zero_table_equals_without": true
+}

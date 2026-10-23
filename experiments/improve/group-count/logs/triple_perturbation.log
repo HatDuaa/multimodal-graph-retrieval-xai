@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/improve/group-count/groupcount_factual_r3_seed0 {"all": 0.4793, "with_triple": 0.4833, "triple_only_with_triple": 0.088, "third_only_all": 0.0946}
+baseline experiments/improve/group-count/groupcount_factual_r3_seed1 {"all": 0.475, "with_triple": 0.4787, "triple_only_with_triple": 0.128, "third_only_all": 0.1335}
+baseline experiments/improve/group-count/groupcount_factual_r3_seed2 {"all": 0.4782, "with_triple": 0.4827, "triple_only_with_triple": 0.1225, "third_only_all": 0.1282}
+verb_swap experiments/improve/group-count/groupcount_factual_r3_seed0 {"all": 0.4696, "with_triple": 0.4733, "triple_only_with_triple": 0.0565, "third_only_all": 0.064}
+verb_swap experiments/improve/group-count/groupcount_factual_r3_seed1 {"all": 0.466, "with_triple": 0.4694, "triple_only_with_triple": 0.0844, "third_only_all": 0.0911}
+verb_swap experiments/improve/group-count/groupcount_factual_r3_seed2 {"all": 0.4629, "with_triple": 0.4669, "triple_only_with_triple": 0.0928, "third_only_all": 0.0993}
+subject_object_swap experiments/improve/group-count/groupcount_factual_r3_seed0 {"all": 0.4772, "with_triple": 0.4811, "triple_only_with_triple": 0.0728, "third_only_all": 0.0798}
+subject_object_swap experiments/improve/group-count/groupcount_factual_r3_seed1 {"all": 0.4731, "with_triple": 0.4768, "triple_only_with_triple": 0.1039, "third_only_all": 0.1101}
+subject_object_swap experiments/improve/group-count/groupcount_factual_r3_seed2 {"all": 0.4721, "with_triple": 0.4764, "triple_only_with_triple": 0.1124, "third_only_all": 0.1183}
+wrote experiments/improve/group-count/triple_perturbation.json in 36s
