@@ -19,6 +19,8 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `graph-dedup-audit/` | Audit làm sạch đồ thị ảnh: gộp khung trùng, gom nhóm theo vai trò (CPU, không train) |
 | `full-graph/` | Đợt 4, thí nghiệm 3: train trên graph ảnh gộp trùng + hình học cạnh + kNN liền + node tổng, mốc 1a |
 | `group-count/` | Đợt 4, thí nghiệm 4: node nhóm + số lượng + bảng g trong kênh vật thể, trên nền fullgraph |
+| `count-only/` | Đợt 4, thí nghiệm 5: chỉ số lượng + bảng g trên fullgraph, không gom nhóm — **mô hình chính** |
+| `test-prep/` | Dữ liệu test đóng gói theo chuỗi count_v1, kiểm tra và lệnh chấm test một lần (chưa chấm) |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -128,3 +130,16 @@ Kết quả (`group-count/REPORT.md`):
 - Câu không có số lượng tụt −0,97, câu chỉ có số nhiều tụt −0,87. Nhiều khả năng do graph đã gom làm mất thông tin
   (−24% node, khớp số lượng ở ảnh đúng 40,7% → 37,3%).
 - fullgraph vẫn là bản tốt nhất trên val. Test chưa chấm.
+
+### Thí nghiệm 5: chỉ số lượng, không gom nhóm (24/10/2026, branch `feat/count-only`)
+
+Nền là fullgraph_factual_r3. Thêm số lượng cho từng node ảnh (số vật cùng loại trong ảnh, giữ nhãn gốc), cùng luật số
+lượng phía câu và bảng g như thí nghiệm 4 (`count-only/REPORT.md`).
+
+- `countonly_factual_r3` đạt R@1 48,91 ± 0,21 (+0,53 so với fullgraph, Welch p = 0,032) và MRR 60,86 ± 0,22 (+0,35).
+  Cả 3 seed đều cao hơn mọi seed của fullgraph.
+- Câu có số nêu rõ tăng +1,48. Các câu còn lại không tụt nữa.
+- g làm đổi node ảnh được ghép ở 8,4% node câu có số lượng (thí nghiệm 4: 14%).
+- Theo quyết định của Lộc, bản này là **mô hình chính**, và phase cải tiến đóng lại.
+- Test đã được đóng gói và có script chấm một lần (`test-prep/README.md`). Script đã chạy thử trên val và cho lại đúng
+  số. **Test chưa chấm.**

@@ -7,3 +7,28 @@
 2026-10-24 16:36:03 disk 21 GB free before countonly_factual_r3_seed2
 2026-10-24 16:36:03 start countonly_factual_r3_seed2 attempt 1
 2026-10-24 17:41:41 stopped by user request (GPU needed); resume seed2 from checkpoint_last, then diagnostics
+2026-10-24 22:40:24 disk 21 GB free before countonly_factual_r3_seed2
+2026-10-24 22:40:24 start countonly_factual_r3_seed2 attempt 1
+2026-10-24 23:27:51 done countonly_factual_r3_seed2
+2026-10-24 23:27:51 disk 21 GB free before diagnostics
+2026-10-24 23:27:51 start diagnostics
+2026-10-24 23:27:51 start count_subset
+2026-10-24 23:28:26 done count_subset
+2026-10-24 23:28:26 start count_match_changes
+2026-10-24 23:28:46 done count_match_changes
+2026-10-24 23:28:46 start count_match_changes_exp4
+2026-10-24 23:29:03 done count_match_changes_exp4
+2026-10-24 23:29:03 start count_examples
+2026-10-24 23:29:10 done count_examples
+2026-10-24 23:29:10 start triple_perturbation
+2026-10-24 23:29:56 done triple_perturbation
+2026-10-24 23:29:56 start part_similarity
+2026-10-24 23:30:03 done part_similarity
+2026-10-24 23:30:03 start channel_correlation
+2026-10-24 23:30:18 done channel_correlation
+2026-10-24 23:30:18 start gradient_probe
+2026-10-24 23:31:34 done gradient_probe
+2026-10-24 23:31:34 start summarize
+2026-10-24 23:31:34 done summarize
+2026-10-24 23:31:34 done diagnostics
+2026-10-24 23:31:34 all done
