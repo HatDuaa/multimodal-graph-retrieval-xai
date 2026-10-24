@@ -21,7 +21,7 @@ from src.utils.config import load_config, resolve  # noqa: E402
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--split", choices=("train", "val"), default="val")
+    parser.add_argument("--split", choices=("train", "val", "test"), default="val")
     parser.add_argument("--synsets", action="store_true")
     args = parser.parse_args()
     started = time.time()
