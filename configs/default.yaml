@@ -42,7 +42,7 @@ vnmmkg:
   # --- triples (spec 4.2) ---
   landmark_pids: [P31, P1435, P140, P149, P138, P825, P2348, P361, P186, P112]
   context_extra_pids: [P131]            # added for context-context one-hop triples
-  province_classes: [Q2824648]          # province of Viet Nam; gate G1 adds the centrally-governed-city class
+  province_classes: [Q2824648, Q1381899] # province of Viet Nam, centrally-governed city of Viet Nam
   human_class: Q5
   max_p131_depth: 6
   infobox_templates: ["Thông tin chùa", "Thông tin đền Việt Nam"]   # extended in Task 5 after inspecting the cache
@@ -50,14 +50,14 @@ vnmmkg:
   founded_fields: [founded]
   period_source: "Bảng mốc năm do nhóm lập từ bài 'Lịch sử Việt Nam' trên Wikipedia tiếng Việt; revid ghi trong data card"
   periods:                              # inclusive, non-overlapping; gaps = ambiguous, no triple. qid filled at gate G1
-    - {label_vi: "Nhà Lý", start: 1009, end: 1225, qid: null}
-    - {label_vi: "Nhà Trần", start: 1226, end: 1399, qid: null}
-    - {label_vi: "Nhà Lê sơ", start: 1428, end: 1526, qid: null}
-    - {label_vi: "Nhà Mạc", start: 1527, end: 1532, qid: null}
-    - {label_vi: "Nhà Lê trung hưng", start: 1593, end: 1777, qid: null}
-    - {label_vi: "Nhà Tây Sơn", start: 1789, end: 1801, qid: null}
-    - {label_vi: "Nhà Nguyễn", start: 1802, end: 1883, qid: null}
-    - {label_vi: "Pháp thuộc", start: 1884, end: 1945, qid: null}
+    - {label_vi: "Nhà Lý", start: 1009, end: 1225, qid: Q878309}
+    - {label_vi: "Nhà Trần", start: 1226, end: 1399, qid: Q3111454}
+    - {label_vi: "Nhà Lê sơ", start: 1428, end: 1526, qid: Q878276}
+    - {label_vi: "Nhà Mạc", start: 1527, end: 1532, qid: Q1317991}
+    - {label_vi: "Nhà Lê trung hưng", start: 1593, end: 1777, qid: Q10800791}
+    - {label_vi: "Nhà Tây Sơn", start: 1789, end: 1801, qid: Q1034173}
+    - {label_vi: "Nhà Nguyễn", start: 1802, end: 1883, qid: Q6500483}
+    - {label_vi: "Pháp thuộc", start: 1884, end: 1945, qid: Q2523849}
   # --- images (spec 4.3) ---
   max_image_candidates: 12
   min_image_width: 400
