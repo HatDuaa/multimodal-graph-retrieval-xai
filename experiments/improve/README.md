@@ -1,8 +1,84 @@
 # Phase cải tiến — kênh bộ ba
 
-Mọi số trong thư mục này là của **val**. Test chưa được chạm. Mỗi thí nghiệm chỉ đổi đúng một thứ so với `main_r3`
-(`experiments/level1/gat/main_r3_seed*`) và chạy 3 seed (0, 1, 2). Số được tổng hợp bằng `src/eval/metrics.py`
-(mean ± std, ddof = 1).
+Mọi số trong thư mục này là của **val**, trừ `test/`. Test chỉ được chấm một lần, cho mô hình chính, vào cuối phase
+(25/10/2026). Mỗi thí nghiệm đổi đúng một thứ so với mô hình tốt nhất lúc đó; riêng thí nghiệm 3 gộp bốn thay đổi theo
+quyết định của Lộc. Mọi thí nghiệm chạy 3 seed (0, 1, 2), số được tổng hợp bằng `src/eval/metrics.py` (mean ± std,
+ddof = 1).
+
+## Tổng kết phase cải tiến (18–25/10/2026)
+
+**Mô hình chính:** `countonly_factual_r3` (`count-only/`).
+
+Kết quả test: R@1 **47,95 ± 0,15**, MRR 60,15 ± 0,15. So với main_r3 cấp 1 (45,77 ± 0,23), R@1 tăng +2,18 (p = 0,0005);
+so với CLIP thuần (39,32), tăng +8,63.
+
+Mô hình gồm:
+
+- **Đồ thị câu:** FACTUAL-T5 large thay cho parser sng.
+- **Trộn điểm:** trộn điểm thô, bỏ z-score (`--fusion raw`).
+- **Đồ thị ảnh:**
+  - gộp các khung trùng cùng loại (IoU ≥ 0,7);
+  - 6 đặc trưng hình học trên mọi cạnh;
+  - nối mỗi node tới 5 node gần nhất cùng cầu nối cho graph liền, vị từ `[none]`, không tính là bộ ba;
+  - một node tổng.
+- **Số lượng:** số lượng cho node câu và node ảnh, kèm bảng học được g cộng vào độ giống trong kênh vật thể.
+
+### Chuỗi các bước được giữ lại (val, 3 seed)
+
+| Bước | Mô hình | Thay đổi so với bước trước | R@1 | R@5 | R@10 | MRR |
+|---|---|---|---|---|---|---|
+| Cấp 1 | main_r3 | — | 46.48 ± 0.24 | 73.78 ± 0.16 | 83.44 ± 0.24 | 58.85 ± 0.18 |
+| 1d | main_factual_r3 | Đồ thị câu từ FACTUAL-T5 large (`factual_v1`) | 47.23 ± 0.36 | 74.49 ± 0.33 | 84.00 ± 0.16 | 59.49 ± 0.29 |
+| 1a | raw_factual_r3 | Bỏ z-score, trộn điểm thô | 47.48 ± 0.10 | 74.70 ± 0.18 | 84.10 ± 0.08 | 59.72 ± 0.00 |
+| 3 | fullgraph_factual_r3 | Gộp trùng + hình học cạnh + kNN liền + node tổng (`merge_v1`) | 48.38 ± 0.17 | 75.25 ± 0.09 | 84.71 ± 0.09 | 60.51 ± 0.17 |
+| 5 | **countonly_factual_r3** | Số lượng + bảng g, không gom nhóm (`count_v1`) | **48.91 ± 0.21** | 75.22 ± 0.05 | **84.96 ± 0.25** | **60.86 ± 0.22** |
+
+Mức tăng R@1 val ở từng bước, so với bước liền trước (Welch, 3 seed mỗi bên):
+
+| Bước | Chênh R@1 | p |
+|---|---|---|
+| 1d | +0,76 | ≈ 0,05 |
+| 1a | +0,25 | không có ý nghĩa thống kê; giữ vì std thấp nhất và vẫn còn tăng ở epoch 10 |
+| 3 | +0,90 | 0,003 |
+| 5 | +0,53 | 0,032 |
+
+Cộng lại, val tăng +2,43 so với main_r3. Thí nghiệm 3 gộp bốn thay đổi, nên chưa biết phần nào có tác dụng; Lộc quyết
+không chạy ablation.
+
+### Test cuối cùng (`test/README.md`, chấm một lần, 25/10/2026)
+
+| Mô hình | R@1 | R@5 | R@10 | MRR |
+|---|---|---|---|---|
+| CLIP thuần | 39.32 | 66.39 | 77.32 | 52.00 |
+| main_r3 (cấp 1) | 45.77 ± 0.23 | 72.87 ± 0.31 | 82.69 ± 0.31 | 58.14 ± 0.18 |
+| **countonly_factual_r3** | **47.95 ± 0.15** | **74.79 ± 0.03** | **84.38 ± 0.08** | **60.15 ± 0.15** |
+
+- Chênh so với main_r3: R@1 +2,18, R@5 +1,91, R@10 +1,70, MRR +2,00. Mọi p đều ≤ 0,008.
+- Chênh val → test: −0,96 R@1 (main_r3: −0,71).
+
+### Các thí nghiệm không giúp (không đưa vào mô hình chính)
+
+| Thí nghiệm | Mốc lúc đó | Kết quả val | Ghi chú |
+|---|---|---|---|
+| A: so khớp bộ ba tách thành phần (`triple-factorized/`) | main_r3 46,48 | R@1 46.00 ± 0.02 | Gỡ được độ dồn, nhưng kênh bộ ba lặp kênh vật thể (tương quan 0,59) |
+| B: kênh mức đồ thị thay kênh bộ ba (`graph-channel/`) | main_r3 46,48 | R@1 46.23 ± 0.13 | Mù vị từ và chiều |
+| Đổi parser, không train lại (`parser-compare/`) | main_r3 46,48 | +0,02 đến +0,16 | Cần train lại; chính là bước 1d |
+| Kênh hình học theo luật: số lượng + vị trí (`geometry-channel/`) | main_r3 46,48 | toàn val +0,10 / +0,05 | Kênh vị trí không có bằng chứng giúp |
+| 1b: sàn cho z-score (`fusion/floor/`) | main_factual_r3 47,23 | R@1 47.31 ± 0.17 | Bớt dồn (0,98 → 0,88) nhưng không tăng điểm |
+| 2: ghép cả đồ thị, FGW / nhất quán node chung (`graph-matching/`) | main_factual_r3 47,23 | tối đa +0,12 | Không train |
+| 4: node nhóm + số lượng (`group-count/`) | fullgraph 48,38 | R@1 47.75 ± 0.22 (−0,63, p = 0,019) | Gom nhóm làm mất thông tin; bảng g vẫn giúp câu có số nêu rõ |
+
+Các thư mục chẩn đoán và kiểm soát hạ tầng: `triple-perturbation/`, `channel-correlation/`, `microbatch-control/`,
+`graph-dedup-audit/`, `test-prep/`.
+
+### Hạn chế cần ghi trong báo cáo môn học
+
+- **Thí nghiệm 3 gộp bốn thay đổi**, không có ablation. Vì vậy chưa biết phần nào có tác dụng, và chưa rõ GAT có thật sự
+  đóng góp vào thứ hạng hay không.
+- **Đếm số lượng gộp mọi người thành một loại.** "A lone woman" trong ảnh nhiều người bị coi là sai số lượng. Bảng g đôi
+  khi kéo node câu ghép sang node ảnh khác nhãn, ở khoảng 8% node có số lượng.
+- **Val bị dùng nhiều lần để chọn mô hình,** nên val hơi lạc quan. Chênh val → test là −0,96 R@1.
+- **Mỗi epoch chậm gấp khoảng 3 lần bản 1a** (931 giây so với 312), do cạnh kNN và bảng g.
 
 | Thư mục | Nội dung |
 |---|---|
@@ -20,7 +96,8 @@ Mọi số trong thư mục này là của **val**. Test chưa được chạm. 
 | `full-graph/` | Đợt 4, thí nghiệm 3: train trên graph ảnh gộp trùng + hình học cạnh + kNN liền + node tổng, mốc 1a |
 | `group-count/` | Đợt 4, thí nghiệm 4: node nhóm + số lượng + bảng g trong kênh vật thể, trên nền fullgraph |
 | `count-only/` | Đợt 4, thí nghiệm 5: chỉ số lượng + bảng g trên fullgraph, không gom nhóm — **mô hình chính** |
-| `test-prep/` | Dữ liệu test đóng gói theo chuỗi count_v1, kiểm tra và lệnh chấm test một lần (chưa chấm) |
+| `test-prep/` | Dữ liệu test đóng gói theo chuỗi count_v1, kiểm tra và lệnh chấm test một lần |
+| `test/` | Kết quả test, chấm một lần ngày 25/10/2026: countonly_factual_r3 và CLIP thuần |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.
@@ -81,7 +158,7 @@ Tóm tắt:
 `factual-retrain/REPORT.md`: chỉ đổi parser câu. Val R@1 đạt 47,23 ± 0,36, so với 46,48 ± 0,24 của main_r3 (+0,76);
 MRR 59,49 ± 0,29, so với 58,85 ± 0,18 (+0,64). Welch p ≈ 0,05 với 3 seed mỗi bên, và mọi seed đều cao hơn mọi seed
 của main_r3. Probe không train chỉ báo +0,12, nên lợi ích đến từ việc train trên đồ thị sạch hơn. Độ dồn của vector
-bộ ba vẫn còn (cosine 0,97–0,99). Test chưa chấm.
+bộ ba vẫn còn (cosine 0,97–0,99). Lúc đó test chưa chấm.
 
 ## Đợt 3: chuẩn hoá, ghép cả đồ thị, làm sạch đồ thị ảnh (19–20/10/2026, branch `feat/fusion-and-graph-matching`)
 
@@ -111,7 +188,7 @@ Kết quả (`full-graph/REPORT.md`):
 - Vector bộ ba bớt dồn (cosine 0,96 → 0,87).
 - Kênh bộ ba đứng riêng mạnh gần gấp đôi (R@1 7,2 → 13,1).
 - Mỗi epoch chậm gấp khoảng 2,2 lần.
-- Chưa tách được phần nào có tác dụng (chưa có ablation, chưa có đối chứng tắt GAT). Test chưa chấm.
+- Chưa tách được phần nào có tác dụng (chưa có ablation, chưa có đối chứng tắt GAT). Lúc đó test chưa chấm.
 
 ### Thí nghiệm 4: node nhóm và số lượng (23–24/10/2026, branch `feat/group-count`)
 
@@ -129,7 +206,7 @@ Kết quả (`group-count/REPORT.md`):
 - Trên 1 235 câu có số nêu rõ, R@1 tăng +1,65 và MRR tăng +1,05 (p = 0,044).
 - Câu không có số lượng tụt −0,97, câu chỉ có số nhiều tụt −0,87. Nhiều khả năng do graph đã gom làm mất thông tin
   (−24% node, khớp số lượng ở ảnh đúng 40,7% → 37,3%).
-- fullgraph vẫn là bản tốt nhất trên val. Test chưa chấm.
+- fullgraph vẫn là bản tốt nhất trên val. Lúc đó test chưa chấm.
 
 ### Thí nghiệm 5: chỉ số lượng, không gom nhóm (24/10/2026, branch `feat/count-only`)
 
@@ -142,4 +219,4 @@ lượng phía câu và bảng g như thí nghiệm 4 (`count-only/REPORT.md`).
 - g làm đổi node ảnh được ghép ở 8,4% node câu có số lượng (thí nghiệm 4: 14%).
 - Theo quyết định của Lộc, bản này là **mô hình chính**, và phase cải tiến đóng lại.
 - Test đã được đóng gói và có script chấm một lần (`test-prep/README.md`). Script đã chạy thử trên val và cho lại đúng
-  số. **Test chưa chấm.**
+  số. Test được chấm một lần ngày 25/10 (`test/README.md`): R@1 47,95 ± 0,15.

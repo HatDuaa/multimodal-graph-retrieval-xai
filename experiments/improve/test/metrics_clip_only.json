@@ -1,0 +1,41 @@
+{
+  "method": "clip_only",
+  "dataset": "vg_coco",
+  "split": "test",
+  "per_seed": {
+    "0": {
+      "n_queries": 10696,
+      "recall@1": 0.3932311144353029,
+      "recall@5": 0.6638930441286462,
+      "recall@10": 0.7731862378459237,
+      "mrr": 0.5199921545657556
+    }
+  },
+  "aggregate": {
+    "n_queries": 10696,
+    "n_runs": 1,
+    "recall@1": {
+      "mean": 0.3932311144353029,
+      "std": 0.0
+    },
+    "recall@5": {
+      "mean": 0.6638930441286462,
+      "std": 0.0
+    },
+    "recall@10": {
+      "mean": 0.7731862378459237,
+      "std": 0.0
+    },
+    "mrr": {
+      "mean": 0.5199921545657556,
+      "std": 0.0
+    }
+  },
+  "config": {
+    "split": "test",
+    "config": "configs/count_v1_test.yaml",
+    "candidates_sha256": "75448b186b67e6cd98f36fcb418e15aabf7c3e587a6630a131cb9251eb759a86",
+    "time": "2026-10-25 00:09:31 +0700",
+    "git_commit": "8806b52933eee8ad4f9c60f21dfb862547a2560f"
+  }
+}
