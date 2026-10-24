@@ -40,14 +40,27 @@ vnmmkg:
   max_images: 5
   max_entities: 150
   # --- triples (spec 4.2) ---
-  landmark_pids: [P31, P1435, P140, P149, P138, P825, P2348, P361, P186, P112]
+  landmark_pids: [P31, P1435, P140, P149, P138, P825, P2348, P361, P186, P112, P276, P527]   # P276, P527 added at gate G2 (spec section 7)
   context_extra_pids: [P131]            # added for context-context one-hop triples
-  province_classes: [Q2824648, Q1381899] # province of Viet Nam, centrally-governed city of Viet Nam
+  province_classes: [Q2824648, Q1381899, Q137325529]   # province, centrally-governed city, former province (pre-2025 merger)
   human_class: Q5
   max_p131_depth: 6
-  infobox_templates: ["Thông tin chùa", "Thông tin đền Việt Nam"]   # extended in Task 5 after inspecting the cache
-  infobox_fields: {founder: P112, "thờ phụng": P825, denomination: P140}
-  founded_fields: [founded]
+  infobox_templates: ["Thông tin chùa", "Thông tin đền Việt Nam", "Thông tin tháp Chăm", "Thông tin di tích lịch sử",
+                      "Infobox di tích lịch sử", "Thông tin công trình xây dựng", "Infobox Mandir", "Infobox church",
+                      "Infobox religious building", "Infobox ancient site"]   # buildings / religious sites seen in the cache
+  infobox_fields:                       # only fields meaning founder / worshipped / denomination (spec 4.2)
+    founder: P112
+    "người sáng lập": P112
+    creator: P112
+    "thờ phụng": P825
+    "đối tượng thờ": P825
+    "tên thần": P825
+    "thờ": P825
+    primary_deity: P825
+    deity: P825
+    denomination: P140
+    religious_affiliation: P140
+  founded_fields: [founded, "thành lập", "xây dựng", date_built, built, year_completed, "completed date"]
   period_source: "Bảng mốc năm do nhóm lập từ bài 'Lịch sử Việt Nam' trên Wikipedia tiếng Việt; revid ghi trong data card"
   periods:                              # inclusive, non-overlapping; gaps = ambiguous, no triple. qid filled at gate G1
     - {label_vi: "Nhà Lý", start: 1009, end: 1225, qid: Q878309}
@@ -72,4 +85,4 @@ vnmmkg:
   max_pattern_golds: 5
   # --- split (spec 2.5, setting A1) ---
   val_fraction: 0.5
-  pid_labels_vi: {P31: "là", P1435: "danh hiệu di sản", P140: "tôn giáo", P149: "phong cách kiến trúc", P138: "đặt theo tên", P825: "thờ", P2348: "thời kỳ", P361: "là một phần của", P186: "vật liệu", P112: "người sáng lập", P131: "thuộc đơn vị hành chính"}
+  pid_labels_vi: {P31: "là", P1435: "danh hiệu di sản", P140: "tôn giáo", P149: "phong cách kiến trúc", P138: "đặt theo tên", P825: "thờ", P2348: "thời kỳ", P361: "là một phần của", P186: "vật liệu", P112: "người sáng lập", P131: "thuộc đơn vị hành chính", P276: "vị trí", P527: "gồm có"}

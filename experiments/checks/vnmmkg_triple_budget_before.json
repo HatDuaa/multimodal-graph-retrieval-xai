@@ -1,0 +1,105 @@
+{
+ "date": "2026-10-24",
+ "landmark_pids": [
+  "P31",
+  "P1435",
+  "P140",
+  "P149",
+  "P138",
+  "P825",
+  "P2348",
+  "P361",
+  "P186",
+  "P112"
+ ],
+ "max_entities": 150,
+ "valid_candidates": 133,
+ "by_n": {
+  "133": {
+   "proposed": 511,
+   "after_cap": 254,
+   "context_kept": 17,
+   "dropped_entities": 134,
+   "dropped_triples": 257,
+   "by_source": {
+    "derived": 33,
+    "infobox": 17,
+    "wikidata": 204
+   },
+   "by_relation": {
+    "P131": 35,
+    "P140": 50,
+    "P1435": 21,
+    "P2348": 31,
+    "P31": 104,
+    "P361": 13
+   },
+   "counters": {
+    "infobox_link_unresolved": 1,
+    "infobox_unlinked": 13,
+    "no_province": 31,
+    "year_without_period": 14
+   }
+  },
+  "90": {
+   "proposed": 378,
+   "after_cap": 307,
+   "context_kept": 60,
+   "dropped_entities": 67,
+   "dropped_triples": 71,
+   "by_source": {
+    "derived": 47,
+    "infobox": 25,
+    "wikidata": 235
+   },
+   "by_relation": {
+    "P112": 6,
+    "P131": 59,
+    "P138": 4,
+    "P140": 56,
+    "P1435": 35,
+    "P149": 9,
+    "P2348": 25,
+    "P31": 94,
+    "P361": 11,
+    "P825": 8
+   },
+   "counters": {
+    "infobox_link_unresolved": 1,
+    "infobox_unlinked": 9,
+    "no_province": 20,
+    "year_without_period": 12
+   }
+  },
+  "80": {
+   "proposed": 351,
+   "after_cap": 301,
+   "context_kept": 70,
+   "dropped_entities": 50,
+   "dropped_triples": 50,
+   "by_source": {
+    "derived": 47,
+    "infobox": 26,
+    "wikidata": 228
+   },
+   "by_relation": {
+    "P112": 6,
+    "P131": 61,
+    "P138": 4,
+    "P140": 56,
+    "P1435": 29,
+    "P149": 9,
+    "P186": 1,
+    "P2348": 24,
+    "P31": 89,
+    "P361": 13,
+    "P825": 9
+   },
+   "counters": {
+    "infobox_unlinked": 7,
+    "no_province": 14,
+    "year_without_period": 12
+   }
+  }
+ }
+}

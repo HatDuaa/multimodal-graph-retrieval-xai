@@ -8,9 +8,10 @@
    province rule), plus targets of context entities (for one-hop context triples).
 All answers are cached (src/data/wikimedia_client.py); rerunning only fetches what is missing.
 
-Usage:  python scripts/fetch_vnmmkg_wikidata.py
+Usage:  python scripts/fetch_vnmmkg_wikidata.py [--retrim]
 Output: data/raw/vnmmkg/candidates.json, data/raw/vnmmkg/wikidata/<qid>.json
 """
+import argparse
 import datetime
 import json
 import sys
@@ -63,6 +64,13 @@ def main() -> None:
     ent_dir = raw_dir / "wikidata"
     client = client_from_config(cfg)
     keep = keep_pids_from_config(v)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--retrim", action="store_true",
+                    help="delete compact entity files and rebuild them (after changing PIDs in config)")
+    args = ap.parse_args()
+    if args.retrim:
+        for path in ent_dir.glob("Q*.json"):
+            path.unlink()
 
     cand_path = raw_dir / "candidates.json"
     if cand_path.exists():
