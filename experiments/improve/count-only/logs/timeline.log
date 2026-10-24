@@ -1,0 +1,9 @@
+2026-10-24 11:23:15 disk 21 GB free before countonly_factual_r3_seed0
+2026-10-24 11:23:15 start countonly_factual_r3_seed0 attempt 1
+2026-10-24 13:59:31 done countonly_factual_r3_seed0
+2026-10-24 13:59:31 disk 21 GB free before countonly_factual_r3_seed1
+2026-10-24 13:59:31 start countonly_factual_r3_seed1 attempt 1
+2026-10-24 16:36:03 done countonly_factual_r3_seed1
+2026-10-24 16:36:03 disk 21 GB free before countonly_factual_r3_seed2
+2026-10-24 16:36:03 start countonly_factual_r3_seed2 attempt 1
+2026-10-24 17:41:41 stopped by user request (GPU needed); resume seed2 from checkpoint_last, then diagnostics

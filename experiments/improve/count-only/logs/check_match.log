@@ -1,0 +1,146 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+level1 {"caption_nodes": 5871, "matched": 0.6656446942599217, "compatible": 0.4067450178845171, "compatible_given_matched": 0.6110542476970318, "by_class": {"1": {"nodes": 20, "compatible": 0.4}, "2": {"nodes": 969, "compatible": 0.23323013415892674}, "3-4": {"nodes": 249, "compatible": 0.3453815261044177}, ">=5": {"nodes": 37, "compatible": 0.5135135135135135}, ">=2": {"nodes": 3725, "compatible": 0.42818791946308726}, ">=3": {"nodes": 871, "compatible": 0.521239954075775}}}
+merge_v1 {"caption_nodes": 5871, "matched": 0.6605348322261966, "compatible": 0.4070856753534321, "compatible_given_matched": 0.6162970603403817, "by_class": {"1": {"nodes": 20, "compatible": 0.45}, "2": {"nodes": 969, "compatible": 0.30030959752321984}, "3-4": {"nodes": 249, "compatible": 0.39357429718875503}, ">=5": {"nodes": 37, "compatible": 0.5135135135135135}, ">=2": {"nodes": 3725, "compatible": 0.4104697986577181}, ">=3": {"nodes": 871, "compatible": 0.5097588978185993}}}
+group_v1 {"caption_nodes": 5871, "matched": 0.6230625106455459, "compatible": 0.372508942258559, "compatible_given_matched": 0.5978676872607982, "by_class": {"1": {"nodes": 20, "compatible": 0.45}, "2": {"nodes": 969, "compatible": 0.3126934984520124}, "3-4": {"nodes": 249, "compatible": 0.3614457831325301}, ">=5": {"nodes": 37, "compatible": 0.40540540540540543}, ">=2": {"nodes": 3725, "compatible": 0.37208053691275167}, ">=3": {"nodes": 871, "compatible": 0.44087256027554533}}}
+count_v1 {"caption_nodes": 5871, "matched": 0.6605348322261966, "compatible": 0.4070856753534321, "compatible_given_matched": 0.6162970603403817, "by_class": {"1": {"nodes": 20, "compatible": 0.45}, "2": {"nodes": 969, "compatible": 0.30030959752321984}, "3-4": {"nodes": 249, "compatible": 0.39357429718875503}, ">=5": {"nodes": 37, "compatible": 0.5135135135135135}, ">=2": {"nodes": 3725, "compatible": 0.4104697986577181}, ">=3": {"nodes": 871, "compatible": 0.5097588978185993}}}
+{
+  "threshold": 0.955,
+  "variants": [
+    "level1",
+    "merge_v1",
+    "group_v1",
+    "count_v1"
+  ],
+  "by_class": {},
+  "level1": {
+    "caption_nodes": 5871,
+    "matched": 0.6656446942599217,
+    "compatible": 0.4067450178845171,
+    "compatible_given_matched": 0.6110542476970318,
+    "by_class": {
+      "1": {
+        "nodes": 20,
+        "compatible": 0.4
+      },
+      "2": {
+        "nodes": 969,
+        "compatible": 0.23323013415892674
+      },
+      "3-4": {
+        "nodes": 249,
+        "compatible": 0.3453815261044177
+      },
+      ">=5": {
+        "nodes": 37,
+        "compatible": 0.5135135135135135
+      },
+      ">=2": {
+        "nodes": 3725,
+        "compatible": 0.42818791946308726
+      },
+      ">=3": {
+        "nodes": 871,
+        "compatible": 0.521239954075775
+      }
+    }
+  },
+  "merge_v1": {
+    "caption_nodes": 5871,
+    "matched": 0.6605348322261966,
+    "compatible": 0.4070856753534321,
+    "compatible_given_matched": 0.6162970603403817,
+    "by_class": {
+      "1": {
+        "nodes": 20,
+        "compatible": 0.45
+      },
+      "2": {
+        "nodes": 969,
+        "compatible": 0.30030959752321984
+      },
+      "3-4": {
+        "nodes": 249,
+        "compatible": 0.39357429718875503
+      },
+      ">=5": {
+        "nodes": 37,
+        "compatible": 0.5135135135135135
+      },
+      ">=2": {
+        "nodes": 3725,
+        "compatible": 0.4104697986577181
+      },
+      ">=3": {
+        "nodes": 871,
+        "compatible": 0.5097588978185993
+      }
+    }
+  },
+  "group_v1": {
+    "caption_nodes": 5871,
+    "matched": 0.6230625106455459,
+    "compatible": 0.372508942258559,
+    "compatible_given_matched": 0.5978676872607982,
+    "by_class": {
+      "1": {
+        "nodes": 20,
+        "compatible": 0.45
+      },
+      "2": {
+        "nodes": 969,
+        "compatible": 0.3126934984520124
+      },
+      "3-4": {
+        "nodes": 249,
+        "compatible": 0.3614457831325301
+      },
+      ">=5": {
+        "nodes": 37,
+        "compatible": 0.40540540540540543
+      },
+      ">=2": {
+        "nodes": 3725,
+        "compatible": 0.37208053691275167
+      },
+      ">=3": {
+        "nodes": 871,
+        "compatible": 0.44087256027554533
+      }
+    }
+  },
+  "count_v1": {
+    "caption_nodes": 5871,
+    "matched": 0.6605348322261966,
+    "compatible": 0.4070856753534321,
+    "compatible_given_matched": 0.6162970603403817,
+    "by_class": {
+      "1": {
+        "nodes": 20,
+        "compatible": 0.45
+      },
+      "2": {
+        "nodes": 969,
+        "compatible": 0.30030959752321984
+      },
+      "3-4": {
+        "nodes": 249,
+        "compatible": 0.39357429718875503
+      },
+      ">=5": {
+        "nodes": 37,
+        "compatible": 0.5135135135135135
+      },
+      ">=2": {
+        "nodes": 3725,
+        "compatible": 0.4104697986577181
+      },
+      ">=3": {
+        "nodes": 871,
+        "compatible": 0.5097588978185993
+      }
+    }
+  },
+  "val_captions": 10633,
+  "val_captions_with_known_count": 4543
+}
