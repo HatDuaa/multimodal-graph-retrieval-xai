@@ -4,8 +4,9 @@ Every JSON answer is cached on disk (one file per request, keyed by a hash of me
 and parameters), so the fetch scripts can be stopped and rerun at any time and the dataset
 can be rebuilt without calling the APIs again. Rate limiting (HTTP 429/5xx, or a MediaWiki
 `maxlag`-style error body) is handled by waiting `Retry-After` (seconds or HTTP date,
-capped) or an increasing fallback, then retrying. Error answers are never cached. A short
-polite delay follows every successful request.
+capped) or an increasing fallback, then retrying. Error answers are never cached. Network errors
+(connection reset, read timeout) are retried the same way. A short polite delay follows every
+successful request.
 """
 import email.utils
 import hashlib
@@ -81,7 +82,13 @@ class WikimediaClient:
 
     def _request(self, method: str, url: str, **kwargs):
         for attempt in range(self.max_retries):
-            resp = self.session.request(method, url, timeout=120, **kwargs)
+            try:
+                resp = self.session.request(method, url, timeout=120, **kwargs)
+            except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as err:
+                wait = min(15 * (attempt + 1), self.max_wait)
+                print(f"{type(err).__name__} from {url}, waiting {wait}s ({attempt + 1}/{self.max_retries})")
+                self.sleeper(wait)
+                continue
             if resp.status_code in RETRY_STATUS:
                 wait = retry_after_seconds(resp.headers.get("Retry-After"), 15 * (attempt + 1), self.max_wait)
                 print(f"HTTP {resp.status_code} from {url}, waiting {wait}s ({attempt + 1}/{self.max_retries})")

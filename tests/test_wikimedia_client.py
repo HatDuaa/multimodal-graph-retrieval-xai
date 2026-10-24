@@ -97,3 +97,31 @@ def test_download_returns_bytes_without_caching(tmp_path):
     assert client.download("https://upload/x.jpg") == b"img"
     assert client.download("https://upload/x.jpg") == b"img"
     assert len(session.calls) == 2
+
+
+class FlakySession(FakeSession):
+    def request(self, method, url, **kwargs):
+        self.calls.append((method, url, kwargs))
+        item = self.responses.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+
+def test_network_error_is_retried_with_backoff(tmp_path):
+    import requests
+
+    waits = []
+    session = FlakySession([requests.exceptions.ReadTimeout("read timed out"), FakeResponse(200, content=b"img")])
+    client = WikimediaClient(tmp_path, "ua", sleep=0.5, max_retries=3, session=session, sleeper=waits.append)
+    assert client.download("https://thumb/x.jpg") == b"img"
+    assert waits == [15, 0.5]
+
+
+def test_network_error_gives_up_after_max_retries(tmp_path):
+    import requests
+
+    session = FlakySession([requests.exceptions.ConnectionError("reset")] * 3)
+    client = WikimediaClient(tmp_path, "ua", max_retries=3, session=session, sleeper=lambda s: None)
+    with pytest.raises(RuntimeError, match="after 3 attempts"):
+        client.download("https://thumb/x.jpg")
