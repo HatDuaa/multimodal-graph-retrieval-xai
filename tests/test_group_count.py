@@ -163,3 +163,14 @@ def test_explanations_show_the_count_term():
     assert row['count_bias'] == pytest.approx(.1)
     assert build_model({'adaptive_weights': True, 'use_gat': True, 'use_triple_channel': True, 'use_edges': True,
                         'query_graph_encoder': True, 'count_table': True}, 'cpu').counts_table().shape == (7, 4)
+
+
+def test_count_buckets_beside_the_graphs_keep_labels_and_order():
+    from src.data.graph_store import attach_count_buckets
+    graphs = {7: {'objects': [{'id': 0, 'name': 'man'}, {'id': 1, 'name': 'skier'}, {'id': 2, 'name': 'horse'}], 'relations': []}}
+    attach_count_buckets(graphs, {'7': {'counts': [2, 2, 1], 'buckets': [1, 1, 0]}})
+    assert [(o['name'], o['count'], o['count_bucket']) for o in graphs[7]['objects']] == \
+        [('man', 2, 1), ('skier', 2, 1), ('horse', 1, 0)]
+    assert GraphStore._graph_parts(graphs[7])['count_index'] == [1, 1, 0]
+    with pytest.raises(ValueError):
+        attach_count_buckets(graphs, {'7': {'counts': [1], 'buckets': [0]}})

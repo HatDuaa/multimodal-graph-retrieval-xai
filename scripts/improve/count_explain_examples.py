@@ -29,7 +29,8 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    cfg = load_config(REPO_ROOT / "configs" / "group_v1.yaml")
+    config = json.loads((args.run / "config.json").read_text(encoding="utf-8"))["args"]["config"]
+    cfg = load_config(REPO_ROOT / config)  # the run's data version (group_v1 or count_v1)
     store = GraphStore(cfg, splits=("val",))
     model = load_run_model(args.run, device, store=store)[0]
     arrays = store.candidates("val")

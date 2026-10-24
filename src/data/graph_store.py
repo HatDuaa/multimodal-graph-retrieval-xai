@@ -139,6 +139,16 @@ class GraphIndex:
                            count_index=to(self.fields['count_index'].astype(np.int64)))
 
 
+def attach_count_buckets(graphs, counts):
+    """Set count and count_bucket of every image node from {image_id: {"counts", "buckets"}} (same node order)."""
+    for image_id, graph in graphs.items():
+        entry = counts[str(image_id)]
+        if len(entry['buckets']) != len(graph['objects']):
+            raise ValueError(f'count buckets do not match the nodes of image {image_id}')
+        for obj, count, bucket in zip(graph['objects'], entry['counts'], entry['buckets']):
+            obj['count'], obj['count_bucket'] = count, bucket
+
+
 class GraphStore:
     def __init__(self, cfg=None, root=None, splits=("train", "val"), allow_test=False, structure=None):
         # Test is opened only by the one-time final evaluation (scripts/evaluate_test.py), never with train.
@@ -169,6 +179,11 @@ class GraphStore:
                 graph = json.loads(line)
                 if graph['split'] in splits:
                     self.graphs[int(graph['image_id'])] = graph
+        if self.cfg['paths'].get('count_buckets'):
+            # Image node counts kept beside the graphs (configs/count_v1.yaml): {image_id: {"counts", "buckets"}}.
+            path = self.base / self.cfg['paths']['count_buckets']
+            self.input_paths.append(path)
+            attach_count_buckets(self.graphs, json.loads(path.read_text(encoding='utf-8')))
         processed = self.base / self.cfg['paths']['processed']
         for split in splits:
             query_path = processed / f'query_graphs_{split}.json'

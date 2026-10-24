@@ -2,12 +2,14 @@
 
 zero: the fullgraph_factual_r3_seed0 checkpoint (GPU)
   1. on merge_v1 with the current code, without the count table: val metrics must equal its metrics.json;
-  2. on group_v1, without and with a zero count table g (same weights), twice: all val metrics must be equal.
+  2. on --config (group_v1 for experiment 4, count_v1 for experiment 5), without and with a zero count table g (same
+     weights), twice: all val metrics must be equal (and, for count_v1, whose graphs are merge_v1's, equal to 1).
 match: count agreement on the gold image (CPU). For every scorable val caption node with a known count class, the
   gold image's matching nodes (label equal after VG aliases, or frozen-CLIP node cosine >= 0.955, as in the
   graph-cleaning audit): has a match at all, and has a match whose count bucket is compatible with the class
   (src/graph/counts.py compatible). Image counts: level-1 graphs and merge_v1 without grouping (every node counts the
-  same-type instances), and group_v1 (group nodes count their members).
+  same-type instances), group_v1 (group nodes count their members), and count_v1 (the stored buckets of experiment 5,
+  which must reproduce the merge_v1 row).
 """
 import argparse
 import collections
@@ -33,7 +35,7 @@ KEYS = ("recall@1", "recall@5", "recall@10", "mrr")
 THRESHOLD = .955
 
 
-def zero_check():
+def zero_check(config):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     options = json.loads((RUN / "config.json").read_text(encoding="utf-8"))["args"]
     state = torch.load(RUN / "checkpoint_best.pt", map_location=device, weights_only=False)
@@ -48,11 +50,16 @@ def zero_check():
     store = GraphStore(load_config(REPO_ROOT / "configs" / "merge_v1.yaml"), splits=("val",), structure=structure_options(options))
     out["merge_v1_without_table"] = {k: evaluate_val(plain, store, store.candidates("val"), device)[k] for k in KEYS}
     del store
-    store = GraphStore(load_config(REPO_ROOT / "configs" / "group_v1.yaml"), splits=("val",), structure=structure_options(options))
-    for name, model in (("group_v1_without_table", plain), ("group_v1_zero_table", counted), ("group_v1_zero_table_again", counted)):
+    store = GraphStore(load_config(REPO_ROOT / config), splits=("val",), structure=structure_options(options))
+    version = Path(config).stem
+    out["config"] = str(config)
+    for name, model in ((f"{version}_without_table", plain), (f"{version}_zero_table", counted),
+                        (f"{version}_zero_table_again", counted)):
         out[name] = {k: evaluate_val(model, store, store.candidates("val"), device)[k] for k in KEYS}
     out["merge_v1_equals_metrics_json"] = out["merge_v1_without_table"] == out["metrics_json"]
-    out["zero_table_equals_without"] = out["group_v1_zero_table"] == out["group_v1_without_table"] == out["group_v1_zero_table_again"]
+    out["zero_table_equals_without"] = (out[f"{version}_zero_table"] == out[f"{version}_without_table"]
+                                        == out[f"{version}_zero_table_again"])
+    out["zero_table_equals_metrics_json"] = out[f"{version}_zero_table"] == out["metrics_json"]
     return out
 
 
@@ -69,7 +76,7 @@ def match_check():
         if g["split"] == "val":
             graphs.setdefault("level1", {})[g["image_id"]] = with_boxes(g, objects[str(g["image_id"])]["boxes"],
                                                                         objects[str(g["image_id"])]["synsets"])
-    for name, config in (("merge_v1", "merge_v1"), ("group_v1", "group_v1")):
+    for name, config in (("merge_v1", "merge_v1"), ("group_v1", "group_v1"), ("count_v1", "merge_v1")):
         for line in (resolve(load_config(REPO_ROOT / "configs" / f"{config}.yaml"), "graphs") / "vg_coco_scene_graphs.jsonl").open(encoding="utf-8"):
             g = json.loads(line)
             if g["split"] == "val":
@@ -84,10 +91,14 @@ def match_check():
             cache[(q, i)] = same or (known and float(vector(q) @ vector(i)) >= THRESHOLD)
         return cache[(q, i)]
 
+    stored = json.loads((REPO_ROOT / "data" / "graphs" / "count_v1" / "count_buckets.json").read_text(encoding="utf-8"))
     buckets = {}
     for name, by_image in graphs.items():
         buckets[name] = {}
         for image_id, g in by_image.items():
+            if name == "count_v1":
+                buckets[name][image_id] = stored[str(image_id)]["buckets"]
+                continue
             counts = [o["count"] for o in g["objects"]] if name == "group_v1" else image_counts(g["objects"], same_type)
             buckets[name][image_id] = [image_bucket(c) for c in counts]
     result = {"threshold": THRESHOLD, "variants": list(graphs), "by_class": {}}
@@ -123,11 +134,14 @@ def match_check():
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("check", choices=("zero", "match"))
+    parser.add_argument("--config", default="configs/group_v1.yaml", help="zero: data version with count fields.")
+    parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()
-    out = zero_check() if args.check == "zero" else match_check()
+    out = zero_check(args.config) if args.check == "zero" else match_check()
     print(json.dumps(out, indent=2), flush=True)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"check_{args.check}.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    path = args.out or OUT / f"check_{args.check}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
