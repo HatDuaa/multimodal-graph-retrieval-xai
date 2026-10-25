@@ -36,4 +36,5 @@ Sinh bởi `python -m src.data.build_vnmmkg` (seed 0). Không sửa tay.
 - `queries_auto`: 197
 - `query_drops`: {}
 - `split`: {"val": {"landmarks": 38, "images": 170, "queries": 94}, "test": {"landmarks": 37, "images": 161, "queries": 103}}
+- `hand_queries`: {"direct": 12, "indirect": 18, "indirect_gold_sizes": {"1": 15, "2": 1, "3": 1, "4": 1}}
 <!-- vnmmkg:end -->

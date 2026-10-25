@@ -24,8 +24,9 @@ from collections import Counter
 from pathlib import Path
 
 from src.data.vnmmkg_cache import infobox_rows, landmark_candidates, load_commons, load_link_qids, load_viwiki
-from src.data.vnmmkg_text import make_auto_queries, name_variants
-from src.data.vnmmkg_triples import cap_entities, categorize, propose_triples, triple_key, validate_periods
+from src.data.vnmmkg_text import contains_name, make_auto_queries, name_variants
+from src.data.vnmmkg_triples import (cap_entities, categorize, gold_from_pattern, propose_triples, triple_key,
+                                     validate_periods)
 from src.data.vnmmkg_wikidata import qid_key, truthy
 from src.utils.config import REPO_ROOT, load_config, resolve
 
@@ -92,6 +93,56 @@ def split_landmarks(landmarks: list[str], seed: int, val_fraction: float) -> dic
     random.Random(seed).shuffle(order)
     n_val = int(round(len(order) * val_fraction))
     return {"val": sorted(order[:n_val], key=qid_key), "test": sorted(order[n_val:], key=qid_key)}
+
+
+def resolve_hand_queries(queries: list[dict], triples: list[dict], entity_rows: list[dict], cfg_v: dict,
+                         allow_update: bool) -> tuple[list[dict], dict]:
+    """Compute gold_qids of indirect queries from their pattern and validate the whole set (spec 4.5)."""
+    landmarks = [e["qid"] for e in entity_rows if e["kind"] == "landmark"]
+    by_qid = {e["qid"]: e for e in entity_rows}
+    non_visual = set(cfg_v["non_visual_pids"])
+    problems, out, seen, sizes = [], [], set(), Counter()
+    for q in queries:
+        qid, group, pattern = q["query_id"], q["group"], [list(p) for p in q.get("pattern") or []]
+        if qid in seen:
+            problems.append(f"{qid}: duplicate query_id")
+        seen.add(qid)
+        if not q["text"].strip():
+            problems.append(f"{qid}: empty text")
+        gold = q.get("gold_qids")
+        if group == "direct":
+            if pattern:
+                problems.append(f"{qid}: a direct query has no pattern")
+            if not gold or len(gold) != 1 or gold[0] not in by_qid or by_qid[gold[0]]["kind"] != "landmark":
+                problems.append(f"{qid}: a direct query needs exactly one landmark in gold_qids")
+        elif group == "indirect":
+            if not pattern or not all(len(p) == 2 for p in pattern):
+                problems.append(f"{qid}: an indirect query needs a pattern of [pid, qid] pairs")
+            elif not {p[0] for p in pattern} & non_visual:
+                problems.append(f"{qid}: pattern needs at least one non-visual relation {sorted(non_visual)}")
+            computed = gold_from_pattern(pattern, triples, landmarks)
+            if not computed:
+                problems.append(f"{qid}: pattern has no gold landmark")
+            elif len(computed) > cfg_v["max_pattern_golds"]:
+                problems.append(f"{qid}: too many gold landmarks ({len(computed)}); narrow the pattern")
+            if gold is not None and gold != computed and not allow_update:
+                problems.append(f"{qid}: gold changed {gold} -> {computed} (locked set; rerun with --update-hand-gold "
+                                "only if Khang approves)")
+            gold = computed
+            sizes[str(len(computed))] += 1
+        else:
+            problems.append(f"{qid}: group must be direct or indirect")
+        for g in gold or []:
+            e = by_qid.get(g)
+            if e and contains_name(q["text"], name_variants(e["label_vi"], e["aliases_vi"], e["viwiki_title"],
+                                                            cfg_v["type_prefixes"])):
+                problems.append(f"{qid}: text names its own answer {g}")
+        out.append({"query_id": qid, "group": group, "text": q["text"], "pattern": pattern, "gold_qids": gold})
+    if problems:
+        raise ValueError("hand-written queries:\n" + "\n".join(problems))
+    stats = {"direct": sum(q["group"] == "direct" for q in out), "indirect": sum(q["group"] == "indirect" for q in out),
+             "indirect_gold_sizes": dict(sorted(sizes.items()))}
+    return out, stats
 
 
 def _entity_row(qid: str, kind: str, category: str, e: dict, page: dict | None) -> dict:
@@ -226,26 +277,36 @@ def replace_stats_block(md_path: Path, block: str) -> None:
     md_path.write_text(text, encoding="utf-8", newline="\n")
 
 
-def run_build(cfg_v: dict, raw_dir: Path, out_dir: Path, splits_dir: Path, stats_md: Path, seed: int) -> dict:
+def run_build(cfg_v: dict, raw_dir: Path, out_dir: Path, splits_dir: Path, stats_md: Path, seed: int,
+              update_hand_gold: bool = False) -> dict:
     result = build_dataset(cfg_v, raw_dir, out_dir, seed)
     check_and_copy_images(result["copies"], raw_dir / "candidates", raw_dir / "images", dry_run=True)
+    hand_path = out_dir / "queries_hand.json"
+    if hand_path.exists():
+        hand, result["stats"]["hand_queries"] = resolve_hand_queries(
+            json.loads(hand_path.read_text(encoding="utf-8")), result["triples"], result["entities"], cfg_v,
+            allow_update=update_hand_gold)
     write_jsonl(out_dir / "entities.jsonl", result["entities"])
     write_jsonl(out_dir / "triples.jsonl", result["triples"])
     write_jsonl(out_dir / "images.jsonl", result["images"])
     write_jsonl(out_dir / "queries_auto.jsonl", result["queries_auto"])
     for name, payload in result["splits"].items():
         write_json(splits_dir / f"{DATASET}_{name}.json", payload)
+    if hand_path.exists():
+        write_json(hand_path, hand)
     check_and_copy_images(result["copies"], raw_dir / "candidates", raw_dir / "images", dry_run=False)
     replace_stats_block(stats_md, stats_markdown(result["stats"]))
     return result["stats"]
 
-
 def main() -> None:
-    argparse.ArgumentParser(description=__doc__.splitlines()[0]).parse_args()
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--update-hand-gold", action="store_true",
+                    help="accept recomputed gold of indirect hand queries (only before the set is locked)")
+    args = ap.parse_args()
     cfg = load_config()
     v = cfg["vnmmkg"]
     stats = run_build(v, REPO_ROOT / v["raw_dir"], REPO_ROOT / v["out_dir"], resolve(cfg, "splits"),
-                      resolve(cfg, "experiments") / "data_stats.md", cfg["seed"])
+                      resolve(cfg, "experiments") / "data_stats.md", cfg["seed"], args.update_hand_gold)
     print(json.dumps(stats, ensure_ascii=False, indent=1))
     problems = scale_problems(stats)
     print("SCALE OK" if not problems else "SCALE OUT OF RANGE: " + "; ".join(problems))

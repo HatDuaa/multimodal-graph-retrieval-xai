@@ -127,3 +127,51 @@ def test_build_refuses_missing_period_qid(tmp_path):
     cfg_v["periods"][0]["qid"] = None
     with pytest.raises(ValueError, match="qid"):
         build_dataset(cfg_v, raw, out, seed=0)
+
+
+import json
+
+from src.data.build_vnmmkg import resolve_hand_queries
+
+
+def _hand(qid="h1", group="indirect", text="Ngôi chùa ở Hà Nội có người dựng", pattern=None, gold=None):
+    return {"query_id": qid, "group": group, "text": text,
+            "pattern": [["P31", "Q50"], ["P131", "Q12"]] if pattern is None else pattern, "gold_qids": gold}
+
+
+def test_hand_queries_gold_and_validation(tmp_path):
+    cfg_v, raw, out = make_raw_cache(tmp_path)
+    r = build_dataset(cfg_v, raw, out, seed=0)
+    args = (r["triples"], r["entities"], cfg_v)
+    queries = [_hand(), _hand("d1", "direct", "Ngôi chùa có mái ngói cong và sân rộng", [], ["Q3"])]
+    resolved, stats = resolve_hand_queries(queries, *args, allow_update=False)
+    assert resolved[0]["gold_qids"] == ["Q1", "Q2"] and resolved[1]["gold_qids"] == ["Q3"]
+    assert stats == {"direct": 1, "indirect": 1, "indirect_gold_sizes": {"2": 1}}
+    assert resolve_hand_queries(resolved, *args, allow_update=False)[0] == resolved      # idempotent
+
+    def problems(qs, **kw):
+        with pytest.raises(ValueError) as err:
+            resolve_hand_queries(qs, *args, allow_update=kw.get("allow_update", False))
+        return str(err.value)
+
+    assert "non-visual" in problems([_hand(pattern=[["P31", "Q50"]])])
+    assert "no gold" in problems([_hand(pattern=[["P131", "Q999"]])])
+    cfg_v["max_pattern_golds"] = 1                      # args holds the same dict
+    assert "too many" in problems([_hand()])
+    cfg_v["max_pattern_golds"] = 5
+    assert "exactly one" in problems([_hand("d1", "direct", "Ngôi chùa có mái ngói cong", [], ["Q1", "Q2"])])
+    assert "duplicate" in problems([_hand(), _hand()])
+    assert "gold changed" in problems([_hand(gold=["Q1"])])
+    assert resolve_hand_queries([_hand(gold=["Q1"])], *args, allow_update=True)[0][0]["gold_qids"] == ["Q1", "Q2"]
+    assert "names its own answer" in problems([_hand("d1", "direct", "Chùa Hương có mái ngói cong", [], ["Q3"])])
+
+
+def test_run_build_writes_hand_queries_and_stats(tmp_path):
+    cfg_v, raw, out = make_raw_cache(tmp_path)
+    (out / "queries_hand.json").write_text(json.dumps([_hand()], ensure_ascii=False), encoding="utf-8")
+    stats = run_build(cfg_v, raw, out, tmp_path / "splits", tmp_path / "s.md", seed=0)
+    assert json.loads((out / "queries_hand.json").read_text(encoding="utf-8"))[0]["gold_qids"] == ["Q1", "Q2"]
+    assert stats["hand_queries"]["indirect"] == 1
+    before = (out / "queries_hand.json").read_bytes()
+    run_build(cfg_v, raw, out, tmp_path / "splits", tmp_path / "s.md", seed=0)
+    assert (out / "queries_hand.json").read_bytes() == before
