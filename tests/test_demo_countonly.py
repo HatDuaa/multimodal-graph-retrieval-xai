@@ -104,3 +104,33 @@ def test_one_caption_is_not_truncated_by_its_own_length():
     assert calls["max_length"] == calls["tokens"] == 8      # "Generate Scene Graph:" + 4 words + end token
     parser.generate_one(" ".join(["word"] * 80))
     assert calls["max_length"] == 64
+
+
+def test_top50_deltas_fill_missing_rows_and_add_up():
+    from src.explain.score_breakdown import top50_deltas
+    terms = {"objects": [[.2, .1], [float("nan")] * 2, [.4, .1]], "triples": [[.3], [.2], [.1]]}
+    out = top50_deltas(.5, [.3, .2, .1], terms)
+    assert out["objects"][1] == pytest.approx([0., 0.])        # filled with the known mean: no push either way
+    assert out["clip"] == pytest.approx([.05, 0., -.05])
+    fused = [.5 * .3 + .3 + .3, .5 * .2 + .4 + .2, .5 * .1 + .5 + .1]  # the missing candidate takes .4 = mean(.3, .5)
+    for k in range(3):
+        total = out["clip"][k] + out["objects"][k].sum() + out["triples"][k].sum()
+        assert total == pytest.approx(fused[k] - sum(fused) / 3)
+
+
+def test_demo_deltas_add_up_to_fused_minus_mean_fused():
+    from src.service.graph_mode import GraphRerankMode
+    store, model, batch = count_model_and_batch()
+    with torch.no_grad():
+        fused, detail = model(batch, return_encoded=True)
+        query_parts = store.graph_parts(store.queries["q"], query=True)
+        ids = batch["candidate_ids"][0].tolist()
+        all_pairs = [matched_pairs(model, detail, query_parts, store.graph_parts(store.graphs[i]),
+                                   int(batch["candidate_index"][0, k])) for k, i in enumerate(ids)]
+    hits = [SimpleNamespace(clip_score=float(batch["clip"][0, k])) for k in range(len(ids))]
+    deltas = GraphRerankMode._deltas(float(detail["weights"][0, 0]), hits, all_pairs)
+    for k in range(len(ids)):
+        total = deltas["clip"][k] + deltas["objects"][k].sum() + deltas["triples"][k].sum()
+        assert total == pytest.approx(float(fused[0, k] - fused[0].mean()), abs=1e-6)
+    missing = ids.index(2)                                  # image 2 has no relation: its triple part was filled
+    assert deltas["triples"][missing].sum() == pytest.approx(0., abs=1e-9)

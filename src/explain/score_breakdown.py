@@ -6,8 +6,12 @@ into per-row terms; it is shared out in proportion to each row's raw contributio
 over the channels that are active for the query only.
 
 Raw fusion (fuse_raw, the improvement-phase models): fused = a * CLIP + b * S_obj + c * S_tri, and a channel score is
-S = sum_i w_i * sum_j a_ij * sim_ij over the query parts i, so every part is exact (split_raw_score).
+S = sum_i w_i * sum_j a_ij * sim_ij over the query parts i, so every part is exact (split_raw_score). Since a, b, c and
+w_i are the same for every candidate of a query, each part also compares exactly with its mean over the candidates
+(top50_deltas): what puts this image above or below the average of the pool.
 """
+import numpy as np
+
 
 
 def split_final_score(fused, clip_weight, z_clip, graph, contributions, active):
@@ -53,3 +57,22 @@ def split_raw_score(fused, clip_weight, clip, terms, fills):
             "row_parts": {channel: list(values) for channel, values in terms.items()},
             "row_shares": {channel: [share(part) for part in values] for channel, values in terms.items()},
             "fill_parts": dict(fills), "fill_shares": {channel: share(part) for channel, part in fills.items()}}
+
+
+def top50_deltas(clip_weight, clip, terms):
+    """Each raw-fusion row against the mean of the same row over the K candidates of the query.
+
+    clip: (K,) CLIP cosines. terms: {channel: (K, n) array of channel weight * w_i * sum_j a_ij sim_ij for the n
+    scorable query parts, NaN on every row of a candidate that has no part in that channel}. As in fuse_raw, such a
+    candidate takes the known mean of each row (channel weight and w_i do not change between candidates, so the rows
+    split the filled channel score exactly; 0 when no candidate has a part). Returns {"clip": (K,), channel: (K, n)};
+    for every candidate the deltas add up to fused - mean(fused), and a candidate with a filled channel gets 0 there.
+    """
+    out = {"clip": clip_weight * (np.asarray(clip, dtype=np.float64) - np.mean(clip))}
+    for channel, values in terms.items():
+        values = np.asarray(values, dtype=np.float64)
+        known = np.isfinite(values)
+        mean = np.where(known, values, 0.).sum(0) / np.maximum(known.sum(0), 1)
+        filled = np.where(known, values, mean)
+        out[channel] = filled - filled.mean(0)
+    return out
