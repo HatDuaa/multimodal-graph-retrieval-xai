@@ -70,6 +70,12 @@ footer { display: none !important; }
                 background: var(--neutral-200, #e5e7eb); }
 #detail .sbar > span { display: block; height: 100%; background: var(--ch); opacity: 0.75; }
 #detail .sbar.neg > span { background: var(--neutral-400, #9ca3af); }
+#detail .dbar { display: inline-block; width: 40px; height: 6px; border-radius: 3px; overflow: hidden;
+                background: var(--neutral-200, #e5e7eb); }
+#detail .dbar > span { display: block; height: 100%; background: #16a34a; }
+#detail .dbar.neg > span { background: #dc2626; }
+#detail .summary .up { color: #16a34a; font-weight: 600; }
+#detail .summary .down { color: #dc2626; font-weight: 600; }
 """
 
 # Short reason shown in place of the matched image part; codes come from src.service.graph_mode.unmatched_parts.
@@ -117,6 +123,22 @@ def share_cell(share: float | None, part: float | None, raw: float | None = None
     return f'<td class="num"{title}><span class="share">{bar}{signed(share, ".0%")}</span></td>'
 
 
+def clean(value: float) -> float:
+    """0 for float noise, so a filled channel (exactly 0 in theory) does not print as −0.0000."""
+    return 0. if abs(value) < 1e-9 else value
+
+
+def delta_cell(delta: float | None, scale: float) -> str:
+    """This row minus its mean over the 50 candidates, with a green (above) or red (below) bar scaled to the table."""
+    if delta is None:
+        return DASH
+    delta = clean(delta)
+    width = min(abs(delta) / scale, 1) * 100 if scale > 0 else 0
+    bar = f'<span class="dbar{" neg" if delta < 0 else ""}"><span style="width:{width:.1f}%"></span></span>'
+    return (f'<td class="num" title="giá trị dòng ở ảnh này − trung bình của dòng đó trên 50 ứng viên">'
+            f'<span class="share">{bar}{signed(delta, "+.4f")}</span></td>')
+
+
 def count_notes(item: dict) -> tuple[str, str]:
     """Count class of the caption node and count bucket + g of the matched image node, for a stated count."""
     if item.get("query_count", "unknown") == "unknown":
@@ -125,13 +147,15 @@ def count_notes(item: dict) -> tuple[str, str]:
             f' <span class="muted">số lượng {esc(item["image_count"])} · g = {signed(item["count_bias"], "+.3f")}</span>')
 
 
-def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, split: dict) -> list[str]:
+def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, split: dict, scale: float = 0.) -> list[str]:
     """Row group of one channel: matched parts by contribution, then query parts without a match and why.
 
     z-score fusion: Độ khớp is a × sim of the best image part and the row part is the proportional share. Raw fusion:
-    Độ khớp is sum_j a_j × sim_j over the image parts and the row part, channel weight × w × Độ khớp, is exact.
+    Độ khớp is sum_j a_j × sim_j over the image parts and the row part, channel weight × w × Độ khớp, is exact; a
+    last column compares it with its mean over the 50 candidates.
     """
     raw = info.get("fusion") == "raw"
+    delta = (lambda value: delta_cell(value, scale)) if raw and "clip_delta" in info else (lambda value: "")  # noqa: E731
     active = info.get("channel_active", [True, True])[0 if key == "objects" else 1]
     cells = []
     rows = zip(info[key], split["row_parts"][key], split["row_shares"][key])
@@ -143,19 +167,21 @@ def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, spli
         else:
             match, cell = num(item["a_ij"] * item["sim_ij"], 2), share_cell(share, part, item["contribution"])
         cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code>{query_note}</td>' + num(item["w_i"], 2)
-                     + f'<td><code>{esc(part_text(item["image_part"]))}</code>{image_note}</td>' + match + cell)
+                     + f'<td><code>{esc(part_text(item["image_part"]))}</code>{image_note}</td>' + match + cell
+                     + delta(item.get("delta")))
     fill = split.get("fill_parts", {}).get(key)
     if fill is not None and any(item["reason"] == "image_empty" for item in info.get("unmatched", {}).get(key, [])):
         cells.append("<td>cả kênh</td>" + DASH + f'<td>— <span class="muted">{FILLED[key]}</span></td>'
-                     + num(fill / weight if weight else None, 2) + share_cell(split["fill_shares"][key], fill))
+                     + num(fill / weight if weight else None, 2) + share_cell(split["fill_shares"][key], fill)
+                     + delta(info.get("fill_deltas", {}).get(key)))
     for item in info.get("unmatched", {}).get(key, []):
         reason = UNMATCHED_REASONS.get(item["reason"], item["reason"])
         reason = reason[key] if isinstance(reason, dict) else reason
         cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code></td>' + DASH
-                     + f'<td>— <span class="muted">{esc(reason)}</span></td>' + DASH + DASH)
+                     + f'<td>— <span class="muted">{esc(reason)}</span></td>' + DASH + DASH + delta(None))
     if not cells:
         cells.append("<td>—</td>" + DASH + f'<td>— <span class="muted">{NO_QUERY_PARTS[key]}</span></td>'
-                     + DASH + DASH)
+                     + DASH + DASH + delta(None))
     if raw:
         note = '<span class="muted">Σw = 1</span>' if info[key] else ""
     else:
@@ -174,23 +200,47 @@ def score_summary(fused: float, split: dict) -> str:
             + term("Đồ thị", "graph", split["graph_part"], split["graph_share"]) + "</p>")
 
 
+def delta_summary(info: dict) -> str:
+    """Hơn trung bình top-50: +X = CLIP + vật thể + bộ ba, each the sum of its rows' deltas."""
+    parts = [("CLIP", info["clip_delta"])] + [
+        (title, clean(sum(item["delta"] for item in info[key]) + (info["fill_deltas"].get(key) or 0.)))
+        for key, title, _ in CHANNELS]
+    total = info["delta_total"]
+    word = "Hơn" if total >= 0 else "Kém"
+    cls = lambda value: "up" if value >= 0 else "down"  # noqa: E731
+    return (f'<p class="summary">{word} trung bình top-50: <span class="{cls(total)}">{signed(total, "+.4f")}</span> = '
+            + " + ".join(f'{name} <span class="{cls(value)}">{signed(value, "+.4f")}</span>' for name, value in parts)
+            + "</p>")
+
+
 def raw_explanation(info: dict, hit: Hit) -> str:
     """Raw fusion: fused = a × cosine + b × S_obj + c × S_tri, every row an exact part of the final score."""
     a, b, c = info["weights_abc"]
     split = split_raw_score(hit.score, a, hit.clip_score,
                             {key: [item["channel_term"] for item in info[key]] for key, _, _ in CHANNELS},
                             info.get("fills", {}))
+    deltas = "clip_delta" in info
+    values = [info["clip_delta"]] + [item["delta"] for key, _, _ in CHANNELS for item in info[key]] if deltas else []
+    scale = max((abs(v) for v in values), default=0.)
     rows = ['<tr class="ch-clip group-start"><td class="channel"><b>CLIP</b> ' f"{a:.0%}</td>"
             "<td>cả câu</td>" + DASH + "<td>cả ảnh</td>"
             f'<td class="num">cosine {hit.clip_score:.4f}</td>'
-            + share_cell(split["clip_share"], split["clip_part"]) + "</tr>"]
+            + share_cell(split["clip_share"], split["clip_part"])
+            + (delta_cell(info["clip_delta"], scale) if deltas else "") + "</tr>"]
     for (key, title, cls), weight in zip(CHANNELS, (b, c)):
-        rows += channel_rows(key, title, cls, weight, info, split)
+        rows += channel_rows(key, title, cls, weight, info, split, scale)
     total_share = "100%" if hit.score > 0 else signed(hit.score, ".3f")
+    total_delta = f'<td class="num">{signed(info["delta_total"], "+.4f")}</td>' if deltas else ""
     rows.append(f'<tr class="total"><td>Tổng</td><td></td>{EMPTY}<td></td>{EMPTY}'
-                f'<td class="num">{total_share}</td></tr>')
+                f'<td class="num">{total_share}</td>{total_delta}</tr>')
     notes = ["Điểm cuối = a × cosine CLIP + b × S(vật thể) + c × S(bộ ba) (fusion raw, không chuẩn hoá trong top-50), "
              "nên mọi phần đều tách đúng: các % cộng lại bằng 100%.",
+             "Cột So với TB top-50 = giá trị dòng ở ảnh này trừ trung bình của đúng dòng đó trên 50 ứng viên (trọng số "
+             "kênh và w không đổi giữa các ứng viên, chỉ Σ a × sim đổi). Cột này cho biết dòng nào đẩy ảnh lên hay kéo "
+             "xuống so với các ảnh khác: một dòng có thể chiếm nhiều % điểm cuối mà gần như không giúp xếp hạng."]
+    if not deltas:
+        notes.pop()
+    notes += [
              "Mỗi dòng = trọng số kênh × w × Độ khớp, với Độ khớp = Σ a × sim trên mọi phần của ảnh theo attention; "
              "cột Phần khớp ghi phần có a lớn nhất (rê chuột lên ô % để xem a và sim của nó).",
              "Cạnh kNN không nhãn ([none]) và node tổng chỉ dùng lúc truyền tin trong GAT, không được so khớp nên không "
@@ -200,13 +250,14 @@ def raw_explanation(info: dict, hit: Hit) -> str:
                      "(bảng g học lúc train; số lượng không rõ thì g = 0).")
     if any(part is not None for part in split["fill_parts"].values()):
         notes.append("Kênh mà ảnh không có phần nào để so khớp: fusion raw lấy điểm kênh trung bình của các ảnh ứng "
-                     "viên có phần đó.")
+                     "viên có phần đó, nên kênh này không đẩy ảnh lên hay xuống (So với TB top-50 = 0).")
     if hit.score <= 0:
         notes.append("Điểm cuối không dương nên cột % điểm cuối ghi giá trị tuyệt đối của từng phần.")
-    return (score_summary(hit.score, split)
+    return (score_summary(hit.score, split) + (delta_summary(info) if deltas else "")
             + '<table><thead><tr><th>Kênh</th><th class="text">Phần của câu</th><th class="num">w</th>'
             '<th class="text">Phần khớp trong ảnh</th>'
-            '<th class="text">Độ khớp (Σ a × sim)</th><th class="text">% điểm cuối</th></tr>'
+            '<th class="text">Độ khớp (Σ a × sim)</th><th class="text">% điểm cuối</th>'
+            + ('<th class="text">So với TB top-50</th>' if deltas else "") + "</tr>"
             "</thead><tbody>" + "".join(rows) + "</tbody></table>"
             + "".join(f'<p class="muted">{note}</p>' for note in notes))
 

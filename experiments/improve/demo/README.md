@@ -126,3 +126,31 @@ các batch 64 theo đúng thứ tự lúc parse, rồi dùng tokenizer để bi�
   - `generate_one` không cắt token của một câu.
 - Toàn bộ test: 133 passed.
 - **Chạy thử app trên server:** `--split val`, gọi `/run` qua API của Gradio. Ra 5 kết quả và bảng giải thích như mô tả.
+
+## Cột "So với TB top-50" (thêm 25/10/2026)
+
+**Vì sao cần.** Dưới fusion raw, cột "% điểm cuối" cho kênh bộ ba chiếm phần lớn điểm, dù phần này gần như bằng nhau giữa
+các ảnh ứng viên (xem `experiments/improve/explanations/`). Người xem dễ hiểu nhầm rằng bộ ba quyết định thứ hạng.
+
+**Cột mới.** Với mỗi dòng (CLIP, từng dòng vật thể, từng dòng bộ ba, dòng "cả kênh"):
+Δ = giá trị dòng ở ảnh này − trung bình của đúng dòng đó trên 50 ứng viên của câu
+(`src/explain/score_breakdown.top50_deltas`).
+
+- Trọng số kênh và w_i không đổi giữa các ứng viên, chỉ Σ a·sim đổi.
+- Ứng viên không có phần nào cho một kênh lấy giá trị đã fill, đúng như `fuse_raw`. Mỗi dòng nhận trung bình của các ứng
+  viên có phần, nên tổng các dòng đúng bằng điểm kênh đã fill. Một kênh đã fill vì vậy luôn có Δ = 0.
+- Tổng các Δ của một ảnh đúng bằng fused − mean(fused). Test: `tests/test_demo_countonly.py`, có một ca thiếu kênh bộ ba.
+- Dòng tóm tắt dạng "Hơn trung bình top-50: +X = CLIP +… + Vật thể +… + Bộ ba +…".
+- Thanh xanh nghĩa là dòng đẩy ảnh lên, đỏ là kéo xuống. Mô hình cấp 1 (z-score) giữ nguyên bảng cũ.
+
+**Ví dụ.** Câu "Two dogs playing with a frisbee on the grass", chạy qua API của app trên server (CPU, split val):
+- `delta_example_api.html`: bảng của ảnh hạng 1 mà `/run` trả về.
+- `delta_example.html`: thêm ảnh 2399623, ảnh không có bộ ba, kèm CSS của app.
+
+| Ảnh | Điểm cuối | Bộ ba (% điểm cuối) | Hơn / kém trung bình top-50 |
+|---|---|---|---|
+| 2319590 (hạng 1) | 0,584 | 57% | +0,0669 = CLIP +0,0256 + Vật thể +0,0429 + Bộ ba −0,0016 |
+| 2399623 (hạng 34, không có bộ ba) | 0,503 | 67% (dòng "cả kênh") | −0,0140 = CLIP +0,0098 + Vật thể −0,0237 + Bộ ba +0,0000 |
+
+Ở cả hai ảnh, kênh bộ ba chiếm hơn nửa điểm cuối nhưng gần như không đổi thứ hạng. Chính kênh vật thể (dog, frisbee,
+grass) và CLIP đẩy ảnh hạng 1 lên trên trung bình.

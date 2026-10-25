@@ -17,6 +17,7 @@ import torch
 
 from src.data.graph_store import GraphIndex, GraphStore, attach_count_buckets
 from src.explain.graph_explainer import matched_pairs
+from src.explain.score_breakdown import top50_deltas
 from src.graph.soft_match import PRONOUNS
 from src.models.graph_reranker import fill_known_mean
 from src.train_graph_reranker import load_run_model, structure_options
@@ -135,6 +136,21 @@ class GraphRerankMode:
             self.image_parts[image_id] = GraphStore._graph_parts(self.graphs[image_id], **self.structure)
         return self.image_parts[image_id]
 
+    @staticmethod
+    def _deltas(clip_weight, hits, all_pairs):
+        """top50_deltas of every row; columns[channel] maps a query part index to its column."""
+        out = {"columns": {}}
+        terms = {}
+        for key in ("objects", "triples"):
+            indices = sorted({item["query_index"] for pairs in all_pairs for item in pairs[key]})
+            out["columns"][key] = {index: col for col, index in enumerate(indices)}
+            terms[key] = np.full((len(hits), len(indices)), np.nan)
+            for row, pairs in enumerate(all_pairs):
+                for item in pairs[key]:
+                    terms[key][row, out["columns"][key][item["query_index"]]] = item["channel_term"]
+        out.update(top50_deltas(clip_weight, [h.clip_score for h in hits], terms))
+        return out
+
     @torch.no_grad()
     def __call__(self, query, hits):
         query_graph = self.parse(query)
@@ -156,8 +172,10 @@ class GraphRerankMode:
         # fuse_raw fills a missing channel score (image without a part to match) with the candidates' known mean
         filled = {"objects": fill_known_mean(detail["objects"])[0], "triples": fill_known_mean(detail["triples"])[0]}
         names = lambda graph: {o["id"]: o["name"] for o in graph["objects"]}  # noqa: E731
-        for row, (hit, parts) in enumerate(zip(hits, image_parts)):
-            pairs = matched_pairs(self.model, detail, query_parts, parts, row)
+        all_pairs = [matched_pairs(self.model, detail, query_parts, parts, row) for row, parts in enumerate(image_parts)]
+        deltas = self._deltas(weights[0], hits, all_pairs) if self.fusion == "raw" else None
+        mean_fused = float(fused[0].mean())
+        for row, (hit, parts, pairs) in enumerate(zip(hits, image_parts, all_pairs)):
             image_graph, qnames, inames = self.graphs[hit.image_id], names(query_graph), names(self.graphs[hit.image_id])
             for item in pairs["objects"]:
                 item["query_part"] = query_graph["objects"][item["query_index"]]["name"]
@@ -179,6 +197,15 @@ class GraphRerankMode:
                 info["fills"] = {key: (weights[k] * float(filled[key][row])
                                        if not bool(torch.isfinite(detail[key][0, row])) else None)
                                  for k, key in ((1, "objects"), (2, "triples"))}
+                # each row against its mean over the 50 candidates; the deltas add up to fused - mean(fused)
+                info["clip_delta"] = float(deltas["clip"][row])
+                info["delta_total"] = float(fused[0, row]) - mean_fused
+                info["fill_deltas"] = {}
+                for key in ("objects", "triples"):
+                    for item in pairs[key]:
+                        item["delta"] = float(deltas[key][row, deltas["columns"][key][item["query_index"]]])
+                    info["fill_deltas"][key] = (float(deltas[key][row].sum())
+                                                if info["fills"][key] is not None else None)
             else:
                 # z-scored CLIP term of fused = a * z_clip + (1 - a) * graph (fuse_tensor)
                 info["z_clip"] = float(detail["z_clip"][0, row])
