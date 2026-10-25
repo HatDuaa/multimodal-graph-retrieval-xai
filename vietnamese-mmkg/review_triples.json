@@ -1,0 +1,434 @@
+{
+ "reviewer": "",
+ "exported": "2026-10-25",
+ "decisions": {
+  "Q1005868|P825|Q7055|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10748440|P2348|Q10800791|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10748440|P825|Q16481089|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10748461|P131|Q36721|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10748470|P131|Q36413|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10784247|P131|Q36512|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10788178|P112|Q465059|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10788178|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10788196|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10788196|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800884|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800885|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800886|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800887|P131|Q33396|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800888|P112|Q3370279|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800888|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800893|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800894|P131|Q36907|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800904|P131|Q36721|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800904|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800905|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10800905|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10825819|P131|Q36721|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10825819|P140|Q10761708|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10833485|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10833485|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10834009|P131|Q36907|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10834009|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10834009|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10834010|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10834010|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10840433|P112|Q210417|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10840433|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10841674|P131|Q33396|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q10841674|P825|Q7833315|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1088224|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1088224|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1091048|P131|Q33408|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q114397271|P131|Q33356|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1186292|P112|Q711472|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1186292|P2348|Q878309|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1202019|P2348|Q878309|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1359941|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q16480501|P131|Q36874|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q16480514|P131|Q216075|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q16511573|P112|Q466976|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q16511573|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q180566|P112|Q711472|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q180566|P2348|Q878309|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q18460002|P131|Q33403|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1923783|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1923783|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1932222|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q1932222|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q20026052|P131|Q36690|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q20026052|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2277986|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2344822|P131|Q36592|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q23513|P131|Q23533|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2817231|P825|Q25418142|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2942901|P131|Q33369|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2942901|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q2942901|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q3096348|P131|Q36721|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q3096348|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q3360457|P2348|Q10800791|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q3360468|P112|Q10788110|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q3360468|P140|Q48362|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q391406|P825|Q11378|infobox": {
+   "keep": false,
+   "reason": ""
+  },
+  "Q428129|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q428129|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q482355|P112|Q310913|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q5370148|P131|Q1858|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q5370148|P825|Q704070|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q5370148|P825|Q9598|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q5370414|P131|Q1858|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q5965459|P131|Q33356|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q600269|P131|Q33369|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q600269|P825|Q17097872|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q6837230|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q6941009|P131|Q33356|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q6941034|P131|Q33356|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q6941045|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7189862|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481070|P112|Q434419|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481070|P112|Q540994|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481070|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481171|P112|Q466976|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481171|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7481171|P2348|Q6500483|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7680488|P131|Q23533|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7682043|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7818615|P112|Q210417|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7818615|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7818621|P112|Q468758|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7818621|P131|Q131746469|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7818621|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q782099|P131|Q36900|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q782099|P140|Q9592|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q782099|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q7932540|P131|Q36666|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q8052668|P131|Q33369|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q864767|P2348|Q2523849|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q874234|P131|Q1858|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q975568|P112|Q3087774|infobox": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q975568|P2348|Q10800791|derived": {
+   "keep": true,
+   "reason": ""
+  },
+  "Q993402|P131|Q72818|derived": {
+   "keep": true,
+   "reason": ""
+  }
+ }
+}
