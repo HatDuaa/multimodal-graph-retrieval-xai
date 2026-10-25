@@ -1,6 +1,6 @@
 # Khai báo mã nguồn mở, dữ liệu và công cụ AI
 
-Theo mục 9 của đề: khai báo mã nguồn mở và công cụ AI đã dùng, ghi rõ phần đã chỉnh sửa. Claude soạn ngày 2026-09-26 dựa
+Theo mục 9 của đề: khai báo mã nguồn mở và công cụ AI đã dùng, ghi rõ phần đã chỉnh sửa. Claude soạn ngày 2026-09-26, cập nhật ngày 2026-10-25 cho phase cải tiến, dựa
 trên lịch sử git, nhật ký làm việc và các spec trong `local-docs/specs/`. Phần phân công giữa người và AI do Lộc xác nhận
 cùng ngày.
 
@@ -19,9 +19,21 @@ Dùng qua API, không chép hay sửa mã nguồn của thư viện. Phiên bả
 | NumPy, pandas, Pillow, PyYAML, requests, tqdm | Xử lý dữ liệu, ảnh, tải file | BSD / MIT / HPND / Apache-2.0 |
 | Gradio 6.28 | Giao diện demo | Apache-2.0 |
 | pytest | Kiểm thử | MIT |
+| FactualSceneGraph 0.7.3 | Tách caption thành scene graph bằng FACTUAL-T5 (phase cải tiến, demo) | MIT |
+| transformers 5.20.1, tokenizers 0.23 | Chạy model FACTUAL-T5 | Apache-2.0 |
+| NLTK 3.10 + WordNet | Xác định "cùng loại" theo synset / hypernym khi gộp khung trùng và đếm số lượng | Apache-2.0 (NLTK); giấy phép WordNet của Princeton |
+| matplotlib 3.11 | Vẽ hình trong báo cáo thí nghiệm | Giấy phép matplotlib (dựa trên PSF) |
 
 Nhóm không dùng mã nguồn của bài báo nào ở cấp độ 1. Mô hình xếp lại (`src/models/graph_reranker.py`) do nhóm viết theo
 thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
+
+**Model tiền huấn luyện, chỉ chạy suy luận:**
+- CLIP ViT-B/32 của OpenAI (như trên).
+- FACTUAL-T5 large, `lizhuang144/flan-t5-large-VG-factual-sg` trên Hugging Face (Li và cộng sự, "FACTUAL: A Benchmark for
+  Faithful and Consistent Textual Scene Graph Parsing", ACL Findings 2023), xây trên FLAN-T5 (Apache-2.0). Thẻ model không
+  ghi giấy phép (kiểm ngày 25/10/2026). Nhóm không tinh chỉnh model này.
+- Một lỗi của FactualSceneGraph 0.7.3 (cắt token cuối của câu dài nhất mỗi batch) được nhóm vá trong code của mình
+  (`FactualParser.generate_one` trong `src/graph/caption_parsers.py`), không sửa thư viện.
 
 ## 2. Dữ liệu
 
@@ -66,9 +78,29 @@ nhật ký làm việc.
 | Giải thích và 10 ca phân tích, phép thử xoá, đo độ trải vector (`d9eddc3`) | Claude; ca chọn bằng quy tắc cố định, lời phân tích viết sau khi xem ảnh thật | Duyệt |
 | Chế độ CLIP + Đồ thị trong demo, kịch bản video (`657fea7`) | Claude | Duyệt; tự quay video |
 | Nháp báo cáo cấp độ 1 và bản khai báo này | Claude | Duyệt, sửa |
+| Demo: bảng giải thích gộp theo kênh, % điểm cuối (PR #14–#18) | Claude (một agent con viết phần giao diện) | Đề xuất bố cục bảng, duyệt |
+
+## 4. Phase cải tiến (18–25/10/2026)
+
+Làm bởi **Lộc** cùng **Claude**: một session Claude Code trên máy RTX 4090 viết code, chạy thí nghiệm và viết báo cáo
+từng thí nghiệm; một session Claude Code trên máy của Lộc điều phối, review và mở pull request. Lộc chốt từng hướng thử, quyết định gộp bốn thay đổi thành một thí nghiệm, quyết định bỏ gom nhóm, và chọn mô
+hình chính trước khi chấm test.
+
+| Phần việc | Công cụ AI chính | Lộc |
+|---|---|---|
+| Chẩn đoán kênh bộ ba, so khớp tách thành phần, kênh mức đồ thị, so parser, kênh hình học theo luật | Claude (máy 4090) | Đề xuất hướng, duyệt |
+| Train lại với FACTUAL-T5, trộn điểm thô, ghép cả đồ thị (FGW), audit gộp trùng | Claude (máy 4090) | Chốt hướng, duyệt |
+| Đồ thị ảnh liền (gộp trùng, hình học cạnh, kNN, node tổng), node nhóm, số lượng + bảng g (PR #22) | Claude (máy 4090) | Đề xuất ý tưởng đồ thị liền và số lượng; chốt từng bước |
+| Chấm test một lần cho mô hình chính (`8806b52`) | Claude, sau khi Lộc chốt | Duyệt |
+| Demo dùng mô hình chính, cột "so với trung bình top-50" (PR #23, #27) | Claude | Duyệt, chạy thử |
+| 10 truy vấn của mô hình chính, đối chứng lúc chấm, quét α, nhóm câu, ablation bỏ cạnh (PR #24–#26, #29) | Claude (máy 4090); lời phân tích viết sau khi xem ảnh thật | Duyệt |
+| Cập nhật nháp báo cáo và bản khai báo này | Claude | Duyệt, sửa |
+
+## 5. Nguyên tắc
 
 Nguyên tắc áp dụng cho mọi phần do AI làm:
 - Số liệu chỉ lấy từ file kết quả có log và seed.
 - Không nới lỏng phép kiểm tra nào: kiểm tra bước 0 và các file tham chiếu giữ nguyên.
-- Test chỉ chạm một lần.
+- Test chỉ chấm một lần cho mỗi mô hình chính đã chốt (25/09 cho mô hình cấp 1, 25/10 cho mô hình chính mới); các bước
+  chọn mô hình đều dựa trên val.
 - Mọi thay đổi đi qua commit và pull request có người duyệt.
