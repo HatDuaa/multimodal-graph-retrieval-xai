@@ -44,3 +44,8 @@ def landmark_candidates(raw_dir: Path, cfg_v: dict) -> tuple[list[str], dict[str
     sparql_qids = _read_json(Path(raw_dir) / "candidates.json", {"sparql_qids": []})["sparql_qids"]
     ranked, _ = rank_candidates(entities, sparql_qids, cfg_v)
     return ranked, entities
+
+
+def load_commons(raw_dir: Path) -> dict[str, dict]:
+    return {p.stem: json.loads(p.read_text(encoding="utf-8"))
+            for p in sorted((Path(raw_dir) / "commons").glob("Q*.json"))}
