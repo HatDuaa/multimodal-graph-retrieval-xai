@@ -22,3 +22,5 @@ gradio==6.28.0
 # because its declared dependencies would downgrade torch to 2.6.0.
 transformers==5.20.1
 nltk==3.10.3
+# figures in experiment reports (scripts/improve/alpha_groups_countonly.py)
+matplotlib==3.11.2
