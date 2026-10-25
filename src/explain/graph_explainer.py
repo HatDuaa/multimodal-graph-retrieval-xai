@@ -28,10 +28,11 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
     models, object rows also carry query_count, image_count and count_bias = g[query_count, image_count], which sim_ij
     includes. row_score = sum_j a_ij * sim_ij over every image part, and channel_term = channel weight * w_i *
     row_score: the channel score is sum_i w_i * row_score_i, so under the raw fusion the channel terms of one image
-    add up exactly to its part of the final score.
+    add up exactly to its part of the final score. image_terms splits the same part by image part instead:
+    term_j = channel weight * sum_i w_i * a_ij * sim_ij.
     """
     weights = detail['weights'][query_row]
-    result = {'objects': [], 'triples': []}
+    result = {'objects': [], 'triples': [], 'image_terms': {'objects': [], 'triples': []}}
     for channel, offset, tau, u, weight in (('objects', 0, model.tau_objects(), model.u_objects, weights[1]),
                                            ('triples', 2, model.tau_triples(), model.u_triples, weights[2])):
         qs, qm = detail['encoded_query'][offset:offset + 2]
@@ -58,6 +59,8 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
         q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
                      if channel == 'objects' else query_parts['relation_indices'])
         p_indices = image_parts['node_indices'] if channel == 'objects' else image_parts['relation_indices']
+        image_terms = weight * (w[:, None] * attention * sims).sum(0)
+        result['image_terms'][channel] = [{'image_index': p_indices[j], 'term': float(t)} for j, t in enumerate(image_terms)]
         for i, j in enumerate(best.tolist()):
             row = {'query_index': q_indices[i], 'image_index': p_indices[j],
                    'w_i': float(w[i]), 'a_ij': float(attention[i, j]),

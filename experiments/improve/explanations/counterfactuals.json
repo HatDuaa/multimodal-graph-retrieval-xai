@@ -1,0 +1,125 @@
+{
+  "rule": "Is it the count term or the merged graph? Eval-time counterfactuals for the comparison examples (val, no training).\n\nFor countonly_factual_r3 (trained on count_v1), two changes at evaluation only:\n- g = 0: the learned count table zeroed, so object similarities lose the count term;\n- unmerged: every val image graph rebuilt from the level-1 graph and its VG boxes exactly as merge_v1\n  (scripts/improve/package_merged.merged_graph) but with no IoU merge (threshold above 1), count buckets recomputed.\nPer seed: val R@1 and MRR as trained and under each change, overall and on captions with an explicit count. For the three\ncomparison examples of experiments/improve/explanations/cases.json (seed 0): the gold image's rank and the score gap to\nthe best other image as trained and under each change. Writes experiments/improve/explanations/counterfactuals.json.\n",
+  "nodes": {
+    "merged": 52230,
+    "unmerged": 56181
+  },
+  "seeds": {
+    "countonly_factual_r3_seed0": {
+      "trained": {
+        "recall@1": 0.49148876140317876,
+        "mrr": 0.6109571106970852,
+        "recall@1_explicit": 0.551417004048583,
+        "recall@1_no_explicit": 0.48361353479463715
+      },
+      "g_zero": {
+        "recall@1": 0.48763284115489514,
+        "mrr": 0.6079001756432287,
+        "recall@1_explicit": 0.5344129554655871,
+        "recall@1_no_explicit": 0.48148542243030434
+      },
+      "unmerged": {
+        "recall@1": 0.49073638672058684,
+        "mrr": 0.6099868807236731,
+        "recall@1_explicit": 0.5506072874493927,
+        "recall@1_no_explicit": 0.4828686954671207
+      }
+    },
+    "countonly_factual_r3_seed1": {
+      "trained": {
+        "recall@1": 0.48847926267281105,
+        "mrr": 0.6079585874701057,
+        "recall@1_explicit": 0.5408906882591094,
+        "recall@1_no_explicit": 0.48159182804852096
+      },
+      "g_zero": {
+        "recall@1": 0.4849995297658234,
+        "mrr": 0.6053293858875982,
+        "recall@1_explicit": 0.5182186234817814,
+        "recall@1_no_explicit": 0.4806341774845712
+      },
+      "unmerged": {
+        "recall@1": 0.48857330950813505,
+        "mrr": 0.6081159716241339,
+        "recall@1_explicit": 0.5392712550607287,
+        "recall@1_no_explicit": 0.4819110449031709
+      }
+    },
+    "countonly_factual_r3_seed2": {
+      "trained": {
+        "recall@1": 0.48735070064892316,
+        "mrr": 0.6067866956088908,
+        "recall@1_explicit": 0.5295546558704454,
+        "recall@1_no_explicit": 0.48180463928495426
+      },
+      "g_zero": {
+        "recall@1": 0.48415310824790747,
+        "mrr": 0.6040598958982523,
+        "recall@1_explicit": 0.5206477732793522,
+        "recall@1_no_explicit": 0.4793573100659715
+      },
+      "unmerged": {
+        "recall@1": 0.48753879431957114,
+        "mrr": 0.6073685802039356,
+        "recall@1_explicit": 0.5287449392712551,
+        "recall@1_no_explicit": 0.4821238561396042
+      }
+    }
+  },
+  "examples": {
+    "472772_2": {
+      "category": "count_fixed",
+      "trained": {
+        "rank": 1,
+        "gold_score": 0.4899969696998596,
+        "gap_to_best_other": 0.01357966661453247
+      },
+      "g_zero": {
+        "rank": 1,
+        "gold_score": 0.48732417821884155,
+        "gap_to_best_other": 0.008117258548736572
+      },
+      "unmerged": {
+        "rank": 1,
+        "gold_score": 0.4915730953216553,
+        "gap_to_best_other": 0.014896750450134277
+      }
+    },
+    "237041_4": {
+      "category": "merge_fixed",
+      "trained": {
+        "rank": 1,
+        "gold_score": 0.41479212045669556,
+        "gap_to_best_other": 0.010128498077392578
+      },
+      "g_zero": {
+        "rank": 1,
+        "gold_score": 0.41479212045669556,
+        "gap_to_best_other": 0.01012846827507019
+      },
+      "unmerged": {
+        "rank": 1,
+        "gold_score": 0.4100479483604431,
+        "gap_to_best_other": 0.005384325981140137
+      }
+    },
+    "151938_1": {
+      "category": "count_bad_match",
+      "trained": {
+        "rank": 1,
+        "gold_score": 0.41088053584098816,
+        "gap_to_best_other": 0.0052457451820373535
+      },
+      "g_zero": {
+        "rank": 1,
+        "gold_score": 0.4113308787345886,
+        "gap_to_best_other": 0.008281916379928589
+      },
+      "unmerged": {
+        "rank": 1,
+        "gold_score": 0.41088050603866577,
+        "gap_to_best_other": 0.003542482852935791
+      }
+    }
+  }
+}
