@@ -1,0 +1,30 @@
+# Ví dụ giải thích kênh số lượng + vị trí (ảnh đúng của câu)
+
+- `440284_0` Three young men are standing next to four bicycles.
+  - câu: 3 man — ảnh: 3 man ✓
+  - câu: 4 bicycle — ảnh: 4 bicycle ✓
+  - câu: man next to bicycle — ảnh: 9/12 cặp khung thoả 'beside' ✓
+- `440284_1` A group of three men standing next to bikes.
+  - câu: 3 man — ảnh: 3 man ✓
+  - câu: man next to bike — ảnh: 9/12 cặp khung thoả 'beside' ✓
+- `440284_2` Three teenage boys wearing bike helmets posing with their bicycles.
+  - câu: 3 boy — ảnh: 3 boy ✓
+- `440284_3` Three men with helmets stand next to strange bikes.
+  - câu: 3 man — ảnh: 3 man ✓
+  - câu: man next to bike — ảnh: 9/12 cặp khung thoả 'beside' ✓
+- `440284_4` Three boys posing with their helmets on and their bikes.
+  - câu: 3 boy — ảnh: 3 boy ✓
+- `503724_1` A red train sitting in a train station under a blue sky.
+  - câu: train under sky — ảnh: 8/8 cặp khung thoả 'below' ✓
+- `149123_0` a truck and two double deckered busses near a building
+  - câu: 2 bus — ảnh: 1 bus ✗ (điểm 0.50)
+- `417031_3` A group of five people enjoying a white water rafting experience
+  - câu: 5 people — ảnh: 2 people ✗ (điểm 0.40)
+- `579673_2` A french press and coffee cups on a tray under an umbrella.
+  - câu: tray under umbrella — ảnh: 10/10 cặp khung thoả 'below' ✓
+- `447088_0` three baseball players walking around while holding bats
+  - câu: 3 player — ảnh: 1 player ✗ (điểm 0.33)
+- `447088_3` Three baseball players from the Chicago cubs teams.
+  - câu: 3 player — ảnh: 1 player ✗ (điểm 0.33)
+- `82940_0` A pair of woman paddling on surfboards in the ocean.
+  - câu: 2 woman — ảnh: 2 woman ✓

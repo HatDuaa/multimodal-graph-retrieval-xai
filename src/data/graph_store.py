@@ -7,7 +7,13 @@ import numpy as np
 import torch
 
 from src.graph.soft_match import PRONOUNS
+from src.graph.structure import GEOMETRY_FEATURES, completion_edges, edge_geometry
 from src.utils.config import REPO_ROOT, load_config
+
+# Edge kinds: labelled triples, added completion edges (k-nearest and bridges, experiment 3.3), global-node links
+# (3.4). Only labelled edges are triples; the others carry messages in the GAT only.
+EDGE_LABELLED, EDGE_COMPLETION, EDGE_GLOBAL = 0, 1, 2
+STRUCTURE_DEFAULTS = {"knn_edges": 0, "global_node": False}
 
 
 @dataclass
@@ -20,6 +26,14 @@ class PackedBatch:
     part_mask: torch.Tensor
     batch: torch.Tensor
     num_graphs: int
+    # None when every edge is labelled / no edge has a box geometry / no graph has a global node. Otherwise
+    # edge_attr and triple_f hold the labelled edges only, in edge order, and labelled_index says which they are.
+    edge_kind: torch.Tensor | None = None
+    labelled_index: torch.Tensor | None = None
+    edge_geometry: torch.Tensor | None = None
+    global_mask: torch.Tensor | None = None
+    # Count bucket (image nodes) or count class (caption nodes) per node, src/graph/counts.py; 0 when unknown.
+    count_index: torch.Tensor | None = None
 
 
 def _flat_positions(starts, counts):
@@ -31,8 +45,8 @@ def _flat_positions(starts, counts):
 class GraphIndex:
     """Many small graphs as flat int arrays: part-table rows per node / relation / triple and local edges."""
 
-    NODE_FIELDS = ('node_rows', 'part_mask')
-    EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows')
+    NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask', 'count_index')
+    EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows', 'edge_kind', 'edge_geometry')
 
     def __init__(self, node_counts, edge_counts, **fields):
         self.node_counts = np.asarray(node_counts, dtype=np.int64)
@@ -46,21 +60,47 @@ class GraphIndex:
 
     @classmethod
     def build(cls, parts_list, part_row):
-        node_rows, part_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], []
-        node_counts, edge_counts = [], []
+        node_rows, part_mask, global_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], [], []
+        count_index = []
+        edge_kind, geometry, node_counts, edge_counts = [], [], [], []
+        nan = [float('nan')] * len(GEOMETRY_FEATURES)
         for parts in parts_list:
+            n, labelled = len(parts['node_labels']), parts['edges']
             node_rows.extend(part_row[f'node:{x}'] for x in parts['node_labels'])
             part_mask.extend(parts['part_mask'])
-            edge_src.extend(e[0] for e in parts['edges'])
-            edge_dst.extend(e[1] for e in parts['edges'])
-            relation_rows.extend(part_row[f'rel:{x}'] for x in parts['relation_labels'])
-            triple_rows.extend(part_row[f'triple:{x}'] for x in parts['triple_labels'])
-            node_counts.append(len(parts['node_labels']))
-            edge_counts.append(len(parts['edges']))
+            global_mask.extend([False] * n)
+            count_index.extend(parts.get('count_index', [0] * n))
+            added = list(parts.get('added_edges', ()))
+            if parts.get('global_node'):
+                # Its vector is set by the model (mean of the graph's node vectors); row 0 is a placeholder.
+                node_rows.append(0)
+                part_mask.append(False)
+                global_mask.append(True)
+                count_index.append(0)
+                added += [(n, i, EDGE_GLOBAL) for i in range(n)] + [(i, n, EDGE_GLOBAL) for i in range(n)]
+            edges = [(e[0], e[1]) for e in labelled] + [(e[0], e[1]) for e in added]
+            edge_src.extend(e[0] for e in edges)
+            edge_dst.extend(e[1] for e in edges)
+            relation_rows.extend([part_row[f'rel:{x}'] for x in parts['relation_labels']] + [-1] * len(added))
+            triple_rows.extend([part_row[f'triple:{x}'] for x in parts['triple_labels']] + [-1] * len(added))
+            edge_kind.extend([EDGE_LABELLED] * len(labelled) + [e[2] for e in added])
+            known = parts.get('edge_geometry', [])
+            geometry.extend(list(known) + [nan] * (len(edges) - len(known)))
+            node_counts.append(n + bool(parts.get('global_node')))
+            edge_counts.append(len(edges))
         as_int = lambda values: np.asarray(values, dtype=np.int64)  # noqa: E731
         return cls(node_counts, edge_counts, node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
-                   edge_src=as_int(edge_src), edge_dst=as_int(edge_dst), relation_rows=as_int(relation_rows),
-                   triple_rows=as_int(triple_rows))
+                   global_mask=np.asarray(global_mask, dtype=bool), count_index=np.asarray(count_index, dtype=np.int8),
+                   edge_src=as_int(edge_src), edge_dst=as_int(edge_dst),
+                   relation_rows=as_int(relation_rows), triple_rows=as_int(triple_rows),
+                   edge_kind=np.asarray(edge_kind, dtype=np.int8),
+                   edge_geometry=np.asarray(geometry, dtype=np.float32).reshape(-1, len(GEOMETRY_FEATURES)))
+
+    def labelled_counts(self):
+        """Labelled edges (triples) per graph."""
+        graph_of_edge = np.repeat(np.arange(len(self)), self.edge_counts)
+        labelled = self.fields['edge_kind'] == EDGE_LABELLED
+        return np.bincount(graph_of_edge, weights=labelled, minlength=len(self)).astype(np.int64)
 
     def select(self, indices):
         indices = np.asarray(indices, dtype=np.int64)
@@ -83,14 +123,34 @@ class GraphIndex:
         edge_index = np.stack((self.fields['edge_src'] + offsets, self.fields['edge_dst'] + offsets))
         graph_of_node = np.repeat(np.arange(len(self), dtype=np.int64), self.node_counts)
         to = lambda array: torch.from_numpy(array).to(device, non_blocking=True)  # noqa: E731
-        rows = lambda key: table[to(self.fields[key])]  # noqa: E731
-        return PackedBatch(x=rows('node_rows'), edge_index=to(edge_index), edge_attr=rows('relation_rows'),
-                           triple_f=rows('triple_rows'), part_mask=to(self.fields['part_mask']),
-                           batch=to(graph_of_node), num_graphs=len(self))
+        kind = self.fields['edge_kind']
+        labelled = kind == EDGE_LABELLED
+        every_edge_labelled = bool(labelled.all())
+        rows = lambda key: table[to(self.fields[key] if every_edge_labelled else self.fields[key][labelled])]  # noqa: E731
+        geometry = self.fields['edge_geometry']
+        has_global = bool(self.fields['global_mask'].any())
+        return PackedBatch(x=table[to(self.fields['node_rows'])], edge_index=to(edge_index),
+                           edge_attr=rows('relation_rows'), triple_f=rows('triple_rows'),
+                           part_mask=to(self.fields['part_mask']), batch=to(graph_of_node), num_graphs=len(self),
+                           edge_kind=None if every_edge_labelled else to(kind.astype(np.int64)),
+                           labelled_index=None if every_edge_labelled else to(np.flatnonzero(labelled)),
+                           edge_geometry=to(geometry) if len(geometry) and np.isfinite(geometry[:, 0]).any() else None,
+                           global_mask=to(self.fields['global_mask']) if has_global else None,
+                           count_index=to(self.fields['count_index'].astype(np.int64)))
+
+
+def attach_count_buckets(graphs, counts):
+    """Set count and count_bucket of every image node from {image_id: {"counts", "buckets"}} (same node order)."""
+    for image_id, graph in graphs.items():
+        entry = counts[str(image_id)]
+        if len(entry['buckets']) != len(graph['objects']):
+            raise ValueError(f'count buckets do not match the nodes of image {image_id}')
+        for obj, count, bucket in zip(graph['objects'], entry['counts'], entry['buckets']):
+            obj['count'], obj['count_bucket'] = count, bucket
 
 
 class GraphStore:
-    def __init__(self, cfg=None, root=None, splits=("train", "val"), allow_test=False):
+    def __init__(self, cfg=None, root=None, splits=("train", "val"), allow_test=False, structure=None):
         # Test is opened only by the one-time final evaluation (scripts/evaluate_test.py), never with train.
         allowed = {"test"} if allow_test else {"train", "val"}
         if not splits or not set(splits) <= allowed:
@@ -101,7 +161,15 @@ class GraphStore:
         features = self.base / self.cfg['paths']['features']
         # Both tables are read fully into RAM (1.2 GB + 0.5 GB); no memory map on the training path.
         self.part_vectors, self.part_row = self._table(features / 'vg_coco_graph_parts')
+        if self.cfg['paths'].get('extra_parts'):
+            # A data version's part texts that the shared table lacks (configs/merge_v1.yaml).
+            vectors, rows = self._table(self.base / self.cfg['paths']['extra_parts'])
+            keys = [key for key in sorted(rows, key=rows.get) if key not in self.part_row]
+            offset = len(self.part_vectors)
+            self.part_vectors = np.concatenate([self.part_vectors, vectors[[rows[key] for key in keys]]])
+            self.part_row.update({key: offset + i for i, key in enumerate(keys)})
         self.part_dim = self.part_vectors.shape[1]
+        self.structure = dict(STRUCTURE_DEFAULTS, **(structure or {}))
         self.caption_vectors, self.caption_row = self._table(features / 'vg_coco_caption')
         self.graphs, self.queries, self.arrays = {}, {}, {}
         graph_path = self.base / self.cfg['paths']['graphs'] / 'vg_coco_scene_graphs.jsonl'
@@ -111,6 +179,11 @@ class GraphStore:
                 graph = json.loads(line)
                 if graph['split'] in splits:
                     self.graphs[int(graph['image_id'])] = graph
+        if self.cfg['paths'].get('count_buckets'):
+            # Image node counts kept beside the graphs (configs/count_v1.yaml): {image_id: {"counts", "buckets"}}.
+            path = self.base / self.cfg['paths']['count_buckets']
+            self.input_paths.append(path)
+            attach_count_buckets(self.graphs, json.loads(path.read_text(encoding='utf-8')))
         processed = self.base / self.cfg['paths']['processed']
         for split in splits:
             query_path = processed / f'query_graphs_{split}.json'
@@ -135,7 +208,13 @@ class GraphStore:
         return vectors, {key: row for row, key in enumerate(meta['ids'])}
 
     @staticmethod
-    def _graph_parts(graph, query=False):
+    def _graph_parts(graph, query=False, knn_edges=0, global_node=False):
+        """Labels, labelled edges and part mask of one graph.
+
+        Image graphs with a box per object (data version merge_v1) also get the box geometry of every edge, and with
+        knn_edges > 0 the completion edges (src/graph/structure.py); global_node adds one node linked both ways to
+        every node. Added edges are listed in added_edges as (source, target, kind), after the labelled ones.
+        """
         # Keep empty image labels: instance_parts in the reference includes them.
         objects = graph['objects']
         names = {obj['id']: obj['name'] for obj in objects}
@@ -151,10 +230,37 @@ class GraphStore:
             relations.append(predicate)
             triples.append(f'{names[s]} {predicate} {names[o]}')
             relation_indices.append(index)
-        return dict(node_labels=[obj['name'] for obj in kept], relation_labels=relations, triple_labels=triples,
-                    edges=edges, raw=graph, node_indices=[i for i, obj in enumerate(objects) if obj['id'] in remap],
-                    relation_indices=relation_indices,
-                    part_mask=[bool(obj['name']) if query else True for obj in kept])
+        parts = dict(node_labels=[obj['name'] for obj in kept], relation_labels=relations, triple_labels=triples,
+                     edges=edges, raw=graph, node_indices=[i for i, obj in enumerate(objects) if obj['id'] in remap],
+                     relation_indices=relation_indices,
+                     part_mask=[bool(obj['name']) if query else True for obj in kept],
+                     count_index=[int(obj.get('count_class' if query else 'count_bucket', 0)) for obj in kept])
+        boxes = [obj.get('box') for obj in kept]
+        has_boxes = not query and all(box is not None for box in boxes)
+        if knn_edges and not query:
+            if not has_boxes:
+                raise ValueError('completion edges need a box for every image node (data version merge_v1)')
+            knn, bridges = completion_edges(boxes, graph['width'], graph['height'], knn_edges, [e[:2] for e in edges])
+            parts['added_edges'] = [(s, t, EDGE_COMPLETION) for s, t in knn + bridges]
+            parts['bridge_edges'] = len(bridges)
+        if has_boxes:
+            parts['edge_geometry'] = [edge_geometry(boxes[e[0]], boxes[e[1]])
+                                      for e in edges + parts.get('added_edges', [])]
+        if global_node:
+            parts['global_node'] = True
+        return parts
+
+    def graph_parts(self, graph, query=False):
+        """_graph_parts with this store's structure options."""
+        structure = getattr(self, 'structure', STRUCTURE_DEFAULTS)
+        return self._graph_parts(graph, query, knn_edges=structure['knn_edges'], global_node=structure['global_node'])
+
+    def set_structure(self, knn_edges=0, global_node=False):
+        """Change the structure options; the indexes are rebuilt on the next batch if they changed."""
+        structure = {"knn_edges": int(knn_edges), "global_node": bool(global_node)}
+        if structure != getattr(self, 'structure', STRUCTURE_DEFAULTS):
+            self.structure = structure
+            self.image_index = None
 
     def precompute(self):
         """Index every loaded image and query graph once; later batches only gather rows."""
@@ -162,10 +268,10 @@ class GraphStore:
             return
         image_ids = sorted(self.graphs)
         self.image_position = {image_id: i for i, image_id in enumerate(image_ids)}
-        self.image_index = GraphIndex.build((self._graph_parts(self.graphs[i]) for i in image_ids), self.part_row)
+        self.image_index = GraphIndex.build((self.graph_parts(self.graphs[i]) for i in image_ids), self.part_row)
         caption_ids = list(self.queries)
         self.query_position = {cid: i for i, cid in enumerate(caption_ids)}
-        self.query_index = GraphIndex.build((self._graph_parts(self.queries[c], query=True) for c in caption_ids),
+        self.query_index = GraphIndex.build((self.graph_parts(self.queries[c], query=True) for c in caption_ids),
                                             self.part_row)
         self._device_tables = {}
 
@@ -224,7 +330,7 @@ class GraphStore:
         replaced = [int(i) for i in unique if int(i) in overrides]
         images = self.image_index.select([self.image_position[i] for i in stored])
         if replaced:
-            images = GraphIndex.concat([images, GraphIndex.build([self._graph_parts(overrides[i]) for i in replaced],
+            images = GraphIndex.concat([images, GraphIndex.build([self.graph_parts(overrides[i]) for i in replaced],
                                                                   self.part_row)])
         order = {image_id: row for row, image_id in enumerate(stored + replaced)}
         candidate_index = np.array([order[int(i)] for i in unique], dtype=np.int64)[inverse.reshape(candidates.shape)]

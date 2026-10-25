@@ -1,0 +1,81 @@
+{
+  "floors": {
+    "clip": 0.011399665288627148,
+    "objects": 0.018482022825628518,
+    "triples": 0.0258692791685462
+  },
+  "runs": {
+    "experiments/improve/factual-retrain/main_factual_r3_seed0": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.09767899662256241,
+        "share_below_floor": 0.0
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.0032952054170891643,
+        "share_below_floor": 0.9991297621349836
+      }
+    },
+    "experiments/improve/factual-retrain/main_factual_r3_seed1": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.09359446167945862,
+        "share_below_floor": 0.0005642810119439481
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.006221262738108635,
+        "share_below_floor": 0.9912009282537226
+      }
+    },
+    "experiments/improve/factual-retrain/main_factual_r3_seed2": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.13124075531959534,
+        "share_below_floor": 0.0
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.005564733874052763,
+        "share_below_floor": 0.9998066138077741
+      }
+    },
+    "experiments/improve/fusion/floor/floor_factual_r3_seed0": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.09550520032644272,
+        "share_below_floor": 0.00047023417661995676
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.019624431617558002,
+        "share_below_floor": 0.7975246567395088
+      }
+    },
+    "experiments/improve/fusion/floor/floor_factual_r3_seed1": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.11543456465005875,
+        "share_below_floor": 0.0
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.02503866422921419,
+        "share_below_floor": 0.5513440340359699
+      }
+    },
+    "experiments/improve/fusion/floor/floor_factual_r3_seed2": {
+      "objects": {
+        "queries": 10633,
+        "median_std": 0.11453894525766373,
+        "share_below_floor": 0.0
+      },
+      "triples": {
+        "queries": 10342,
+        "median_std": 0.024436786770820618,
+        "share_below_floor": 0.5865403210210791
+      }
+    }
+  }
+}

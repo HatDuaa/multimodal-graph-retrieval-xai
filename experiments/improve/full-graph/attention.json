@@ -1,0 +1,1591 @@
+{
+  "split": "val",
+  "images": 2126,
+  "runs": [
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed0",
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed1",
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed2"
+  ],
+  "per_run": {
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed0": [
+      {
+        "mass_share": {
+          "labelled": 0.05147840312281304,
+          "completion": 0.22645126981048475,
+          "global": 0.2705512197246365,
+          "self": 0.45151910808935214
+        },
+        "lift": {
+          "labelled": 0.5777475196729758,
+          "completion": 0.3494081378804459,
+          "global": 1.9914008428113867,
+          "self": 3.3360120536437465
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "bus -> window",
+            1.1806868666888408
+          ],
+          [
+            "giraffe -> spot",
+            1.1740146855039424
+          ],
+          [
+            "train -> window",
+            1.137099294874229
+          ],
+          [
+            "man -> hand",
+            1.11755949451977
+          ],
+          [
+            "train -> door",
+            1.0257494909798397
+          ],
+          [
+            "man -> head",
+            1.0143093174776516
+          ],
+          [
+            "man -> arm",
+            1.0137888954833467
+          ],
+          [
+            "man -> hair",
+            0.9975123931991233
+          ],
+          [
+            "man -> wall",
+            0.9760537132620811
+          ],
+          [
+            "bathroom -> wall",
+            0.9759695940726513
+          ],
+          [
+            "woman -> hand",
+            0.9720543054242928
+          ],
+          [
+            "sky -> pole",
+            0.9575570015922973
+          ],
+          [
+            "street -> line",
+            0.9548103835965905
+          ],
+          [
+            "building -> window",
+            0.8884487770644584
+          ],
+          [
+            "road -> line",
+            0.8851547441001804
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "ear -> cow",
+            0.013744352717515429
+          ],
+          [
+            "spot -> giraffe",
+            0.01595559130879727
+          ],
+          [
+            "eye -> whisker",
+            0.017353290046171862
+          ],
+          [
+            "head -> cow",
+            0.026140099869676744
+          ],
+          [
+            "leg -> horse",
+            0.026207315821860297
+          ],
+          [
+            "eye -> face",
+            0.02830045404334669
+          ],
+          [
+            "eye -> head",
+            0.032671129205196756
+          ],
+          [
+            "helmet -> jacket",
+            0.03515702031847254
+          ],
+          [
+            "cap -> shirt",
+            0.035927552686335996
+          ],
+          [
+            "cupcake -> cupcake",
+            0.03824482174562339
+          ],
+          [
+            "eye -> hair",
+            0.039191915199696004
+          ],
+          [
+            "hand -> pant",
+            0.04105971294388035
+          ],
+          [
+            "sock -> shoe",
+            0.04365844341024664
+          ],
+          [
+            "duck -> duck",
+            0.047148090145183785
+          ],
+          [
+            "eye -> mouth",
+            0.04925194668282659
+          ]
+        ]
+      },
+      {
+        "mass_share": {
+          "labelled": 0.033706184353186563,
+          "completion": 0.35099683046721103,
+          "global": 0.12238571334073205,
+          "self": 0.49291127198601326
+        },
+        "lift": {
+          "labelled": 0.4087369260911965,
+          "completion": 0.5495726575736493,
+          "global": 0.9085298895799501,
+          "self": 3.606648954023307
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "street -> road",
+            1.1308682397939265
+          ],
+          [
+            "road -> street",
+            1.097287351215208
+          ],
+          [
+            "beach -> beach",
+            1.0267695306967466
+          ],
+          [
+            "ground -> road",
+            1.0073382578790189
+          ],
+          [
+            "street -> street",
+            0.9996295304785312
+          ],
+          [
+            "sidewalk -> street",
+            0.9752827808260918
+          ],
+          [
+            "street -> sidewalk",
+            0.9683126640738919
+          ],
+          [
+            "sand -> beach",
+            0.9586457661220006
+          ],
+          [
+            "beach -> sand",
+            0.9365035930275917
+          ],
+          [
+            "table -> plate",
+            0.9122283824307974
+          ],
+          [
+            "road -> ground",
+            0.906657108817907
+          ],
+          [
+            "train -> train",
+            0.906356042152957
+          ],
+          [
+            "water -> ocean",
+            0.9048916815780104
+          ],
+          [
+            "bathroom -> wall",
+            0.9034895316974537
+          ],
+          [
+            "road -> road",
+            0.8963451738056448
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "eye -> mouth",
+            0.28509788875068937
+          ],
+          [
+            "checker -> checker",
+            0.31683100501616157
+          ],
+          [
+            "eye -> nose",
+            0.32248601750952416
+          ],
+          [
+            "ear -> cow",
+            0.3392966561245196
+          ],
+          [
+            "eye -> wall",
+            0.3426948033371254
+          ],
+          [
+            "hoof -> hoof",
+            0.34531908426792
+          ],
+          [
+            "hand -> pant",
+            0.34719347438829784
+          ],
+          [
+            "eye -> whisker",
+            0.34823824230942035
+          ],
+          [
+            "letter -> sign",
+            0.34981962587370213
+          ],
+          [
+            "ear -> mouth",
+            0.35196185965211163
+          ],
+          [
+            "ear -> leg",
+            0.35513121651654894
+          ],
+          [
+            "knob -> knob",
+            0.35739973559975624
+          ],
+          [
+            "helmet -> jacket",
+            0.36095864610636935
+          ],
+          [
+            "sock -> shoe",
+            0.3660471390079086
+          ],
+          [
+            "ear -> nose",
+            0.37018182143689166
+          ]
+        ]
+      }
+    ],
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed1": [
+      {
+        "mass_share": {
+          "labelled": 0.07248523820663769,
+          "completion": 0.2026935459061594,
+          "global": 0.2832108716669266,
+          "self": 0.4416103463774009
+        },
+        "lift": {
+          "labelled": 0.809169938877138,
+          "completion": 0.31038738389201864,
+          "global": 2.087581367286861,
+          "self": 3.257745365349912
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "giraffe -> spot",
+            1.6482745138438124
+          ],
+          [
+            "train -> window",
+            1.4263948644021232
+          ],
+          [
+            "bus -> window",
+            1.3781762532889843
+          ],
+          [
+            "train -> door",
+            1.3046536772128414
+          ],
+          [
+            "man -> hand",
+            1.2336156461387873
+          ],
+          [
+            "fence -> post",
+            1.136324607518812
+          ],
+          [
+            "building -> window",
+            1.1126334875854966
+          ],
+          [
+            "man -> sign",
+            1.1045574164284127
+          ],
+          [
+            "sky -> pole",
+            1.079100205170873
+          ],
+          [
+            "clock -> number",
+            1.068662683557098
+          ],
+          [
+            "woman -> hand",
+            1.0635942523678144
+          ],
+          [
+            "road -> line",
+            1.0246452804810058
+          ],
+          [
+            "car -> window",
+            1.0146693708892498
+          ],
+          [
+            "man -> head",
+            0.9943135247590977
+          ],
+          [
+            "street -> line",
+            0.9941909734514498
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "spot -> giraffe",
+            0.0038932991048730922
+          ],
+          [
+            "leg -> horse",
+            0.00439635388423388
+          ],
+          [
+            "ear -> cow",
+            0.005641562688676017
+          ],
+          [
+            "a -> banana",
+            0.010027541748612472
+          ],
+          [
+            "eye -> whisker",
+            0.011012672371444135
+          ],
+          [
+            "eye -> mouth",
+            0.011106213344906532
+          ],
+          [
+            "skateboard -> skateboard",
+            0.01207480231166682
+          ],
+          [
+            "horse -> horse",
+            0.01223434852890305
+          ],
+          [
+            "surfboard -> surfboard",
+            0.012839425497110245
+          ],
+          [
+            "tree -> giraffe",
+            0.012891705716416861
+          ],
+          [
+            "head -> cow",
+            0.012960576614263588
+          ],
+          [
+            "beak -> beak",
+            0.013397923581167913
+          ],
+          [
+            "bike -> bike",
+            0.015237500831184055
+          ],
+          [
+            "dog -> dog",
+            0.016282235448383482
+          ],
+          [
+            "laptop -> laptop",
+            0.021573440590234496
+          ]
+        ]
+      },
+      {
+        "mass_share": {
+          "labelled": 0.03051098097293532,
+          "completion": 0.29415448402054073,
+          "global": 0.20445360577084506,
+          "self": 0.47088092930890263
+        },
+        "lift": {
+          "labelled": 0.36999131443821287,
+          "completion": 0.4600462660786251,
+          "global": 1.5174954677003851,
+          "self": 3.4418633628797077
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "street -> road",
+            0.8417645550798625
+          ],
+          [
+            "ground -> road",
+            0.7694744045535723
+          ],
+          [
+            "keyboard -> key",
+            0.7620443262159824
+          ],
+          [
+            "road -> street",
+            0.7526842273167662
+          ],
+          [
+            "train -> window",
+            0.7478897248051668
+          ],
+          [
+            "train -> train",
+            0.7420681934607657
+          ],
+          [
+            "beach -> sand",
+            0.7357892151176929
+          ],
+          [
+            "motorcycle -> motorcycle",
+            0.7343517002098414
+          ],
+          [
+            "table -> plate",
+            0.734109089731477
+          ],
+          [
+            "sky -> building",
+            0.7330291797717412
+          ],
+          [
+            "bus -> window",
+            0.7263459478909114
+          ],
+          [
+            "train -> door",
+            0.712552326347898
+          ],
+          [
+            "water -> ocean",
+            0.7086998329497873
+          ],
+          [
+            "tree -> window",
+            0.7082611168424289
+          ],
+          [
+            "sidewalk -> street",
+            0.7061914998339489
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "checker -> checker",
+            0.24440083790931008
+          ],
+          [
+            "feather -> feather",
+            0.24678576793125334
+          ],
+          [
+            "eye -> mouth",
+            0.2554302148787039
+          ],
+          [
+            "eye -> nose",
+            0.26595441211314724
+          ],
+          [
+            "memory chip -> memory chip",
+            0.28278540214523673
+          ],
+          [
+            "eye -> whisker",
+            0.2847805265337229
+          ],
+          [
+            "knob -> knob",
+            0.28678580505604095
+          ],
+          [
+            "nose -> mouth",
+            0.2902367209723915
+          ],
+          [
+            "hoof -> leg",
+            0.2925098145753145
+          ],
+          [
+            "numeral -> numeral",
+            0.29324678517878056
+          ],
+          [
+            "eye -> wall",
+            0.2955778469821732
+          ],
+          [
+            "number -> number",
+            0.3031302660442235
+          ],
+          [
+            "ear -> leg",
+            0.305724873080511
+          ],
+          [
+            "log -> log",
+            0.3059240295241276
+          ],
+          [
+            "letter -> sign",
+            0.31198410306081
+          ]
+        ]
+      }
+    ],
+    "experiments/improve/full-graph/fullgraph_factual_r3_seed2": [
+      {
+        "mass_share": {
+          "labelled": 0.04154189355235373,
+          "completion": 0.15252504065049935,
+          "global": 0.43913753223492225,
+          "self": 0.36679553425439854
+        },
+        "lift": {
+          "labelled": 0.4663962504721636,
+          "completion": 0.23471450701394636,
+          "global": 3.2310012712358582,
+          "self": 2.7091213380206445
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "giraffe -> spot",
+            1.2078798120645315
+          ],
+          [
+            "bus -> window",
+            1.0940708257257938
+          ],
+          [
+            "train -> window",
+            1.0843058215748322
+          ],
+          [
+            "man -> hand",
+            1.0333742987841705
+          ],
+          [
+            "street -> line",
+            0.96883074699768
+          ],
+          [
+            "road -> line",
+            0.9609984351832065
+          ],
+          [
+            "woman -> hand",
+            0.9123200381795565
+          ],
+          [
+            "building -> window",
+            0.8803302107262425
+          ],
+          [
+            "man -> head",
+            0.8673536899323399
+          ],
+          [
+            "man -> arm",
+            0.7835454586199782
+          ],
+          [
+            "man -> hair",
+            0.774986342628203
+          ],
+          [
+            "wall -> picture",
+            0.7666134065283197
+          ],
+          [
+            "train -> door",
+            0.759221713825622
+          ],
+          [
+            "ground -> line",
+            0.7367082488205697
+          ],
+          [
+            "car -> window",
+            0.7335323227431487
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "leg -> horse",
+            0.007448667304985671
+          ],
+          [
+            "ear -> cow",
+            0.008665623110697528
+          ],
+          [
+            "hand -> man",
+            0.012908431329803231
+          ],
+          [
+            "glass -> man",
+            0.013213127853656
+          ],
+          [
+            "sock -> shoe",
+            0.014375096618702324
+          ],
+          [
+            "hand -> woman",
+            0.015892794340814476
+          ],
+          [
+            "cap -> man",
+            0.016005484536435688
+          ],
+          [
+            "head -> cow",
+            0.01606930161834762
+          ],
+          [
+            "letter -> sign",
+            0.016370104555028457
+          ],
+          [
+            "hand -> pant",
+            0.016818922409851545
+          ],
+          [
+            "number -> sign",
+            0.01758806643187144
+          ],
+          [
+            "eye -> mouth",
+            0.018112456586095504
+          ],
+          [
+            "apple -> apple",
+            0.01853287960457729
+          ],
+          [
+            "spot -> giraffe",
+            0.018755362369379976
+          ],
+          [
+            "a -> banana",
+            0.02295620129924551
+          ]
+        ]
+      },
+      {
+        "mass_share": {
+          "labelled": 0.034865066675392964,
+          "completion": 0.37805712944267184,
+          "global": 0.12808616218527466,
+          "self": 0.4589916418110208
+        },
+        "lift": {
+          "labelled": 0.41594668455459,
+          "completion": 0.5918324203885373,
+          "global": 0.951446003241815,
+          "self": 3.3619025717275983
+        },
+        "completion_pairs_seen_30": 523,
+        "completion_pairs_highest_lift": [
+          [
+            "street -> road",
+            1.0558489803224802
+          ],
+          [
+            "beach -> sand",
+            0.9845076067745686
+          ],
+          [
+            "road -> street",
+            0.9666449878666852
+          ],
+          [
+            "ground -> road",
+            0.958157035211722
+          ],
+          [
+            "bathroom -> wall",
+            0.9528836148816187
+          ],
+          [
+            "street -> sidewalk",
+            0.9279578931163996
+          ],
+          [
+            "ground -> snow",
+            0.9229433343904775
+          ],
+          [
+            "ocean -> water",
+            0.9227960369720751
+          ],
+          [
+            "giraffe -> spot",
+            0.9187702673830485
+          ],
+          [
+            "ground -> field",
+            0.9052076167335698
+          ],
+          [
+            "street -> line",
+            0.8970843067481404
+          ],
+          [
+            "field -> ground",
+            0.8952344292611406
+          ],
+          [
+            "beach -> beach",
+            0.8909052795706651
+          ],
+          [
+            "water -> ocean",
+            0.8902062680572271
+          ],
+          [
+            "man -> hand",
+            0.889184604552421
+          ]
+        ],
+        "completion_pairs_lowest_lift": [
+          [
+            "bolt -> bolt",
+            0.29569972754688933
+          ],
+          [
+            "checker -> checker",
+            0.32048281744843526
+          ],
+          [
+            "eye -> mouth",
+            0.33437876637492864
+          ],
+          [
+            "eye -> wall",
+            0.35182649853002085
+          ],
+          [
+            "eye -> whisker",
+            0.3629529405265085
+          ],
+          [
+            "eye -> tree",
+            0.36938144236562714
+          ],
+          [
+            "knob -> knob",
+            0.3745870633558793
+          ],
+          [
+            "eye -> nose",
+            0.37598789847273933
+          ],
+          [
+            "letter -> sign",
+            0.3825029874422464
+          ],
+          [
+            "strap -> strap",
+            0.3872036000172938
+          ],
+          [
+            "toe -> toe",
+            0.3915200274851587
+          ],
+          [
+            "nose -> mouth",
+            0.39199711135532483
+          ],
+          [
+            "hoof -> hoof",
+            0.3943624601412851
+          ],
+          [
+            "light -> sign",
+            0.4029963171817887
+          ],
+          [
+            "eye -> hair",
+            0.40456337956328914
+          ]
+        ]
+      }
+    ]
+  },
+  "aggregate": [
+    {
+      "mass_share": {
+        "labelled": {
+          "mean": 0.05516851162726816,
+          "std": 0.015798269531168273
+        },
+        "completion": {
+          "mean": 0.19388995212238117,
+          "std": 0.037741214700722114
+        },
+        "global": {
+          "mean": 0.33096654120882846,
+          "std": 0.0938924340482258
+        },
+        "self": {
+          "mean": 0.4199749962403838,
+          "std": 0.04632048437252358
+        }
+      },
+      "lift": {
+        "labelled": {
+          "mean": 0.6177712363407591,
+          "std": 0.17485672359853613
+        },
+        "completion": {
+          "mean": 0.2981700095954703,
+          "std": 0.058314710119846125
+        },
+        "global": {
+          "mean": 2.436661160444702,
+          "std": 0.6895975870251244
+        },
+        "self": {
+          "mean": 3.1009595856714345,
+          "std": 0.34159087790169745
+        }
+      }
+    },
+    {
+      "mass_share": {
+        "labelled": {
+          "mean": 0.03302741066717162,
+          "std": 0.0022550090606705464
+        },
+        "completion": {
+          "mean": 0.3410694813101412,
+          "std": 0.04282321418544789
+        },
+        "global": {
+          "mean": 0.15164182709895058,
+          "std": 0.04582506687528331
+        },
+        "self": {
+          "mean": 0.4742612810353122,
+          "std": 0.01721061913900092
+        }
+      },
+      "lift": {
+        "labelled": {
+          "mean": 0.3982249750279998,
+          "std": 0.02471537673189676
+        },
+        "completion": {
+          "mean": 0.5338171146802706,
+          "std": 0.06729097611008346
+        },
+        "global": {
+          "mean": 1.1258237868407168,
+          "std": 0.3398756793204509
+        },
+        "self": {
+          "mean": 3.470138296210204,
+          "std": 0.1247990456808156
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "caption_id": "430525_2",
+      "image_id": 2406539,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "woman#21",
+          "target": "wall#20",
+          "alpha_layer1": 0.21687933802604675,
+          "alpha_layer2": 0.08343753218650818,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "woman#21",
+          "target": "hair#5",
+          "alpha_layer1": 0.19193953275680542,
+          "alpha_layer2": 0.09546971321105957,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "planter#11",
+          "target": "shrub#15",
+          "alpha_layer1": 0.18677067756652832,
+          "alpha_layer2": 0.12377134710550308,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "man#8",
+          "target": "hair#6",
+          "alpha_layer1": 0.18144887685775757,
+          "alpha_layer2": 0.09289570152759552,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "line#7",
+          "target": "shoe#14",
+          "alpha_layer1": 0.18066561222076416,
+          "alpha_layer2": 0.13028191030025482,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "man#8",
+          "target": "tank top#18",
+          "alpha_layer1": 0.1701287031173706,
+          "alpha_layer2": 0.07275166362524033,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "455624_3",
+      "image_id": 2372942,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "man#16",
+          "target": "head#10",
+          "alpha_layer1": 0.24358759820461273,
+          "alpha_layer2": 0.11333795636892319,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "man#16",
+          "target": "head#11",
+          "alpha_layer1": 0.22616559267044067,
+          "alpha_layer2": 0.1094818040728569,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "man#16",
+          "target": "person#20",
+          "alpha_layer1": 0.22072777152061462,
+          "alpha_layer2": 0.10868672281503677,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "man#17",
+          "target": "audience#0",
+          "alpha_layer1": 0.21857750415802002,
+          "alpha_layer2": 0.08904876559972763,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "hay#9",
+          "target": "ground#7",
+          "alpha_layer1": 0.21691355109214783,
+          "alpha_layer2": 0.13059483468532562,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "man#17",
+          "target": "crowd#4",
+          "alpha_layer1": 0.2133127897977829,
+          "alpha_layer2": 0.08954303711652756,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "139749_0",
+      "image_id": 2368508,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "airport#0",
+          "target": "ceiling#29",
+          "alpha_layer1": 0.281133770942688,
+          "alpha_layer2": 0.11557289212942123,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "airport#0",
+          "target": "sign#20",
+          "alpha_layer1": 0.27618998289108276,
+          "alpha_layer2": 0.08683573454618454,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "airport#0",
+          "target": "panel#14",
+          "alpha_layer1": 0.24764658510684967,
+          "alpha_layer2": 0.09400255978107452,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "airport#0",
+          "target": "panel#16",
+          "alpha_layer1": 0.24681644141674042,
+          "alpha_layer2": 0.09762226790189743,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "man#12",
+          "target": "man#11",
+          "alpha_layer1": 0.23930662870407104,
+          "alpha_layer2": 0.11815353482961655,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "ceiling#3",
+          "target": "light#7",
+          "alpha_layer1": 0.22902244329452515,
+          "alpha_layer2": 0.07001489400863647,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "317763_3",
+      "image_id": 2358740,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "table#4",
+          "target": "part#14",
+          "alpha_layer1": 0.23929733037948608,
+          "alpha_layer2": 0.1177966371178627,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "laptop#2",
+          "target": "item#8",
+          "alpha_layer1": 0.20237386226654053,
+          "alpha_layer2": 0.12017074227333069,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "laptop#2",
+          "target": "object#11",
+          "alpha_layer1": 0.18585336208343506,
+          "alpha_layer2": 0.11890838295221329,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "laptop#2",
+          "target": "bar#0",
+          "alpha_layer1": 0.16382436454296112,
+          "alpha_layer2": 0.10289937257766724,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "table#4",
+          "target": "cord#3",
+          "alpha_layer1": 0.16079984605312347,
+          "alpha_layer2": 0.1565018594264984,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "desk#17",
+          "target": "opening#12",
+          "alpha_layer1": 0.15010955929756165,
+          "alpha_layer2": 0.09172400087118149,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "530407_2",
+      "image_id": 2372757,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "elephant#5",
+          "target": "dirt#2",
+          "alpha_layer1": 0.20891238749027252,
+          "alpha_layer2": 0.10330941528081894,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "elephant#5",
+          "target": "tail#15",
+          "alpha_layer1": 0.19837668538093567,
+          "alpha_layer2": 0.10942476242780685,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "tusk#17",
+          "target": "shore#13",
+          "alpha_layer1": 0.177882581949234,
+          "alpha_layer2": 0.14071758091449738,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "elephant#6",
+          "target": "leg#11",
+          "alpha_layer1": 0.15823739767074585,
+          "alpha_layer2": 0.10113772004842758,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "grass#9",
+          "target": "bird#0",
+          "alpha_layer1": 0.1545613706111908,
+          "alpha_layer2": 0.09564130753278732,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "shore#13",
+          "target": "sky#14",
+          "alpha_layer1": 0.12247820198535919,
+          "alpha_layer2": 0.10997436195611954,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "507887_1",
+      "image_id": 2366234,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "ham#8",
+          "target": "fork#2",
+          "alpha_layer1": 0.15428368747234344,
+          "alpha_layer2": 0.11325512826442719,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "pizza#16",
+          "target": "knife#10",
+          "alpha_layer1": 0.12386070191860199,
+          "alpha_layer2": 0.1496870517730713,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "pitcher#14",
+          "target": "table#21",
+          "alpha_layer1": 0.1195639967918396,
+          "alpha_layer2": 0.07874809205532074,
+          "target_in_degree": 8
+        },
+        {
+          "rank": 4,
+          "source": "knife#10",
+          "target": "handle#9",
+          "alpha_layer1": 0.11492159962654114,
+          "alpha_layer2": 0.11753954738378525,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "table#20",
+          "target": "table#21",
+          "alpha_layer1": 0.10634920001029968,
+          "alpha_layer2": 0.07169833034276962,
+          "target_in_degree": 8
+        },
+        {
+          "rank": 6,
+          "source": "plate#18",
+          "target": "table#20",
+          "alpha_layer1": 0.10268102586269379,
+          "alpha_layer2": 0.10712224245071411,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "442809_2",
+      "image_id": 1592735,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "cupcake#1",
+          "target": "cupcake#2",
+          "alpha_layer1": 0.014510344713926315,
+          "alpha_layer2": 0.06853897869586945,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "cupcake#4",
+          "target": "cupcake#5",
+          "alpha_layer1": 0.014303520321846008,
+          "alpha_layer2": 0.06721723079681396,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "cupcake#0",
+          "target": "cupcake#1",
+          "alpha_layer1": 0.013574760407209396,
+          "alpha_layer2": 0.10996483266353607,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "cupcake#1",
+          "target": "cupcake#4",
+          "alpha_layer1": 0.011345169506967068,
+          "alpha_layer2": 0.053884655237197876,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "cupcake#1",
+          "target": "cupcake#0",
+          "alpha_layer1": 0.01127092819660902,
+          "alpha_layer2": 0.0800400972366333,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "cupcake#0",
+          "target": "cupcake#3",
+          "alpha_layer1": 0.010577794164419174,
+          "alpha_layer2": 0.09428169578313828,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "357229_0",
+      "image_id": 2377859,
+      "gold_rank": 1,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "table#18",
+          "target": "table#16",
+          "alpha_layer1": 0.13966920971870422,
+          "alpha_layer2": 0.07911688089370728,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "crust#4",
+          "target": "tablecloth#19",
+          "alpha_layer1": 0.1356256902217865,
+          "alpha_layer2": 0.13189859688282013,
+          "target_in_degree": 8
+        },
+        {
+          "rank": 3,
+          "source": "fork#6",
+          "target": "sport#12",
+          "alpha_layer1": 0.135175421833992,
+          "alpha_layer2": 0.10254630446434021,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "knife#20",
+          "target": "handle#9",
+          "alpha_layer1": 0.13068918883800507,
+          "alpha_layer2": 0.11393006145954132,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "fork#6",
+          "target": "handle#8",
+          "alpha_layer1": 0.12607695162296295,
+          "alpha_layer2": 0.07147122174501419,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "cardboard#1",
+          "target": "floor#5",
+          "alpha_layer1": 0.12064214795827866,
+          "alpha_layer2": 0.0757056251168251,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "377231_0",
+      "image_id": 2348001,
+      "gold_rank": 4,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "zebra#27",
+          "target": "boulder#6",
+          "alpha_layer1": 0.2564094066619873,
+          "alpha_layer2": 0.11579979956150055,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "left#11",
+          "target": "white truck#23",
+          "alpha_layer1": 0.2493322193622589,
+          "alpha_layer2": 0.0924181416630745,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "dead tree#1",
+          "target": "boulder#2",
+          "alpha_layer1": 0.21333372592926025,
+          "alpha_layer2": 0.08501578122377396,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "dead tree#1",
+          "target": "boulder#3",
+          "alpha_layer1": 0.20844781398773193,
+          "alpha_layer2": 0.08165909349918365,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "dead tree#1",
+          "target": "boulder#5",
+          "alpha_layer1": 0.20214682817459106,
+          "alpha_layer2": 0.0987132340669632,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "dead tree#1",
+          "target": "boulder#4",
+          "alpha_layer1": 0.19590774178504944,
+          "alpha_layer2": 0.08197546750307083,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "30706_2",
+      "image_id": 2377845,
+      "gold_rank": 4,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "photo#7",
+          "target": "switch#10",
+          "alpha_layer1": 0.169657900929451,
+          "alpha_layer2": 0.09675536304712296,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "man#4",
+          "target": "hair#3",
+          "alpha_layer1": 0.16719204187393188,
+          "alpha_layer2": 0.09395983070135117,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "photo#7",
+          "target": "wall#14",
+          "alpha_layer1": 0.16538213193416595,
+          "alpha_layer2": 0.11855602264404297,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "mirror#5",
+          "target": "wall#14",
+          "alpha_layer1": 0.14495274424552917,
+          "alpha_layer2": 0.11539806425571442,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "mirror#5",
+          "target": "doorway#0",
+          "alpha_layer1": 0.13046470284461975,
+          "alpha_layer2": 0.10322536528110504,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "stand#9",
+          "target": "hair#3",
+          "alpha_layer1": 0.11719085276126862,
+          "alpha_layer2": 0.09014391154050827,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "441535_3",
+      "image_id": 2398105,
+      "gold_rank": 5,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "wall#23",
+          "target": "pillow#19",
+          "alpha_layer1": 0.1975974589586258,
+          "alpha_layer2": 0.11701343953609467,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "wall#22",
+          "target": "the#28",
+          "alpha_layer1": 0.173238143324852,
+          "alpha_layer2": 0.10949874669313431,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "wall#22",
+          "target": "outside#18",
+          "alpha_layer1": 0.1645933836698532,
+          "alpha_layer2": 0.12123419344425201,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "wall#22",
+          "target": "tree#21",
+          "alpha_layer1": 0.160403311252594,
+          "alpha_layer2": 0.11085492372512817,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "corner#12",
+          "target": "bird decal#6",
+          "alpha_layer1": 0.13520370423793793,
+          "alpha_layer2": 0.11571034044027328,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "yellow and white#26",
+          "target": "comforter#11",
+          "alpha_layer1": 0.13133704662322998,
+          "alpha_layer2": 0.08920231461524963,
+          "target_in_degree": 7
+        }
+      ]
+    },
+    {
+      "caption_id": "81054_2",
+      "image_id": 2347690,
+      "gold_rank": 3,
+      "top_completion_edges": [
+        {
+          "rank": 1,
+          "source": "door#6",
+          "target": "trim#17",
+          "alpha_layer1": 0.4187747836112976,
+          "alpha_layer2": 0.17908146977424622,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 2,
+          "source": "window#21",
+          "target": "building#3",
+          "alpha_layer1": 0.2432045191526413,
+          "alpha_layer2": 0.14420737326145172,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 3,
+          "source": "car#5",
+          "target": "logo#11",
+          "alpha_layer1": 0.20758463442325592,
+          "alpha_layer2": 0.12095633894205093,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 4,
+          "source": "car#5",
+          "target": "can#4",
+          "alpha_layer1": 0.17531147599220276,
+          "alpha_layer2": 0.0987568125128746,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 5,
+          "source": "car#5",
+          "target": "drink holder#8",
+          "alpha_layer1": 0.17345774173736572,
+          "alpha_layer2": 0.09589987248182297,
+          "target_in_degree": 7
+        },
+        {
+          "rank": 6,
+          "source": "truck#18",
+          "target": "grass#9",
+          "alpha_layer1": 0.17215123772621155,
+          "alpha_layer2": 0.08961287885904312,
+          "target_in_degree": 7
+        }
+      ]
+    }
+  ]
+}

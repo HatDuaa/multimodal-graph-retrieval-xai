@@ -1,0 +1,6 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+step0_frozen_clip {"objects": {"mean": 0.7895445823669434, "p05": 0.6991091370582581, "p95": 0.8728840947151184}, "triples": {"mean": 0.682954728603363, "p05": 0.5648858547210693, "p95": 0.7930142879486084}}
+fullgraph_factual_r3_seed0 {"objects": {"mean": 0.40204760432243347, "p05": 0.15014007687568665, "p95": 0.6499396562576294}, "triples": {"mean": 0.8271448612213135, "p05": 0.7405115962028503, "p95": 0.8974971771240234}}
+fullgraph_factual_r3_seed1 {"objects": {"mean": 0.250604510307312, "p05": -0.02526615373790264, "p95": 0.5618772506713867}, "triples": {"mean": 0.9158504009246826, "p05": 0.8702011704444885, "p95": 0.9544232487678528}}
+fullgraph_factual_r3_seed2 {"objects": {"mean": 0.3490912616252899, "p05": 0.11141878366470337, "p95": 0.6058676838874817}, "triples": {"mean": 0.8649510145187378, "p05": 0.786984920501709, "p95": 0.9283009171485901}}

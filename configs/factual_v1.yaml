@@ -1,0 +1,26 @@
+# Data version factual_v1: caption graphs from FACTUAL-T5 large (scripts/improve/package_factual.py).
+# Same as configs/default.yaml except the processed and features folders; image graphs, splits and the CLIP
+# top-50 candidates are the level-1 ones.
+# Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]          # main experiments are reported as mean ± std over these
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features/factual_v1
+  graphs: data/graphs
+  processed: data/processed/factual_v1
+  experiments: experiments
+
+clip:
+  model: ViT-B-32-quickgelu   # open_clip model name; OpenAI weights need the QuickGELU config (experiments/checks, section 5)
+  pretrained: openai      # open_clip pretrained tag
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+# vg_coco uses the full Visual Genome ∩ COCO intersection (no sampling); see src/data/build_split.py
+
+retrieval:
+  top_k: 50

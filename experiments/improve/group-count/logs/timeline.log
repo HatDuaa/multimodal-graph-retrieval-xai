@@ -1,0 +1,21 @@
+2026-10-23 21:15:03 start groupcount_factual_r3_seed0 attempt 1
+2026-10-23 23:10:20 done groupcount_factual_r3_seed0
+2026-10-23 23:10:20 start groupcount_factual_r3_seed1 attempt 1
+2026-10-24 00:19:59 done groupcount_factual_r3_seed1
+2026-10-24 00:19:59 start groupcount_factual_r3_seed2 attempt 1
+2026-10-24 02:03:47 done groupcount_factual_r3_seed2
+2026-10-24 02:03:47 start diagnostics
+2026-10-24 02:03:47 start count_subset
+2026-10-24 02:04:10 done count_subset
+2026-10-24 02:04:10 start triple_perturbation
+2026-10-24 02:04:50 done triple_perturbation
+2026-10-24 02:04:50 start part_similarity
+2026-10-24 02:04:57 done part_similarity
+2026-10-24 02:04:57 start channel_correlation
+2026-10-24 02:05:09 done channel_correlation
+2026-10-24 02:05:09 start gradient_probe
+2026-10-24 02:06:08 done gradient_probe
+2026-10-24 02:06:08 start summarize
+2026-10-24 02:06:08 done summarize
+2026-10-24 02:06:08 done diagnostics
+2026-10-24 02:06:08 all done

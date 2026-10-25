@@ -1,0 +1,12 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+baseline experiments/improve/full-graph/fullgraph_factual_r3_seed0 {"all": 0.4821, "with_triple": 0.4863, "triple_only_with_triple": 0.1173, "third_only_all": 0.1231}
+baseline experiments/improve/full-graph/fullgraph_factual_r3_seed1 {"all": 0.4856, "with_triple": 0.4902, "triple_only_with_triple": 0.1355, "third_only_all": 0.1408}
+baseline experiments/improve/full-graph/fullgraph_factual_r3_seed2 {"all": 0.4839, "with_triple": 0.488, "triple_only_with_triple": 0.1414, "third_only_all": 0.1465}
+verb_swap experiments/improve/full-graph/fullgraph_factual_r3_seed0 {"all": 0.4731, "with_triple": 0.4771, "triple_only_with_triple": 0.0791, "third_only_all": 0.086}
+verb_swap experiments/improve/full-graph/fullgraph_factual_r3_seed1 {"all": 0.4756, "with_triple": 0.48, "triple_only_with_triple": 0.0938, "third_only_all": 0.1003}
+verb_swap experiments/improve/full-graph/fullgraph_factual_r3_seed2 {"all": 0.4721, "with_triple": 0.4759, "triple_only_with_triple": 0.0976, "third_only_all": 0.1039}
+subject_object_swap experiments/improve/full-graph/fullgraph_factual_r3_seed0 {"all": 0.4779, "with_triple": 0.482, "triple_only_with_triple": 0.0973, "third_only_all": 0.1036}
+subject_object_swap experiments/improve/full-graph/fullgraph_factual_r3_seed1 {"all": 0.4846, "with_triple": 0.4893, "triple_only_with_triple": 0.1078, "third_only_all": 0.1139}
+subject_object_swap experiments/improve/full-graph/fullgraph_factual_r3_seed2 {"all": 0.4774, "with_triple": 0.4813, "triple_only_with_triple": 0.112, "third_only_all": 0.1179}
+wrote experiments/improve/full-graph/triple_perturbation.json in 43s

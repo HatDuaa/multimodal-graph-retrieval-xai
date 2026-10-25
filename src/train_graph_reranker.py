@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.graph_store import GraphStore
 from src.eval.metrics import evaluate
-from src.models.graph_reranker import GraphReranker
+from src.models.graph_reranker import FUSIONS, TRIPLE_MATCHES, GraphReranker
 from src.utils.config import load_config, resolve
 from src.utils.seed import set_seed
 
@@ -120,11 +120,35 @@ def save_atomic(payload, path: Path):
     os.replace(tmp, path)
 
 
-def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt"):
-    """Rebuild a finished run's model from its config.json flags and load one of its checkpoints."""
+def build_model(options, device):
+    """GraphReranker from run flags (argparse namespace or config.json args); older runs lack the newer flags."""
+    options = options if isinstance(options, dict) else vars(options)
+    return GraphReranker(options["adaptive_weights"], options["use_gat"], options["use_triple_channel"],
+                         options["use_edges"], options["query_graph_encoder"],
+                         triple_match=options.get("triple_match", "phrase"),
+                         graph_channel=options.get("graph_channel", False),
+                         fusion=options.get("fusion", "zscore"), fusion_scale=options.get("fusion_scale"),
+                         zscore_floor=options.get("zscore_floor"), edge_geometry=options.get("edge_geometry", False),
+                         completion_edges=options.get("knn_edges", 0) > 0,
+                         global_node=options.get("global_node", False),
+                         count_table=options.get("count_table", False)).to(device)
+
+
+def structure_options(options):
+    """GraphStore structure options of a run (argparse namespace or config.json args)."""
+    options = options if isinstance(options, dict) else vars(options)
+    return {"knn_edges": options.get("knn_edges", 0), "global_node": options.get("global_node", False)}
+
+
+def load_run_model(run_dir: Path, device, checkpoint="checkpoint_best.pt", store=None):
+    """Rebuild a finished run's model from its config.json flags and load one of its checkpoints.
+
+    With a GraphStore, also set the store's graph structure to the run's (completion edges, global node).
+    """
     options = json.loads((run_dir / "config.json").read_text(encoding="utf-8"))["args"]
-    model = GraphReranker(options["adaptive_weights"], options["use_gat"], options["use_triple_channel"],
-                          options["use_edges"], options["query_graph_encoder"]).to(device)
+    if store is not None:
+        store.set_structure(**structure_options(options))
+    model = build_model(options, device)
     state = torch.load(run_dir / checkpoint, map_location=device, weights_only=False)
     model.load_state_dict(state["model"])
     return model.eval(), state["epoch"], state["metrics"]
@@ -147,6 +171,27 @@ def build_parser():
     parser.add_argument("--use-edges", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--query-graph-encoder", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--loss", choices=("cross_entropy", "lambda_mrr"), default="cross_entropy")
+    parser.add_argument("--triple-match", choices=TRIPLE_MATCHES, default="phrase",
+                        help="phrase: one vector per triple (level 1); factorized: c(s) * c(p) * c(o).")
+    parser.add_argument("--graph-channel", action=argparse.BooleanOptionalAction, default=False,
+                        help="Replace the triple channel by the cosine of attention-pooled graph vectors.")
+    parser.add_argument("--fusion", choices=FUSIONS, default="zscore",
+                        help="zscore: z-score every channel per query (level 1); raw: a*CLIP + b*S_obj + c*S_tri.")
+    parser.add_argument("--fusion-scale", type=float, nargs=3, metavar=("CLIP", "OBJ", "TRI"),
+                        help="raw fusion: per-channel train std at step 0, to start equivalent to the z-score fusion.")
+    parser.add_argument("--zscore-floor", type=float, nargs=3, metavar=("CLIP", "OBJ", "TRI"),
+                        help="z-score fusion: divide by max(std, floor) per channel (floors from train statistics).")
+    parser.add_argument("--edge-geometry", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add an MLP of the six box-geometry numbers of each image edge to its edge vector.")
+    parser.add_argument("--knn-edges", type=int, default=0, metavar="K",
+                        help="Complete image graphs: each node receives an edge from its K nearest nodes (box "
+                             "centres), then bridges join the remaining components; added edges are not triples.")
+    parser.add_argument("--global-node", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add one global node per graph (image and sentence) linked both ways to every node.")
+    parser.add_argument("--count-table", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add a learned g[caption count class, image count bucket] to object-channel similarities.")
+    parser.add_argument("--runs-root", default="level1/gat",
+                        help="Run directory parent, relative to the experiments path.")
     parser.add_argument("--rewire-seed", type=int,
                         help="Train and validate on image graphs with degree-preserving rewired edges (control).")
     parser.add_argument("--resume", action="store_true",
@@ -154,14 +199,15 @@ def build_parser():
     parser.add_argument("--stop-after-epoch", type=int,
                         help="Testing only: exit after saving this epoch's checkpoint, as if interrupted.")
     parser.add_argument("--eval-only", type=Path)
+    parser.add_argument("--config", type=Path,
+                        help="Data configuration (default configs/default.yaml), e.g. a repackaged data version.")
     return parser
 
 
 def train(args, store, run_dir: Path, device, cfg=None):
     """One training run; resumable from run_dir/checkpoint_last.pt with identical behaviour."""
     set_seed(args.seed)
-    model = GraphReranker(args.adaptive_weights, args.use_gat, args.use_triple_channel,
-                          args.use_edges, args.query_graph_encoder).to(device)
+    model = build_model(args, device)
     train_arrays, val_arrays = store.candidates("train"), store.candidates("val")
     last_path = run_dir / "checkpoint_last.pt"
     if run_dir.exists() and any(run_dir.iterdir()) and not args.resume:
@@ -265,16 +311,15 @@ def train(args, store, run_dir: Path, device, cfg=None):
 def main() -> None:
     faulthandler.enable()
     args = build_parser().parse_args()
-    cfg = load_config()
+    cfg = load_config(args.config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    store = GraphStore(cfg)
+    store = GraphStore(cfg, structure=structure_options(args))
     if args.rewire_seed is not None:
         store.use_rewired_graphs(args.rewire_seed)
-    run_dir = resolve(cfg, "experiments") / "level1" / "gat" / args.run_name
+    run_dir = resolve(cfg, "experiments") / args.runs_root / args.run_name
     if args.eval_only:
         set_seed(args.seed)
-        model = GraphReranker(args.adaptive_weights, args.use_gat, args.use_triple_channel,
-                              args.use_edges, args.query_graph_encoder).to(device)
+        model = build_model(args, device)
         model.load_state_dict(torch.load(args.eval_only, map_location=device)["model"])
         model.eval(); print(json.dumps(evaluate_val(model, store, store.candidates("val"), device, args.eval_batch_size)))
         return

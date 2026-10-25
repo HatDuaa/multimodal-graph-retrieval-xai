@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/level1/gat/no_gat_r3_seed0 {"all": 0.4678, "with_triple": 0.4769, "triple_only_with_triple": 0.0676}
+baseline experiments/level1/gat/no_gat_r3_seed1 {"all": 0.4671, "with_triple": 0.4766, "triple_only_with_triple": 0.0688}
+baseline experiments/level1/gat/no_gat_r3_seed2 {"all": 0.4664, "with_triple": 0.4753, "triple_only_with_triple": 0.0807}
+verb_swap experiments/level1/gat/no_gat_r3_seed0 {"all": 0.4634, "with_triple": 0.4718, "triple_only_with_triple": 0.0499}
+verb_swap experiments/level1/gat/no_gat_r3_seed1 {"all": 0.4612, "with_triple": 0.4697, "triple_only_with_triple": 0.0536}
+verb_swap experiments/level1/gat/no_gat_r3_seed2 {"all": 0.4624, "with_triple": 0.4707, "triple_only_with_triple": 0.0631}
+subject_object_swap experiments/level1/gat/no_gat_r3_seed0 {"all": 0.464, "with_triple": 0.4725, "triple_only_with_triple": 0.0446}
+subject_object_swap experiments/level1/gat/no_gat_r3_seed1 {"all": 0.4609, "with_triple": 0.4694, "triple_only_with_triple": 0.0504}
+subject_object_swap experiments/level1/gat/no_gat_r3_seed2 {"all": 0.4639, "with_triple": 0.4724, "triple_only_with_triple": 0.0596}
+wrote experiments/improve/triple-perturbation/no_gat_r3.json in 28s

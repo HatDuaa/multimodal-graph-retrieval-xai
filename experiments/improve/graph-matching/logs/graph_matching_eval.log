@@ -1,0 +1,12 @@
+frozen fgw alone R@1 0.025 corr [-0.032 -0.049 -0.042] best w 0.0 0.4723
+frozen srfgw alone R@1 0.1483 corr [0.285 0.292 0.287] best w 0.05 0.4729
+frozen consistency alone R@1 0.2545 corr [-0.059 -0.064 -0.059] best w 0.0 0.4723
+seed0 fgw alone R@1 0.0381 corr [0.232] best w 0.0 0.4708
+seed0 srfgw alone R@1 0.211 corr [0.707] best w 0.0 0.4708
+seed0 consistency alone R@1 0.2513 corr [-0.047] best w 0.0 0.4708
+seed1 fgw alone R@1 0.0365 corr [0.186] best w 0.05 0.4708
+seed1 srfgw alone R@1 0.2052 corr [0.679] best w 0.1 0.4724
+seed1 consistency alone R@1 0.2616 corr [-0.051] best w 0.0 0.4698
+seed2 fgw alone R@1 0.0433 corr [0.28] best w 0.0 0.4764
+seed2 srfgw alone R@1 0.2271 corr [0.778] best w 0.05 0.4774
+seed2 consistency alone R@1 0.2507 corr [-0.053] best w 0.0 0.4764

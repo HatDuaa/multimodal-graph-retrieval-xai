@@ -1,0 +1,26 @@
+# Test split of data version count_v1 (main model countonly_factual_r3), for the one-time final evaluation only
+# (scripts/improve/evaluate_test_countonly.py). Built by scripts/improve/package_test_count_v1.py --split test with the
+# same chain as train/val: level-1 graphs + VG boxes -> merge_v1 merge -> count_v1 counts; FACTUAL-T5 large captions
+# -> group_v1 count classes; level-1 CLIP top-50 candidates. Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features/factual_v1
+  extra_parts: data/features/count_v1_test/vg_coco_graph_parts_extra   # test part texts the factual_v1 table lacks
+  graphs: data/graphs/count_v1_test
+  count_buckets: data/graphs/count_v1_test/count_buckets.json
+  processed: data/processed/count_v1_test
+  experiments: experiments
+
+clip:
+  model: ViT-B-32-quickgelu
+  pretrained: openai
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+retrieval:
+  top_k: 50

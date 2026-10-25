@@ -1,0 +1,446 @@
+{
+  "split": "val",
+  "runs": [
+    "experiments/improve/group-count/groupcount_factual_r3_seed0",
+    "experiments/improve/group-count/groupcount_factual_r3_seed1",
+    "experiments/improve/group-count/groupcount_factual_r3_seed2"
+  ],
+  "per_run": {
+    "experiments/improve/group-count/groupcount_factual_r3_seed0": {
+      "caption_nodes": 5582,
+      "changed": 783,
+      "changed_share": 0.14027230383375133,
+      "good": 26,
+      "bad": 197,
+      "same_label_status": 560,
+      "label_match_without_g": 0.6160874238624149,
+      "label_match_with_g": 0.5854532425653888,
+      "count_compatible_without_g": 0.5250806162665711,
+      "count_compatible_with_g": 0.6361519168756719
+    },
+    "experiments/improve/group-count/groupcount_factual_r3_seed1": {
+      "caption_nodes": 5582,
+      "changed": 782,
+      "changed_share": 0.14009315657470442,
+      "good": 7,
+      "bad": 217,
+      "same_label_status": 558,
+      "label_match_without_g": 0.624328197778574,
+      "label_match_with_g": 0.5867072733787173,
+      "count_compatible_without_g": 0.5299175922608385,
+      "count_compatible_with_g": 0.641347187388033
+    },
+    "experiments/improve/group-count/groupcount_factual_r3_seed2": {
+      "caption_nodes": 5582,
+      "changed": 783,
+      "changed_share": 0.14027230383375133,
+      "good": 15,
+      "bad": 202,
+      "same_label_status": 566,
+      "label_match_without_g": 0.6191329272662128,
+      "label_match_with_g": 0.5856323898244357,
+      "count_compatible_without_g": 0.5308133285560731,
+      "count_compatible_with_g": 0.64385524901469
+    }
+  },
+  "aggregate": {
+    "caption_nodes": {
+      "mean": 5582.0,
+      "std": 0.0
+    },
+    "changed": {
+      "mean": 782.6666666666666,
+      "std": 0.5773502691896257
+    },
+    "changed_share": {
+      "mean": 0.1402125880807357,
+      "std": 0.00010343071823531908
+    },
+    "good": {
+      "mean": 16.0,
+      "std": 9.539392014169456
+    },
+    "bad": {
+      "mean": 205.33333333333334,
+      "std": 10.408329997330663
+    },
+    "same_label_status": {
+      "mean": 561.3333333333334,
+      "std": 4.163331998932265
+    },
+    "label_match_without_g": {
+      "mean": 0.6198495163024006,
+      "std": 0.0041668589572242875
+    },
+    "label_match_with_g": {
+      "mean": 0.5859309685895139,
+      "std": 0.0006782405763525924
+    },
+    "count_compatible_without_g": {
+      "mean": 0.5286038456944943,
+      "std": 0.003083900951552722
+    },
+    "count_compatible_with_g": {
+      "mean": 0.6404514510927983,
+      "std": 0.003929006126739716
+    }
+  },
+  "examples": {
+    "bad": [
+      {
+        "caption_id": "163601_3",
+        "image_id": 2355615,
+        "query_node": "clock",
+        "query_count": "3-4",
+        "kind": "bad",
+        "without_g": {
+          "node": "clock",
+          "count": ">=5",
+          "sim": 0.9438644051551819,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "clock face",
+          "count": "3-4",
+          "sim_plus_g": 1.0323399305343628,
+          "g": 0.1110924482345581,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "451949_2",
+        "image_id": 2415864,
+        "query_node": "tennis player",
+        "query_count": "2",
+        "kind": "bad",
+        "without_g": {
+          "node": "tennis",
+          "count": "1",
+          "sim": 0.7080856561660767,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "racket",
+          "count": "2",
+          "sim_plus_g": 0.7667779326438904,
+          "g": 0.07338970899581909,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "491169_4",
+        "image_id": 2356629,
+        "query_node": "motorcycle",
+        "query_count": ">=3",
+        "kind": "bad",
+        "without_g": {
+          "node": "motorcycle",
+          "count": "1",
+          "sim": 0.8096062541007996,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "bike",
+          "count": ">=5",
+          "sim_plus_g": 0.8164860606193542,
+          "g": 0.09186375141143799,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "186856_1",
+        "image_id": 2317962,
+        "query_node": "people",
+        "query_count": ">=3",
+        "kind": "bad",
+        "without_g": {
+          "node": "people",
+          "count": "1",
+          "sim": 0.7748634219169617,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "child",
+          "count": ">=5",
+          "sim_plus_g": 0.7892698645591736,
+          "g": 0.09186375141143799,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "118065_1",
+        "image_id": 2345589,
+        "query_node": "fruit",
+        "query_count": ">=3",
+        "kind": "bad",
+        "without_g": {
+          "node": "fruit",
+          "count": "1",
+          "sim": 0.9199469089508057,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "orange",
+          "count": "3-4",
+          "sim_plus_g": 0.887729287147522,
+          "g": 0.04020744562149048,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "11760_0",
+        "image_id": 2372348,
+        "query_node": "tree",
+        "query_count": ">=2",
+        "kind": "bad",
+        "without_g": {
+          "node": "tree",
+          "count": "1",
+          "sim": 0.5559028387069702,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "branch",
+          "count": "2",
+          "sim_plus_g": 0.521125078201294,
+          "g": -9.149312973022461e-05,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "41247_0",
+        "image_id": 2368751,
+        "query_node": "wave",
+        "query_count": ">=2",
+        "kind": "bad",
+        "without_g": {
+          "node": "wave",
+          "count": "1",
+          "sim": 0.8748692274093628,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "person",
+          "count": "2",
+          "sim_plus_g": 0.8285475373268127,
+          "g": -9.149312973022461e-05,
+          "label_match": false,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "491169_0",
+        "image_id": 2356629,
+        "query_node": "people",
+        "query_count": ">=2",
+        "kind": "bad",
+        "without_g": {
+          "node": "people",
+          "count": "1",
+          "sim": 0.8417351841926575,
+          "label_match": true,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "man",
+          "count": ">=5",
+          "sim_plus_g": 0.8468739986419678,
+          "g": 0.05335962772369385,
+          "label_match": false,
+          "count_compatible": true
+        }
+      }
+    ],
+    "good": [
+      {
+        "caption_id": "76822_4",
+        "image_id": 2414527,
+        "query_node": "ski",
+        "query_count": ">=2",
+        "kind": "good",
+        "without_g": {
+          "node": "ski track",
+          "count": "1",
+          "sim": 0.766537070274353,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "skier",
+          "count": "3-4",
+          "sim_plus_g": 0.7867991924285889,
+          "g": 0.039164185523986816,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "36607_3",
+        "image_id": 2339868,
+        "query_node": "people",
+        "query_count": "2",
+        "kind": "good",
+        "without_g": {
+          "node": "man",
+          "count": "3-4",
+          "sim": 0.754772961139679,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "person",
+          "count": "2",
+          "sim_plus_g": 0.8236783146858215,
+          "g": 0.07338970899581909,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "282847_0",
+        "image_id": 2372558,
+        "query_node": "man",
+        "query_count": ">=3",
+        "kind": "good",
+        "without_g": {
+          "node": "shirt",
+          "count": "3-4",
+          "sim": 0.8140513896942139,
+          "label_match": false,
+          "count_compatible": true
+        },
+        "with_g": {
+          "node": "man",
+          "count": ">=5",
+          "sim_plus_g": 0.898345410823822,
+          "g": 0.09186375141143799,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "37549_2",
+        "image_id": 2347393,
+        "query_node": "giraffe",
+        "query_count": ">=2",
+        "kind": "good",
+        "without_g": {
+          "node": "baby giraffe",
+          "count": "1",
+          "sim": 0.8175046443939209,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "adult giraffe",
+          "count": "3-4",
+          "sim_plus_g": 0.8475155830383301,
+          "g": 0.03916424512863159,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "573770_3",
+        "image_id": 2377283,
+        "query_node": "tree",
+        "query_count": ">=2",
+        "kind": "good",
+        "without_g": {
+          "node": "tree branches",
+          "count": "1",
+          "sim": 0.8476919531822205,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "tree",
+          "count": ">=5",
+          "sim_plus_g": 0.8981084227561951,
+          "g": 0.05335962772369385,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "537695_0",
+        "image_id": 2337436,
+        "query_node": "man",
+        "query_count": "2",
+        "kind": "good",
+        "without_g": {
+          "node": "shirt",
+          "count": "1",
+          "sim": 0.8549996614456177,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "human",
+          "count": "2",
+          "sim_plus_g": 0.9216112494468689,
+          "g": 0.07338970899581909,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "206876_3",
+        "image_id": 2372686,
+        "query_node": "elephant",
+        "query_count": ">=2",
+        "kind": "good",
+        "without_g": {
+          "node": "trunk",
+          "count": "1",
+          "sim": 0.774897575378418,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "elephant",
+          "count": "2",
+          "sim_plus_g": 0.7603297233581543,
+          "g": -9.149312973022461e-05,
+          "label_match": true,
+          "count_compatible": true
+        }
+      },
+      {
+        "caption_id": "577182_3",
+        "image_id": 2326961,
+        "query_node": "bench",
+        "query_count": "2",
+        "kind": "good",
+        "without_g": {
+          "node": "information",
+          "count": "1",
+          "sim": 0.8481082320213318,
+          "label_match": false,
+          "count_compatible": false
+        },
+        "with_g": {
+          "node": "bench",
+          "count": "3-4",
+          "sim_plus_g": 0.8728818297386169,
+          "g": 0.05708038806915283,
+          "label_match": true,
+          "count_compatible": false
+        }
+      }
+    ]
+  }
+}

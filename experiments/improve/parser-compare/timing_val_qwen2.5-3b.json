@@ -1,0 +1,14 @@
+{
+  "parser": "qwen2.5-3b",
+  "checkpoint": "Qwen/Qwen2.5-3B-Instruct",
+  "split": "val",
+  "captions": 10633,
+  "device": "cuda (RTX 4090)",
+  "batch_size": 64,
+  "seconds_total": 1460.8623447418213,
+  "seconds_per_1000": 137.38948036695393,
+  "seconds_model_load": 5.186190605163574,
+  "seconds_generate": 1454.2270884513855,
+  "seconds_per_1000_generate": 136.76545551127487,
+  "failed_outputs": 18
+}

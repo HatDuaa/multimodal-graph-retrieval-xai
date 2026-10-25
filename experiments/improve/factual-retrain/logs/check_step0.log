@@ -1,0 +1,3 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+{"n_queries": 10633, "recall@1": 0.434590426032164, "recall@5": 0.7115583560613186, "recall@10": 0.8171729521301608, "mrr": 0.5613296447614589, "weights_mean": [0.600060760974884, 0.28002405166625977, 0.11999573558568954], "weights_std": [6.079628656152636e-05, 2.4050739739323035e-05, 4.261636149749393e-06], "tau_objects": 0.05000000074505806, "tau_triples": 0.05000000074505806, "temperature": 1.0, "config": "configs/factual_v1.yaml"}

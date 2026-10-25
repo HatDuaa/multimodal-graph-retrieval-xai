@@ -1,0 +1,59 @@
+{
+  "version": "count_v1_test",
+  "split": "test",
+  "date": "2026-10-24 22:43:17 +0700",
+  "chain": "level-1 graphs + objects_<split> boxes -> merge_v1 merge -> count_v1 counts; factual_v1 captions -> group_v1 count classes; factual_v1 candidates",
+  "source_graphs_sha256": "1f65f3e24e4f2bcb9e390e1092aa12f764154a398d3e163fffc237b837f41788",
+  "objects_sha256": "3344aa09165b69a72356cb775f86414022cebbd852ccd4212f4c0196ab7d715e",
+  "captions": {
+    "test": {
+      "captions": 10696,
+      "captions_with_known_count": 4796,
+      "captions_with_known_count_share": 0.4483919222139117,
+      "raw_heads_aligned_share": 1.0,
+      "scorable_nodes": 29952,
+      "node_classes": {
+        "unknown": 23830,
+        "1": 25,
+        "2": 1044,
+        "3-4": 262,
+        ">=5": 19,
+        ">=2": 3930,
+        ">=3": 842
+      },
+      "node_class_shares": {
+        "unknown": 0.7956063034188035,
+        "1": 0.0008346688034188034,
+        "2": 0.03485576923076923,
+        "3-4": 0.00874732905982906,
+        ">=5": 0.0006343482905982906,
+        ">=2": 0.1312099358974359,
+        ">=3": 0.0281116452991453
+      },
+      "node_rules": {
+        "unknown": 23830,
+        "group_many": 842,
+        "plural": 3930,
+        "number": 1067,
+        "lone_single": 25,
+        "factual_count": 40,
+        "couple_both": 161,
+        "pair": 57
+      }
+    }
+  },
+  "images": 2138,
+  "nodes_before": 56381,
+  "nodes_after": 52510,
+  "extra_parts": {
+    "keys": 388,
+    "by_kind": {
+      "node": 0,
+      "rel": 0,
+      "triple": 388
+    },
+    "encoder": "ViT-B-32-quickgelu/openai",
+    "reencoded_max_abs_error": 5.364418029785156e-07
+  },
+  "seconds": 31.024914503097534
+}
