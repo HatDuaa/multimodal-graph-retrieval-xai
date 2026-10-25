@@ -92,30 +92,49 @@ python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh
 Cần các file sau (checksum ở `data/MANIFEST.md`). Tất cả nằm trên Drive nhóm, thư mục `DLDT/multimodal-graph-retrieval-xai-data/`, cùng cấu trúc `data/` và `experiments/` như repo; tải về đặt đúng đường dẫn (xem thêm [data/README.md](data/README.md)):
 
 - `data/features/vg_coco_image.npy` và `vg_coco_caption.npy`, mỗi file kèm `.ids.json`: cho chế độ CLIP thuần.
-- Thêm cho chế độ **CLIP + Đồ thị**:
-  - `data/features/vg_coco_graph_parts.npy` và `.ids.json` (1,2 GB);
-  - `data/graphs/vg_coco_scene_graphs.jsonl`;
-  - checkpoint `experiments/level1/gat/main_r3_seed0/checkpoint_best.pt` (4,2 MB, SHA-256 `7575951f…991e6d`) cùng file `config.json` đã có sẵn trong git.
+- Thêm cho chế độ **CLIP + Đồ thị** với mô hình chính `countonly_factual_r3` (mặc định, seed 0 = seed có R@1 val cao nhất
+  trong 3 seed):
+  - `data/features/factual_v1/vg_coco_graph_parts.npy` và `.ids.json` (1,5 GB);
+  - `data/features/merge_v1/vg_coco_graph_parts_extra.*` (pool val) hoặc `data/features/count_v1_test/vg_coco_graph_parts_extra.*` (pool test);
+  - đồ thị ảnh: `data/graphs/merge_v1/vg_coco_scene_graphs.jsonl` + `data/graphs/count_v1/count_buckets.json` (val), hoặc
+    `data/graphs/count_v1_test/vg_coco_scene_graphs.jsonl` + `count_buckets.json` (test);
+  - checkpoint `experiments/improve/count-only/countonly_factual_r3_seed0/checkpoint_best.pt` (4,3 MB, SHA-256
+    `b065eb16…ae3631`), `config.json` có sẵn trong git;
+  - parser FACTUAL: `pip install transformers==5.20.1 nltk==3.10.3` rồi `pip install --no-deps FactualSceneGraph==0.7.3`;
+    model `lizhuang144/flan-t5-large-VG-factual-sg` (3,1 GB) tự tải từ Hugging Face lần chạy đầu.
+- Mô hình cấp 1 `--run main_r3_seed0` cần `data/features/vg_coco_graph_parts.npy` + `.ids.json` (1,2 GB),
+  `data/graphs/vg_coco_scene_graphs.jsonl` và checkpoint `experiments/level1/gat/main_r3_seed0/checkpoint_best.pt`
+  (4,2 MB, SHA-256 `7575951f…991e6d`).
 - Mô hình spaCy cho parser: `python -m spacy download en_core_web_sm`.
 - Ảnh của split muốn xem.
 
 ```bash
 python scripts/download_images.py --splits test    # 2 138 ảnh, một lần
 python app/demo_app.py --split test                 # mở http://localhost:7860
+python app/demo_app.py --split test --run main_r3_seed0   # mô hình cấp 1 để so sánh
 python app/demo_app.py --split test --no-graph      # chỉ CLIP thuần, không cần checkpoint
 ```
 
 Nhập một câu tiếng Anh rồi bấm **Tìm**, chọn chế độ **CLIP thuần** hoặc **CLIP + Đồ thị**. Bấm vào một ảnh trong lưới để xem:
-điểm cuối, điểm CLIP, điểm đồ thị, trọng số a / b / c của câu, đồ thị câu do parser tách ra, và bảng các cặp khớp giữa câu
-và ảnh (w, a, sim, đóng góp). Bảng này lấy từ chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không
-phải tìm đường đi sau khi đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng
-đứng hạng mấy.
+điểm cuối, điểm CLIP, điểm đồ thị, trọng số a / b / c của câu, và bảng các cặp khớp giữa câu và ảnh (w, độ khớp, % điểm
+cuối). Bảng này lấy từ chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không phải tìm đường đi sau khi
+đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng đứng hạng mấy.
 
-Chế độ đồ thị (`src/service/graph_mode.py`) lấy top-50 của CLIP, tách câu bằng `sng_parser`, mã hoá ngay bằng CLIP những
-nhãn chưa có trong bảng vector, rồi xếp lại bằng mô hình chính `main_r3_seed0`. Đã kiểm tra trên máy không GPU
-(`CUDA_VISIBLE_DEVICES=""`): khởi động khoảng 2 giây, mỗi truy vấn dưới 1 giây. Trên val, chế độ này cho top-10 giống hệt
-đường đánh giá đã đóng gói (điểm lệch khoảng 1e-4 do mã hoá câu lại lúc chạy). Kịch bản video dự phòng:
-[docs/demo-video-script.md](docs/demo-video-script.md).
+Chế độ đồ thị (`src/service/graph_mode.py`) lấy top-50 của CLIP, tách câu bằng parser mà run đã dùng, mã hoá ngay bằng
+CLIP những nhãn chưa có trong bảng vector, rồi xếp lại bằng mô hình của run:
+- **`countonly_factual_r3`:**
+  - câu được tách bằng FACTUAL-T5 large, kèm luật số lượng của count_v1;
+  - đồ thị ảnh là merge_v1, có cạnh hình học, cạnh kNN `[none]`, node tổng và nhóm số lượng;
+  - điểm dùng fusion raw cùng bảng g;
+  - vì fusion raw, các % trong bảng cộng đúng bằng 100%.
+- **`main_r3_seed0`:** câu được tách bằng `sng_parser`, điểm dùng fusion z-score.
+
+Kiểm tra trên val (`scripts/checks/demo_parity.py`, chi tiết ở
+[experiments/improve/demo/README.md](experiments/improve/demo/README.md)):
+- **countonly**, 200 caption: điểm cuối lệch đường đánh giá đã đóng gói tối đa 4e-6, top-1 trùng 200/200.
+- **main_r3**, 100 caption: lệch tối đa 3e-4, top-1 trùng 100/100.
+
+Kịch bản video dự phòng (quay với `main_r3_seed0`): [docs/demo-video-script.md](docs/demo-video-script.md).
 
 Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
 

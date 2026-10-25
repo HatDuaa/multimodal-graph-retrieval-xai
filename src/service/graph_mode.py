@@ -1,9 +1,13 @@
-""""CLIP + Đồ thị" ranking mode for the demo: re-rank CLIP's top-50 with the trained graph reranker.
+""""CLIP + Đồ thị" ranking mode for the demo: re-rank CLIP's top-50 with a trained graph reranker.
 
-A typed query is parsed with sng_parser into the same query graph as the packaged captions; part texts that the
-frozen part table lacks are encoded on the fly with the same frozen CLIP text encoder and the same conventions
-(nodes through the concept prompt, relations and triples verbatim). Every explanation row comes from the
-ranking pass itself (src/explain/graph_explainer.matched_pairs), never from a search after the fact.
+The run decides the data: its config.json names the training config, and DEMO_DATA gives the config of the demo split
+and the caption parser that built its packaged caption graphs. Level-1 runs (no config entry) read configs/default.yaml
+and parse with sng_parser; countonly_factual_r3 reads count_v1 (merge_v1 image graphs with box geometry, completion
+edges and a global node as in its config.json, count buckets) and parses with FACTUAL-T5 large plus the count rules
+(src/graph/caption_parsers.FactualQueryParser). Part texts that the frozen part table lacks are encoded on the fly with
+the same frozen CLIP text encoder and the same conventions (nodes through the concept prompt, relations and triples
+verbatim). Every explanation row comes from the ranking pass itself (src/explain/graph_explainer.matched_pairs),
+never from a search after the fact.
 """
 import json
 from pathlib import Path
@@ -11,12 +15,31 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from src.data.graph_store import GraphIndex, GraphStore
+from src.data.graph_store import GraphIndex, GraphStore, attach_count_buckets
 from src.explain.graph_explainer import matched_pairs
-from src.graph.parse_query import parse_caption
 from src.graph.soft_match import PRONOUNS
-from src.train_graph_reranker import load_run_model
-from src.utils.config import resolve
+from src.models.graph_reranker import fill_known_mean
+from src.train_graph_reranker import load_run_model, structure_options
+from src.utils.config import REPO_ROOT, load_config
+
+# Training config of a run (config.json "config") -> config read for each demo split, and the caption parser.
+DEMO_DATA = {
+    None: {"val": None, "test": None, "parser": "sng"},
+    "configs/count_v1.yaml": {"val": "configs/count_v1.yaml", "test": "configs/count_v1_test.yaml", "parser": "factual-large"},
+}
+# Folders searched for a run given by name; the default is the improvement phase's main model, seed chosen on val R@1.
+RUN_ROOTS = ("experiments/improve/count-only", "experiments/level1/gat")
+DEFAULT_RUN = "countonly_factual_r3_seed0"
+
+
+def find_run(run) -> Path:
+    path = Path(run)
+    if path.is_dir():
+        return path
+    for root in RUN_ROOTS:
+        if (REPO_ROOT / root / run / "config.json").exists():
+            return REPO_ROOT / root / run
+    raise FileNotFoundError(f"run {run!r} not found in {RUN_ROOTS}")
 
 
 def unmatched_parts(query_graph, query_parts, image_parts):
@@ -51,22 +74,44 @@ def unmatched_parts(query_graph, query_parts, image_parts):
 class GraphRerankMode:
     """Callable reranker (query, hits) -> hits for SearchService.add_mode()."""
 
-    def __init__(self, cfg, split, encoder, run="main_r3_seed0", device=None):
-        self.cfg, self.encoder = cfg, encoder
+    def __init__(self, cfg, split, encoder, run=DEFAULT_RUN, device=None, parser_device=None):
+        self.encoder = encoder
         self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
-        features = resolve(cfg, "features")
+        self.run_dir = find_run(run)
+        self.run = self.run_dir.name
+        self.options = json.loads((self.run_dir / "config.json").read_text(encoding="utf-8"))["args"]
+        data = DEMO_DATA[self.options.get("config")]
+        self.cfg = cfg if data[split] is None else load_config(REPO_ROOT / data[split])
+        self.fusion = self.options.get("fusion") or "zscore"
+        self.structure = structure_options(self.options)
+        paths = self.cfg["paths"]
+        features = REPO_ROOT / paths["features"]
         meta = json.loads((features / "vg_coco_graph_parts.ids.json").read_text(encoding="utf-8"))
         self.table = np.load(features / "vg_coco_graph_parts.npy", mmap_mode="r")
         self.row = {key: r for r, key in enumerate(meta["ids"])}
-        self.extra = {}  # part key -> vector encoded on demand for typed queries
+        self.extra = {}  # part key -> vector: the data version's extra parts, then texts encoded for typed queries
+        if paths.get("extra_parts"):
+            stem = REPO_ROOT / paths["extra_parts"]
+            keys = json.loads(stem.with_suffix(".ids.json").read_text(encoding="utf-8"))["ids"]
+            vectors = np.load(stem.with_suffix(".npy"))
+            self.extra.update((k, np.asarray(v, dtype=np.float32)) for k, v in zip(keys, vectors) if k not in self.row)
         self.graphs = {}
-        with (resolve(cfg, "graphs") / "vg_coco_scene_graphs.jsonl").open(encoding="utf-8") as handle:
+        with (REPO_ROOT / paths["graphs"] / "vg_coco_scene_graphs.jsonl").open(encoding="utf-8") as handle:
             for line in handle:
                 graph = json.loads(line)
                 if graph["split"] == split:
                     self.graphs[int(graph["image_id"])] = graph
-        self.run = run
-        self.model = load_run_model(Path(resolve(cfg, "experiments")) / "level1" / "gat" / run, self.device)[0]
+        if paths.get("count_buckets"):
+            counts = json.loads((REPO_ROOT / paths["count_buckets"]).read_text(encoding="utf-8"))
+            attach_count_buckets(self.graphs, counts)
+        self.image_parts = {}  # image id -> graph parts with the run's structure, built on first use
+        if data["parser"] == "sng":
+            from src.graph.parse_query import parse_caption
+            self.parse = parse_caption
+        else:
+            from src.graph.caption_parsers import FactualQueryParser
+            self.parse = FactualQueryParser(str(parser_device or self.device))
+        self.model = load_run_model(self.run_dir, self.device)[0]
 
     def _vectors(self, keys):
         """A compact table holding exactly these part keys, encoding unseen texts once with frozen CLIP."""
@@ -85,11 +130,16 @@ class GraphRerankMode:
         return ([f"node:{x}" for x in parts["node_labels"]] + [f"rel:{x}" for x in parts["relation_labels"]]
                 + [f"triple:{x}" for x in parts["triple_labels"]])
 
+    def _image(self, image_id):
+        if image_id not in self.image_parts:
+            self.image_parts[image_id] = GraphStore._graph_parts(self.graphs[image_id], **self.structure)
+        return self.image_parts[image_id]
+
     @torch.no_grad()
     def __call__(self, query, hits):
-        query_graph = parse_caption(query)
-        query_parts = GraphStore._graph_parts(query_graph, query=True)
-        image_parts = [GraphStore._graph_parts(self.graphs[h.image_id]) for h in hits]
+        query_graph = self.parse(query)
+        query_parts = GraphStore._graph_parts(query_graph, query=True, global_node=self.structure["global_node"])
+        image_parts = [self._image(h.image_id) for h in hits]
         keys = list(dict.fromkeys(self._keys(query_parts) + [k for p in image_parts for k in self._keys(p)]))
         local, table = self._vectors(keys)
         sentence = torch.from_numpy(np.asarray(self.encoder.encode_texts([query]), dtype=np.float32)).to(self.device)
@@ -103,6 +153,8 @@ class GraphRerankMode:
         # fuse_tensor leaves a channel out of the graph score when it is inactive for this query (no scorable parts,
         # or constant over the pool); the demo states this instead of implying the channel weight was used
         active = [bool(detail["object_active"][0]), bool(detail["triple_active"][0])]
+        # fuse_raw fills a missing channel score (image without a part to match) with the candidates' known mean
+        filled = {"objects": fill_known_mean(detail["objects"])[0], "triples": fill_known_mean(detail["triples"])[0]}
         names = lambda graph: {o["id"]: o["name"] for o in graph["objects"]}  # noqa: E731
         for row, (hit, parts) in enumerate(zip(hits, image_parts)):
             pairs = matched_pairs(self.model, detail, query_parts, parts, row)
@@ -116,13 +168,19 @@ class GraphRerankMode:
                 item["image_part"] = (inames[i["subject"]], i["predicate"], inames[i["object"]])
             hit.score = float(fused[0, row])
             hit.graph_score = float(detail["graph"][0, row])
-            hit.explanation = [{"weights_abc": weights, **pairs,
-                                "channel_active": active,
-                                # z-scored CLIP term of fused = a * z_clip + (1 - a) * graph (fuse_tensor)
-                                "z_clip": float(detail["z_clip"][0, row]),
-                                "unmatched": unmatched_parts(query_graph, query_parts, parts),
-                                "query_graph": {"objects": [o["name"] for o in query_graph["objects"]],
-                                                "relations": [(qnames[r["subject"]], r["predicate"].lower(), qnames[r["object"]])
-                                                              for r in query_graph["relations"]
-                                                              if r["subject"] in qnames and r["object"] in qnames]}}]
+            info = {"weights_abc": weights, **pairs, "fusion": self.fusion, "channel_active": active,
+                    "unmatched": unmatched_parts(query_graph, query_parts, parts),
+                    "query_graph": {"objects": [o["name"] for o in query_graph["objects"]],
+                                    "relations": [(qnames[r["subject"]], r["predicate"].lower(), qnames[r["object"]])
+                                                  for r in query_graph["relations"]
+                                                  if r["subject"] in qnames and r["object"] in qnames]}}
+            if self.fusion == "raw":
+                # fused = a * cosine + b * S_obj + c * S_tri; a channel without rows here took the filled mean
+                info["fills"] = {key: (weights[k] * float(filled[key][row])
+                                       if not bool(torch.isfinite(detail[key][0, row])) else None)
+                                 for k, key in ((1, "objects"), (2, "triples"))}
+            else:
+                # z-scored CLIP term of fused = a * z_clip + (1 - a) * graph (fuse_tensor)
+                info["z_clip"] = float(detail["z_clip"][0, row])
+            hit.explanation = [info]
         return hits

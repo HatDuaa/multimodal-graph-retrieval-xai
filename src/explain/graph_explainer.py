@@ -26,7 +26,9 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
     detail must come from model(batch, return_encoded=True); image_row indexes the encoded images of that batch.
     contribution = channel weight (b or c) * w_i * a_ij * sim_ij, before the candidate-wise z-score. For count-table
     models, object rows also carry query_count, image_count and count_bias = g[query_count, image_count], which sim_ij
-    includes.
+    includes. row_score = sum_j a_ij * sim_ij over every image part, and channel_term = channel weight * w_i *
+    row_score: the channel score is sum_i w_i * row_score_i, so under the raw fusion the channel terms of one image
+    add up exactly to its part of the final score.
     """
     weights = detail['weights'][query_row]
     result = {'objects': [], 'triples': []}
@@ -50,6 +52,7 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
         attention = torch.softmax(sims / tau, -1)
         w = torch.softmax(part_summary(q[None])[0] @ u, -1)
         best = sims.argmax(-1)
+        row_scores = (attention * sims).sum(-1)
         slots = slot_similarity(torch.einsum('isd,jsd->ijs', q, p)) if q.dim() == 3 else None
         # Encoded query objects keep only scorable parts (part_mask), so the index list must be masked the same way.
         q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
@@ -59,7 +62,8 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
             row = {'query_index': q_indices[i], 'image_index': p_indices[j],
                    'w_i': float(w[i]), 'a_ij': float(attention[i, j]),
                    'sim_ij': float(sims[i, j]),
-                   'contribution': float(weight * w[i] * attention[i, j] * sims[i, j])}
+                   'contribution': float(weight * w[i] * attention[i, j] * sims[i, j]),
+                   'row_score': float(row_scores[i]), 'channel_term': float(weight * w[i] * row_scores[i])}
             if slots is not None:
                 row['slot_similarity'] = dict(zip(('subject', 'predicate', 'object'), slots[i, j].tolist()))
             if counts is not None:

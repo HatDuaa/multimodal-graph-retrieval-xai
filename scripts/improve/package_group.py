@@ -28,6 +28,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts.improve.package_factual import fresh, sha256  # noqa: E402
 from src.data.graph_store import GraphStore  # noqa: E402
+from src.graph.caption_parsers import entity_heads  # noqa: E402
 from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS, caption_classes, image_bucket, image_counts  # noqa: E402
 from src.graph.dedup import group_by_role, majority_name, same_type  # noqa: E402
 from src.graph.soft_match import PRONOUNS  # noqa: E402
@@ -49,15 +50,6 @@ def grouped_graph(graph):
         objects.append(node)
     return {"image_id": graph["image_id"], "split": graph["split"], "width": graph["width"], "height": graph["height"],
             "objects": objects, "relations": grouped["relations"]}
-
-
-def entity_heads(raw_text):
-    from factual_scene_graph.parser.scene_graph_parser import SceneGraphParser
-    parser = object.__new__(SceneGraphParser)
-    try:
-        return [e["head"] for e in parser.graph_string_to_object(raw_text)["entities"]]
-    except Exception:  # noqa: BLE001 - malformed FACTUAL output: fall back to lemma matching
-        return None
 
 
 def part_keys(graph):

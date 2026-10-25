@@ -6,6 +6,7 @@ Schema: {"objects": [{"id", "name", "attributes", "count"}], "relations": [{"sub
 - factual: FACTUAL-T5 (Li et al., ACL Findings 2023) through the FactualSceneGraph package.
 - llm: an instruction-tuned LLM prompted few-shot for JSON, asked to replace pronouns by their referents.
 Object names of factual and llm are lower-cased and their last word lemmatised (spaCy), like sng's lemma_head.
+FactualQueryParser turns one typed caption into the caption graph of data versions group_v1 / count_v1 (demo).
 """
 from __future__ import annotations
 
@@ -86,9 +87,9 @@ def _count(value) -> int | None:
     return None
 
 
-def convert(raw_graphs: list[dict]) -> list[dict]:
+def convert(raw_graphs: list[dict], nlp=None) -> list[dict]:
     """Normalise names and predicates of parser-neutral graphs {"entities": [...], "relations": [...]}."""
-    nlp = _nlp()
+    nlp = nlp or _nlp()
     names = normalize_names([e["name"] for g in raw_graphs for e in g["entities"]], nlp)
     lemmas = predicate_lemma([r["predicate"] for g in raw_graphs for r in g["relations"]], nlp)
     return [to_query_graph(g["entities"], g["relations"], names, lemmas) for g in raw_graphs]
@@ -105,18 +106,80 @@ class FactualParser:
         self.parser.tokenizer.as_target_tokenizer = contextlib.nullcontext
         self.batch_size, self.beam_size = batch_size, beam_size
 
+    def raw_graph(self, text: str) -> dict:
+        """Parser-neutral graph of one FACTUAL output text."""
+        graph = self.parser.graph_string_to_object(text)
+        entities = [{"name": e["head"], "attributes": sorted(e["attributes"]), "count": _count(e["quantity"])}
+                    for e in graph["entities"]]
+        relations = [{"subject": r["subject"], "predicate": r["relation"], "object": r["object"]}
+                     for r in graph["relations"] if r["subject"] != r["object"]]
+        return {"entities": entities, "relations": relations}
+
     def parse(self, texts: list[str]) -> tuple[list[dict], list[str]]:
         outputs = self.parser.parse(texts, batch_size=self.batch_size, beam_size=self.beam_size, return_text=True,
                                     filter_factual_chars=True)
-        raw = []
-        for text in outputs:
-            graph = self.parser.graph_string_to_object(text)
-            entities = [{"name": e["head"], "attributes": sorted(e["attributes"]), "count": _count(e["quantity"])}
-                        for e in graph["entities"]]
-            relations = [{"subject": r["subject"], "predicate": r["relation"], "object": r["object"]}
-                         for r in graph["relations"] if r["subject"] != r["object"]]
-            raw.append({"entities": entities, "relations": relations})
-        return raw, outputs
+        return [self.raw_graph(text) for text in outputs], outputs
+
+    def generate_one(self, text: str, max_input_len: int = 64, max_output_len: int = 128) -> str:
+        """FACTUAL output text of one caption as parse() gives it to a caption that is not its batch's longest.
+
+        SceneGraphParser.parse (FactualSceneGraph 0.7.3) measures the batch's longest prompt without the end-of-sequence
+        token and then truncates to that length with it, so the longest prompt of each batch of 64 loses its last
+        token (a final period for most captions); a caption parsed alone always would. Here the limit counts the end
+        token, up to max_input_len tokens in all; generation and post-processing are parse()'s.
+        """
+        import torch
+        from factual_scene_graph.utils import clean_graph_string, remove_factual_chars, space_out_symbols_in_graph
+        tokenizer, model = self.parser.tokenizer, self.parser.model
+        prompt = "Generate Scene Graph: " + text.strip()
+        length = min(max_input_len, len(tokenizer.encode(prompt, add_special_tokens=False)) + 1)
+        encoded = tokenizer([prompt], max_length=length, truncation=True, return_tensors="pt").to(self.parser.device)
+        with torch.no_grad():
+            ids = model.generate(encoded["input_ids"], attention_mask=encoded["attention_mask"], use_cache=True,
+                                 decoder_start_token_id=tokenizer.pad_token_id, num_beams=self.beam_size,
+                                 max_length=max_output_len, early_stopping=self.beam_size > 1, num_return_sequences=1)
+        out = remove_factual_chars(tokenizer.batch_decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
+        return clean_graph_string(space_out_symbols_in_graph(out.replace("Generate Scene Graph:", "").strip()))
+
+
+def entity_heads(raw_text: str) -> list[str] | None:
+    """Entity heads of a raw FACTUAL output in entity order, or None when it does not parse."""
+    from factual_scene_graph.parser.scene_graph_parser import SceneGraphParser
+    parser = object.__new__(SceneGraphParser)
+    try:
+        return [e["head"] for e in parser.graph_string_to_object(raw_text)["entities"]]
+    except Exception:  # noqa: BLE001 - malformed FACTUAL output: fall back to lemma matching
+        return None
+
+
+class FactualQueryParser:
+    """One caption -> its caption graph as packaged in group_v1 / count_v1 (the demo's typed queries).
+
+    Same chain as the packaging: FACTUAL-T5 large (scripts/improve/parse_captions.py, beam 5, filter_factual_chars),
+    names and predicates through convert(), then a count class and rule per node from the spaCy parse of the caption
+    and the raw FACTUAL heads (scripts/improve/package_group.py caption_side, src/graph/counts.py). The caption is
+    generated without the batch truncation of its last token (FactualParser.generate_one), like the packaged captions
+    that were not the longest of their batch (98% of each split).
+    """
+
+    CHECKPOINT = "lizhuang144/flan-t5-large-VG-factual-sg"
+
+    def __init__(self, device: str = "cuda"):
+        import spacy
+        self.parser = FactualParser(self.CHECKPOINT, device=device, batch_size=1)
+        self.names_nlp = _nlp()
+        self.counts_nlp = spacy.load("en_core_web_sm", disable=["ner"])
+
+    def __call__(self, text: str) -> dict:
+        from src.graph.counts import caption_classes
+        output = self.parser.generate_one(text)
+        graph = convert([self.parser.raw_graph(output)], self.names_nlp)[0]
+        heads = entity_heads(output)
+        if heads is not None and len(heads) != len(graph["objects"]):
+            heads = None
+        for obj, (index, rule) in zip(graph["objects"], caption_classes(self.counts_nlp(text), graph["objects"], heads)):
+            obj["count_class"], obj["count_rule"] = index, rule
+        return graph
 
 
 def parse_llm_json(text: str) -> dict | None:
