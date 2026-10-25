@@ -89,3 +89,22 @@ Sinh bởi `scripts/build_rewired_parts.py --seed k` (chỉ đồ thị train/va
 | `data/features/vg_coco_graph_parts_rewire_seed1.ids.json` | 10631284 | `1dc918602f801f58c011bdc8feae348886aa026184c670dd0157311812407a7e` |
 | `data/features/vg_coco_graph_parts_rewire_seed2.npy` | 721016960 | `fc1c076d410bc1b7ac8a67bfe3f0941459515ea2b18dcd78c767c5540da39e56` |
 | `data/features/vg_coco_graph_parts_rewire_seed2.ids.json` | 10622224 | `a3c2ed7fdaf63742a9d013047bac007aee3224828d8a9a9d9a6ab1c53de01a90` |
+
+## MMKG tiếng Việt (cấp độ 3, Khang)
+
+Bản 2026-10-26, cache thô tải ngày 2026-10-24.
+- Đóng gói bằng `scripts/archive_vnmmkg_raw.py`, chia sẻ qua Drive nhóm (`data/raw/`).
+- Dựng bằng `python -m src.data.build_vnmmkg` (seed 0).
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/raw/vnmmkg_raw_2026-10-24.zip` | 137913533 | `7215a609f957fa1eaa6f350aa784898b6f72872a214933e5df61ce2c38c9f506` |
+| `vietnamese-mmkg/entities.jsonl` | 54729 | `743d99fec526d33c7365b0a0aaa6a68d41ff32948fc2547c353116f6ef7850fb` |
+| `vietnamese-mmkg/triples.jsonl` | 40181 | `06391fb60b3a56cc88749608d7b803e3b005999aba2c00cb4434a69fe950c1ba` |
+| `vietnamese-mmkg/images.jsonl` | 223663 | `48174233fd9067300238229458b649589709b40295f190d3fc0b4804ab9cd776` |
+| `vietnamese-mmkg/queries_auto.jsonl` | 55229 | `0f5e239e84c57ccedad73025f40430c696476358fb5649ab8eb12f637b3d9fc8` |
+| `vietnamese-mmkg/queries_hand.json` | 7930 | `fe311fa0bc44aa7f8e237fe33b33d01e7a8b82b0d434c7c73fe04ee116bb8c1e` |
+| `data/splits/vnmmkg_val.json` | 86978 | `910847b4000eb65a05223a9a7194131bfa0d8f40a695650edc9720caf0963508` |
+| `data/splits/vnmmkg_test.json` | 88504 | `56d939c13461187204b860a2ed99bb1fbd430bde2be9f37be8c11364dd654574` |
+
+Ảnh `data/raw/vnmmkg/images/<image_id>.jpg` sinh lại từ zip bằng lệnh build; SHA-256 từng ảnh nằm trong `images.jsonl`.
