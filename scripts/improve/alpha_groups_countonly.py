@@ -94,6 +94,18 @@ def shared_grid(level1):
     return sorted(set.intersection(*({g["a"] for g in run["grid"]} for run in level1)))
 
 
+def caption_groups(store, arrays):
+    """Masks over the val captions (candidates_val order) of every caption group, from count_v1's FACTUAL graphs."""
+    parts = [GraphStore._graph_parts(store.queries[str(c)], query=True) for c in arrays["caption_ids"]]
+    objects = np.array([sum(p["part_mask"]) for p in parts])
+    relations = np.array([len(p["edges"]) for p in parts])
+    explicit = np.array([any(cls in EXPLICIT for cls, keep in zip(p["count_index"], p["part_mask"]) if keep) for p in parts])
+    return {"all": np.ones(len(parts), dtype=bool),
+            "explicit_count": explicit, "no_explicit_count": ~explicit,
+            "with_relation": relations > 0, "objects_only": relations == 0,
+            "objects_0": objects == 0, "objects_1": objects == 1, "objects_2": objects == 2, "objects_3plus": objects >= 3}
+
+
 def plot(sweep, level1, path):
     import matplotlib
     matplotlib.use("Agg")
@@ -182,14 +194,7 @@ def main() -> None:
     for seed in range(3):
         stored = json.loads((LEVEL1 / "gat" / f"main_r3_seed{seed}" / "metrics.json").read_text(encoding="utf-8"))["best"]
         assert abs((ranks["main_r3"][seed] == 1).mean() - stored["recall@1"]) < 1e-9
-    parts = [GraphStore._graph_parts(store.queries[str(c)], query=True) for c in arrays["caption_ids"]]
-    objects = np.array([sum(p["part_mask"]) for p in parts])
-    relations = np.array([len(p["edges"]) for p in parts])
-    explicit = np.array([any(cls in EXPLICIT for cls, keep in zip(p["count_index"], p["part_mask"]) if keep) for p in parts])
-    groups = {"all": np.ones(len(parts), dtype=bool),
-              "explicit_count": explicit, "no_explicit_count": ~explicit,
-              "with_relation": relations > 0, "objects_only": relations == 0,
-              "objects_0": objects == 0, "objects_1": objects == 1, "objects_2": objects == 2, "objects_3plus": objects >= 3}
+    groups = caption_groups(store, arrays)
     hit = {name: np.stack([r == 1 for r in rs]).astype(np.float64) for name, rs in ranks.items()}
     recip = {name: np.stack([np.where(r <= 50, 1 / r, 0.) for r in rs]) for name, rs in ranks.items()}
     hit["clip"], recip["clip"] = (clip_rank == 1).astype(np.float64)[None], np.where(clip_rank <= 50, 1 / clip_rank, 0.)[None]

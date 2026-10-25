@@ -1,0 +1,22 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+countonly_factual_r3_seed0 49.15
+countonly_factual_r3_seed1 48.85
+countonly_factual_r3_seed2 48.74
+countonly_noedges_r3_seed0 46.53
+countonly_noedges_r3_seed1 46.54
+countonly_noedges_r3_seed2 46.5
+main_r3_seed0 46.67
+main_r3_seed1 46.56
+main_r3_seed2 46.21
+no_edges_r3_seed0 45.93
+no_edges_r3_seed1 45.91
+no_edges_r3_seed2 46.09
+all 10633 {"clip": 39.13, "countonly": 48.91, "noedges": 46.52, "main_r3": 46.48, "no_edges_r3": 45.98} {"countonly_minus_noedges": [2.39, [1.9, 2.86], 0.0024, 0.24], "main_r3_minus_no_edges_r3": [0.5, [0.13, 0.85], 0.0546, 0.07]}
+explicit_count 1235 {"clip": 44.21, "countonly": 54.06, "noedges": 50.39, "main_r3": 50.69, "no_edges_r3": 50.23} {"countonly_minus_noedges": [3.67, [2.29, 5.02], 0.026, 0.37], "main_r3_minus_no_edges_r3": [0.46, [-0.59, 1.51], 0.0451, 0.07]}
+no_explicit_count 9398 {"clip": 38.47, "countonly": 48.23, "noedges": 46.02, "main_r3": 45.92, "no_edges_r3": 45.42} {"countonly_minus_noedges": [2.22, [1.71, 2.74], 0.0002, 0.23], "main_r3_minus_no_edges_r3": [0.5, [0.14, 0.88], 0.062, 0.07]}
+with_relation 10342 {"clip": 39.31, "countonly": 49.38, "noedges": 46.92, "main_r3": 46.83, "no_edges_r3": 46.32} {"countonly_minus_noedges": [2.46, [1.98, 2.94], 0.0013, 0.24], "main_r3_minus_no_edges_r3": [0.52, [0.16, 0.9], 0.0536, 0.07]}
+objects_only 291 {"clip": 32.99, "countonly": 32.19, "noedges": 32.42, "main_r3": 33.91, "no_edges_r3": 34.02} {"countonly_minus_noedges": [-0.23, [-2.52, 2.18], 0.8025, 0], "main_r3_minus_no_edges_r3": [-0.11, [-2.29, 1.95], 0.8554, -0.12]}
+objects_1 269 {"clip": 31.97, "countonly": 31.47, "noedges": 31.72, "main_r3": 33.33, "no_edges_r3": 33.71} {"countonly_minus_noedges": [-0.25, [-2.73, 2.23], 0.8025, 0], "main_r3_minus_no_edges_r3": [-0.37, [-2.73, 1.73], 0.5656, -0.27]}
+objects_2 3757 {"clip": 35.67, "countonly": 42.41, "noedges": 40.45, "main_r3": 40.87, "no_edges_r3": 40.35} {"countonly_minus_noedges": [1.96, [1.2, 2.77], 0.0089, 0.29], "main_r3_minus_no_edges_r3": [0.51, [-0.08, 1.05], 0.0481, 0.1]}
+objects_3plus 6607 {"clip": 41.4, "countonly": 53.32, "noedges": 50.58, "main_r3": 50.2, "no_edges_r3": 49.68} {"countonly_minus_noedges": [2.73, [2.13, 3.32], 0.0025, 0.23], "main_r3_minus_no_edges_r3": [0.52, [0.05, 0.99], 0.1045, 0.06]}
