@@ -82,6 +82,9 @@ Cần Python 3.11 hoặc 3.12 (bộ phiên bản trong `requirements.txt` đã k
 ```bash
 python3.12 -m venv ~/venvs/mgrx && source ~/venvs/mgrx/bin/activate
 pip install -r requirements.txt
+pip install --no-deps FactualSceneGraph==0.7.3   # parser FACTUAL; cài kèm deps sẽ hạ torch xuống 2.6.0
+python -m spacy download en_core_web_sm
+python -m nltk.downloader wordnet   # WordNet cho test và cho bước đóng gói gộp trùng / số lượng (src/graph/dedup.py)
 pytest                              # kiểm tra các module dùng chung
 python scripts/download_data.py     # tải chú thích Visual Genome + split Karpathy (~170 MB, chưa có ảnh)
 python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh: join → tải ảnh → CLIP → FAISS → top-k
@@ -101,6 +104,8 @@ Cần các file sau (checksum ở `data/MANIFEST.md`). Tất cả nằm trên Dr
   - checkpoint `experiments/improve/count-only/countonly_factual_r3_seed0/checkpoint_best.pt` (4,3 MB, SHA-256
     `b065eb16…ae3631`), `config.json` có sẵn trong git;
   - parser FACTUAL: `pip install transformers==5.20.1 nltk==3.10.3` rồi `pip install --no-deps FactualSceneGraph==0.7.3`;
+    riêng demo không cần dữ liệu nltk, nhưng `pytest` và các script đóng gói gộp trùng / số lượng cần WordNet
+    (`python -m nltk.downloader wordnet`);
     model `lizhuang144/flan-t5-large-VG-factual-sg` (3,1 GB) tự tải từ Hugging Face lần chạy đầu.
 - Mô hình cấp 1 `--run main_r3_seed0` cần `data/features/vg_coco_graph_parts.npy` + `.ids.json` (1,2 GB),
   `data/graphs/vg_coco_scene_graphs.jsonl` và checkpoint `experiments/level1/gat/main_r3_seed0/checkpoint_best.pt`
@@ -134,7 +139,7 @@ Kiểm tra trên val (`scripts/checks/demo_parity.py`, chi tiết ở
 - **countonly**, 200 caption: điểm cuối lệch đường đánh giá đã đóng gói tối đa 4e-6, top-1 trùng 200/200.
 - **main_r3**, 100 caption: lệch tối đa 3e-4, top-1 trùng 100/100.
 
-Kịch bản video dự phòng (quay với `main_r3_seed0`): [docs/demo-video-script.md](docs/demo-video-script.md).
+Kịch bản video dự phòng (quay với mô hình chính `countonly_factual_r3_seed0`, pool val): [docs/demo-video-script.md](docs/demo-video-script.md).
 
 Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
 
