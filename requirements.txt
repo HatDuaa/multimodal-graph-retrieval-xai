@@ -17,3 +17,8 @@ SceneGraphParser==0.1.0
 pytest==9.1.1
 # demo app (not needed for experiments)
 gradio==6.28.0
+# FACTUAL-T5 caption parser (improvement phase; demo with countonly_factual_r3). Install the parser package itself with
+#   pip install --no-deps FactualSceneGraph==0.7.3
+# because its declared dependencies would downgrade torch to 2.6.0.
+transformers==5.20.1
+nltk==3.10.3
