@@ -58,6 +58,8 @@ def test_channel_terms_and_filled_channels_add_up_to_the_fused_score():
         total = out["clip_part"] + sum(sum(v) for v in out["row_parts"].values()) + sum(
             v for v in out["fill_parts"].values() if v is not None)
         assert total == pytest.approx(float(fused[0, k]), abs=1e-6)
+        for key in ("objects", "triples"):                  # the same part, split by image part instead
+            assert sum(t["term"] for t in pairs["image_terms"][key]) == pytest.approx(sum(out["row_parts"][key]), abs=1e-6)
         # the global node is never matched; only labelled relations are triple rows
         assert len(pairs["objects"]) == 2 and all(row["image_index"] < len(store.graphs[image_id]["objects"])
                                                   for row in pairs["objects"])
