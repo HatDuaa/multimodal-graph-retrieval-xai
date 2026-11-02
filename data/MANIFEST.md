@@ -93,7 +93,7 @@ Sinh bởi `scripts/build_rewired_parts.py --seed k` (chỉ đồ thị train/va
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 
 Bản 2026-10-26, cache thô tải ngày 2026-10-24.
-- Đóng gói bằng `scripts/archive_vnmmkg_raw.py`, chia sẻ qua Drive nhóm (`data/raw/`).
+- Đóng gói bằng `scripts/archive_vnmmkg_raw.py`, chia sẻ qua Drive (link trong `data/README.md`, mục MMKG tiếng Việt) và Hugging Face (`duongkhang2100/graphml-vietnamese-mmkg`).
 - Dựng bằng `python -m src.data.build_vnmmkg` (seed 0).
 
 | File | Bytes | SHA-256 |

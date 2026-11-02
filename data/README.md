@@ -49,7 +49,7 @@ Chỉ chạy `scripts/extract_features.py` khi đổi encoder; khi đó phải t
 Dữ liệu đã commit nằm trong `vietnamese-mmkg/` (thực thể, triple, ảnh kèm giấy phép, truy vấn, quyết định duyệt, data card) và `data/splits/vnmmkg_{val,test}.json`. Ảnh và cache thô không commit.
 
 **Chỉ cần dùng dữ liệu:**
-1. Tải `vnmmkg_raw_<ngày>.zip` từ Drive nhóm (thư mục `data/raw/`) và giải nén vào `data/raw/`.
+1. Tải `vnmmkg_raw_<ngày>.zip` từ Drive (<https://drive.google.com/drive/folders/1XAtuj07985lOpjcDy0POCscBhZLqBI-O?usp=drive_link>) và giải nén vào `data/raw/`. Bản sao trên Hugging Face: <https://huggingface.co/datasets/duongkhang2100/graphml-vietnamese-mmkg>.
 2. Đối chiếu checksum trong `MANIFEST.md`.
 3. Chạy `python -m src.data.build_vnmmkg`. Lệnh này dựng lại ảnh `data/raw/vnmmkg/images/<image_id>.jpg` và cho ra đúng các file đã commit.
 

@@ -166,7 +166,7 @@ Chỉ dùng cho mục đích học thuật trong môn học.
 ## 11. Tái lập
 
 - Thứ tự lệnh ở `data/README.md`, mục MMKG tiếng Việt.
-- Cache thô (`data/raw/vnmmkg/`) nằm trên Drive nhóm; checksum ở `data/MANIFEST.md`.
+- Cache thô (`data/raw/vnmmkg/`) nằm trên Drive và Hugging Face (link trong `data/README.md`); checksum ở `data/MANIFEST.md`.
 - Chạy lại `python -m src.data.build_vnmmkg` từ cache cho ra đúng các file đã commit. Đã kiểm tra bằng `git diff` sau khi chạy lại.
 
 ## 12. Người thực hiện và phần AI hỗ trợ
