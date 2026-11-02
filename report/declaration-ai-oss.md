@@ -23,6 +23,7 @@ Dùng qua API, không chép hay sửa mã nguồn của thư viện. Phiên bả
 | transformers 5.20.1, tokenizers 0.23 | Chạy model FACTUAL-T5 | Apache-2.0 |
 | NLTK 3.10 + WordNet | Xác định "cùng loại" theo synset / hypernym khi gộp khung trùng và đếm số lượng | Apache-2.0 (NLTK); giấy phép WordNet của Princeton |
 | matplotlib 3.11 | Vẽ hình trong báo cáo thí nghiệm | Giấy phép matplotlib (dựa trên PSF) |
+| mwparserfromhell 0.7.2 | Đọc infobox từ wikitext (MMKG tiếng Việt) | MIT |
 
 Nhóm không dùng mã nguồn của bài báo nào ở cấp độ 1. Mô hình xếp lại (`src/models/graph_reranker.py`) do nhóm viết theo
 thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
@@ -42,6 +43,9 @@ thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
 | Visual Genome 1.4: `objects.json`, `relationships.json`, `attributes.json`, ảnh | Scene graph của ảnh; phép thử thuộc tính | CC BY 4.0 |
 | MS-COCO 2014: caption | Truy vấn | CC BY 4.0 (chú thích) |
 | Split Karpathy (`dataset_coco.json`) | Chia train / val / test | Công bố cùng bài báo của Karpathy & Fei-Fei |
+| Wikidata (SPARQL, wbgetentities) | Thực thể và triple của MMKG tiếng Việt | CC0 |
+| Wikipedia tiếng Việt | Phần mở đầu (truy vấn tự động), infobox | CC BY-SA 4.0 |
+| Wikimedia Commons | Ảnh của MMKG tiếng Việt | Theo từng file (CC0, PD, CC BY, CC BY-SA); ghi trong vietnamese-mmkg/images.jsonl |
 
 Link tải và checksum: `data/README.md`, `data/MANIFEST.md`.
 
@@ -104,3 +108,12 @@ Nguyên tắc áp dụng cho mọi phần do AI làm:
 - Test chỉ chấm một lần cho mỗi mô hình chính đã chốt (25/09 cho mô hình cấp 1, 25/10 cho mô hình chính mới); các bước
   chọn mô hình đều dựa trên val.
 - Mọi thay đổi đi qua commit và pull request có người duyệt.
+
+### MMKG tiếng Việt (dòng 30–31, Âu Dương Khang)
+
+- **Anthropic Claude** (Claude Code), làm cùng Khang:
+  - viết thiết kế (spec ngày 2026-10-04) và kế hoạch;
+  - viết mã nguồn pipeline (`scripts/fetch_vnmmkg_*.py`, `scripts/build_vnmmkg_review.py`, `scripts/archive_vnmmkg_raw.py`, `src/data/vnmmkg_*.py`, `src/data/build_vnmmkg.py`) và kiểm thử;
+  - chạy pipeline và đề xuất các quyết định ở cổng G1/G2 (QID thời kỳ và lớp tỉnh, ánh xạ infobox, thêm quan hệ P276/P527);
+  - soạn nháp bộ truy vấn soạn tay và data card.
+- **Khang** chốt miền và nguồn dữ liệu; duyệt toàn bộ ảnh và mọi triple infobox/suy diễn; duyệt và khoá bộ truy vấn soạn tay. Khang chịu trách nhiệm mọi quyết định và tự giải thích được phần mình commit.

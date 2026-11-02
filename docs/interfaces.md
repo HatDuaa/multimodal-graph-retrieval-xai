@@ -30,6 +30,12 @@ Gói 1 phát hành, các gói khác chỉ đọc. Ví dụ: `vg_coco_train.json`
 - Mỗi caption là một truy vấn; đáp án đúng là ảnh chứa nó. `caption_id` = `<coco_id>_<thứ tự>`.
 - Pool ứng viên khi đánh giá split nào là toàn bộ ảnh của chính split đó.
 - Lấy **toàn bộ** phần giao Visual Genome ∩ COCO, không lấy mẫu: train 46 944 ảnh (đã gộp `restval` của Karpathy), val 2 126, test 2 138; đa số ảnh có 5 caption, một ít có 6–7. 290 ảnh Visual Genome bị bỏ vì trùng `coco_id` với ảnh khác. Số liệu đầy đủ: `experiments/data_stats.md`.
+- **Mở rộng cho `vnmmkg` (MMKG tiếng Việt, cấp độ 3).** Một di tích có nhiều ảnh, nên file split có thêm hai điểm:
+  - Mỗi ảnh có trường `qid` (di tích của ảnh) và trường `captions` để rỗng.
+  - Truy vấn nằm trong danh sách `queries` ở cấp ngoài cùng, mỗi phần tử có dạng `{"query_id", "text", "gold_qid"}`.
+  - Đáp án đúng là **mọi ảnh** có `qid == gold_qid`, nên khi chấm, `golds[i]` là tập `image_id`. Đây là trường hợp nhiều đáp án mà `src/eval/metrics.evaluate` đã hỗ trợ.
+  - Chỉ có `vnmmkg_val.json` và `vnmmkg_test.json`, không có tập train.
+  - Chi tiết: `vietnamese-mmkg/DATA_CARD.md`.
 
 ## 2. Đặc trưng CLIP — `data/features/<dataset>_<loại>.npy` + `.ids.json`
 

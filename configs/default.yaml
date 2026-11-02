@@ -22,3 +22,67 @@ clip:
 
 retrieval:
   top_k: 50
+
+# Vietnamese MMKG (level 3, Khang). Every rule below is described in vietnamese-mmkg/DATA_CARD.md.
+vnmmkg:
+  raw_dir: data/raw/vnmmkg              # cache, candidate images, review page (not committed, shared on Drive)
+  out_dir: vietnamese-mmkg              # committed dataset files
+  user_agent: "vnmmkg-course-project/0.1 (https://github.com/HatDuaa/multimodal-graph-retrieval-xai; academic use)"
+  sleep_seconds: 1.0                    # polite delay after every successful request
+  max_retries: 6
+  max_retry_wait: 600                   # seconds; caps Retry-After
+  # --- landmark candidates (spec 4.1) ---
+  country: Q881                         # Viet Nam
+  landmark_classes: [Q44539, Q5393308, Q160742, Q2977, Q16970, Q845945, Q1370598, Q23413, Q4989906, Q33506]
+  exclude_if_has: [P195, P189]          # movable artefacts (collection / find place), not buildings
+  max_landmark_candidates: 110
+  min_images: 3
+  max_images: 5
+  max_entities: 150
+  # --- triples (spec 4.2) ---
+  landmark_pids: [P31, P1435, P140, P149, P138, P825, P2348, P361, P186, P112, P276, P527]   # P276, P527 added at gate G2 (spec section 7)
+  context_extra_pids: [P131]            # added for context-context one-hop triples
+  province_classes: [Q2824648, Q1381899, Q137325529]   # province, centrally-governed city, former province (pre-2025 merger)
+  human_class: Q5
+  max_p131_depth: 6
+  infobox_templates: ["Thông tin chùa", "Thông tin đền Việt Nam", "Thông tin tháp Chăm", "Thông tin di tích lịch sử",
+                      "Infobox di tích lịch sử", "Thông tin công trình xây dựng", "Infobox Mandir", "Infobox church",
+                      "Infobox religious building", "Infobox ancient site"]   # buildings / religious sites seen in the cache
+  infobox_fields:                       # only fields meaning founder / worshipped / denomination (spec 4.2)
+    founder: P112
+    "người sáng lập": P112
+    creator: P112
+    "thờ phụng": P825
+    "đối tượng thờ": P825
+    "tên thần": P825
+    "thờ": P825
+    primary_deity: P825
+    deity: P825
+    denomination: P140
+    religious_affiliation: P140
+  founded_fields: [founded, "thành lập", "xây dựng", date_built, built, year_completed, "completed date"]
+  period_source: "Bảng mốc năm do nhóm lập từ bài 'Lịch sử Việt Nam' trên Wikipedia tiếng Việt; revid ghi trong data card"
+  periods:                              # inclusive, non-overlapping; gaps = ambiguous, no triple. qid filled at gate G1
+    - {label_vi: "Nhà Lý", start: 1009, end: 1225, qid: Q878309}
+    - {label_vi: "Nhà Trần", start: 1226, end: 1399, qid: Q3111454}
+    - {label_vi: "Nhà Lê sơ", start: 1428, end: 1526, qid: Q878276}
+    - {label_vi: "Nhà Mạc", start: 1527, end: 1532, qid: Q1317991}
+    - {label_vi: "Nhà Lê trung hưng", start: 1593, end: 1777, qid: Q10800791}
+    - {label_vi: "Nhà Tây Sơn", start: 1789, end: 1801, qid: Q1034173}
+    - {label_vi: "Nhà Nguyễn", start: 1802, end: 1883, qid: Q6500483}
+    - {label_vi: "Pháp thuộc", start: 1884, end: 1945, qid: Q2523849}
+  # --- images (spec 4.3) ---
+  max_image_candidates: 12
+  min_image_width: 400
+  thumb_request_width: 960              # Commons standard thumbnail step; resized locally
+  thumb_width: 640
+  allowed_mime: [image/jpeg, image/png]
+  # --- queries (spec 4.4, 4.5) ---
+  type_prefixes: ["Nhà thờ chính tòa", "Nhà thờ", "Chùa", "Đền", "Đình", "Tháp", "Lăng", "Thành", "Bảo tàng", "Miếu", "Phủ", "Văn miếu"]
+  max_query_sentences: 3
+  min_query_words: 6
+  non_visual_pids: [P131, P2348, P112, P825, P138, P1435, P140]   # an indirect hand query needs at least one
+  max_pattern_golds: 5
+  # --- split (spec 2.5, setting A1) ---
+  val_fraction: 0.5
+  pid_labels_vi: {P31: "là", P1435: "danh hiệu di sản", P140: "tôn giáo", P149: "phong cách kiến trúc", P138: "đặt theo tên", P825: "thờ", P2348: "thời kỳ", P361: "là một phần của", P186: "vật liệu", P112: "người sáng lập", P131: "thuộc đơn vị hành chính", P276: "vị trí", P527: "gồm có"}
