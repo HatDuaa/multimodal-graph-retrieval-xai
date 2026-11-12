@@ -8,7 +8,7 @@ Dữ liệu lớn **không commit**. Git chỉ giữ: file split (`data/splits/`
 |---|---|---|---|
 | Visual Genome ∩ MS-COCO | Cấp độ 1 | Chú thích Visual Genome v1.4 (objects, relationships, alias) + split Karpathy của COCO (kèm 5 caption mỗi ảnh). Hai bộ dùng chung ảnh, nối bằng trường `coco_id` trong `image_data.json`. | Script tải đã có |
 | MKG-W | Cấp độ 2 | Kho mã của NativE / MMRNS | Chưa có script |
-| MMKG tiếng Việt | Cấp độ 3 | Nhóm tự xây | Chưa bắt đầu |
+| MMKG tiếng Việt | Cấp độ 3 | Nhóm tự xây (Khang) từ Wikidata, Wikipedia tiếng Việt, Wikimedia Commons | Đã có, xem mục dưới |
 
 ## Tải chú thích Visual Genome ∩ COCO
 
@@ -43,6 +43,29 @@ python scripts/download_images.py                        # cả 51 208 ảnh, ~7
 **Link Drive của nhóm:** <https://drive.google.com/drive/folders/11xG7r4oX884RmKfmLjtFQeLVpcSrv6cV?usp=sharing> → thư mục `data/features/`. Tải cả 4 file về đặt đúng vào `data/features/` trong repo, rồi đối chiếu checksum với `MANIFEST.md`.
 
 Chỉ chạy `scripts/extract_features.py` khi đổi encoder; khi đó phải tải đủ 51 208 ảnh trước (script từ chối chạy nếu thiếu ảnh) và phát hành file mới với tên mới.
+
+## MMKG tiếng Việt (cấp độ 3, Khang)
+
+Dữ liệu đã commit nằm trong `vietnamese-mmkg/` (thực thể, triple, ảnh kèm giấy phép, truy vấn, quyết định duyệt, data card) và `data/splits/vnmmkg_{val,test}.json`. Ảnh và cache thô không commit.
+
+**Chỉ cần dùng dữ liệu:**
+1. Tải `vnmmkg_raw_<ngày>.zip` từ Drive (<https://drive.google.com/drive/folders/1XAtuj07985lOpjcDy0POCscBhZLqBI-O?usp=drive_link>) và giải nén vào `data/raw/`. Bản sao trên Hugging Face: <https://huggingface.co/datasets/duongkhang2100/graphml-vietnamese-mmkg>.
+2. Đối chiếu checksum trong `MANIFEST.md`.
+3. Chạy `python -m src.data.build_vnmmkg`. Lệnh này dựng lại ảnh `data/raw/vnmmkg/images/<image_id>.jpg` và cho ra đúng các file đã commit.
+
+**Dựng lại từ đầu** (gọi API, có cache, chạy lại được; số liệu có thể khác vì Wikidata/Wikipedia thay đổi):
+
+```bash
+python scripts/fetch_vnmmkg_wikidata.py          # 1. ứng viên + thực thể Wikidata
+python scripts/fetch_vnmmkg_viwiki.py --inspect  # 2a. bài viwiki, xem mẫu infobox
+python scripts/fetch_vnmmkg_viwiki.py            # 2b. phân giải link infobox
+python scripts/fetch_vnmmkg_images.py            # 3. ảnh ứng viên Commons + giấy phép
+python scripts/build_vnmmkg_review.py            # 4. trang duyệt data/raw/vnmmkg/review.html
+python -m src.data.build_vnmmkg                  # 5. dựng bộ dữ liệu, split, thống kê
+```
+
+- Truy vấn: đáp án đúng là **mọi ảnh** của `gold_qid`. Bộ soạn tay `queries_hand.json` chỉ dùng để đánh giá, đã khoá và không nằm trong file split.
+- Chia dữ liệu và chống rò rỉ: xem mục 8 của `vietnamese-mmkg/DATA_CARD.md`.
 
 ## Cấu trúc thư mục
 

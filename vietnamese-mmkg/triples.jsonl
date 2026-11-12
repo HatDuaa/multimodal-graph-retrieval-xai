@@ -1,0 +1,325 @@
+{"h": "Q748", "r": "P138", "t": "Q7055", "source": "wikidata", "evidence": "wikidata:P138", "reviewed": false}
+{"h": "Q1841", "r": "P527", "t": "Q9592", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q9592", "r": "P361", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q23513", "r": "P131", "t": "Q23533", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q23513", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q23513", "r": "P276", "t": "Q23533", "source": "wikidata", "evidence": "wikidata:P276", "reviewed": false}
+{"h": "Q23513", "r": "P361", "t": "Q14316796", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q25282", "r": "P361", "t": "Q14316796", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q41179", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q41179", "r": "P31", "t": "Q4022", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q48362", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q48362", "r": "P361", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q120560", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q163900", "r": "P140", "t": "Q9592", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q167477", "r": "P140", "t": "Q9592", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q180566", "r": "P112", "t": "Q711472", "source": "infobox", "evidence": "Thông tin đền Việt Nam|người sáng lập=Lý Thái Tông", "reviewed": true}
+{"h": "Q180566", "r": "P2348", "t": "Q878309", "source": "derived", "evidence": "rule:period year 1030 from Thông tin đền Việt Nam|thành lập=3 tháng 3, 1030", "reviewed": true}
+{"h": "Q180566", "r": "P276", "t": "Q33408", "source": "wikidata", "evidence": "wikidata:P276", "reviewed": false}
+{"h": "Q180566", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q185606", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q190060", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q190060", "r": "P31", "t": "Q88291", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q190128", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q206219", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q206219", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q206219", "r": "P31", "t": "Q88291", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q206219", "r": "P527", "t": "Q864752", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q206219", "r": "P527", "t": "Q4568216", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q310913", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q428129", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q428129", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q428129", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox religious building|religious_affiliation=Giáo hội Công giáo", "reviewed": true}
+{"h": "Q428129", "r": "P149", "t": "Q744373", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q428129", "r": "P2348", "t": "Q6500483", "source": "derived", "evidence": "rule:period year 1880 from wikidata:P571", "reviewed": true}
+{"h": "Q428129", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q428129", "r": "P31", "t": "Q120560", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q428129", "r": "P825", "t": "Q345", "source": "wikidata", "evidence": "wikidata:P825", "reviewed": false}
+{"h": "Q482355", "r": "P112", "t": "Q310913", "source": "infobox", "evidence": "Thông tin chùa|người sáng lập=Thiền sư Trí HữuThích Nhất Hạnh", "reviewed": true}
+{"h": "Q482355", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q586985", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q586985", "r": "P31", "t": "Q46169", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q600269", "r": "P131", "t": "Q33369", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q600269", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q782099", "r": "P131", "t": "Q36900", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 3", "reviewed": true}
+{"h": "Q782099", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q782099", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Giáo hội Công giáo", "reviewed": true}
+{"h": "Q782099", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1899 from wikidata:P571", "reviewed": true}
+{"h": "Q782099", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q782099", "r": "P825", "t": "Q345", "source": "wikidata", "evidence": "wikidata:P825", "reviewed": false}
+{"h": "Q864752", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q864770", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q864770", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q864770", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q874234", "r": "P131", "t": "Q1858", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 3", "reviewed": true}
+{"h": "Q874234", "r": "P31", "t": "Q162875", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q874234", "r": "P31", "t": "Q4989906", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q877185", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q877185", "r": "P31", "t": "Q88291", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q877185", "r": "P527", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q878309", "r": "P140", "t": "Q9598", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q975568", "r": "P131", "t": "Q36399", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q975568", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q975568", "r": "P2348", "t": "Q10800791", "source": "derived", "evidence": "rule:period year 1601 from Thông tin chùa|founded=1601", "reviewed": true}
+{"h": "Q975568", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q975568", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q993402", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q993402", "r": "P1435", "t": "Q1459900", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q993402", "r": "P31", "t": "Q23442", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1005868", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1005868", "r": "P31", "t": "Q199451", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1005868", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1005868", "r": "P825", "t": "Q7055", "source": "infobox", "evidence": "Infobox Mandir|primary_deity=Phật", "reviewed": true}
+{"h": "Q1088224", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1088224", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q1088224", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo", "reviewed": true}
+{"h": "Q1088224", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1932 from wikidata:P571", "reviewed": true}
+{"h": "Q1088224", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1091048", "r": "P131", "t": "Q33408", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q1091048", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1091048", "r": "P527", "t": "Q106656518", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q1091048", "r": "P527", "t": "Q131920178", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q1091048", "r": "P527", "t": "Q131920509", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q1186292", "r": "P112", "t": "Q711472", "source": "infobox", "evidence": "Thông tin chùa|founder=Lý Thái Tông (1000 - 1054)", "reviewed": true}
+{"h": "Q1186292", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1186292", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q1186292", "r": "P2348", "t": "Q878309", "source": "derived", "evidence": "rule:period year 1049 from Thông tin chùa|founded=1049", "reviewed": true}
+{"h": "Q1186292", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1328473", "r": "P131", "t": "Q36404", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1328473", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1328473", "r": "P31", "t": "Q23397", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1421202", "r": "P1435", "t": "Q1459900", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1421202", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1421202", "r": "P31", "t": "Q46169", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1459900", "r": "P361", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q1583627", "r": "P131", "t": "Q36907", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1583627", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1583627", "r": "P31", "t": "Q46169", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1923783", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1923783", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q1923783", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox religious building|religious_affiliation=Công giáo Rôma", "reviewed": true}
+{"h": "Q1923783", "r": "P149", "t": "Q186363", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q1923783", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1886 from wikidata:P571", "reviewed": true}
+{"h": "Q1923783", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1923783", "r": "P825", "t": "Q128267", "source": "wikidata", "evidence": "wikidata:P825", "reviewed": false}
+{"h": "Q1932222", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1932222", "r": "P138", "t": "Q167477", "source": "wikidata", "evidence": "wikidata:P138", "reviewed": false}
+{"h": "Q1932222", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q1932222", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q1932222", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1934 from wikidata:P571", "reviewed": true}
+{"h": "Q1932222", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q1968747", "r": "P131", "t": "Q36404", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q1968747", "r": "P1435", "t": "Q1459900", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1968747", "r": "P1435", "t": "Q19683138", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q1968747", "r": "P276", "t": "Q36404", "source": "wikidata", "evidence": "wikidata:P276", "reviewed": false}
+{"h": "Q1968747", "r": "P31", "t": "Q46169", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q2277986", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q2277986", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1886 from wikidata:P571", "reviewed": true}
+{"h": "Q2277986", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q2344822", "r": "P1435", "t": "Q1459900", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q2817231", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q2857598", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q2942901", "r": "P131", "t": "Q33369", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q2942901", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q2942901", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q2942901", "r": "P149", "t": "Q186363", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q2942901", "r": "P186", "t": "Q22657", "source": "wikidata", "evidence": "wikidata:P186", "reviewed": false}
+{"h": "Q2942901", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1930 from wikidata:P571", "reviewed": true}
+{"h": "Q2942901", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q3096348", "r": "P131", "t": "Q36721", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q3096348", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1932 from wikidata:P571", "reviewed": true}
+{"h": "Q3360457", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q3360457", "r": "P2348", "t": "Q10800791", "source": "derived", "evidence": "rule:period year 1744 from Thông tin chùa|founded=1744", "reviewed": true}
+{"h": "Q3360457", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q3360468", "r": "P112", "t": "Q10788110", "source": "infobox", "evidence": "Thông tin chùa|founder=Lý Quốc Sư-Nguyễn Minh Không (1065 - 1141)", "reviewed": true}
+{"h": "Q3360468", "r": "P131", "t": "Q36900", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q3360468", "r": "P140", "t": "Q48362", "source": "infobox", "evidence": "Thông tin chùa|denomination=Bắc Tông", "reviewed": true}
+{"h": "Q3360468", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q3370279", "r": "P140", "t": "Q9592", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q4361432", "r": "P1435", "t": "Q1459900", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q4568216", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q4568216", "r": "P31", "t": "Q88291", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q4885571", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q4885571", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q5370148", "r": "P131", "t": "Q1858", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q5370148", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q5370148", "r": "P825", "t": "Q9598", "source": "infobox", "evidence": "Thông tin đền Việt Nam|đối tượng thờ=thần đạo giáo", "reviewed": true}
+{"h": "Q5370414", "r": "P131", "t": "Q1858", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q5370414", "r": "P31", "t": "Q33506", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q5393308", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q5964889", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q5964889", "r": "P31", "t": "Q4989906", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q5965459", "r": "P131", "t": "Q33356", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q5965459", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q6500483", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q6500483", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q6500483", "r": "P140", "t": "Q9598", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q6673286", "r": "P31", "t": "Q4989906", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q6837230", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q6837230", "r": "P138", "t": "Q163900", "source": "wikidata", "evidence": "wikidata:P138", "reviewed": false}
+{"h": "Q6837230", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q6837230", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q6837230", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q6941034", "r": "P131", "t": "Q33356", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q6941034", "r": "P31", "t": "Q33506", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7481070", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q7481070", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q7481070", "r": "P31", "t": "Q162875", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7481070", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7481070", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q7481070", "r": "P527", "t": "Q132524026", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q7481171", "r": "P112", "t": "Q466976", "source": "infobox", "evidence": "Infobox Mandir|creator=Tự Đức", "reviewed": true}
+{"h": "Q7481171", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q7481171", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q7481171", "r": "P2348", "t": "Q6500483", "source": "derived", "evidence": "rule:period year 1866 from Infobox Mandir|date_built=1866", "reviewed": true}
+{"h": "Q7481171", "r": "P31", "t": "Q162875", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7481171", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q7680488", "r": "P131", "t": "Q23533", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q7680488", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q7680488", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7682043", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q7682043", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q7682043", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox religious building|religious_affiliation=Công giáo Rôma", "reviewed": true}
+{"h": "Q7682043", "r": "P149", "t": "Q744373", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q7682043", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7818615", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q7818615", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q7818615", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7818615", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q7818621", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q7818621", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q7818621", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1920 from wikidata:P571", "reviewed": true}
+{"h": "Q7818621", "r": "P31", "t": "Q162875", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7818621", "r": "P31", "t": "Q4989906", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7818621", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q7932540", "r": "P31", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q7932540", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10743287", "r": "P131", "t": "Q1858", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10743287", "r": "P31", "t": "Q33506", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10743440", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10743440", "r": "P31", "t": "Q33506", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10743440", "r": "P31", "t": "Q4989906", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10748461", "r": "P131", "t": "Q36721", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10748461", "r": "P31", "t": "Q199451", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10748461", "r": "P31", "t": "Q5393308", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10769129", "r": "P361", "t": "Q877185", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10788110", "r": "P140", "t": "Q748", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10788178", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10788178", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10788178", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10788196", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10788196", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10788196", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10794266", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800882", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800884", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10800884", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800884", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q10800884", "r": "P149", "t": "Q744373", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q10800884", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800885", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10800885", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800886", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10800886", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800886", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q10800886", "r": "P149", "t": "Q186363", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q10800886", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800887", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800887", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800888", "r": "P112", "t": "Q3370279", "source": "infobox", "evidence": "Infobox church|founder=Giám mục Puginier", "reviewed": true}
+{"h": "Q10800888", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10800888", "r": "P138", "t": "Q128267", "source": "wikidata", "evidence": "wikidata:P138", "reviewed": false}
+{"h": "Q10800888", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800888", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Roma", "reviewed": true}
+{"h": "Q10800888", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800893", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800893", "r": "P149", "t": "Q186363", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q10800893", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1892 from wikidata:P571", "reviewed": true}
+{"h": "Q10800893", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800896", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10800896", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800896", "r": "P149", "t": "Q744373", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q10800896", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800904", "r": "P131", "t": "Q36721", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10800904", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800904", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q10800904", "r": "P149", "t": "Q744373", "source": "wikidata", "evidence": "wikidata:P149", "reviewed": false}
+{"h": "Q10800904", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10800905", "r": "P131", "t": "Q25282", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10800905", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10800905", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox religious building|religious_affiliation=Giáo hội Công giáo", "reviewed": true}
+{"h": "Q10800905", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1924 from Infobox religious building|year_completed=1924", "reviewed": true}
+{"h": "Q10800905", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10801136", "r": "P1435", "t": "Q10753291", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10801136", "r": "P276", "t": "Q15176", "source": "wikidata", "evidence": "wikidata:P276", "reviewed": false}
+{"h": "Q10810560", "r": "P131", "t": "Q36399", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10810560", "r": "P1435", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10810560", "r": "P31", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q877185", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q975568", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q7481070", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q7481171", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q7818615", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q7818621", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q10788178", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q10788196", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q10829227", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q10833485", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q10840433", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q16511573", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q66213344", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10810560", "r": "P527", "t": "Q66213453", "source": "wikidata", "evidence": "wikidata:P527", "reviewed": false}
+{"h": "Q10825817", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10825817", "r": "P140", "t": "Q470364", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10825817", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10825817", "r": "P31", "t": "Q1370598", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10825819", "r": "P131", "t": "Q36721", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10825819", "r": "P140", "t": "Q470364", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10825819", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10829227", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10829227", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10831162", "r": "P140", "t": "Q470364", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10831162", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10831162", "r": "P31", "t": "Q1370598", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10833485", "r": "P131", "t": "Q131746469", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10833485", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10833485", "r": "P2348", "t": "Q6500483", "source": "derived", "evidence": "rule:period year 1808 from Infobox ancient site|built=1808", "reviewed": true}
+{"h": "Q10833485", "r": "P31", "t": "Q618618", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10833485", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10834009", "r": "P131", "t": "Q36907", "source": "derived", "evidence": "rule:province via truthy P131 chain, depth 2", "reviewed": true}
+{"h": "Q10834009", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10834009", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q10834009", "r": "P2348", "t": "Q2523849", "source": "derived", "evidence": "rule:period year 1933 from wikidata:P571", "reviewed": true}
+{"h": "Q10834009", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10834009", "r": "P31", "t": "Q120560", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10834009", "r": "P825", "t": "Q185606", "source": "wikidata", "evidence": "wikidata:P825", "reviewed": false}
+{"h": "Q10834010", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q10834010", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox religious building|religious_affiliation=Công giáo Rôma", "reviewed": true}
+{"h": "Q10834010", "r": "P2348", "t": "Q6500483", "source": "derived", "evidence": "rule:period year 1882 from wikidata:P571", "reviewed": true}
+{"h": "Q10834010", "r": "P31", "t": "Q16970", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q10834010", "r": "P825", "t": "Q185606", "source": "wikidata", "evidence": "wikidata:P825", "reviewed": false}
+{"h": "Q10840433", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q10840433", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q10841729", "r": "P131", "t": "Q1854", "source": "wikidata", "evidence": "wikidata:P131", "reviewed": false}
+{"h": "Q10841729", "r": "P31", "t": "Q44539", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q16480514", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q16480514", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q16511573", "r": "P112", "t": "Q466976", "source": "infobox", "evidence": "Infobox Mandir|creator=Tự Đức", "reviewed": true}
+{"h": "Q16511573", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q16511573", "r": "P2348", "t": "Q6500483", "source": "derived", "evidence": "rule:period year 1848 from Infobox Mandir|date_built=1848", "reviewed": true}
+{"h": "Q16511573", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q16511573", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q20026052", "r": "P140", "t": "Q1841", "source": "wikidata", "evidence": "wikidata:P140", "reviewed": false}
+{"h": "Q20026052", "r": "P140", "t": "Q9592", "source": "infobox", "evidence": "Infobox church|denomination=Công giáo Rôma", "reviewed": true}
+{"h": "Q20026052", "r": "P31", "t": "Q2977", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q43113623", "r": "P361", "t": "Q9259", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q66213344", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q66213344", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q66213453", "r": "P1435", "t": "Q43113623", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q66213453", "r": "P31", "t": "Q618618", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}
+{"h": "Q66213453", "r": "P361", "t": "Q10769129", "source": "wikidata", "evidence": "wikidata:P361", "reviewed": false}
+{"h": "Q106656518", "r": "P1435", "t": "Q10753291", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q106656518", "r": "P2348", "t": "Q10800791", "source": "wikidata", "evidence": "wikidata:P2348", "reviewed": false}
+{"h": "Q131920178", "r": "P1435", "t": "Q10753291", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q131920509", "r": "P1435", "t": "Q10753291", "source": "wikidata", "evidence": "wikidata:P1435", "reviewed": false}
+{"h": "Q132524026", "r": "P31", "t": "Q381885", "source": "wikidata", "evidence": "wikidata:P31", "reviewed": false}

@@ -162,3 +162,4 @@ multimodal-graph-retrieval-xai/
 
 - 2026-09-09: chốt đề Project 3, chưa bắt đầu code.
 - 2026-09-17: nhóm 7 đủ 5 người; chốt 3 bộ dữ liệu (Visual Genome ∩ COCO, MKG-W, MMKG tiếng Việt); lập khung kế hoạch và file phân công. Việc tiếp theo: cả nhóm chọn việc trong `task-assignment.xlsx`, bắt đầu giai đoạn 0.
+- 2026-10-26: MMKG tiếng Việt (cấp độ 3) dựng xong: 150 thực thể, 325 triple, 331 ảnh đã duyệt; bộ truy vấn soạn tay đã khoá (Khang). Việc tiếp theo: dòng 32, chạy phương pháp tốt nhất khi cấp 1/2 và encoder đa ngữ (dòng 9) đã chốt.

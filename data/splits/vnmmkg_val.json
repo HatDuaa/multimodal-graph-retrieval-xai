@@ -1,0 +1,2008 @@
+{
+ "dataset": "vnmmkg",
+ "split": "val",
+ "images": [
+  {
+   "image_id": 0,
+   "qid": "Q23513",
+   "file_name": "0.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Phongnhatourism.jpg/960px-Phongnhatourism.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 1,
+   "qid": "Q23513",
+   "file_name": "1.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Bateau_Phong_Nha.jpg/960px-Bateau_Phong_Nha.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 2,
+   "qid": "Q23513",
+   "file_name": "2.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Dong_Hoi_Phong_Nha_grotten_%2818347%29.jpg/960px-Dong_Hoi_Phong_Nha_grotten_%2818347%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 3,
+   "qid": "Q23513",
+   "file_name": "3.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Dong_Hoi_Phong_Nha_grotten_%2819075%29.jpg/960px-Dong_Hoi_Phong_Nha_grotten_%2819075%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 1138,
+   "captions": []
+  },
+  {
+   "image_id": 4,
+   "qid": "Q23513",
+   "file_name": "4.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Dong_Hoi_Phong_Nha_grotten_%2824670%29.jpg/960px-Dong_Hoi_Phong_Nha_grotten_%2824670%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 5,
+   "qid": "Q41179",
+   "file_name": "5.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Chiang_Saen%2C_Mekong_River%2C_Thailand.jpg/960px-Chiang_Saen%2C_Mekong_River%2C_Thailand.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 6,
+   "qid": "Q41179",
+   "file_name": "6.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Bank_Erosion_at_Song_Tien_of_Mekong%2C_Binh_Dai%2C_Ben_Tre%2C_Vietnam.jpg/960px-Bank_Erosion_at_Song_Tien_of_Mekong%2C_Binh_Dai%2C_Ben_Tre%2C_Vietnam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 416,
+   "captions": []
+  },
+  {
+   "image_id": 7,
+   "qid": "Q41179",
+   "file_name": "7.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Chinese_Flag_on_Barge_along_Mekong_River_-_Laos_on_Other_Side_-_Chiang_Saen_-_Golden_Triangle_-_Thailand_%2834478955674%29.jpg/960px-Chinese_Flag_on_Barge_along_Mekong_River_-_Laos_on_Other_Side_-_Chiang_Saen_-_Golden_Triangle_-_Thailand_%2834478955674%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 8,
+   "qid": "Q41179",
+   "file_name": "8.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Down_The_Mekong_River_%2823495549714%29.jpg/960px-Down_The_Mekong_River_%2823495549714%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 9,
+   "qid": "Q41179",
+   "file_name": "9.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Down_The_Mekong_River_%2823496932043%29.jpg/960px-Down_The_Mekong_River_%2823496932043%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 15,
+   "qid": "Q190060",
+   "file_name": "15.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Ho_dynasty%27s_citadel%2C_Vietnam.jpg/960px-Ho_dynasty%27s_citadel%2C_Vietnam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 16,
+   "qid": "Q190060",
+   "file_name": "16.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/C%E1%BB%95ng_B%E1%BA%AFc_th%C3%A0nh_nh%C3%A0_H%E1%BB%93_.jpg/960px-C%E1%BB%95ng_B%E1%BA%AFc_th%C3%A0nh_nh%C3%A0_H%E1%BB%93_.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 398,
+   "captions": []
+  },
+  {
+   "image_id": 17,
+   "qid": "Q190060",
+   "file_name": "17.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/C%E1%BB%95ng_Nam.jpg/960px-C%E1%BB%95ng_Nam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 18,
+   "qid": "Q190060",
+   "file_name": "18.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Hoangthanh4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 19,
+   "qid": "Q190060",
+   "file_name": "19.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Tay_Do_castle_East_gate.JPG/960px-Tay_Do_castle_East_gate.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 25,
+   "qid": "Q874234",
+   "file_name": "25.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/L%C4%83ng_B%C3%A1c_-_NKS.jpg/960px-L%C4%83ng_B%C3%A1c_-_NKS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 26,
+   "qid": "Q874234",
+   "file_name": "26.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/04142-Hanoi_%2832317496486%29.jpg/960px-04142-Hanoi_%2832317496486%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 418,
+   "captions": []
+  },
+  {
+   "image_id": 27,
+   "qid": "Q874234",
+   "file_name": "27.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/04309-Hanoi_%2832317550906%29.jpg/960px-04309-Hanoi_%2832317550906%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 28,
+   "qid": "Q874234",
+   "file_name": "28.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/04315-Hanoi_%2832317555126%29.jpg/960px-04315-Hanoi_%2832317555126%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 410,
+   "captions": []
+  },
+  {
+   "image_id": 29,
+   "qid": "Q874234",
+   "file_name": "29.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/04322-Hanoi_%2832206501532%29.jpg/960px-04322-Hanoi_%2832206501532%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 410,
+   "captions": []
+  },
+  {
+   "image_id": 30,
+   "qid": "Q993402",
+   "file_name": "30.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Cat_Ba_Vietnam-Feb06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 416,
+   "height": 270,
+   "captions": []
+  },
+  {
+   "image_id": 31,
+   "qid": "Q993402",
+   "file_name": "31.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Arrival_on_Cat_Ba.jpg/960px-Arrival_on_Cat_Ba.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 422,
+   "captions": []
+  },
+  {
+   "image_id": 32,
+   "qid": "Q993402",
+   "file_name": "32.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/At_the_beach%2C_Cat_Ba_Island_%284856529828%29.jpg/960px-At_the_beach%2C_Cat_Ba_Island_%284856529828%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 33,
+   "qid": "Q993402",
+   "file_name": "33.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Bai_tam_Dao_Khi.JPG/960px-Bai_tam_Dao_Khi.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 34,
+   "qid": "Q993402",
+   "file_name": "34.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Beach_in_Cat_Ba.JPG/960px-Beach_in_Cat_Ba.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 45,
+   "qid": "Q2344822",
+   "file_name": "45.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Ruins_of_Nam_Linh_Son_archaeological_site%2C_Oc_Eo.jpg/960px-Ruins_of_Nam_Linh_Son_archaeological_site%2C_Oc_Eo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 46,
+   "qid": "Q2344822",
+   "file_name": "46.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Di_ch%E1%BB%89_G%C3%B2_C%C3%A2y_Th%E1%BB%8B.jpg/960px-Di_ch%E1%BB%89_G%C3%B2_C%C3%A2y_Th%E1%BB%8B.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 47,
+   "qid": "Q2344822",
+   "file_name": "47.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Di_t%C3%ADch_G%C3%B2_C%C3%A2y_Th%E1%BB%8B_A.jpg/960px-Di_t%C3%ADch_G%C3%B2_C%C3%A2y_Th%E1%BB%8B_A.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 48,
+   "qid": "Q2344822",
+   "file_name": "48.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Di_t%C3%ADch_G%C3%B2_C%C3%A2y_Th%E1%BB%8B_B.jpg/960px-Di_t%C3%ADch_G%C3%B2_C%C3%A2y_Th%E1%BB%8B_B.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 49,
+   "qid": "Q2344822",
+   "file_name": "49.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/G%C3%B2_C%C3%A2y_Th%E1%BB%8B.jpg/960px-G%C3%B2_C%C3%A2y_Th%E1%BB%8B.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 50,
+   "qid": "Q1968747",
+   "file_name": "50.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Ba_Be_Lake_6464.jpg/960px-Ba_Be_Lake_6464.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 51,
+   "qid": "Q1968747",
+   "file_name": "51.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Aboard_the_Boat_on_Ba_Be_Lake_-_Ba_Be_National_Park_-_Vietnam_%2848102408917%29.jpg/960px-Aboard_the_Boat_on_Ba_Be_Lake_-_Ba_Be_National_Park_-_Vietnam_%2848102408917%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 52,
+   "qid": "Q1968747",
+   "file_name": "52.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Ba_Be_%2843867711525%29.jpg/960px-Ba_Be_%2843867711525%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 53,
+   "qid": "Q1968747",
+   "file_name": "53.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Ba_Be_%2849309919936%29.jpg/960px-Ba_Be_%2849309919936%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 54,
+   "qid": "Q1968747",
+   "file_name": "54.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Ba_Be_Cave_%2833215585468%29.jpg/960px-Ba_Be_Cave_%2833215585468%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 959,
+   "captions": []
+  },
+  {
+   "image_id": 80,
+   "qid": "Q864770",
+   "file_name": "80.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Ch%C3%B9a_Tr%E1%BA%A5n_Qu%E1%BB%91c%2C_H%C3%A0_N%E1%BB%99i.jpg/960px-Ch%C3%B9a_Tr%E1%BA%A5n_Qu%E1%BB%91c%2C_H%C3%A0_N%E1%BB%99i.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 81,
+   "qid": "Q864770",
+   "file_name": "81.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/04329-Hanoi_%2832509095230%29.jpg/960px-04329-Hanoi_%2832509095230%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 82,
+   "qid": "Q864770",
+   "file_name": "82.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/04332-Hanoi_%2832074630743%29.jpg/960px-04332-Hanoi_%2832074630743%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 83,
+   "qid": "Q864770",
+   "file_name": "83.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/04333-Hanoi_%2832509111190%29.jpg/960px-04333-Hanoi_%2832509111190%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 84,
+   "qid": "Q864770",
+   "file_name": "84.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/04334-Hanoi_%2832848541346%29.jpg/960px-04334-Hanoi_%2832848541346%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 94,
+   "qid": "Q782099",
+   "file_name": "94.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Phatdiemk-77.jpg/960px-Phatdiemk-77.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 95,
+   "qid": "Q782099",
+   "file_name": "95.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Kimsonk8.JPG/960px-Kimsonk8.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 96,
+   "qid": "Q782099",
+   "file_name": "96.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Nh%C3%A0_tho_Ph%C3%A1t_Diem.jpg/960px-Nh%C3%A0_tho_Ph%C3%A1t_Diem.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 97,
+   "qid": "Q782099",
+   "file_name": "97.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Nh%C3%A0_th%E1%BB%9D_Ph%C3%A1t_Di%E1%BB%87m_1.JPG/960px-Nh%C3%A0_th%E1%BB%9D_Ph%C3%A1t_Di%E1%BB%87m_1.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 98,
+   "qid": "Q782099",
+   "file_name": "98.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Nh%C3%A0_th%E1%BB%9D_Ph%C3%A1t_Di%E1%BB%87m%2C_Ninh_B%C3%ACnh.JPG/960px-Nh%C3%A0_th%E1%BB%9D_Ph%C3%A1t_Di%E1%BB%87m%2C_Ninh_B%C3%ACnh.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 104,
+   "qid": "Q2942901",
+   "file_name": "104.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Ntct3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 600,
+   "height": 392,
+   "captions": []
+  },
+  {
+   "image_id": 105,
+   "qid": "Q2942901",
+   "file_name": "105.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Christ_the_King_Cathedral_Nha_Trang.JPG/960px-Christ_the_King_Cathedral_Nha_Trang.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 106,
+   "qid": "Q2942901",
+   "file_name": "106.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Entrance_of_Nha_Trang_Cathedral.jpg/960px-Entrance_of_Nha_Trang_Cathedral.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 107,
+   "qid": "Q2942901",
+   "file_name": "107.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/M%E1%BA%B7t_b%C3%AAn_Nh%C3%A0_th%E1%BB%9D_n%C3%BAi_2.JPG/960px-M%E1%BA%B7t_b%C3%AAn_Nh%C3%A0_th%E1%BB%9D_n%C3%BAi_2.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 108,
+   "qid": "Q2942901",
+   "file_name": "108.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/M%E1%BA%B7t_ti%E1%BB%81n_Nh%C3%A0_th%E1%BB%9D_N%C3%BAi.JPG/960px-M%E1%BA%B7t_ti%E1%BB%81n_Nh%C3%A0_th%E1%BB%9D_N%C3%BAi.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 962,
+   "captions": []
+  },
+  {
+   "image_id": 109,
+   "qid": "Q5370414",
+   "file_name": "109.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Vietnam_National_Museum_of_History%2C_Hanoi%2C_Vietnam.jpg/960px-Vietnam_National_Museum_of_History%2C_Hanoi%2C_Vietnam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 110,
+   "qid": "Q5370414",
+   "file_name": "110.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/03429-Hanoi_%2832800171462%29.jpg/960px-03429-Hanoi_%2832800171462%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 959,
+   "captions": []
+  },
+  {
+   "image_id": 111,
+   "qid": "Q5370414",
+   "file_name": "111.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/03435-Hanoi_%2832953976695%29.jpg/960px-03435-Hanoi_%2832953976695%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 959,
+   "captions": []
+  },
+  {
+   "image_id": 117,
+   "qid": "Q1005868",
+   "file_name": "117.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/ChuaXaLoi001.jpg/960px-ChuaXaLoi001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 118,
+   "qid": "Q1005868",
+   "file_name": "118.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_03.jpg/960px-2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 119,
+   "qid": "Q1005868",
+   "file_name": "119.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_04.jpg/960px-2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 120,
+   "qid": "Q1005868",
+   "file_name": "120.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_05.jpg/960px-2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 121,
+   "qid": "Q1005868",
+   "file_name": "121.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_06.jpg/960px-2023-12-10_X%C3%A1_L%E1%BB%A3i_Pagoda%2C_Saigon_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 122,
+   "qid": "Q7818621",
+   "file_name": "122.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Emperor_Khai_Dinh_in_Hue_%2839543600561%29.jpg/960px-Emperor_Khai_Dinh_in_Hue_%2839543600561%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 123,
+   "qid": "Q7818621",
+   "file_name": "123.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/4.4_Hue-46_%2835792133084%29.jpg/960px-4.4_Hue-46_%2835792133084%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 124,
+   "qid": "Q7818621",
+   "file_name": "124.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/4.4_Hue-47_%2835792123054%29.jpg/960px-4.4_Hue-47_%2835792123054%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 125,
+   "qid": "Q7818621",
+   "file_name": "125.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/4.4_Hue-49_%2836627171105%29.jpg/960px-4.4_Hue-49_%2836627171105%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 126,
+   "qid": "Q7818621",
+   "file_name": "126.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/4.4_Hue-50_%2836452523882%29.jpg/960px-4.4_Hue-50_%2836452523882%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 137,
+   "qid": "Q1932222",
+   "file_name": "137.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/4G4A0773_HDR.jpg/960px-4G4A0773_HDR.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 138,
+   "qid": "Q1932222",
+   "file_name": "138.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/80_years_Hong_An_Catholic_church.jpg/960px-80_years_Hong_An_Catholic_church.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 361,
+   "captions": []
+  },
+  {
+   "image_id": 139,
+   "qid": "Q1932222",
+   "file_name": "139.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Nh%C3%A0_th%E1%BB%9D_H%C3%A0m_Long.jpg/960px-Nh%C3%A0_th%E1%BB%9D_H%C3%A0m_Long.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 153,
+   "qid": "Q3360468",
+   "file_name": "153.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/2tranganbaidinh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 154,
+   "qid": "Q3360468",
+   "file_name": "154.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/3tranganbaidinh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 155,
+   "qid": "Q3360468",
+   "file_name": "155.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/4tranganbaidinh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 156,
+   "qid": "Q3360468",
+   "file_name": "156.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/7tranganbaidinh.jpg/960px-7tranganbaidinh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 157,
+   "qid": "Q3360468",
+   "file_name": "157.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/A_view_of_Bai_Dinh_Pagoda_-_panoramio.jpg/960px-A_view_of_Bai_Dinh_Pagoda_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 326,
+   "captions": []
+  },
+  {
+   "image_id": 158,
+   "qid": "Q10834009",
+   "file_name": "158.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Immaculate_Conception_church%2C_Nhai_Ph%C3%BA.jpg/960px-Immaculate_Conception_church%2C_Nhai_Ph%C3%BA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 367,
+   "captions": []
+  },
+  {
+   "image_id": 159,
+   "qid": "Q10834009",
+   "file_name": "159.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/M%E1%BA%B7t_b%C3%AAn_V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG/960px-M%E1%BA%B7t_b%C3%AAn_V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 425,
+   "captions": []
+  },
+  {
+   "image_id": 160,
+   "qid": "Q10834009",
+   "file_name": "160.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Nh%C3%A0_th%E1%BB%9D_V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG/960px-Nh%C3%A0_th%E1%BB%9D_V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 161,
+   "qid": "Q10834009",
+   "file_name": "161.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG/960px-V%C6%B0%C6%A1ng_cung_th%C3%A1nh_%C4%91%C6%B0%E1%BB%9Dng_Ph%C3%BA_Nhai.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 425,
+   "captions": []
+  },
+  {
+   "image_id": 183,
+   "qid": "Q180566",
+   "file_name": "183.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/%C4%90%E1%BB%81n_%C4%90%C3%B4_%C4%90%C3%ACnh_B%E1%BA%A3ng.jpeg/960px-%C4%90%E1%BB%81n_%C4%90%C3%B4_%C4%90%C3%ACnh_B%E1%BA%A3ng.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 184,
+   "qid": "Q180566",
+   "file_name": "184.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/4G4A3956_HDR.jpg/960px-4G4A3956_HDR.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 307,
+   "captions": []
+  },
+  {
+   "image_id": 185,
+   "qid": "Q180566",
+   "file_name": "185.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/4G4A3973A_HDR.jpg/960px-4G4A3973A_HDR.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 274,
+   "captions": []
+  },
+  {
+   "image_id": 186,
+   "qid": "Q180566",
+   "file_name": "186.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/LyBatDeShrine.JPG/960px-LyBatDeShrine.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 187,
+   "qid": "Q180566",
+   "file_name": "187.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Ngulongmon2.JPG/960px-Ngulongmon2.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 188,
+   "qid": "Q2277986",
+   "file_name": "188.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Chuabuoisang.jpg/960px-Chuabuoisang.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 1109,
+   "captions": []
+  },
+  {
+   "image_id": 189,
+   "qid": "Q2277986",
+   "file_name": "189.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%2810%29.jpg/960px-Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%2810%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 385,
+   "captions": []
+  },
+  {
+   "image_id": 190,
+   "qid": "Q2277986",
+   "file_name": "190.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%2811%29.jpg/960px-Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%2811%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 376,
+   "captions": []
+  },
+  {
+   "image_id": 191,
+   "qid": "Q2277986",
+   "file_name": "191.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%288%29.jpg/960px-Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%288%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 376,
+   "captions": []
+  },
+  {
+   "image_id": 192,
+   "qid": "Q2277986",
+   "file_name": "192.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%289%29.jpg/960px-Ch%C3%B9a_Long_S%C6%A1n_%28ch%C3%B9a_Ph%E1%BA%ADt_Tr%E1%BA%AFng%29%2C_Nha_Trang%2C_ng%C3%A0y_27_th%C3%A1ng_5_n%C4%83m_2015_%289%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 365,
+   "captions": []
+  },
+  {
+   "image_id": 193,
+   "qid": "Q3360457",
+   "file_name": "193.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/ChuaGiacLam02.jpg/960px-ChuaGiacLam02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 194,
+   "qid": "Q3360457",
+   "file_name": "194.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/2019-01-08_seven-storied_stupa.jpg/960px-2019-01-08_seven-storied_stupa.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 195,
+   "qid": "Q3360457",
+   "file_name": "195.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Buu_Thap_Xa_Loi_Giac_Lam.jpg/960px-Buu_Thap_Xa_Loi_Giac_Lam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 196,
+   "qid": "Q3360457",
+   "file_name": "196.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Chua_Giac_Lam_Gate.JPG/960px-Chua_Giac_Lam_Gate.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 197,
+   "qid": "Q7481070",
+   "file_name": "197.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/L%C4%83ng_Minh_M%E1%BA%A1ng_-_Mausoleum_of_Emperor_Minh_M%E1%BA%A1ng_%282024%29_-_img_05.jpg/960px-L%C4%83ng_Minh_M%E1%BA%A1ng_-_Mausoleum_of_Emperor_Minh_M%E1%BA%A1ng_%282024%29_-_img_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 198,
+   "qid": "Q7481070",
+   "file_name": "198.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/4.4_Hue-58_%2836483450781%29.jpg/960px-4.4_Hue-58_%2836483450781%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 424,
+   "captions": []
+  },
+  {
+   "image_id": 199,
+   "qid": "Q7481070",
+   "file_name": "199.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Annam_-_Hu%C3%A9_-_Pagode_o%C3%B9_se_font_les_c%C3%A9r%C3%A9monies_rituelles_au_tombeau_de_Minh-Mang.jpg/960px-Annam_-_Hu%C3%A9_-_Pagode_o%C3%B9_se_font_les_c%C3%A9r%C3%A9monies_rituelles_au_tombeau_de_Minh-Mang.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 409,
+   "captions": []
+  },
+  {
+   "image_id": 200,
+   "qid": "Q7481070",
+   "file_name": "200.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Hue_Vietnam_Tomb-of-Emperor-Minh-Mang-04.jpg/960px-Hue_Vietnam_Tomb-of-Emperor-Minh-Mang-04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 217,
+   "qid": "Q6837230",
+   "file_name": "217.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Nh%C3%A0_th%E1%BB%9D_Cha_Tam_%28Ch%E1%BB%A3_L%E1%BB%9Bn%29.jpg/960px-Nh%C3%A0_th%E1%BB%9D_Cha_Tam_%28Ch%E1%BB%A3_L%E1%BB%9Bn%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 897,
+   "captions": []
+  },
+  {
+   "image_id": 218,
+   "qid": "Q6837230",
+   "file_name": "218.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Cha_Tam_Church_%2810018161394%29.jpg/960px-Cha_Tam_Church_%2810018161394%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 219,
+   "qid": "Q6837230",
+   "file_name": "219.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Cha_Tam_Church_%2810018216585%29.jpg/960px-Cha_Tam_Church_%2810018216585%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 220,
+   "qid": "Q6837230",
+   "file_name": "220.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Cha_Tam_Church_%2810018217485%29.jpg/960px-Cha_Tam_Church_%2810018217485%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 221,
+   "qid": "Q6837230",
+   "file_name": "221.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Cholon_-_Eglise_Catholique_Chinoise.jpg/960px-Cholon_-_Eglise_Catholique_Chinoise.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 409,
+   "captions": []
+  },
+  {
+   "image_id": 222,
+   "qid": "Q6941034",
+   "file_name": "222.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/H%E1%BB%99i_An%2C_Museum_of_Trade_Ceramics%2C_2020-01_CN-02.jpg/960px-H%E1%BB%99i_An%2C_Museum_of_Trade_Ceramics%2C_2020-01_CN-02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 451,
+   "captions": []
+  },
+  {
+   "image_id": 223,
+   "qid": "Q6941034",
+   "file_name": "223.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Hoi_An_Museum_of_Trade_Ceramics.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 224,
+   "qid": "Q6941034",
+   "file_name": "224.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/H%E1%BB%99i_An%2C_Museum_of_Trade_Ceramics%2C_2020-01_CN-01.jpg/960px-H%E1%BB%99i_An%2C_Museum_of_Trade_Ceramics%2C_2020-01_CN-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 485,
+   "captions": []
+  },
+  {
+   "image_id": 225,
+   "qid": "Q7680488",
+   "file_name": "225.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/TamToa.jpg/960px-TamToa.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 226,
+   "qid": "Q7680488",
+   "file_name": "226.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Di_t%C3%ADch_Nh%C3%A0_th%E1%BB%9D_Tam_T%C3%B2a_2%2C_%C4%90%E1%BB%93ng_H%E1%BB%9Bi%2C_Qu%E1%BA%A3ng_B%C3%ACnh.jpeg/960px-Di_t%C3%ADch_Nh%C3%A0_th%E1%BB%9D_Tam_T%C3%B2a_2%2C_%C4%90%E1%BB%93ng_H%E1%BB%9Bi%2C_Qu%E1%BA%A3ng_B%C3%ACnh.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 1141,
+   "captions": []
+  },
+  {
+   "image_id": 227,
+   "qid": "Q7680488",
+   "file_name": "227.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Di_t%C3%ADch_Nh%C3%A0_th%E1%BB%9D_Tam_T%C3%B2a%2C_%C4%90%E1%BB%93ng_H%E1%BB%9Bi%2C_Qu%E1%BA%A3ng_B%C3%ACnh.jpeg/960px-Di_t%C3%ADch_Nh%C3%A0_th%E1%BB%9D_Tam_T%C3%B2a%2C_%C4%90%E1%BB%93ng_H%E1%BB%9Bi%2C_Qu%E1%BA%A3ng_B%C3%ACnh.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 1141,
+   "captions": []
+  },
+  {
+   "image_id": 228,
+   "qid": "Q7680488",
+   "file_name": "228.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Nhathocoquangbinh.jpg/960px-Nhathocoquangbinh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 229,
+   "qid": "Q7680488",
+   "file_name": "229.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Tam_Toa_Church%2C_Dong_Hoi.jpg/960px-Tam_Toa_Church%2C_Dong_Hoi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 235,
+   "qid": "Q10743440",
+   "file_name": "235.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Ho_Chi_Minh_Museum%2C_Saigon.jpg/960px-Ho_Chi_Minh_Museum%2C_Saigon.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 236,
+   "qid": "Q10743440",
+   "file_name": "236.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Bac_Bo_Museum_Saigon_Vietnam.JPG/960px-Bac_Bo_Museum_Saigon_Vietnam.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 237,
+   "qid": "Q10743440",
+   "file_name": "237.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Ben_Nha_Rong_2.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 539,
+   "height": 431,
+   "captions": []
+  },
+  {
+   "image_id": 238,
+   "qid": "Q10743440",
+   "file_name": "238.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Ben_Nha_Rong_3.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 506,
+   "captions": []
+  },
+  {
+   "image_id": 239,
+   "qid": "Q10743440",
+   "file_name": "239.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Ben_Nha_Rong_ve_dem.JPG/960px-Ben_Nha_Rong_ve_dem.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 475,
+   "captions": []
+  },
+  {
+   "image_id": 244,
+   "qid": "Q10800884",
+   "file_name": "244.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Nh%C3%A0_th%E1%BB%9D_Th%C3%A1nh_T%C3%A2m_Ch%C3%BAa_Gi%C3%AAsu%2C_Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh.jpg/960px-Nh%C3%A0_th%E1%BB%9D_Th%C3%A1nh_T%C3%A2m_Ch%C3%BAa_Gi%C3%AAsu%2C_Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 245,
+   "qid": "Q10800884",
+   "file_name": "245.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Can_canh_mat_ngang_thap_chuong_Nha_tho_Cho_Quan_2.jpg/960px-Can_canh_mat_ngang_thap_chuong_Nha_tho_Cho_Quan_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 246,
+   "qid": "Q10800884",
+   "file_name": "246.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Can_canh_mat_ngang_thap_chuong_Nha_tho_Cho_Quan.jpg/960px-Can_canh_mat_ngang_thap_chuong_Nha_tho_Cho_Quan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 247,
+   "qid": "Q10800884",
+   "file_name": "247.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Cho_Quan_Parish_Roman_Catholic_Church_%2810018216946%29.jpg/960px-Cho_Quan_Parish_Roman_Catholic_Church_%2810018216946%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 248,
+   "qid": "Q10800884",
+   "file_name": "248.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Goc_chup_ngang_Nha_tho_Cho_Quan_2020_2.jpg/960px-Goc_chup_ngang_Nha_tho_Cho_Quan_2020_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 249,
+   "qid": "Q10800886",
+   "file_name": "249.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Nh%C3%A0_th%E1%BB%9D_huy%E1%BB%87n_S%E1%BB%B9_%E1%BB%9F_HCM.jpg/960px-Nh%C3%A0_th%E1%BB%9D_huy%E1%BB%87n_S%E1%BB%B9_%E1%BB%9F_HCM.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 250,
+   "qid": "Q10800886",
+   "file_name": "250.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/2023-12-10_Saint_Philip_Church%2C_Saigon_01.jpg/960px-2023-12-10_Saint_Philip_Church%2C_Saigon_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 251,
+   "qid": "Q10800886",
+   "file_name": "251.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/2023-12-10_Saint_Philip_Church%2C_Saigon_02.jpg/960px-2023-12-10_Saint_Philip_Church%2C_Saigon_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 252,
+   "qid": "Q10800886",
+   "file_name": "252.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/2023-12-10_Saint_Philip_Church%2C_Saigon_05.jpg/960px-2023-12-10_Saint_Philip_Church%2C_Saigon_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 253,
+   "qid": "Q10800886",
+   "file_name": "253.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/2023-12-10_Saint_Philip_Church%2C_Saigon_08.jpg/960px-2023-12-10_Saint_Philip_Church%2C_Saigon_08.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 254,
+   "qid": "Q10800888",
+   "file_name": "254.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Nh%C3%A0_th%E1%BB%9D_h%E1%BA%A1nh_th%C3%B4ng_t%C3%A2y%2C_%C4%91%C6%B0%E1%BB%9Dng_quang_trung%2C_G%C3%B2_v%E1%BA%A5p_tp_Hcm_vn_-_panoramio.jpg/960px-Nh%C3%A0_th%E1%BB%9D_h%E1%BA%A1nh_th%C3%B4ng_t%C3%A2y%2C_%C4%91%C6%B0%E1%BB%9Dng_quang_trung%2C_G%C3%B2_v%E1%BA%A5p_tp_Hcm_vn_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 255,
+   "qid": "Q10800888",
+   "file_name": "255.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/11/M%C3%A1i_v%C3%B2m_nh%C3%A0_th%E1%BB%9D_h%E1%BA%A1nh_th%C3%B4ng_t%C3%A2y.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 433,
+   "captions": []
+  },
+  {
+   "image_id": 256,
+   "qid": "Q10800888",
+   "file_name": "256.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Nhathohanhthongtay.jpg/960px-Nhathohanhthongtay.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 1015,
+   "captions": []
+  },
+  {
+   "image_id": 257,
+   "qid": "Q10800888",
+   "file_name": "257.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Nh%C3%A0_th%E1%BB%9D_h%E1%BA%A1nh_th%C3%B4ng_t%C3%A2y_x%C6%B0a_c%C3%B2n_th%C3%A1p_chu%C3%B4ng_nh%E1%BB%8Dn.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 469,
+   "height": 669,
+   "captions": []
+  },
+  {
+   "image_id": 258,
+   "qid": "Q10800896",
+   "file_name": "258.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Nh%C3%A0_th%E1%BB%9D_Cha_Tam.jpg/960px-Nh%C3%A0_th%E1%BB%9D_Cha_Tam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 259,
+   "qid": "Q10800896",
+   "file_name": "259.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Bell_tower.JPG/960px-Bell_tower.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 260,
+   "qid": "Q10800896",
+   "file_name": "260.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Goc_chup_thang_Nha_tho_Jeanne_d%27Arc.jpg/960px-Goc_chup_thang_Nha_tho_Jeanne_d%27Arc.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 261,
+   "qid": "Q10800896",
+   "file_name": "261.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Jeanne_d%27Arc_catholic_church.JPG/960px-Jeanne_d%27Arc_catholic_church.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 360,
+   "captions": []
+  },
+  {
+   "image_id": 262,
+   "qid": "Q10800896",
+   "file_name": "262.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Nh%C3%A0_Th%E1%BB%9DNg%C3%A3_S%C3%A1u%2CNg%C3%B4_gia_T%E1%BB%B1%2C_qu%E1%BA%ADn_5%2C_hcmvn_-_panoramio.jpg/960px-Nh%C3%A0_Th%E1%BB%9DNg%C3%A3_S%C3%A1u%2CNg%C3%B4_gia_T%E1%BB%B1%2C_qu%E1%BA%ADn_5%2C_hcmvn_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 987,
+   "captions": []
+  },
+  {
+   "image_id": 268,
+   "qid": "Q482355",
+   "file_name": "268.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/An_Quang_Pagoda_%2810017937455%29.jpg/960px-An_Quang_Pagoda_%2810017937455%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 269,
+   "qid": "Q482355",
+   "file_name": "269.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/An_Quang_Pagoda_%2810017938195%29.jpg/960px-An_Quang_Pagoda_%2810017938195%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 270,
+   "qid": "Q482355",
+   "file_name": "270.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/An_Quang_Pagoda_%2810017938845%29.jpg/960px-An_Quang_Pagoda_%2810017938845%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 271,
+   "qid": "Q482355",
+   "file_name": "271.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/An_Quang_Pagoda_%2810017948626%29.jpg/960px-An_Quang_Pagoda_%2810017948626%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 272,
+   "qid": "Q482355",
+   "file_name": "272.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/An_Quang_Pagoda_%2810017949256%29.jpg/960px-An_Quang_Pagoda_%2810017949256%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 960,
+   "captions": []
+  },
+  {
+   "image_id": 276,
+   "qid": "Q2857598",
+   "file_name": "276.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Dau_pagoda.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 600,
+   "height": 369,
+   "captions": []
+  },
+  {
+   "image_id": 277,
+   "qid": "Q2857598",
+   "file_name": "277.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/ChuaDau_Thap.JPG/960px-ChuaDau_Thap.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 278,
+   "qid": "Q2857598",
+   "file_name": "278.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/ChuaDau_ToanCanh.JPG/960px-ChuaDau_ToanCanh.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 287,
+   "qid": "Q5964889",
+   "file_name": "287.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Mausoleum_of_Hung_King.JPG/960px-Mausoleum_of_Hung_King.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 288,
+   "qid": "Q5964889",
+   "file_name": "288.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/C%E1%BB%95ng_%C4%91%E1%BB%81n_H%C3%B9ng_%28Ph%C3%BA_Th%E1%BB%8D%29.jpg/960px-C%E1%BB%95ng_%C4%91%E1%BB%81n_H%C3%B9ng_%28Ph%C3%BA_Th%E1%BB%8D%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 289,
+   "qid": "Q5964889",
+   "file_name": "289.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Trung_t%C3%A2m_l%E1%BB%85_h%E1%BB%99i_%C4%91%E1%BB%81n_H%C3%B9ng_18-09-2015_1.jpg/960px-Trung_t%C3%A2m_l%E1%BB%85_h%E1%BB%99i_%C4%91%E1%BB%81n_H%C3%B9ng_18-09-2015_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 290,
+   "qid": "Q10801136",
+   "file_name": "290.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Kh%C3%A1n_b%C3%A1o_lan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 841,
+   "captions": []
+  },
+  {
+   "image_id": 291,
+   "qid": "Q10801136",
+   "file_name": "291.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/T%E1%BB%9D_cu%E1%BB%91i_t%E1%BA%ADp_th%C6%A1_Nh%E1%BA%ADt_k%C3%BD_trong_t%C3%B9.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 841,
+   "captions": []
+  },
+  {
+   "image_id": 292,
+   "qid": "Q10801136",
+   "file_name": "292.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/%C4%90%E1%BB%99c_th%C6%B0_lan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 640,
+   "height": 841,
+   "captions": []
+  },
+  {
+   "image_id": 299,
+   "qid": "Q10841729",
+   "file_name": "299.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/H%C3%B9ng_Kings_Temple%2C_Ho_Chi_Minh_City%2C_Vietnam_-_DSC06242.JPG/960px-H%C3%B9ng_Kings_Temple%2C_Ho_Chi_Minh_City%2C_Vietnam_-_DSC06242.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 300,
+   "qid": "Q10841729",
+   "file_name": "300.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Building_in_park_across_from_Vietnam_History_Museum_%289980947315%29.jpg/960px-Building_in_park_across_from_Vietnam_History_Museum_%289980947315%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 301,
+   "qid": "Q10841729",
+   "file_name": "301.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Den_Hung%2C_Ho_Chi_Minh_City.jpg/960px-Den_Hung%2C_Ho_Chi_Minh_City.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 302,
+   "qid": "Q10841729",
+   "file_name": "302.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Den_Tho_Vua_Hung.jpg/960px-Den_Tho_Vua_Hung.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 303,
+   "qid": "Q16480514",
+   "file_name": "303.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Cathedrale_C%E1%BA%A7n_Th%C6%A1_2.jpg/960px-Cathedrale_C%E1%BA%A7n_Th%C6%A1_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 304,
+   "qid": "Q16480514",
+   "file_name": "304.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Cathedrale_C%E1%BA%A7n_Th%C6%A1.jpg/960px-Cathedrale_C%E1%BA%A7n_Th%C6%A1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 305,
+   "qid": "Q16480514",
+   "file_name": "305.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Nh%C3%A0_th%E1%BB%9D_C%E1%BA%A7n_Th%C6%A1.jpg/960px-Nh%C3%A0_th%E1%BB%9D_C%E1%BA%A7n_Th%C6%A1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 409,
+   "captions": []
+  },
+  {
+   "image_id": 306,
+   "qid": "Q16480514",
+   "file_name": "306.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/%C3%89glise_Can_Tho.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 550,
+   "height": 843,
+   "captions": []
+  },
+  {
+   "image_id": 307,
+   "qid": "Q16511573",
+   "file_name": "307.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Annam._Pr%C3%A8s_Hu%C3%A9._Au_tombeau_de_Thieu-tri%2C_vue_vers_la_colline_o%C3%B9_le_corps_est_cach%C3%A9_-_%28photogr.%29_A._S%28alles%29_-_btv1b53013120r_%281_of_2%29.jpg/960px-Annam._Pr%C3%A8s_Hu%C3%A9._Au_tombeau_de_Thieu-tri%2C_vue_vers_la_colline_o%C3%B9_le_corps_est_cach%C3%A9_-_%28photogr.%29_A._S%28alles%29_-_btv1b53013120r_%281_of_2%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 464,
+   "captions": []
+  },
+  {
+   "image_id": 308,
+   "qid": "Q16511573",
+   "file_name": "308.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/L%C4%83ng_vua_Thi%E1%BB%87u_Tr%E1%BB%8B.JPG/960px-L%C4%83ng_vua_Thi%E1%BB%87u_Tr%E1%BB%8B.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 309,
+   "qid": "Q16511573",
+   "file_name": "309.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/Tombeau_Empereur_Thieu_Tri%2C_portique.jpg/960px-Tombeau_Empereur_Thieu_Tri%2C_portique.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 415,
+   "captions": []
+  },
+  {
+   "image_id": 310,
+   "qid": "Q16511573",
+   "file_name": "310.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Tombeau_Empereur_Thieu_Tri.jpg/960px-Tombeau_Empereur_Thieu_Tri.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 414,
+   "captions": []
+  },
+  {
+   "image_id": 311,
+   "qid": "Q10794266",
+   "file_name": "311.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Mi%E1%BA%BFu_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg/960px-Mi%E1%BA%BFu_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 427,
+   "captions": []
+  },
+  {
+   "image_id": 312,
+   "qid": "Q10794266",
+   "file_name": "312.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/H%E1%BA%ADu_%C4%91i%E1%BB%87n_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg/960px-H%E1%BA%ADu_%C4%91i%E1%BB%87n_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 313,
+   "qid": "Q10794266",
+   "file_name": "313.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/H%E1%BA%ADu_%C4%91i%E1%BB%87n_mi%E1%BA%BFu_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg/960px-H%E1%BA%ADu_%C4%91i%E1%BB%87n_mi%E1%BA%BFu_Nh%E1%BB%8B_Ph%E1%BB%A7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 314,
+   "qid": "Q10794266",
+   "file_name": "314.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Nh%E1%BB%8B_Ph%E1%BB%A7.jpg/960px-Nh%E1%BB%8B_Ph%E1%BB%A7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 315,
+   "qid": "Q10800885",
+   "file_name": "315.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF1.jpg/960px-Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 426,
+   "captions": []
+  },
+  {
+   "image_id": 316,
+   "qid": "Q10800885",
+   "file_name": "316.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Catholic_church_at_Hue_Vietnam.JPG/960px-Catholic_church_at_Hue_Vietnam.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 471,
+   "captions": []
+  },
+  {
+   "image_id": 317,
+   "qid": "Q10800885",
+   "file_name": "317.jpg",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/1/18/Hue_church.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "width": 600,
+   "height": 800,
+   "captions": []
+  },
+  {
+   "image_id": 318,
+   "qid": "Q10800885",
+   "file_name": "318.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Hu%E1%BA%BF_2024_-_Church_of_the_Saviour_%28Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF%29_-_img_01.jpg/960px-Hu%E1%BA%BF_2024_-_Church_of_the_Saviour_%28Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF%29_-_img_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 480,
+   "captions": []
+  },
+  {
+   "image_id": 319,
+   "qid": "Q10800885",
+   "file_name": "319.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Hu%E1%BA%BF_2024_-_Church_of_the_Saviour_%28Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF%29_-_img_02.jpg/960px-Hu%E1%BA%BF_2024_-_Church_of_the_Saviour_%28Nh%C3%A0_th%E1%BB%9D_D%C3%B2ng_Ch%C3%BAa_C%E1%BB%A9u_Th%E1%BA%BF%2C_Hu%E1%BA%BF%29_-_img_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 326,
+   "qid": "Q10825819",
+   "file_name": "326.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Thanh_that_Da_Phuoc_02.JPG/960px-Thanh_that_Da_Phuoc_02.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 583,
+   "captions": []
+  },
+  {
+   "image_id": 327,
+   "qid": "Q10825819",
+   "file_name": "327.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Thanh_that_Da_Phuoc_01.jpg/960px-Thanh_that_Da_Phuoc_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 697,
+   "captions": []
+  },
+  {
+   "image_id": 328,
+   "qid": "Q10825819",
+   "file_name": "328.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Thanh_that_Da_Phuoc_03.jpg/960px-Thanh_that_Da_Phuoc_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  },
+  {
+   "image_id": 329,
+   "qid": "Q10825819",
+   "file_name": "329.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Thanh_that_Da_Phuoc_04.jpg/960px-Thanh_that_Da_Phuoc_04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 482,
+   "captions": []
+  },
+  {
+   "image_id": 330,
+   "qid": "Q10825819",
+   "file_name": "330.jpg",
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Thanh_that_Da_Phuoc_05.jpg/960px-Thanh_that_Da_Phuoc_05.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "width": 640,
+   "height": 853,
+   "captions": []
+  }
+ ],
+ "queries": [
+  {
+   "query_id": "Q23513_auto_0",
+   "text": "là một vườn quốc gia của Việt Nam, nằm tại xã Bố Trạch và Minh Hóa, tỉnh Quảng Trị, cách phường Đồng Hới khoảng 50 km về phía Tây Bắc, cách thủ đô Hà Nội khoảng 500 km về phía nam.",
+   "gold_qid": "Q23513"
+  },
+  {
+   "query_id": "Q23513_auto_1",
+   "text": "Vườn quốc gia này giáp khu bảo tồn thiên nhiên Hin Namno ở tỉnh Khammouan, Lào về phía tây; cách Biển Đông 42 km về phía đông kể từ đường biên giới của vườn quốc gia này.",
+   "gold_qid": "Q23513"
+  },
+  {
+   "query_id": "Q23513_auto_2",
+   "text": "nằm ở một khu vực núi đá vôi rộng khoảng 201.000 ha thuộc lãnh thổ Việt Nam, khu vực lãnh thổ Lào tiếp giáp vườn quốc gia này cũng có diện tích núi đá vôi khoảng 200.001 ha.",
+   "gold_qid": "Q23513"
+  },
+  {
+   "query_id": "Q41179_auto_0",
+   "text": "là một trong những con sông lớn nhất trên thế giới, bắt nguồn từ cao nguyên Thanh Tạng nơi sông bắt nguồn thuộc tỉnh Thanh Hải, chảy qua Vân Nam Trung Quốc, qua các nước Lào, Myanmar, Thái Lan, Campuchia và đổ ra Biển Đông ở Việt Nam.",
+   "gold_qid": "Q41179"
+  },
+  {
+   "query_id": "Q41179_auto_1",
+   "text": "Tính theo độ dài đứng thứ 12, còn tính theo lưu lượng nước đứng thứ 10 trên thế giới.",
+   "gold_qid": "Q41179"
+  },
+  {
+   "query_id": "Q41179_auto_2",
+   "text": "Lưu lượng trung bình 13.200 m³/s, vào mùa nước lũ có thể lên tới 30.000 m³/s.",
+   "gold_qid": "Q41179"
+  },
+  {
+   "query_id": "Q190060_auto_0",
+   "text": "là kinh đô nước Đại Ngu, nằm trên địa phận tỉnh Thanh Hóa.",
+   "gold_qid": "Q190060"
+  },
+  {
+   "query_id": "Q190060_auto_1",
+   "text": "Đây là tòa thành kiên cố với kiến trúc độc đáo bằng đá có quy mô lớn hiếm hoi ở Việt Nam, có giá trị và độc đáo nhất, duy nhất còn lại ở tại Đông Nam Á và là một trong rất ít những thành lũy bằng đá còn lại trên thế giới.",
+   "gold_qid": "Q190060"
+  },
+  {
+   "query_id": "Q190060_auto_2",
+   "text": "Thành được xây dựng trong thời gian ngắn, chỉ khoảng 3 tháng và cho đến nay, dù đã tồn tại hơn 6 thế kỷ nhưng một số đoạn của tòa thành này còn lại tương đối nguyên vẹn.",
+   "gold_qid": "Q190060"
+  },
+  {
+   "query_id": "Q874234_auto_0",
+   "text": "còn gọi là, là nơi gìn giữ thi hài.",
+   "gold_qid": "Q874234"
+  },
+  {
+   "query_id": "Q874234_auto_1",
+   "text": "Lăng được chính thức khởi công ngày 2 tháng 9 năm 1973, tại vị trí lễ đài cũ giữa Quảng trường Ba Đình, nơi từng chủ trì các cuộc gặp mặt quan trọng.",
+   "gold_qid": "Q874234"
+  },
+  {
+   "query_id": "Q874234_auto_2",
+   "text": "Lăng được khánh thành vào ngày 29 tháng 8 năm 1975, gồm 3 lớp với chiều cao 21,6 m, chiều rộng 41,2 m; lớp dưới tạo dáng bậc thềm tam cấp, lớp giữa là kết cấu trung tâm của lăng gồm phòng thi hài và những hành lang, những cầu thang.",
+   "gold_qid": "Q874234"
+  },
+  {
+   "query_id": "Q993402_auto_0",
+   "text": "là hòn đảo lớn nhất thuộc nhóm quần trong vịnh Bắc Bộ, về mặt hành chính thuộc đặc khu Cát Hải, thành phố Hải Phòng, Việt Nam.",
+   "gold_qid": "Q993402"
+  },
+  {
+   "query_id": "Q2344822_auto_0",
+   "text": "là một di chỉ khảo cổ tại khu vực núi Ba Thê, thuộc xã, tỉnh An Giang, Việt Nam.",
+   "gold_qid": "Q2344822"
+  },
+  {
+   "query_id": "Q2344822_auto_1",
+   "text": "Di chỉ này do nhà khảo cổ học người Pháp Louis Malleret ở trường Viễn Đông Bác Cổ chủ trì khai quật lần đầu tiên vào năm 1944.",
+   "gold_qid": "Q2344822"
+  },
+  {
+   "query_id": "Q1968747_auto_0",
+   "text": "là một vườn quốc gia, rừng đặc dụng, khu du lịch sinh thái của Việt Nam, nằm trên địa phận tỉnh Thái Nguyên, với trung tâm là hồ Ba Bể.",
+   "gold_qid": "Q1968747"
+  },
+  {
+   "query_id": "Q1968747_auto_1",
+   "text": "được thành lập theo Quyết định số 83/TTg ngày 10 tháng 11 năm năm 1992 của Thủ tướng Chính phủ.",
+   "gold_qid": "Q1968747"
+  },
+  {
+   "query_id": "Q864770_auto_0",
+   "text": "nằm trên một hòn đảo phía Đông Hồ Tây.",
+   "gold_qid": "Q864770"
+  },
+  {
+   "query_id": "Q864770_auto_1",
+   "text": "Chùa có lịch sử gần 1500 năm và được coi là lâu đời nhất ở Thăng Long - Hà Nội.",
+   "gold_qid": "Q864770"
+  },
+  {
+   "query_id": "Q864770_auto_2",
+   "text": "Dưới thời nhà Lý và nhà Trần, là trung tâm Phật giáo của kinh thành Thăng Long.",
+   "gold_qid": "Q864770"
+  },
+  {
+   "query_id": "Q782099_auto_0",
+   "text": "là một quần thể nhà thờ Công giáo rộng khoảng 22 ha, nằm tại xã, tỉnh Ninh Bình, cách Hà Nội khoảng 120 km về hướng Nam.",
+   "gold_qid": "Q782099"
+  },
+  {
+   "query_id": "Q782099_auto_1",
+   "text": "Quần thể các công trình nơi đây được xây dựng từ năm 1875, đến năm 1899 thì hoàn thành.",
+   "gold_qid": "Q782099"
+  },
+  {
+   "query_id": "Q782099_auto_2",
+   "text": "Nhà thờ lớn tại vị trí trung tâm, hiện là nhà thờ chính tòa của Giáo phận ở miền Bắc Việt Nam, được hoàn thành năm 1891.",
+   "gold_qid": "Q782099"
+  },
+  {
+   "query_id": "Q2942901_auto_0",
+   "text": "là một nhà thờ Công giáo ở số 1 đường Thái Nguyên, phường, tỉnh Khánh Hòa.",
+   "gold_qid": "Q2942901"
+  },
+  {
+   "query_id": "Q2942901_auto_1",
+   "text": "Nhà thờ này còn có nhiều tên gọi bình dân như: Nhà thờ; Nhà thờ Đá; Nhà thờ Ngã Sáu; nhưng phổ biến hơn cả là tên gọi.",
+   "gold_qid": "Q2942901"
+  },
+  {
+   "query_id": "Q2942901_auto_2",
+   "text": "Đây là nhà thờ chính tòa của Giáo phận.",
+   "gold_qid": "Q2942901"
+  },
+  {
+   "query_id": "Q5370414_auto_0",
+   "text": "cùng với Bảo tàng Cách mạng Việt Nam là hai bảo tàng đã được sáp nhập thành, tọa lạc ở thành phố Hà Nội.",
+   "gold_qid": "Q5370414"
+  },
+  {
+   "query_id": "Q5370414_auto_1",
+   "text": "là nơi lưu giữ những hiện vật, phản ánh các nền văn hóa, lịch sử dựng nước và giữ nước của người Việt Nam từ thuở ban đầu khai sáng đến ngày ra đời nước Việt Nam Dân chủ Cộng hòa.",
+   "gold_qid": "Q5370414"
+  },
+  {
+   "query_id": "Q5370414_auto_2",
+   "text": "Viện bảo tàng có phong cách kiến trúc Đông Dương, nằm ở số 1 phố Tràng Tiền, Hoàn Kiếm, Hà Nội.",
+   "gold_qid": "Q5370414"
+  },
+  {
+   "query_id": "Q1005868_auto_0",
+   "text": "là một ngôi chùa lớn và là một di tích cấp thành phố của Thành phố Hồ Chí Minh, tọa lạc tại góc đường Bà Huyện Thanh Quan và Sư Thiện Chiếu, phường Xuân Hòa, trong một khuôn viên rộng 2.500 m².",
+   "gold_qid": "Q1005868"
+  },
+  {
+   "query_id": "Q7818621_auto_0",
+   "text": "còn gọi là là lăng tẩm của Hoàng đế, vị Hoàng đế thứ 12 Triều Nguyễn.",
+   "gold_qid": "Q7818621"
+  },
+  {
+   "query_id": "Q7818621_auto_1",
+   "text": "Lăng tọa lạc tại núi Châu Chữ, phường Thủy Xuân, thành phố Huế.",
+   "gold_qid": "Q7818621"
+  },
+  {
+   "query_id": "Q7818621_auto_2",
+   "text": "Công trình kiến trúc này nằm trong quần thể di tích cố đô Huế, di sản thế giới đã được UNESCO công nhận từ năm 1993.",
+   "gold_qid": "Q7818621"
+  },
+  {
+   "query_id": "Q1932222_auto_0",
+   "text": "là một nhà thờ của Giáo hội Công giáo Rôma, thuộc Tổng giáo phận Hà Nội, Việt Nam.",
+   "gold_qid": "Q1932222"
+  },
+  {
+   "query_id": "Q1932222_auto_1",
+   "text": "Đây là một trong những nhà thờ lớn ở Hà Nội.",
+   "gold_qid": "Q1932222"
+  },
+  {
+   "query_id": "Q1932222_auto_2",
+   "text": "Linh mục Al-phong-sô Phạm Hùng hiện đang là Linh mục chính xứ cùng với Linh mục phó xứ Giuse Trần Đình Ngọc Nhà thờ tọa lạc ở số 21 phố, phường Cửa Nam, công trình do kiến trúc sư người Việt Phêrô Lý Đức Thân, tục gọi cụ Đốc Thân, du học ở Pháp thiết kế.",
+   "gold_qid": "Q1932222"
+  },
+  {
+   "query_id": "Q3360468_auto_0",
+   "text": "là một quần thể chùa lớn với nhiều kỷ lục châu Á và Việt Nam được xác lập như chùa có tượng Phật bằng đồng dát vàng lớn nhất châu Á, chùa có hành lang La Hán dài nhất châu Á, có tượng Di lặc bằng đồng lớn nhất Đông Nam Á... Đây là ngôi chùa lớn nhất và sở hữu nhiều kỷ lục nhất ở Việt Nam.",
+   "gold_qid": "Q3360468"
+  },
+  {
+   "query_id": "Q3360468_auto_1",
+   "text": "Các hạng mục xây dựng, mở rộng khu chùa mới được các đại biểu tham dự đại lễ Phật đản thế giới 2008 làm lễ khánh thành giai đoạn 1, năm 2010 là nơi tổ chức Đại lễ cung nghinh xá lợi Phật đầu tiên từ Ấn Độ về Việt Nam.",
+   "gold_qid": "Q3360468"
+  },
+  {
+   "query_id": "Q3360468_auto_2",
+   "text": "Đại lễ Phật đản Liên hiệp quốc – Vesak 2014 do Việt Nam đăng cai đã diễn ra tại trong tháng 3 năm 2014.",
+   "gold_qid": "Q3360468"
+  },
+  {
+   "query_id": "Q10834009_auto_0",
+   "text": "Vương cung thánh đường Đức Mẹ Vô nhiễm Nguyên tội, là một nhà thờ Công giáo Rôma thuộc Giáo phận Bùi Chu, Việt Nam.",
+   "gold_qid": "Q10834009"
+  },
+  {
+   "query_id": "Q10834009_auto_1",
+   "text": "nằm ở xã Xuân Hưng, tỉnh Ninh Bình.",
+   "gold_qid": "Q10834009"
+  },
+  {
+   "query_id": "Q180566_auto_0",
+   "text": "tên chữ là Cổ Pháp điện, còn được gọi là, là một quần thể kiến trúc tín ngưỡng thờ tám vị vua đầu tiên của nhà Lý.",
+   "gold_qid": "Q180566"
+  },
+  {
+   "query_id": "Q180566_auto_1",
+   "text": "đã được Nhà nước Việt Nam công nhận là di tích lịch sử - văn hóa theo Quyết định số 154 của Bộ Văn hóa – Thông tin ngày 25 tháng 1 năm 1991.",
+   "gold_qid": "Q180566"
+  },
+  {
+   "query_id": "Q180566_auto_2",
+   "text": "Năm 2014, nơi đây cùng với khu lăng mộ các Vua nhà Lý đã được xếp hạng di tích quốc gia đặc biệt.",
+   "gold_qid": "Q180566"
+  },
+  {
+   "query_id": "Q2277986_auto_0",
+   "text": "trước có tên là Đằng Long Tự, tọa lạc dưới chân đồi Trại Thủy, tại số 22 đường 23 tháng 10, phường Tây Nha Trang, tỉnh Khánh Hòa.",
+   "gold_qid": "Q2277986"
+  },
+  {
+   "query_id": "Q2277986_auto_1",
+   "text": "Chùa khởi công xây dựng vào thế kỷ 19, đến năm 1940 trùng tu lại và trở thành ngôi chùa nổi tiếng nhất tỉnh với tượng phật Thích Ca ngoài trời lớn nhất Việt Nam.",
+   "gold_qid": "Q2277986"
+  },
+  {
+   "query_id": "Q3360457_auto_0",
+   "text": "còn có các tên khác: Cẩm Sơn, Sơn Can hay Cẩm Đệm; là một trong những ngôi chùa cổ nhất của Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q3360457"
+  },
+  {
+   "query_id": "Q3360457_auto_1",
+   "text": "Đây chính là tổ đình của phái Thiền Lâm Tế tông ở Nam Bộ.",
+   "gold_qid": "Q3360457"
+  },
+  {
+   "query_id": "Q3360457_auto_2",
+   "text": "Chùa tọa lạc tại số 565 đường Lạc Long Quân, thuộc Phường Bảy Hiền, Thành phố Hồ Chí Minh, và đã được Bộ Văn hóa công nhận là di tích lịch sử - văn hóa quốc gia của Việt Nam theo quyết định số 1288-VH/QĐ ngày 16 tháng 11 năm 1988.",
+   "gold_qid": "Q3360457"
+  },
+  {
+   "query_id": "Q7481070_auto_0",
+   "text": "có tên chữ là Hiếu lăng, do hoàng đế Thiệu Trị thời nhà Nguyễn cho xây dựng, nằm trên núi Cẩm Kê, ấp An Bằng, phường Long Hồ, quận Phú Xuân, thành phố Huế, gần ngã ba Bằng Lãng là nơi hội lưu của hai dòng Hữu Trạch và Tả Trạch hợp thành sông Hương, cách trung tâm thành phố Huế 12 km.",
+   "gold_qid": "Q7481070"
+  },
+  {
+   "query_id": "Q7481070_auto_1",
+   "text": "được xây dựng từ năm 1840 đến năm 1843 thì hoàn thành, huy động tới mười nghìn thợ và lính.",
+   "gold_qid": "Q7481070"
+  },
+  {
+   "query_id": "Q6837230_auto_0",
+   "text": "là một nhà thờ cổ, hiện tọa lạc tại số 25 đường Học Lạc, phường Chợ Lớn, Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q6837230"
+  },
+  {
+   "query_id": "Q6941034_auto_0",
+   "text": "là bảo tàng trưng bày gốm sứ liên quan đến lịch sử giao thương quốc tế với các nước như Trung Quốc, Ấn Độ, Nhật Bản, Philippines và Thái Lan tọa lạc ở Hội An, Quảng Nam, Việt Nam.",
+   "gold_qid": "Q6941034"
+  },
+  {
+   "query_id": "Q6941034_auto_1",
+   "text": "Bảo tàng được khai trương năm 1995, được hình thành với sự giúp đỡ của các chuyên gia Nhật Bản.",
+   "gold_qid": "Q6941034"
+  },
+  {
+   "query_id": "Q6941034_auto_2",
+   "text": "Bảo tàng hiện có khoảng 368 hiện vật gốm sứ có niên đại từ thế kỷ IX -X đến thế kỷ XIX được tìm thấy ở các điểm khảo cổ tại Hội An.",
+   "gold_qid": "Q6941034"
+  },
+  {
+   "query_id": "Q7680488_auto_0",
+   "text": "là một di tích nhà thờ Công giáo tọa lạc đường Nguyễn Du, phường Đồng Hới, tỉnh Quảng Trị.",
+   "gold_qid": "Q7680488"
+  },
+  {
+   "query_id": "Q7680488_auto_1",
+   "text": "Nơi đây từng là nhà thờ của giáo xứ, được coi là một trong những nhà thờ đẹp nhất ở Việt Nam.",
+   "gold_qid": "Q7680488"
+  },
+  {
+   "query_id": "Q7680488_auto_2",
+   "text": "Trong Chiến tranh Việt Nam, nhà thờ bị bom đạn Mỹ đánh sập, chỉ còn lại phế tích và được bảo tồn về sau như một chứng tích chiến tranh.",
+   "gold_qid": "Q7680488"
+  },
+  {
+   "query_id": "Q10743440_auto_0",
+   "text": "tên chính thức là Bảo tàng Hồ Chí Minh - Chi nhánh Thành phố Hồ Chí Minh, là cụm di tích kiến trúc - bảo tàng nằm bên sông Sài Gòn, thuộc phường Xóm Chiếu, Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10743440"
+  },
+  {
+   "query_id": "Q10743440_auto_1",
+   "text": "Nơi đây từng là trụ sở của hãng vận tải Messageries maritimes tại Sài Gòn từ năm 1864 đến năm 1955.",
+   "gold_qid": "Q10743440"
+  },
+  {
+   "query_id": "Q10743440_auto_2",
+   "text": "Ngày nay, địa danh này được biết đến nhiều do tại đây có cụm di tích kiến trúc đánh dấu sự kiện ngày 5 tháng 6 năm 1911, người thanh niên Nguyễn Tất Thành đã xuống con tàu Amiral Latouche-Tréville làm phụ bếp để có điều kiện sang châu Âu, mở đầu hành trình cách mạng của mình.",
+   "gold_qid": "Q10743440"
+  },
+  {
+   "query_id": "Q10800884_auto_0",
+   "text": "là một nhà thờ Công giáo tại Thành phố Hồ Chí Minh, thuộc giáo xứ, tọa lạc tại số 120 đường Trần Bình Trọng, phường, thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10800884"
+  },
+  {
+   "query_id": "Q10800884_auto_1",
+   "text": "Nhà thờ có kiến trúc Romanesque, đã nhiều lần bị phá hủy rồi lại được xây lại vào các năm 1727, 1733, 1793, 1862, 1882 và ngôi nhà thờ hiện nay được khánh thành vào năm 1896.",
+   "gold_qid": "Q10800884"
+  },
+  {
+   "query_id": "Q10800884_auto_2",
+   "text": "là nhà thờ cổ nhất Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10800884"
+  },
+  {
+   "query_id": "Q10800886_auto_0",
+   "text": "là một nhà thờ Công giáo cổ hơn 100 tuổi, tọa lạc tại số 1 đường Tôn Thất Tùng, phường Bến Thành, Thành phố Hồ Chí Minh, Việt Nam.",
+   "gold_qid": "Q10800886"
+  },
+  {
+   "query_id": "Q10800886_auto_1",
+   "text": "Đây là nhà thờ của giáo xứ Chợ Đũi thuộc Tổng giáo phận Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10800886"
+  },
+  {
+   "query_id": "Q10800888_auto_0",
+   "text": "là một nhà thờ Công giáo ở Thành phố Hồ Chí Minh, Việt Nam.",
+   "gold_qid": "Q10800888"
+  },
+  {
+   "query_id": "Q10800888_auto_1",
+   "text": "Nhà thờ tọa lạc tại số 688 đường Quang Trung, phường Thông Tây Hội, Thành phố Hồ Chí Minh, Việt Nam.",
+   "gold_qid": "Q10800888"
+  },
+  {
+   "query_id": "Q10800896_auto_0",
+   "text": "là một nhà thờ Công giáo tại Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10800896"
+  },
+  {
+   "query_id": "Q10800896_auto_1",
+   "text": "Nhà thờ này tọa lạc tại số 169A đường Hùng Vương, phường An Đông, Thành phố Hồ Chí Minh xây từ năm 1922 và hoàn thành vào tháng 5 năm 1928, mang tên, cũng là thánh bổn mạng nhà thờ.",
+   "gold_qid": "Q10800896"
+  },
+  {
+   "query_id": "Q10800896_auto_2",
+   "text": "Nhà thờ có phong cách Kiến trúc Romanesque, được xây trên khu nghĩa trang Hoa kiều.",
+   "gold_qid": "Q10800896"
+  },
+  {
+   "query_id": "Q482355_auto_0",
+   "text": "hay Tổ đình là một ngôi chùa ở phường Vườn Lài, Thành phố Hồ Chí Minh, Việt Nam và đây cũng là một trường Phật học của Giáo hội Phật giáo Việt Nam ở miền Nam.",
+   "gold_qid": "Q482355"
+  },
+  {
+   "query_id": "Q482355_auto_1",
+   "text": "tọa lạc tại 243 đường Sư Vạn Hạnh, phường Vườn Lài, thành phố Hồ Chí Minh.",
+   "gold_qid": "Q482355"
+  },
+  {
+   "query_id": "Q482355_auto_2",
+   "text": "Chùa được tạo lập năm 1948 và đã được mở rộng nâng cấp.",
+   "gold_qid": "Q482355"
+  },
+  {
+   "query_id": "Q2857598_auto_0",
+   "text": "là một ngôi chùa nằm ở phường Trí Quả, thành phố Bắc Ninh, cách Hà Nội khoảng 30 km.",
+   "gold_qid": "Q2857598"
+  },
+  {
+   "query_id": "Q2857598_auto_1",
+   "text": "Đây là trung tâm Phật giáo cổ xưa nhất của Việt Nam.",
+   "gold_qid": "Q2857598"
+  },
+  {
+   "query_id": "Q2857598_auto_2",
+   "text": "Chùa còn được người dân gọi với những tên gọi khác nhau như chùa Cả, Cổ Châu tự, tự, Thiền Định tự.",
+   "gold_qid": "Q2857598"
+  },
+  {
+   "query_id": "Q5964889_auto_0",
+   "text": "là tên gọi khái quát của - quần thể đền chùa thờ phụng các Vua và tôn thất của nhà vua trên núi Nghĩa Lĩnh, xã Hy Cương, tỉnh Phú Thọ, xưa thuộc xã Hy Cương, huyện Sơn Vi, gắn với - được tổ chức tại địa điểm đó hàng năm vào ngày 10 tháng 3 âm lịch.",
+   "gold_qid": "Q5964889"
+  },
+  {
+   "query_id": "Q5964889_auto_1",
+   "text": "Hiện nay, theo các tài liệu khoa học đã công bố đa số đều thống nhất nền móng kiến trúc bắt đầu được xây dựng từ thời vua Đinh Tiên Hoàng trị vì.",
+   "gold_qid": "Q5964889"
+  },
+  {
+   "query_id": "Q5964889_auto_2",
+   "text": "Đến thời Hậu Lê được xây dựng hoàn chỉnh theo quy mô như hiện tại.",
+   "gold_qid": "Q5964889"
+  },
+  {
+   "query_id": "Q10801136_auto_0",
+   "text": "là tập thơ chữ Hán gồm 134 bài theo thể Đường luật do Hồ Chí Minh sáng tác trong thời gian bị chính quyền Tưởng Giới Thạch bắt giam ở Quảng Tây, Trung Quốc, từ ngày 29 tháng 8 năm 1942 đến ngày 10 tháng 9 năm 1943.",
+   "gold_qid": "Q10801136"
+  },
+  {
+   "query_id": "Q10801136_auto_1",
+   "text": "Ngoài ra, phần cuối văn bản là bút ký đọc sách và bút ký đọc báo ghi chép tóm tắt những thông tin quan trọng về chính trị, quân sự, văn hóa quốc tế và Việt Nam đương thời.",
+   "gold_qid": "Q10801136"
+  },
+  {
+   "query_id": "Q10801136_auto_2",
+   "text": "không chỉ ghi những cảnh sinh hoạt trong tù, mà còn có ý nghĩa tố cáo chế độ nhà tù khắc nghiệt của chính quyền Tưởng Giới Thạch.",
+   "gold_qid": "Q10801136"
+  },
+  {
+   "query_id": "Q10841729_auto_0",
+   "text": "là một trong những nơi Vương lâu đời tại Thành phố Hồ Chí Minh; hiện tọa lạc tại số 2, đường Nguyễn Bỉnh Khiêm, phường Sài Gòn, Thành phố Hồ Chí Minh, Việt Nam.",
+   "gold_qid": "Q10841729"
+  },
+  {
+   "query_id": "Q16480514_auto_0",
+   "text": "với tước hiệu là nhà thờ chính tòa của Giáo phận tọa lạc tại số 14 đường Nguyễn Thị Minh Khai, phường Ninh Kiều, thành phố.",
+   "gold_qid": "Q16480514"
+  },
+  {
+   "query_id": "Q16480514_auto_1",
+   "text": "cách Thành phố Hồ Chí Minh 167 km.",
+   "gold_qid": "Q16480514"
+  },
+  {
+   "query_id": "Q16480514_auto_2",
+   "text": "Năm 1850, Toà Thánh Vatican chia giáo phận Tông tòa Tây Đàng Trong thành giáo phận Tông tòa Nam Vang và Giáo phận Tông tòa Tây.",
+   "gold_qid": "Q16480514"
+  },
+  {
+   "query_id": "Q16511573_auto_0",
+   "text": "có tên chữ là là nơi chôn cất hoàng đế.",
+   "gold_qid": "Q16511573"
+  },
+  {
+   "query_id": "Q16511573_auto_1",
+   "text": "Đây là một di tích trong Quần thể di tích cố đô Huế được UNESCO công nhận là di sản văn hóa thế giới ngày 11 tháng 12 năm 1993.",
+   "gold_qid": "Q16511573"
+  },
+  {
+   "query_id": "Q10794266_auto_0",
+   "text": "còn được gọi là hay, là một cơ sở tín ngưỡng tại địa chỉ số 264 đường Hải Thượng Lãn Ông, Phường Chợ Lớn, Thành phố Hồ Chí Minh.",
+   "gold_qid": "Q10794266"
+  },
+  {
+   "query_id": "Q10794266_auto_1",
+   "text": "Đây là hội quán do người Hoa gốc Phúc Kiến lập ra trên đất Đề Ngạn xưa vào khoảng đầu thế kỷ 18.",
+   "gold_qid": "Q10794266"
+  },
+  {
+   "query_id": "Q10800885_auto_0",
+   "text": "Nhà thờ Dòng Chúa Cứu Thế là một công trình kiến trúc của Công giáo Rôma tại Huế.",
+   "gold_qid": "Q10800885"
+  },
+  {
+   "query_id": "Q10825819_auto_0",
+   "text": "hay là một Thánh thất Cao Đài thuộc Tòa Thánh Tây Ninh nằm ở phường Xuân Trường - Đà Lạt, tỉnh Lâm Đồng.",
+   "gold_qid": "Q10825819"
+  },
+  {
+   "query_id": "Q10825819_auto_1",
+   "text": "Thánh thất này trước đây thuộc Tộc đạo Đà Lạt, Châu đạo Lâm Đồng, Trấn đạo Tuyên Đức, nay là Họ Đạo Đà Lạt, tỉnh Lâm Đồng.",
+   "gold_qid": "Q10825819"
+  }
+ ]
+}
