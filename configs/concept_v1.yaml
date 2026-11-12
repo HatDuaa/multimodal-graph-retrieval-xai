@@ -1,0 +1,36 @@
+# Data version concept_v1 (scene-ranker options, docs/scene-ranker.html): the count_v1 data unchanged, plus the
+# commonsense concept graph, image node attributes and fixed scene terms that scripts/build_concept_data.py writes
+# under paths.concepts. Everything there is fitted on train (vocabulary, co-occurrence prior, IDF, term scales).
+# Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]          # main experiments are reported as mean ± std over these
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features/factual_v1
+  extra_parts: data/features/merge_v1/vg_coco_graph_parts_extra   # file stem (.npy + .ids.json), appended to the part table
+  graphs: data/graphs/merge_v1
+  count_buckets: data/graphs/count_v1/count_buckets.json           # image node counts, merge_v1 node order
+  concepts: data/graphs/concept_v1                                 # scripts/build_concept_data.py output
+  processed: data/processed/group_v1
+  experiments: experiments
+
+clip:
+  model: ViT-B-32-quickgelu   # open_clip model name; OpenAI weights need the QuickGELU config (experiments/checks, section 5)
+  pretrained: openai      # open_clip pretrained tag
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+retrieval:
+  top_k: 50
+
+# Concept graph rules (src/graph/concepts.py); values of the B/32 scene ranker that docs/scene-ranker.html reports.
+concepts:
+  min_images: 20             # a node label becomes a concept when it occurs in at least this many train images
+  prior_min_images: 5        # a Visual Genome subject -> object pair needs this many train images
+  conceptnet_min_weight: 1.0
+  conceptnet_url: https://s3.amazonaws.com/conceptnet/downloads/2019/edges/conceptnet-assertions-5.7.0.csv.gz
+  neighbors: 20              # neighbours kept per concept
+  quota_per_family: 5        # of which, first, the best of every relation type
