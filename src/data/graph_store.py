@@ -51,8 +51,11 @@ class GraphIndex:
     NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask', 'count_index', 'node_concept')
     EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows', 'edge_kind', 'edge_geometry')
 
-    def __init__(self, node_counts, edge_counts, **fields):
+    def __init__(self, node_counts, edge_counts, has_concepts=False, **fields):
         self.node_counts = np.asarray(node_counts, dtype=np.int64)
+        # True when the parts carried node_concept (a store with concepts); otherwise batches carry None, so a model
+        # built with concept_gat fails loudly instead of reading NO_CONCEPT everywhere.
+        self.has_concepts = has_concepts
         self.edge_counts = np.asarray(edge_counts, dtype=np.int64)
         self.fields = fields
         self.node_start = np.cumsum(self.node_counts) - self.node_counts
@@ -64,6 +67,7 @@ class GraphIndex:
     @classmethod
     def build(cls, parts_list, part_row):
         node_rows, part_mask, global_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], [], []
+        has_concepts = None
         count_index, node_concept = [], []
         edge_kind, geometry, node_counts, edge_counts = [], [], [], []
         nan = [float('nan')] * len(GEOMETRY_FEATURES)
@@ -73,6 +77,9 @@ class GraphIndex:
             part_mask.extend(parts['part_mask'])
             global_mask.extend([False] * n)
             count_index.extend(parts.get('count_index', [0] * n))
+            if has_concepts is not None and has_concepts != ('node_concept' in parts):
+                raise ValueError('graphs with and without node concepts in one index')
+            has_concepts = 'node_concept' in parts
             node_concept.extend(parts.get('node_concept', [NO_CONCEPT] * n))
             added = list(parts.get('added_edges', ()))
             if parts.get('global_node'):
@@ -94,7 +101,8 @@ class GraphIndex:
             node_counts.append(n + bool(parts.get('global_node')))
             edge_counts.append(len(edges))
         as_int = lambda values: np.asarray(values, dtype=np.int64)  # noqa: E731
-        return cls(node_counts, edge_counts, node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
+        return cls(node_counts, edge_counts, has_concepts=bool(has_concepts),
+                   node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
                    global_mask=np.asarray(global_mask, dtype=bool), count_index=np.asarray(count_index, dtype=np.int8),
                    node_concept=np.asarray(node_concept, dtype=np.int32),
                    edge_src=as_int(edge_src), edge_dst=as_int(edge_dst),
@@ -115,12 +123,14 @@ class GraphIndex:
         edges = _flat_positions(self.edge_start[indices], edge_counts)
         fields = {k: self.fields[k][nodes] for k in self.NODE_FIELDS}
         fields.update({k: self.fields[k][edges] for k in self.EDGE_FIELDS})
-        return GraphIndex(node_counts, edge_counts, **fields)
+        return GraphIndex(node_counts, edge_counts, has_concepts=self.has_concepts, **fields)
 
     @staticmethod
     def concat(items):
+        if len({i.has_concepts for i in items}) > 1:
+            raise ValueError('graphs with and without node concepts in one index')
         return GraphIndex(np.concatenate([i.node_counts for i in items]), np.concatenate([i.edge_counts for i in items]),
-                          **{k: np.concatenate([i.fields[k] for i in items])
+                          has_concepts=items[0].has_concepts, **{k: np.concatenate([i.fields[k] for i in items])
                              for k in GraphIndex.NODE_FIELDS + GraphIndex.EDGE_FIELDS})
 
     def to_batch(self, table, device):
@@ -143,7 +153,7 @@ class GraphIndex:
                            edge_geometry=to(geometry) if len(geometry) and np.isfinite(geometry[:, 0]).any() else None,
                            global_mask=to(self.fields['global_mask']) if has_global else None,
                            count_index=to(self.fields['count_index'].astype(np.int64)),
-                           node_concept=to(self.fields['node_concept'].astype(np.int64)))
+                           node_concept=to(self.fields['node_concept'].astype(np.int64)) if self.has_concepts else None)
 
 
 def attach_count_buckets(graphs, counts):
@@ -191,12 +201,12 @@ class GraphStore:
             path = self.base / self.cfg['paths']['count_buckets']
             self.input_paths.append(path)
             attach_count_buckets(self.graphs, json.loads(path.read_text(encoding='utf-8')))
-        self.concept_vocab = None
+        self.concept_vocab, self.concept_folder, self.scene_terms = None, None, False
         if self.cfg['paths'].get('concepts'):
-            # Data version concept_v1 (scripts/build_concept_data.py): node concepts, and fixed scene terms if built.
-            concepts = self.base / self.cfg['paths']['concepts']
-            self.input_paths.append(concepts / 'concepts.json')
-            self.concept_vocab = ConceptVocab.load(concepts)
+            # Data version concept_v1 (scripts/build_concept_data.py): node concepts; scene terms via use_scene_terms.
+            self.concept_folder = self.base / self.cfg['paths']['concepts']
+            self.input_paths.append(self.concept_folder / 'concepts.json')
+            self.concept_vocab = ConceptVocab.load(self.concept_folder)
         processed = self.base / self.cfg['paths']['processed']
         for split in splits:
             query_path = processed / f'query_graphs_{split}.json'
@@ -207,8 +217,6 @@ class GraphStore:
             with np.load(path, allow_pickle=False) as data:
                 self.arrays[split] = {key: data[key] for key in ('caption_ids', 'gold', 'candidate_ids',
                                                                'clip_scores', 'gold_rank', 'group_index')}
-            if self.concept_vocab is not None:
-                self._load_terms(split)
         self.caption_location = {str(cid): (split, row) for split, arrays in self.arrays.items()
                                  for row, cid in enumerate(arrays['caption_ids'])}
         for split in splits:
@@ -216,11 +224,23 @@ class GraphStore:
         if 'train' in splits:
             self.input_paths.append(self.base / self.cfg['paths']['splits'] / 'vg_coco_train_groups.json')
 
-    def _load_terms(self, split):
-        """Fixed scene terms (captions, K, terms) of a split, row-aligned with its candidates; skipped if not built."""
-        path = self.base / self.cfg['paths']['concepts'] / f'terms_{split}.npz'
-        if not path.exists():
+    def use_scene_terms(self):
+        """Load the fixed scene terms of every loaded split; every batch then carries them as batch['terms']."""
+        if self.scene_terms:
             return
+        if self.concept_folder is None:
+            raise ValueError('scene terms need a data configuration with paths.concepts (configs/concept_v1.yaml)')
+        for split in self.arrays:
+            self._load_terms(split)
+        self.scene_terms = True
+
+    def _load_terms(self, split):
+        """Fixed scene terms (captions, K, terms) of a split, row-aligned with its candidates."""
+        path = self.concept_folder / f'terms_{split}.npz'
+        if not path.exists():
+            # scripts/build_concept_data.py writes train and val only; test terms need the test image graphs, which
+            # are packaged only before the one-time final evaluation.
+            raise FileNotFoundError(f'{path} is missing: build it with scripts/build_concept_data.py')
         self.input_paths.append(path)
         arrays = self.arrays[split]
         with np.load(path, allow_pickle=False) as data:
@@ -371,7 +391,10 @@ class GraphStore:
         queries = self.query_index.select([self.query_position[cid] for cid in caption_ids])
         sentence_rows = [self.caption_row[cid] for cid in caption_ids]
         extra = {}
-        if all('terms' in self.arrays[split] for split, _ in locations):
+        if getattr(self, 'scene_terms', False):
+            if replaced:
+                # Terms are precomputed from the stored graphs; an overridden graph would keep stale terms.
+                raise ValueError('graph overrides cannot be scored with scene terms')
             extra['terms'] = torch.from_numpy(np.stack([self.arrays[s]['terms'][r] for s, r in locations])).to(device)
         return {**extra, 'queries': queries.to_batch(table, device),
                 'images': images.to_batch(table, device),

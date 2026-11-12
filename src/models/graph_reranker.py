@@ -491,9 +491,13 @@ class GraphReranker(nn.Module):
         else:
             fused, details = fuse_tensor(batch['clip'], objects, triples, weights, self.options['zscore_floor'] or (0., 0., 0.))
         if self.options['scene_terms']:
-            # sum_t d_t T_t over the fixed terms, already divided by their train scale; part of the graph score.
+            if 'terms' not in batch:
+                raise ValueError("scene_terms needs batches with 'terms': call GraphStore.use_scene_terms()")
+            # sum_t d_t T_t over the fixed terms, already divided by their train scale; part of the graph score, so
+            # it enters fused with the graph's weight: 1 in the raw fusion, 1 - a in the z-score fusion.
             terms = (batch['terms'] * self.term_weights).sum(-1)
-            fused = fused + terms
+            graph_weight = 1. if self.options['fusion'] == 'raw' else 1 - weights[:, :1]
+            fused = fused + graph_weight * terms
             details.update(graph=details['graph'] + terms, terms=terms)
         details.update(objects=objects, triples=triples, fused=fused, **pooled, **counts)
         if return_encoded:
