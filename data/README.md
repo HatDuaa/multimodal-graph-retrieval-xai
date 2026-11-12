@@ -75,3 +75,32 @@ Script `scripts/build_graph_data.py` sinh đồ thị không lọc VG150, đồ 
 | `data/processed/candidates_val.npz` | TODO(run) | TODO(run) |
 
 Visual Genome `attributes.json.zip` (SHA-256 `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7`, 83 280 561 bytes) được tải bởi `scripts/download_data.py` để bổ sung thuộc tính màu/kích thước cho phép thử. File giải nén khoảng 0,46 GB và không commit.
+
+## Gói dữ liệu concept_v1 (các option scene-ranker)
+
+Gói này phục vụ hai option `--concept-gat` và `--scene-terms` của `src/train_graph_reranker.py` (xem `docs/scene-ranker.html`).
+Nó dùng nguyên dữ liệu của `count_v1`, rồi ghi thêm vào `data/graphs/concept_v1/`.
+Mọi thứ trong gói chỉ fit trên train: từ vựng concept, cạnh đồng xuất hiện, IDF và thang chia của các term.
+Val chỉ được tính term, còn test không bị đọc.
+
+```bash
+python scripts/build_concept_data.py --config configs/concept_v1.yaml
+```
+
+Đầu vào cần có sẵn:
+
+- Dữ liệu của `count_v1` (xem `configs/count_v1.yaml`).
+- `data/raw/visual_genome/{objects,relationships,attributes}.json`, do `scripts/download_data.py` tải.
+- WordNet của NLTK (`python -c "import nltk; nltk.download('wordnet')"`).
+- ConceptNet 5.7 (`conceptnet-assertions-5.7.0.csv.gz`, khoảng 475 MB). Script tự tải vào `data/raw/conceptnet/` nếu chưa có.
+
+| File | Nội dung |
+|---|---|
+| `concepts.json` | Tên concept, synset WordNet, số ảnh train, tên loại cạnh |
+| `concept_graph.npz` | Vector CLIP text của từng concept và các cạnh có loại, có trọng số |
+| `image_attributes.json` | Thuộc tính VG của từng node ảnh train/val, theo thứ tự node của `merge_v1` |
+| `attribute_texts.npy` + `.ids.json` | Vector CLIP text của mọi chuỗi "thuộc tính + nhãn" |
+| `terms_train.npz`, `terms_val.npz` | 4 term cố định của từng cặp (caption, ứng viên), khớp từng hàng với `candidates_<split>.npz` |
+| `MANIFEST.json` | Thiết lập, số lượng, thang chia term, SHA-256 đầu vào |
+
+Gói chưa được dựng lần nào, nên chưa có kích thước và SHA-256; khi dựng xong thì đưa lên Drive theo đúng cấu trúc thư mục trên.

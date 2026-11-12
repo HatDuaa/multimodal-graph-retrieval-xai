@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from src.graph.concepts import NO_CONCEPT, SCENE_TERMS, ConceptVocab
 from src.graph.soft_match import PRONOUNS
 from src.graph.structure import GEOMETRY_FEATURES, completion_edges, edge_geometry
 from src.utils.config import REPO_ROOT, load_config
@@ -34,6 +35,8 @@ class PackedBatch:
     global_mask: torch.Tensor | None = None
     # Count bucket (image nodes) or count class (caption nodes) per node, src/graph/counts.py; 0 when unknown.
     count_index: torch.Tensor | None = None
+    # Concept of every node (src/graph/concepts.py), NO_CONCEPT when its label links to none or without concepts.
+    node_concept: torch.Tensor | None = None
 
 
 def _flat_positions(starts, counts):
@@ -45,11 +48,14 @@ def _flat_positions(starts, counts):
 class GraphIndex:
     """Many small graphs as flat int arrays: part-table rows per node / relation / triple and local edges."""
 
-    NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask', 'count_index')
+    NODE_FIELDS = ('node_rows', 'part_mask', 'global_mask', 'count_index', 'node_concept')
     EDGE_FIELDS = ('edge_src', 'edge_dst', 'relation_rows', 'triple_rows', 'edge_kind', 'edge_geometry')
 
-    def __init__(self, node_counts, edge_counts, **fields):
+    def __init__(self, node_counts, edge_counts, has_concepts=False, **fields):
         self.node_counts = np.asarray(node_counts, dtype=np.int64)
+        # True when the parts carried node_concept (a store with concepts); otherwise batches carry None, so a model
+        # built with concept_gat fails loudly instead of reading NO_CONCEPT everywhere.
+        self.has_concepts = has_concepts
         self.edge_counts = np.asarray(edge_counts, dtype=np.int64)
         self.fields = fields
         self.node_start = np.cumsum(self.node_counts) - self.node_counts
@@ -61,7 +67,8 @@ class GraphIndex:
     @classmethod
     def build(cls, parts_list, part_row):
         node_rows, part_mask, global_mask, edge_src, edge_dst, relation_rows, triple_rows = [], [], [], [], [], [], []
-        count_index = []
+        has_concepts = None
+        count_index, node_concept = [], []
         edge_kind, geometry, node_counts, edge_counts = [], [], [], []
         nan = [float('nan')] * len(GEOMETRY_FEATURES)
         for parts in parts_list:
@@ -70,6 +77,10 @@ class GraphIndex:
             part_mask.extend(parts['part_mask'])
             global_mask.extend([False] * n)
             count_index.extend(parts.get('count_index', [0] * n))
+            if has_concepts is not None and has_concepts != ('node_concept' in parts):
+                raise ValueError('graphs with and without node concepts in one index')
+            has_concepts = 'node_concept' in parts
+            node_concept.extend(parts.get('node_concept', [NO_CONCEPT] * n))
             added = list(parts.get('added_edges', ()))
             if parts.get('global_node'):
                 # Its vector is set by the model (mean of the graph's node vectors); row 0 is a placeholder.
@@ -77,6 +88,7 @@ class GraphIndex:
                 part_mask.append(False)
                 global_mask.append(True)
                 count_index.append(0)
+                node_concept.append(NO_CONCEPT)
                 added += [(n, i, EDGE_GLOBAL) for i in range(n)] + [(i, n, EDGE_GLOBAL) for i in range(n)]
             edges = [(e[0], e[1]) for e in labelled] + [(e[0], e[1]) for e in added]
             edge_src.extend(e[0] for e in edges)
@@ -89,8 +101,10 @@ class GraphIndex:
             node_counts.append(n + bool(parts.get('global_node')))
             edge_counts.append(len(edges))
         as_int = lambda values: np.asarray(values, dtype=np.int64)  # noqa: E731
-        return cls(node_counts, edge_counts, node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
+        return cls(node_counts, edge_counts, has_concepts=bool(has_concepts),
+                   node_rows=as_int(node_rows), part_mask=np.asarray(part_mask, dtype=bool),
                    global_mask=np.asarray(global_mask, dtype=bool), count_index=np.asarray(count_index, dtype=np.int8),
+                   node_concept=np.asarray(node_concept, dtype=np.int32),
                    edge_src=as_int(edge_src), edge_dst=as_int(edge_dst),
                    relation_rows=as_int(relation_rows), triple_rows=as_int(triple_rows),
                    edge_kind=np.asarray(edge_kind, dtype=np.int8),
@@ -109,12 +123,14 @@ class GraphIndex:
         edges = _flat_positions(self.edge_start[indices], edge_counts)
         fields = {k: self.fields[k][nodes] for k in self.NODE_FIELDS}
         fields.update({k: self.fields[k][edges] for k in self.EDGE_FIELDS})
-        return GraphIndex(node_counts, edge_counts, **fields)
+        return GraphIndex(node_counts, edge_counts, has_concepts=self.has_concepts, **fields)
 
     @staticmethod
     def concat(items):
+        if len({i.has_concepts for i in items}) > 1:
+            raise ValueError('graphs with and without node concepts in one index')
         return GraphIndex(np.concatenate([i.node_counts for i in items]), np.concatenate([i.edge_counts for i in items]),
-                          **{k: np.concatenate([i.fields[k] for i in items])
+                          has_concepts=items[0].has_concepts, **{k: np.concatenate([i.fields[k] for i in items])
                              for k in GraphIndex.NODE_FIELDS + GraphIndex.EDGE_FIELDS})
 
     def to_batch(self, table, device):
@@ -136,7 +152,8 @@ class GraphIndex:
                            labelled_index=None if every_edge_labelled else to(np.flatnonzero(labelled)),
                            edge_geometry=to(geometry) if len(geometry) and np.isfinite(geometry[:, 0]).any() else None,
                            global_mask=to(self.fields['global_mask']) if has_global else None,
-                           count_index=to(self.fields['count_index'].astype(np.int64)))
+                           count_index=to(self.fields['count_index'].astype(np.int64)),
+                           node_concept=to(self.fields['node_concept'].astype(np.int64)) if self.has_concepts else None)
 
 
 def attach_count_buckets(graphs, counts):
@@ -184,6 +201,12 @@ class GraphStore:
             path = self.base / self.cfg['paths']['count_buckets']
             self.input_paths.append(path)
             attach_count_buckets(self.graphs, json.loads(path.read_text(encoding='utf-8')))
+        self.concept_vocab, self.concept_folder, self.scene_terms = None, None, False
+        if self.cfg['paths'].get('concepts'):
+            # Data version concept_v1 (scripts/build_concept_data.py): node concepts; scene terms via use_scene_terms.
+            self.concept_folder = self.base / self.cfg['paths']['concepts']
+            self.input_paths.append(self.concept_folder / 'concepts.json')
+            self.concept_vocab = ConceptVocab.load(self.concept_folder)
         processed = self.base / self.cfg['paths']['processed']
         for split in splits:
             query_path = processed / f'query_graphs_{split}.json'
@@ -201,6 +224,33 @@ class GraphStore:
         if 'train' in splits:
             self.input_paths.append(self.base / self.cfg['paths']['splits'] / 'vg_coco_train_groups.json')
 
+    def use_scene_terms(self):
+        """Load the fixed scene terms of every loaded split; every batch then carries them as batch['terms']."""
+        if self.scene_terms:
+            return
+        if self.concept_folder is None:
+            raise ValueError('scene terms need a data configuration with paths.concepts (configs/concept_v1.yaml)')
+        for split in self.arrays:
+            self._load_terms(split)
+        self.scene_terms = True
+
+    def _load_terms(self, split):
+        """Fixed scene terms (captions, K, terms) of a split, row-aligned with its candidates."""
+        path = self.concept_folder / f'terms_{split}.npz'
+        if not path.exists():
+            # scripts/build_concept_data.py writes train and val only; test terms need the test image graphs, which
+            # are packaged only before the one-time final evaluation.
+            raise FileNotFoundError(f'{path} is missing: build it with scripts/build_concept_data.py')
+        self.input_paths.append(path)
+        arrays = self.arrays[split]
+        with np.load(path, allow_pickle=False) as data:
+            if list(data['names']) != list(SCENE_TERMS):
+                raise ValueError(f'{path} holds terms {list(data["names"])}, expected {list(SCENE_TERMS)}')
+            if not np.array_equal(data['caption_ids'], arrays['caption_ids']) or \
+                    not np.array_equal(data['candidate_ids'], arrays['candidate_ids']):
+                raise ValueError(f'{path} is not row-aligned with the {split} candidates')
+            arrays['terms'] = np.ascontiguousarray(data['terms'], dtype=np.float32)
+
     def _table(self, stem):
         self.input_paths.extend([stem.with_suffix('.npy'), stem.with_suffix('.ids.json')])
         meta = json.loads(stem.with_suffix('.ids.json').read_text(encoding='utf-8'))
@@ -208,12 +258,13 @@ class GraphStore:
         return vectors, {key: row for row, key in enumerate(meta['ids'])}
 
     @staticmethod
-    def _graph_parts(graph, query=False, knn_edges=0, global_node=False):
+    def _graph_parts(graph, query=False, knn_edges=0, global_node=False, concepts=None):
         """Labels, labelled edges and part mask of one graph.
 
         Image graphs with a box per object (data version merge_v1) also get the box geometry of every edge, and with
         knn_edges > 0 the completion edges (src/graph/structure.py); global_node adds one node linked both ways to
-        every node. Added edges are listed in added_edges as (source, target, kind), after the labelled ones.
+        every node. Added edges are listed in added_edges as (source, target, kind), after the labelled ones. With a
+        ConceptVocab, node_concept holds the concept of every node label.
         """
         # Keep empty image labels: instance_parts in the reference includes them.
         objects = graph['objects']
@@ -235,6 +286,8 @@ class GraphStore:
                      relation_indices=relation_indices,
                      part_mask=[bool(obj['name']) if query else True for obj in kept],
                      count_index=[int(obj.get('count_class' if query else 'count_bucket', 0)) for obj in kept])
+        if concepts is not None:
+            parts['node_concept'] = [concepts.concept_of(obj['name']) for obj in kept]
         boxes = [obj.get('box') for obj in kept]
         has_boxes = not query and all(box is not None for box in boxes)
         if knn_edges and not query:
@@ -253,7 +306,8 @@ class GraphStore:
     def graph_parts(self, graph, query=False):
         """_graph_parts with this store's structure options."""
         structure = getattr(self, 'structure', STRUCTURE_DEFAULTS)
-        return self._graph_parts(graph, query, knn_edges=structure['knn_edges'], global_node=structure['global_node'])
+        return self._graph_parts(graph, query, knn_edges=structure['knn_edges'], global_node=structure['global_node'],
+                                 concepts=getattr(self, 'concept_vocab', None))
 
     def set_structure(self, knn_edges=0, global_node=False):
         """Change the structure options; the indexes are rebuilt on the next batch if they changed."""
@@ -336,7 +390,13 @@ class GraphStore:
         candidate_index = np.array([order[int(i)] for i in unique], dtype=np.int64)[inverse.reshape(candidates.shape)]
         queries = self.query_index.select([self.query_position[cid] for cid in caption_ids])
         sentence_rows = [self.caption_row[cid] for cid in caption_ids]
-        return {'queries': queries.to_batch(table, device),
+        extra = {}
+        if getattr(self, 'scene_terms', False):
+            if replaced:
+                # Terms are precomputed from the stored graphs; an overridden graph would keep stale terms.
+                raise ValueError('graph overrides cannot be scored with scene terms')
+            extra['terms'] = torch.from_numpy(np.stack([self.arrays[s]['terms'][r] for s, r in locations])).to(device)
+        return {**extra, 'queries': queries.to_batch(table, device),
                 'images': images.to_batch(table, device),
                 'candidate_index': torch.from_numpy(candidate_index).to(device),
                 'candidate_ids': candidates, 'image_ids': np.array(stored + replaced, dtype=np.int64),
