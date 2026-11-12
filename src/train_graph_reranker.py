@@ -24,8 +24,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data.graph_store import GraphStore
 from src.eval.metrics import evaluate
-from src.models.graph_reranker import FUSIONS, TRIPLE_MATCHES, GraphReranker
-from src.utils.config import load_config, resolve
+from src.graph.concepts import SCENE_TERMS, load_concept_graph
+from src.models.graph_reranker import FUSIONS, PART_MATCHES, TRIPLE_MATCHES, GraphReranker
+from src.utils.config import REPO_ROOT, load_config, resolve
 from src.utils.seed import set_seed
 
 try:
@@ -72,12 +73,19 @@ def lambda_mrr_loss(scores, target):
     return (pair.sum(-1) / weights.sum(-1).clamp_min(1e-12)).mean()
 
 
-def batch_loss(model, store, caption_ids, device, loss="cross_entropy"):
+def batch_loss(model, store, caption_ids, device, loss="cross_entropy", graph_loss_weight=0.):
+    """Loss of the fused score, plus graph_loss_weight x CE of the graph score alone (CLIP left out), so the graph
+    must rank the gold image on its own instead of only correcting CLIP."""
     batch = store.batch(caption_ids, device)
-    scores, _ = model(batch)
+    scores, details = model(batch)
     if loss == "lambda_mrr":
-        return lambda_mrr_loss(scores / model.loss_temperature(), batch['target'])
-    return F.cross_entropy(scores / model.loss_temperature(), batch['target'])
+        value = lambda_mrr_loss(scores / model.loss_temperature(), batch['target'])
+    else:
+        value = F.cross_entropy(scores / model.loss_temperature(), batch['target'])
+    if graph_loss_weight:
+        graph = details['graph'] / model.graph_temperature()
+        value = value + graph_loss_weight * F.cross_entropy(graph, batch['target'])
+    return value
 
 
 @torch.no_grad()
@@ -98,6 +106,11 @@ def evaluate_val(model, store, arrays, device, batch_size=256):
     metrics["tau_objects"] = float(model.tau_objects())
     metrics["tau_triples"] = float(model.tau_triples())
     metrics["temperature"] = float(model.loss_temperature())
+    for name in ("dustbin_objects", "dustbin_triples"):
+        if hasattr(model, name):
+            metrics[name] = float(getattr(model, name))
+    if hasattr(model, "term_weights"):
+        metrics["term_weights"] = dict(zip(SCENE_TERMS, model.term_weights.tolist(), strict=True))
     return metrics
 
 
@@ -120,6 +133,15 @@ def save_atomic(payload, path: Path):
     os.replace(tmp, path)
 
 
+def concept_graph(options):
+    """The concept graph of a run with --concept-gat, from its data configuration's paths.concepts."""
+    config = options.get("config")
+    cfg = load_config(REPO_ROOT / config if config else None)
+    if not cfg["paths"].get("concepts"):
+        raise ValueError("--concept-gat needs a data configuration with paths.concepts (configs/concept_v1.yaml)")
+    return load_concept_graph(REPO_ROOT / cfg["paths"]["concepts"])
+
+
 def build_model(options, device):
     """GraphReranker from run flags (argparse namespace or config.json args); older runs lack the newer flags."""
     options = options if isinstance(options, dict) else vars(options)
@@ -131,7 +153,12 @@ def build_model(options, device):
                          zscore_floor=options.get("zscore_floor"), edge_geometry=options.get("edge_geometry", False),
                          completion_edges=options.get("knn_edges", 0) > 0,
                          global_node=options.get("global_node", False),
-                         count_table=options.get("count_table", False)).to(device)
+                         count_table=options.get("count_table", False),
+                         part_match=options.get("part_match", "softmax"),
+                         sinkhorn_iterations=options.get("sinkhorn_iterations", 20),
+                         graph_loss=options.get("graph_loss_weight", 0.) > 0,
+                         concept_graph=concept_graph(options) if options.get("concept_gat") else None,
+                         scene_terms=len(SCENE_TERMS) if options.get("scene_terms") else 0).to(device)
 
 
 def structure_options(options):
@@ -190,6 +217,18 @@ def build_parser():
                         help="Add one global node per graph (image and sentence) linked both ways to every node.")
     parser.add_argument("--count-table", action=argparse.BooleanOptionalAction, default=False,
                         help="Add a learned g[caption count class, image count bucket] to object-channel similarities.")
+    parser.add_argument("--part-match", choices=PART_MATCHES, default="softmax",
+                        help="softmax: each caption part attends over the candidate's parts; sinkhorn: a transport "
+                             "plan, one unit per image part, with a learned dustbin score.")
+    parser.add_argument("--sinkhorn-iterations", type=int, default=20)
+    parser.add_argument("--graph-loss-weight", type=float, default=0.,
+                        help="Add this weight x the cross-entropy of the graph score alone (without CLIP).")
+    parser.add_argument("--concept-gat", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add the relational-GAT vector of each node's concept to its input "
+                             "(needs paths.concepts).")
+    parser.add_argument("--scene-terms", action=argparse.BooleanOptionalAction, default=False,
+                        help="Add the fixed scene terms (attributes, attributes_soft, salience, soft_objects) to the "
+                             "graph score with learned weights (needs terms_<split>.npz under paths.concepts).")
     parser.add_argument("--runs-root", default="level1/gat",
                         help="Run directory parent, relative to the experiments path.")
     parser.add_argument("--rewire-seed", type=int,
@@ -216,7 +255,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
     decay, no_decay = [], []
     for name, parameter in model.named_parameters():
         if name.startswith("weight_map") and not args.adaptive_weights: continue
-        (no_decay if name.startswith(("log_tau", "log_temperature", "weight_bias")) else decay).append(parameter)
+        no_decay_names = ("log_tau", "log_temperature", "log_graph_temperature", "weight_bias", "dustbin_")
+        (no_decay if name.startswith(no_decay_names) else decay).append(parameter)
     optimizer = torch.optim.AdamW([{"params": decay, "weight_decay": 1e-4}, {"params": no_decay, "weight_decay": 0}], lr=args.lr)
     log = run_dir / "log.jsonl"
     best, stale, best_metrics, last_metrics, start_epoch = -1.0, 0, None, None, 1
@@ -269,7 +309,7 @@ def train(args, store, run_dir: Path, device, cfg=None):
             for micro_start in range(0, len(batch), micro):
                 part = batch[micro_start:micro_start + micro]
                 loss = batch_loss(model, store, [caption_id for _, caption_id in part], device,
-                                  getattr(args, "loss", "cross_entropy"))
+                                  getattr(args, "loss", "cross_entropy"), getattr(args, "graph_loss_weight", 0.))
                 (loss * (len(part) / len(batch))).backward()
                 del loss
             optimizer.step()

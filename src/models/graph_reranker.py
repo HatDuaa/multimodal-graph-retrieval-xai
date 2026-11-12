@@ -1,5 +1,6 @@
 """Shared PyG encoder and differentiable three-channel graph reranking."""
 import math
+from functools import partial
 
 import torch
 from torch import nn
@@ -8,6 +9,11 @@ from torch.utils.checkpoint import checkpoint
 from torch_geometric.data import Batch
 from torch_geometric.nn import GATv2Conv
 from torch_geometric.utils import to_dense_batch
+
+from src.models.concept_gat import ConceptGAT
+
+# Log-domain stand-in for -inf in the Sinkhorn plan: finite, so masked rows and columns never produce nan.
+NEG = -1e4
 
 
 def zscore_tensor(values, eps=1e-6, floor=0.):
@@ -74,6 +80,37 @@ def masked_softmax(logits, mask, dim):
     return torch.softmax(masked, dim) * mask
 
 
+def sinkhorn_plan(sims, row_mask, column_mask, tau, dustbin, iterations):
+    """Transport plan (..., R, C) of R caption parts onto C image parts, with one dustbin row and one dustbin column.
+
+    Every valid row (caption part) sends one unit of mass and every valid column (image part) receives at most one,
+    so several caption parts cannot all lean on the same image part. Mass a row cannot place goes to the dustbin,
+    whose score is ``dustbin`` in similarity units; invalid rows and columns get no mass. Log-domain iterations as in
+    SuperGlue (Sarlin et al., 2020). sims is (..., R, C), row_mask (..., R) and column_mask (..., C).
+    """
+    rows = row_mask.sum(-1).to(sims.dtype)
+    columns = column_mask.sum(-1).to(sims.dtype)
+    log_total = (rows + columns).clamp_min(1).log()
+    pair = row_mask[..., :, None] & column_mask[..., None, :]
+    logits = (sims / tau).masked_fill(~pair, NEG)
+    bin_logit = (dustbin / tau).expand(sims.shape[:-2])[..., None, None]
+    right = bin_logit.expand(*sims.shape[:-1], 1).masked_fill(~row_mask[..., :, None], NEG)
+    bottom = bin_logit.expand(*sims.shape[:-2], 1, sims.shape[-1]).masked_fill(~column_mask[..., None, :], NEG)
+    full = torch.cat((torch.cat((logits, right), -1), torch.cat((bottom, bin_logit), -1)), -2)
+    # Row marginals: 1 per valid row and the columns' total for the dustbin row; columns symmetric; all divided by
+    # rows + columns.
+    log_mu = torch.cat((torch.where(row_mask, 0., NEG) - log_total[..., None],
+                        (columns.clamp_min(1e-9).log() - log_total)[..., None]), -1)
+    log_nu = torch.cat((torch.where(column_mask, 0., NEG) - log_total[..., None],
+                        (rows.clamp_min(1e-9).log() - log_total)[..., None]), -1)
+    u, v = torch.zeros_like(log_mu), torch.zeros_like(log_nu)
+    for _ in range(iterations):
+        u = log_mu - torch.logsumexp(full + v[..., None, :], -1)
+        v = log_nu - torch.logsumexp(full + u[..., :, None], -2)
+    plan = (full + u[..., :, None] + v[..., None, :] + log_total[..., None, None]).exp()
+    return plan[..., :-1, :-1] * pair
+
+
 def slot_similarity(cos):
     """Map a per-slot cosine into [0, 1]: smooth everywhere, so no slot loses its gradient (unlike relu)."""
     return (1 + cos) / 2
@@ -113,16 +150,22 @@ def count_bias(table, query_class, image_class, candidate_index):
 
 
 def channel_score(query, query_mask, images, image_mask, candidate_index, tau, u, query_class=None, image_class=None,
-                  table=None):
+                  table=None, match="softmax", dustbin=None, iterations=20):
     """Match all B x K pairs together; no loop or materialized feature cache per candidate.
 
     With a count table, sim_ij + table[class_i, bucket_j] replaces sim_ij in both the attention and the score.
+    match="softmax" lets every caption part attend over all parts of the candidate (several may share one image
+    part); match="sinkhorn" replaces the attention by the transport plan of sinkhorn_plan, with a dustbin score.
     """
     masks = image_mask[candidate_index]
     sims = part_similarity(query, images, candidate_index)
     if table is not None:
         sims = sims + count_bias(table, query_class, image_class, candidate_index)
-    attention = masked_softmax(sims / tau, masks[:, :, None, :], -1)
+    if match == "sinkhorn":
+        rows = query_mask[:, None, :].expand(-1, masks.shape[1], -1)
+        attention = sinkhorn_plan(sims, rows, masks, tau, dustbin, iterations)
+    else:
+        attention = masked_softmax(sims / tau, masks[:, :, None, :], -1)
     per_part = (attention * sims).sum(-1)
     weights = masked_softmax(part_summary(query) @ u, query_mask, -1)
     scores = (weights[:, None, :] * per_part).sum(-1)
@@ -155,6 +198,7 @@ def dense_counts(graphs, width):
 
 TRIPLE_MATCHES = ("phrase", "factorized")
 FUSIONS = ("zscore", "raw")
+PART_MATCHES = ("softmax", "sinkhorn")
 
 
 class GraphReranker(nn.Module):
@@ -176,14 +220,26 @@ class GraphReranker(nn.Module):
       learned "[global]" predicate vector; it is not an object for the object channel.
     - count_table: a learned table g[caption count class, image count bucket] (src/graph/counts.py), zero at start,
       added to every node pair similarity of the object channel; the row of unknown caption counts stays 0.
+    Scene-ranker options (docs/scene-ranker.html); all off by default, and each starts at step 0 from the model
+    without it except part_match:
+    - part_match="sinkhorn": both channels match parts with sinkhorn_plan (one unit per image part, a learned dustbin
+      score per channel) instead of a softmax attention; the channel temperatures start at 0.02.
+    - graph_loss: a learned temperature for the graph-only loss, CE(graph / T_graph); the training script weights it.
+    - concept_graph: a commonsense concept graph (src/graph/concepts.py). A relational GAT encodes its concepts, and
+      each node whose label links to a concept adds a projection of that concept vector, zero at start, to its input.
+    - scene_terms: number of fixed scene terms per (caption, candidate) in batch['terms'] (scaled offline), added to
+      the graph score with learned weights d, zero at start.
     record_attention = True keeps the GAT attention of the last encode calls in self.attention.
     """
 
     def __init__(self, adaptive_weights=True, use_gat=True, use_triple_channel=True,
                  use_edges=True, query_graph_encoder=True, dropout=0.1, triple_match="phrase", graph_channel=False,
                  fusion="zscore", fusion_scale=None, zscore_floor=None, edge_geometry=False, completion_edges=False,
-                 global_node=False, count_table=False):
+                 global_node=False, count_table=False, part_match="softmax", sinkhorn_iterations=20, graph_loss=False,
+                 concept_graph=None, scene_terms=0):
         super().__init__()
+        if part_match not in PART_MATCHES:
+            raise ValueError(f"part_match must be one of {PART_MATCHES}")
         if fusion not in FUSIONS:
             raise ValueError(f"fusion must be one of {FUSIONS}")
         if zscore_floor is not None and fusion != "zscore":
@@ -197,7 +253,9 @@ class GraphReranker(nn.Module):
                             query_graph_encoder=query_graph_encoder, dropout=dropout,
                             triple_match=triple_match, graph_channel=graph_channel, fusion=fusion,
                             fusion_scale=fusion_scale, zscore_floor=zscore_floor, edge_geometry=edge_geometry,
-                            completion_edges=completion_edges, global_node=global_node, count_table=count_table)
+                            completion_edges=completion_edges, global_node=global_node, count_table=count_table,
+                            part_match=part_match, sinkhorn_iterations=sinkhorn_iterations, graph_loss=graph_loss,
+                            concept_gat=concept_graph is not None, scene_terms=scene_terms)
         self.p_node = nn.Linear(512, 256)
         self.p_edge = nn.Linear(512, 256)
         self.gat1 = GATv2Conv(256, 64, heads=4, edge_dim=256, fill_value=0., dropout=dropout)
@@ -237,21 +295,70 @@ class GraphReranker(nn.Module):
             from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS
             # Known caption classes only; the unknown row is prepended as a constant 0 in counts_table().
             self.count_table = nn.Parameter(torch.zeros(len(CAPTION_CLASSES) - 1, len(IMAGE_BUCKETS)))
+        if part_match == "sinkhorn":
+            # Values of the B/32 scene ranker (docs/scene-ranker.html): a sharp plan and a dustbin that a part takes
+            # unless some image part is closer than cosine 0.85.
+            with torch.no_grad():
+                self.log_tau_objects.fill_(math.log(.02))
+                self.log_tau_triples.fill_(math.log(.02))
+            self.dustbin_objects = nn.Parameter(torch.tensor(.85))
+            self.dustbin_triples = nn.Parameter(torch.tensor(.85))
+        if graph_loss:
+            # Same start as the fused loss's temperature, so both losses begin on one scale.
+            self.log_graph_temperature = nn.Parameter(self.log_temperature.detach().clone())
+        if concept_graph is not None:
+            self.concept_gat = ConceptGAT(concept_graph, hidden=256)
+            # Zero init: step 0 equals the model without concepts.
+            self.concept_project = nn.Linear(256, 256)
+            nn.init.zeros_(self.concept_project.weight)
+            nn.init.zeros_(self.concept_project.bias)
+        if scene_terms:
+            self.term_weights = nn.Parameter(torch.zeros(scene_terms))
         self.record_attention, self.attention = False, []
 
     def counts_table(self):
         """g with its fixed zero row for unknown caption counts, (caption classes, image buckets)."""
         return torch.cat((self.count_table.new_zeros((1, self.count_table.shape[1])), self.count_table))
 
+    def tau_floor(self):
+        # The Sinkhorn plan starts at 0.02, so it needs a lower floor than the softmax attention.
+        return .005 if self.options['part_match'] == 'sinkhorn' else .01
+
     def tau_objects(self):
-        return self.log_tau_objects.exp().clamp(.01, 1.)
+        return self.log_tau_objects.exp().clamp(self.tau_floor(), 1.)
 
     def tau_triples(self):
-        return self.log_tau_triples.exp().clamp(.01, 1.)
+        return self.log_tau_triples.exp().clamp(self.tau_floor(), 1.)
+
+    def loss_floor(self):
+        # Raw CLIP cosines differ by about 0.02 inside a top-50, so the raw fusion needs a much lower floor.
+        return .005 if self.options['fusion'] == 'raw' else .05
 
     def loss_temperature(self):
-        # Raw CLIP cosines differ by about 0.02 inside a top-50, so the raw fusion needs a much lower floor.
-        return self.log_temperature.exp().clamp(.005 if self.options['fusion'] == 'raw' else .05, 5.)
+        return self.log_temperature.exp().clamp(self.loss_floor(), 5.)
+
+    def graph_temperature(self):
+        """Temperature of the graph-only loss (graph_loss=True)."""
+        return self.log_graph_temperature.exp().clamp(self.loss_floor(), 5.)
+
+    def concept_vectors(self):
+        """One input vector per concept: the concept GAT output through the zero-initialized projection."""
+        return self.concept_project(self.concept_gat())
+
+    def concept_input(self, graphs, concepts):
+        """Concept vector of every node (zero for nodes without a linked concept), added to p_node."""
+        index = getattr(graphs, "node_concept", None)
+        if index is None:
+            raise ValueError('concept_gat needs batches with node_concept: use a data version with concepts '
+                             '(configs/concept_v1.yaml)')
+        return torch.where((index >= 0)[:, None], concepts[index.clamp_min(0)], 0.)
+
+    def match_options(self, channel):
+        """channel_score keyword arguments of the part matching for 'objects' or 'triples'."""
+        if self.options['part_match'] != 'sinkhorn':
+            return {}
+        return {'match': 'sinkhorn', 'dustbin': getattr(self, f'dustbin_{channel}'),
+                'iterations': self.options['sinkhorn_iterations']}
 
     def set_epoch(self, epoch):
         self.weight_map.requires_grad_(epoch > 1 and self.options['adaptive_weights'])
@@ -286,7 +393,8 @@ class GraphReranker(nn.Module):
         self.attention.append((index.detach(), alpha.detach()))
         return out
 
-    def encode(self, graphs: Batch, query=False):
+    def encode(self, graphs: Batch, query=False, concepts=None):
+        """Encoded nodes and triples of a graph batch; concepts is concept_vectors(), computed here when None."""
         nodes, triples = graphs.x, graphs.triple_f
         global_mask = getattr(graphs, 'global_mask', None)
         kind = getattr(graphs, 'edge_kind', None)
@@ -303,6 +411,8 @@ class GraphReranker(nn.Module):
             src, dst = src[graphs.labelled_index], dst[graphs.labelled_index]
         if not query or self.options['query_graph_encoder']:
             h = self.p_node(nodes)
+            if self.options['concept_gat']:
+                h = h + self.concept_input(graphs, self.concept_vectors() if concepts is None else concepts)
             edge_attr, labelled = self.edge_vectors(graphs)
             if self.options['use_gat']:
                 edges = graphs.edge_index if self.options['use_edges'] else graphs.edge_index[:, :0]
@@ -337,8 +447,10 @@ class GraphReranker(nn.Module):
         return nodes, node_mask, triples, triple_mask
 
     def forward(self, batch, return_encoded=False):
-        queries = self.encode(batch['queries'], query=True)
-        images = self.encode(batch['images'])
+        # The concept GAT runs once per forward and serves both sides.
+        concepts = self.concept_vectors() if self.options['concept_gat'] else None
+        queries = self.encode(batch['queries'], query=True, concepts=concepts)
+        images = self.encode(batch['images'], concepts=concepts)
         return self.match_encoded(batch, queries, images, return_encoded)
 
     def match_encoded(self, batch, queries, images, return_encoded=False):
@@ -349,21 +461,24 @@ class GraphReranker(nn.Module):
                       'count_images': dense_counts(batch['images'], images[0].shape[1]), 'count_table': self.counts_table()}
             args_obj = args_obj + (counts['count_query'], counts['count_images'], counts['count_table'])
         args_tri = (queries[2], queries[3], images[2], images[3], batch['candidate_index'], self.tau_triples(), self.u_triples)
+        score_objects = partial(channel_score, **self.match_options('objects'))
+        score_triples = partial(channel_score, **self.match_options('triples'))
         pooled = {}
         if self.options['graph_channel']:
             # The third channel ("triples" in fuse_tensor and details) is the graph-level score here.
             query_graph, pooled['pool_query'] = attention_pool(queries[0], queries[1], self.u_pool_query)
             image_graph, pooled['pool_image'] = attention_pool(images[0], images[1], self.u_pool_image)
-            objects = checkpoint(channel_score, *args_obj, use_reentrant=False) if self.training else channel_score(*args_obj)
+            objects = (checkpoint(score_objects, *args_obj, use_reentrant=False) if self.training
+                       else score_objects(*args_obj))
             triples = graph_level_score(query_graph, queries[1], image_graph, images[1], batch['candidate_index'])
             pooled.update(graph_query=query_graph, graph_images=image_graph)
         elif self.training:
-            objects = checkpoint(channel_score, *args_obj, use_reentrant=False)
+            objects = checkpoint(score_objects, *args_obj, use_reentrant=False)
             # Factorized slots are already checkpointed one by one inside part_similarity.
-            triples = (channel_score(*args_tri) if self.options['triple_match'] == 'factorized'
-                       else checkpoint(channel_score, *args_tri, use_reentrant=False))
+            triples = (score_triples(*args_tri) if self.options['triple_match'] == 'factorized'
+                       else checkpoint(score_triples, *args_tri, use_reentrant=False))
         else:
-            objects, triples = channel_score(*args_obj), channel_score(*args_tri)
+            objects, triples = score_objects(*args_obj), score_triples(*args_tri)
         if not self.uses_third_channel():
             triples = torch.full_like(objects, torch.nan)
         weights = F.softmax(F.linear(batch['sentence'], self.weight_map, self.weight_bias), -1)
@@ -375,6 +490,11 @@ class GraphReranker(nn.Module):
             fused, details = fuse_raw(batch['clip'], objects, triples, weights)
         else:
             fused, details = fuse_tensor(batch['clip'], objects, triples, weights, self.options['zscore_floor'] or (0., 0., 0.))
+        if self.options['scene_terms']:
+            # sum_t d_t T_t over the fixed terms, already divided by their train scale; part of the graph score.
+            terms = (batch['terms'] * self.term_weights).sum(-1)
+            fused = fused + terms
+            details.update(graph=details['graph'] + terms, terms=terms)
         details.update(objects=objects, triples=triples, fused=fused, **pooled, **counts)
         if return_encoded:
             details.update(encoded_query=queries, encoded_images=images)
