@@ -1,0 +1,333 @@
+[
+ {
+  "query_id": "mkgw_hand_direct_01",
+  "group": "direct",
+  "text": "a second-generation hybrid hatchback car built in the 2000s",
+  "pattern": [],
+  "gold_qids": [
+   "Q7830857"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_02",
+  "group": "direct",
+  "text": "a genus of thorny shrubs that bear blackberries and raspberries",
+  "pattern": [],
+  "gold_qids": [
+   "Q602740"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_03",
+  "group": "direct",
+  "text": "the largest island in the Mediterranean, a region with a volcano and a long coastline",
+  "pattern": [],
+  "gold_qids": [
+   "Q1460"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_04",
+  "group": "direct",
+  "text": "the smallest of the four main Japanese islands, mountainous and surrounded by sea",
+  "pattern": [],
+  "gold_qids": [
+   "Q13991"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_05",
+  "group": "direct",
+  "text": "a gold medal prize awarded each year for discoveries in medicine",
+  "pattern": [],
+  "gold_qids": [
+   "Q80061"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_06",
+  "group": "direct",
+  "text": "a video game genre told through text boxes over anime-style character portraits",
+  "pattern": [],
+  "gold_qids": [
+   "Q689445"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_07",
+  "group": "direct",
+  "text": "a television genre that films unscripted real people in everyday or staged situations",
+  "pattern": [],
+  "gold_qids": [
+   "Q182415"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_08",
+  "group": "direct",
+  "text": "an art movement of bold colourful images borrowed from advertising and comic strips",
+  "pattern": [],
+  "gold_qids": [
+   "Q134147"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_09",
+  "group": "direct",
+  "text": "a programming toolkit for building multi-agent systems",
+  "pattern": [],
+  "gold_qids": [
+   "Q1684174"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_direct_10",
+  "group": "direct",
+  "text": "a crew with cameras, lights and a clapperboard working on a set",
+  "pattern": [],
+  "gold_qids": [
+   "Q932586"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_01",
+  "group": "indirect",
+  "text": "a rock guitarist who was a member of Pink Floyd",
+  "pattern": [
+   [
+    "P463",
+    "Q2306"
+   ]
+  ],
+  "gold_qids": [
+   "Q178517"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_02",
+  "group": "indirect",
+  "text": "a Swedish keyboard player and songwriter who belonged to ABBA",
+  "pattern": [
+   [
+    "P463",
+    "Q18233"
+   ]
+  ],
+  "gold_qids": [
+   "Q214582"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_03",
+  "group": "indirect",
+  "text": "the rock band whose lead singer is Hayley Williams",
+  "pattern": [
+   [
+    "P527",
+    "Q201562"
+   ]
+  ],
+  "gold_qids": [
+   "Q473466"
+  ],
+  "note": "edge only in KGC test: unseen by the graph channel"
+ },
+ {
+  "query_id": "mkgw_hand_indirect_04",
+  "group": "indirect",
+  "text": "the alternative rock group led by Billy Corgan",
+  "pattern": [
+   [
+    "P527",
+    "Q311382"
+   ]
+  ],
+  "gold_qids": [
+   "Q184217"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_05",
+  "group": "indirect",
+  "text": "an early sound-era film with music by William Axt",
+  "pattern": [
+   [
+    "P86",
+    "Q509538"
+   ]
+  ],
+  "gold_qids": [
+   "Q666084",
+   "Q916450"
+  ],
+  "note": "one gold edge in KGC test"
+ },
+ {
+  "query_id": "mkgw_hand_indirect_06",
+  "group": "indirect",
+  "text": "a movie whose score was composed by Alan Silvestri",
+  "pattern": [
+   [
+    "P86",
+    "Q313537"
+   ]
+  ],
+  "gold_qids": [
+   "Q2566505",
+   "Q36092"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_07",
+  "group": "indirect",
+  "text": "an Italian film photographed by the cinematographer Aldo Tonti",
+  "pattern": [
+   [
+    "P344",
+    "Q957569"
+   ]
+  ],
+  "gold_qids": [
+   "Q3819271",
+   "Q3823330",
+   "Q609855"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_08",
+  "group": "indirect",
+  "text": "a South Indian movie directed by C. V. Rajendran",
+  "pattern": [
+   [
+    "P57",
+    "Q18379517"
+   ]
+  ],
+  "gold_qids": [
+   "Q5518030",
+   "Q6721048"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_09",
+  "group": "indirect",
+  "text": "a detective novel written by Rex Stout",
+  "pattern": [
+   [
+    "P50",
+    "Q337351"
+   ]
+  ],
+  "gold_qids": [
+   "Q3998152"
+  ],
+  "note": "edge only in KGC test"
+ },
+ {
+  "query_id": "mkgw_hand_indirect_10",
+  "group": "indirect",
+  "text": "a nineteenth-century writer whose work was influenced by William Shakespeare",
+  "pattern": [
+   [
+    "P737",
+    "Q692"
+   ]
+  ],
+  "gold_qids": [
+   "Q311145"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_11",
+  "group": "indirect",
+  "text": "a rugby league player who played for the London Broncos",
+  "pattern": [
+   [
+    "P54",
+    "Q863469"
+   ]
+  ],
+  "gold_qids": [
+   "Q16234021"
+  ],
+  "note": "edge only in KGC test"
+ },
+ {
+  "query_id": "mkgw_hand_indirect_12",
+  "group": "indirect",
+  "text": "the main railway station of Bordeaux",
+  "pattern": [
+   [
+    "P131",
+    "Q1479"
+   ]
+  ],
+  "gold_qids": [
+   "Q800564"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_13",
+  "group": "indirect",
+  "text": "a Telugu film with songs sung by S. P. Balasubrahmanyam",
+  "pattern": [
+   [
+    "P175",
+    "Q2049688"
+   ]
+  ],
+  "gold_qids": [
+   "Q7395625",
+   "Q7650116"
+  ],
+  "note": "one gold edge in KGC test"
+ },
+ {
+  "query_id": "mkgw_hand_indirect_14",
+  "group": "indirect",
+  "text": "an astronomer who studied at the University of Arizona",
+  "pattern": [
+   [
+    "P69",
+    "Q503419"
+   ]
+  ],
+  "gold_qids": [
+   "Q5622172"
+  ],
+  "note": ""
+ },
+ {
+  "query_id": "mkgw_hand_indirect_15",
+  "group": "indirect",
+  "text": "a classic western shot by the cinematographer Winton Hoch",
+  "pattern": [
+   [
+    "P344",
+    "Q373115"
+   ]
+  ],
+  "gold_qids": [
+   "Q470560"
+  ],
+  "note": ""
+ }
+]
