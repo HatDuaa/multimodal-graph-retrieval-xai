@@ -34,15 +34,16 @@ def _tokenize(text: str) -> list[str]:
 class EntityLinker:
     """Match KG entity labels/aliases inside a query string (longest match wins)."""
 
-    def __init__(self, names_of: dict[str, list[str]]):
-        # names_of: qid -> every surface form (label + aliases)
+    def __init__(self, names_of: dict[str, list[str]], max_ngram: int = MAX_NGRAM):
+        # names_of: qid -> every surface form (label + aliases); max_ngram > 5 for Vietnamese names
+        self.max_ngram = max_ngram
         self.by_ngram: dict[tuple, set[str]] = defaultdict(set)
         for qid, names in names_of.items():
             for name in names:
                 if not name or len(name) < MIN_CHARS:
                     continue
                 toks = tuple(_tokenize(name))
-                if 0 < len(toks) <= MAX_NGRAM:
+                if 0 < len(toks) <= max_ngram:
                     self.by_ngram[toks].add(qid)
 
     @classmethod
@@ -60,7 +61,7 @@ class EntityLinker:
         toks = _tokenize(text)
         linked: dict[str, str] = {}
         used = [False] * len(toks)
-        for n in range(min(MAX_NGRAM, len(toks)), 0, -1):
+        for n in range(min(self.max_ngram, len(toks)), 0, -1):
             for i in range(len(toks) - n + 1):
                 if any(used[i:i + n]):
                     continue
