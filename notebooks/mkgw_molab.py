@@ -26,9 +26,11 @@ def _():
         | 1 Setup | clone repo branch + NativE, install, build `Base.so` | 3 min |
         | 2 Data | NativE embeddings, MMRNS image zip (6.4 GB), Wikidata labels, images, KGC triples | 30–60 min |
         | 3 CLIP | frozen CLIP features for 8 920 images + queries | 5 min |
+        | 3b Probe | multilingual CLIP on 84 vi/en MKG-W val queries (row 9) | 10 min |
         | 4 Train | NativE: paper reproduction (original MKG-W) + 3 seeds on the leakage-safe copy | hours |
         | 5 Export | entity embeddings per run | 1 min |
         | 6 Upload | push everything to the HF dataset repo | 5–10 min |
+        | 7 Eval | level-2 evaluation on val (3 seeds, ablations); upload again after it | 5 min |
         """
     )
     return (mo,)
@@ -100,8 +102,28 @@ def _(mo):
     b_train = mo.ui.run_button(label="4 · Train NativE")
     b_export = mo.ui.run_button(label="5 · Export embeddings")
     b_upload = mo.ui.run_button(label="6 · Upload to HF")
-    mo.hstack([b_setup, b_restore, b_data, b_clip, b_train, b_export, b_upload], wrap=True)
-    return b_clip, b_data, b_export, b_restore, b_setup, b_train, b_upload
+    b_probe = mo.ui.run_button(label="3b · Multilingual CLIP probe (row 9)")
+    b_eval = mo.ui.run_button(label="7 · Level-2 eval on val")
+    mo.hstack([b_setup, b_restore, b_data, b_clip, b_probe, b_train, b_export, b_eval, b_upload], wrap=True)
+    return b_clip, b_data, b_eval, b_export, b_probe, b_restore, b_setup, b_train, b_upload
+
+
+@app.cell
+def _(PY, REPO, b_probe, mo, pip, sh):
+    mo.stop(not b_probe.value, mo.md("Stage 3b not run yet."))
+    pip("sentence-transformers")
+    sh(f"{PY} scripts/checks/multilingual_clip_probe.py --large", cwd=REPO)
+    mo.md((REPO / "experiments" / "checks" / "multilingual_clip_probe.json").read_text(encoding="utf-8")[:4000])
+    return
+
+
+@app.cell
+def _(PY, REPO, b_eval, mo, sh):
+    mo.stop(not b_eval.value, mo.md("Stage 7 not run yet."))
+    # val only: chooses alpha/beta per seed. Test runs once, later, after the method is locked.
+    sh(f"{PY} scripts/eval_mkgw_level2.py --split val", cwd=REPO)
+    mo.md("Wrote `experiments/level2/val/` (summary.json, choice.json, metrics_*.json).")
+    return
 
 
 @app.cell
