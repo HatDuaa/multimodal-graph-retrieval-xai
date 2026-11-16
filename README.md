@@ -122,8 +122,9 @@ python app/demo_app.py --split test --no-graph      # chỉ CLIP thuần, không
 
 Nhập một câu tiếng Anh rồi bấm **Tìm**, chọn chế độ **CLIP thuần** hoặc **CLIP + Đồ thị**. Bấm vào một ảnh trong lưới để xem:
 điểm cuối, điểm CLIP, điểm đồ thị, trọng số a / b / c của câu, và bảng các cặp khớp giữa câu và ảnh (w, độ khớp, % điểm
-cuối). Bảng này lấy từ chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không phải tìm đường đi sau khi
-đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng đứng hạng mấy.
+cuối). Mỗi dòng của bảng ghi 3 phần ảnh khớp nhất (a, sim, % của độ khớp). Hộp của các phần này được vẽ trên ảnh,
+đánh số theo dòng, và đồ thị con câu ↔ ảnh nằm dưới bảng; rê chuột hoặc bấm một dòng để làm nổi nó. Bảng này lấy từ
+chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không phải tìm đường đi sau khi đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng đứng hạng mấy.
 
 Chế độ đồ thị (`src/service/graph_mode.py`) lấy top-50 của CLIP, tách câu bằng parser mà run đã dùng, mã hoá ngay bằng
 CLIP những nhãn chưa có trong bảng vector, rồi xếp lại bằng mô hình của run:

@@ -154,3 +154,80 @@ các ảnh ứng viên (xem `experiments/improve/explanations/`). Người xem d
 
 Ở cả hai ảnh, kênh bộ ba chiếm hơn nửa điểm cuối nhưng gần như không đổi thứ hạng. Chính kênh vật thể (dog, frisbee,
 grass) và CLIP đẩy ảnh hạng 1 lên trên trung bình.
+
+## Node nào của câu khớp node nào của ảnh (thêm 16/11/2026)
+
+**Vì sao cần.** Bảng cho biết mỗi phần của câu đóng góp bao nhiêu, nhưng không rõ nó khớp với node nào của ảnh:
+
+- cột Phần khớp chỉ ghi một nhãn (phần có sim lớn nhất) và không chỉ vị trí trong ảnh;
+- với bộ ba, attention trải đều, nên một nhãn dễ gây hiểu nhầm.
+
+**Top-3 phần khớp của mỗi dòng.** `matched_pairs` vốn đã tính a_ij và sim_ij cho mọi phần j của ảnh. Giờ nó trả thêm
+`top_matches`: 3 phần có a_ij · sim_ij lớn nhất, tức 3 số hạng lớn nhất của Độ khớp = Σ_j a_ij · sim_ij. Mỗi phần kèm
+a, sim và tỉ lệ a_ij · sim_ij / Độ khớp. Không tìm kiếm gì thêm ngoài các đại lượng của lần xếp hạng.
+
+- Khi sim dương, a tăng theo sim, nên phần đầu tiên trùng với phần có sim lớn nhất mà cột cũ ghi.
+- Ô Phần khớp hiện 3 dòng dạng `nhãn a … · sim … · %`; rê chuột lên một dòng để xem cả a × sim.
+- Ghi chú số lượng (nhóm số lượng của node ảnh và g) đi theo phần đầu tiên; hai phần sau có trong phần rê chuột.
+- Không ghi chỉ số node (dạng `dog #3`), để khỏi lẫn với số dòng trên hộp. Hai phần cùng nhãn phân biệt bằng a, và
+  bằng hộp khi rê chuột.
+
+**Hộp trên ảnh** (`src/explain/match_view.py`):
+
+- **Nguồn hộp.** Hộp là `box: [x, y, w, h]` của node trong chính đồ thị ảnh mà mô hình chấm điểm: val là merge_v1, test
+  là count_v1_test. Node gộp mang hộp bao các hộp thành viên, và hiện "gộp n" trong đồ thị con và khi rê chuột.
+- **Kích thước ảnh.** File trong `data/raw/images` có đúng `width`, `height` của đồ thị trên cả 2 138 ảnh test (đã đo
+  bằng PIL). Code vẫn tính tỉ lệ từ kích thước file, phòng khi có bản ảnh đã thu nhỏ.
+- **Dòng vật thể.** Khoanh phần khớp nhất, màu cam, đánh số trùng với số dòng trong bảng.
+- **Dòng bộ ba.** Khoanh chủ thể và đối tượng, nối bằng mũi tên, màu tím; số dòng nằm giữa mũi tên.
+- **Làm nổi một dòng.** Rê chuột lên một dòng của bảng, một hộp hoặc một node của đồ thị con:
+  - các dòng khác mờ đi;
+  - phần khớp thứ 2 và 3 hiện thêm, nét đứt, kèm nhãn và a.
+
+  Bấm để giữ trạng thái này, bấm lại để bỏ. Phần rê chuột chỉ dùng CSS `:has()` (Chrome/Edge 105+, Firefox 121+).
+  Phần bấm dùng `js_on_load` của `gr.HTML`.
+- **Khi cuộn.** Ảnh được giữ trên đầu khung chi tiết trong lúc cuộn bảng.
+- **Không vẽ:**
+  - node tổng và cạnh kNN `[none]`: không bao giờ được so khớp;
+  - node không có hộp: bỏ qua.
+- **Mô hình cấp 1** (`--run main_r3_seed0`): đồ thị `data/graphs/vg_coco_scene_graphs.jsonl` không có hộp. Vì vậy app
+  ghi một dòng chú thích thay cho ảnh; ô top-3 và đồ thị con vẫn hiện.
+
+**Đồ thị con câu ↔ ảnh.** Nằm dưới bảng:
+
+- bên trái là các phần của câu (từ FACTUAL), số như trong bảng;
+- bên phải là các phần của ảnh nằm trong top-3 của chúng, mỗi phần ảnh một node, kèm ô cắt từ ảnh;
+- nét nối dày theo w_i · a_ij · sim_ij;
+- rê chuột hay bấm cũng làm nổi dòng như ở bảng và ảnh.
+
+**Bố cục.** Lưới kết quả và khung chi tiết giờ chia 1:1 (trước là 11:9). Nhờ vậy, ở màn 1440 px, bảng có thêm cột top-3
+vẫn vừa khung, không phải cuộn ngang.
+
+**Ví dụ** (split test, mô hình `countonly_factual_r3_seed0`, chạy trên RTX 3070). Ảnh chụp trong `node-matching/`, sinh
+bằng `scripts/improve/capture_demo_detail.py` từ app đang chạy:
+
+- **"Two dogs playing with a frisbee on the grass"**, ảnh hạng 1 là 2392212 (`frisbee_pin_grass.jpg`, đang giữ dòng
+  `grass`):
+  - dòng `dog` dồn 98% Độ khớp vào node `dog`;
+  - dòng `grass` chia cho grass 62%, lawn 22%, yard 11%;
+  - hai dòng bộ ba: mỗi phần trong top-3 chỉ có a từ 0,07 đến 0,09, nên cả 3 phần chỉ chiếm 23% và 25% Độ khớp.
+- **"A man riding a horse on a beach"**, ảnh hạng 1 là 2316823 (`horse.jpg`):
+  - phần khớp nhất của horse, man, beach lần lượt chiếm 69%, 75% và 80% Độ khớp;
+  - dòng `man –ride→ horse` khớp nhất với `man –riding→ horse` của ảnh, nhưng phần này chỉ có a = 0,12 (13%), và cả
+    top-3 chỉ chiếm 25%.
+
+  Như vậy, kênh bộ ba so câu với gần như cả đồ thị ảnh, không với riêng một bộ ba. Đây đúng là điều cột Phần khớp cũ che
+  mất.
+- Cùng câu với mô hình cấp 1: `horse_level1_main_r3_seed0.jpg`, có dòng chú thích thay cho ảnh.
+- Toàn khung app (Browser pane, 1440 × 900, thu về 800 × 500): `app_overview_frisbee.jpg`.
+
+**Test** (`tests/test_demo_node_matching.py`):
+
+- top-3 xếp đúng theo a × sim, tỉ lệ nằm trong [0, 1] và tổng ≤ 1, số phần không vượt số phần của ảnh;
+- qua `GraphRerankMode` với mô hình nhỏ: các dòng đã đánh số vẫn lấy đúng phần điểm, nên CLIP + các dòng + kênh lấy trung
+  bình = điểm cuối, và tổng các Δ = điểm cuối − trung bình top-50;
+- hàm vẽ không lỗi với:
+  - node không có hộp, hộp rỗng, node tổng, node gộp;
+  - cạnh `[none]`;
+  - ảnh không có bộ ba;
+  - đồ thị cấp 1 không có hộp.
