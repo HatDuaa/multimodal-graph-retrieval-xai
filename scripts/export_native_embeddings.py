@@ -14,7 +14,10 @@ Rows are L2-normalised (interface convention: dot product = cosine). Note that
 NativE's own scoring uses unnormalised, relation-gated fusion; the normalised
 export is a retrieval-side representation, not the KGC score.
 
-Usage:  python scripts/export_native_embeddings.py --checkpoint <path> [--what ent img_proj text_proj]
+Usage:  python scripts/export_native_embeddings.py --checkpoint <path> [--what ent img_proj text_proj] [--suffix _seed0]
+
+--suffix names one training run (e.g. one seed of the leakage-safe MKG-W-rmask
+training), so several runs can sit side by side: mkgw_native_ent_seed0.npy, ...
 """
 import argparse
 import sys
@@ -49,6 +52,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--what", nargs="+", default=["ent"], choices=["ent", "img_proj", "text_proj"])
+    ap.add_argument("--suffix", default="", help="appended to the output name, e.g. _seed0")
     args = ap.parse_args()
 
     cfg = load_config()
@@ -62,7 +66,7 @@ def main() -> None:
         with torch.no_grad():
             feats = export(sd, what)
             feats = torch.nn.functional.normalize(feats, dim=-1).numpy().astype(np.float32)
-        out = resolve(cfg, "features") / f"mkgw_native_{what}"
+        out = resolve(cfg, "features") / f"mkgw_native_{what}{args.suffix}"
         save_features(out, feats, qids, encoder_name=f"NativE-AdvRelRotatE[{ckpt_name}]/{what}")
         print(f"{what}: {feats.shape} -> {out}.npy")
 

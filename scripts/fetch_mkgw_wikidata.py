@@ -26,7 +26,7 @@ from src.utils.config import REPO_ROOT, load_config  # noqa: E402
 SPARQL = "https://query.wikidata.org/sparql"
 SLEEP = 3.0           # polite delay between queries
 RETRIES = 6           # on 429/5xx: wait Retry-After (or an increasing fallback) and try again
-HEADERS = {"User-Agent": "mkgw-retrieval-course-project/0.1 (academic use)"}
+HEADERS = {"User-Agent": "mkgw-retrieval-course-project/0.1 (https://github.com/HatDuaa/multimodal-graph-retrieval-xai; academic use)"}
 QUERY = """
 SELECT ?item (SAMPLE(?len) AS ?label_en) (SAMPLE(?lvi) AS ?label_vi)
        (SAMPLE(?den) AS ?desc_en) (SAMPLE(?dvi) AS ?desc_vi)

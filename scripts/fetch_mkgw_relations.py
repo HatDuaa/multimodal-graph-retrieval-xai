@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.utils.config import REPO_ROOT, load_config  # noqa: E402
 
 SPARQL = "https://query.wikidata.org/sparql"
-HEADERS = {"User-Agent": "mkgw-retrieval-course-project/0.1 (academic use)"}
+HEADERS = {"User-Agent": "mkgw-retrieval-course-project/0.1 (https://github.com/HatDuaa/multimodal-graph-retrieval-xai; academic use)"}
 
 
 def main() -> None:
