@@ -16,6 +16,8 @@ from pathlib import Path
 import gradio as gr
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.explain.match_view import (FOCUS_JS, focus_css, has_boxes, image_frame, match_graph_svg,  # noqa: E402
+                                    match_title, ordered_rows, overlay_svg, part_text)
 from src.explain.score_breakdown import split_final_score, split_raw_score  # noqa: E402
 from src.service.graph_mode import DEFAULT_RUN, GraphRerankMode  # noqa: E402
 from src.service.search_service import Hit, SearchService  # noqa: E402
@@ -76,7 +78,23 @@ footer { display: none !important; }
 #detail .dbar.neg > span { background: #dc2626; }
 #detail .summary .up { color: #16a34a; font-weight: 600; }
 #detail .summary .down { color: #dc2626; font-weight: 600; }
-"""
+/* row numbers shared by the table, the boxes on the image and the match graph */
+#detail .rn { display: inline-block; min-width: 18px; height: 18px; line-height: 18px; padding: 0 4px; margin-right: 5px;
+              border-radius: 9px; background: var(--ch); color: #fff; font-size: 0.72rem; font-weight: 700;
+              text-align: center; font-variant-numeric: tabular-nums; }
+/* top matches of a row: the first in full, the 2nd and 3rd smaller */
+#detail td.tmc { min-width: 150px; }
+#detail .tm { line-height: 1.35; }
+#detail .tm + .tm { margin-top: 2px; }
+#detail .tm.alt { font-size: 0.82rem; opacity: 0.85; }
+#detail .tm .v { font-size: 0.82rem; font-variant-numeric: tabular-nums;
+                 color: var(--body-text-color-subdued, #6b7280); }
+/* the image stays in view while the table scrolls, so hovering a row shows its boxes */
+#detail .mx-fig { position: sticky; top: 0; z-index: 2; background: var(--background-fill-primary, #fff);
+                  padding: 2px 0 6px; }
+#detail .mx-image { display: block; width: 100%; max-height: 34vh; }
+#detail .mx-graph { display: block; width: 100%; max-width: 660px; margin: 2px 0 4px; }
+""" + focus_css()
 
 # Short reason shown in place of the matched image part; codes come from src.service.graph_mode.unmatched_parts.
 UNMATCHED_REASONS = {
@@ -95,10 +113,6 @@ DASH = '<td class="num">—</td>'
 
 def esc(value) -> str:
     return html.escape(str(value))
-
-
-def part_text(value) -> str:
-    return f"{value[0]} –{value[1]}→ {value[2]}" if isinstance(value, (list, tuple)) else str(value)
 
 
 def signed(value: float, fmt: str) -> str:
@@ -147,48 +161,71 @@ def count_notes(item: dict) -> tuple[str, str]:
             f' <span class="muted">số lượng {esc(item["image_count"])} · g = {signed(item["count_bias"], "+.3f")}</span>')
 
 
-def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, split: dict, scale: float = 0.) -> list[str]:
+def matches_cell(item: dict, number: int) -> str:
+    """The row's top image parts by a × sim, each with a, sim and its share of the row's Σ a × sim (Độ khớp).
+
+    The first one carries the count note (its count bucket and g); the others show it on hover."""
+    matches = item.get("top_matches") or [{"part": item["image_part"], "a_ij": item["a_ij"], "sim_ij": item["sim_ij"]}]
+    lines = []
+    for rank, match in enumerate(matches):
+        share = "" if match.get("share") is None else f" · {match['share']:.0%}"
+        counts = {k: match[k] for k in ("image_count", "count_bias") if k in match}
+        note = count_notes({**item, **counts})[1] if rank == 0 else ""
+        # non-breaking spaces keep "a 0.62" together, so the values wrap only between the dots
+        lines.append(f'<div class="tm{" alt" if rank else ""}" title="{esc(match_title(number, match))}">'
+                     f'<code>{esc(part_text(match.get("part", "?")))}</code> <span class="v">a&nbsp;{match["a_ij"]:.2f} · '
+                     f'sim&nbsp;{signed(match["sim_ij"], ".2f")}{share}</span>{note}</div>')
+    return '<td class="tmc">' + "".join(lines) + "</td>"
+
+
+def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, split: dict, scale: float = 0.,
+                 numbered: list | None = None) -> list[str]:
     """Row group of one channel: matched parts by contribution, then query parts without a match and why.
 
     z-score fusion: Độ khớp is a × sim of the best image part and the row part is the proportional share. Raw fusion:
     Độ khớp is sum_j a_j × sim_j over the image parts and the row part, channel weight × w × Độ khớp, is exact; a
-    last column compares it with its mean over the 50 candidates.
+    last column compares it with its mean over the 50 candidates. numbered: ordered_rows(info, raw), whose row
+    numbers the boxes on the image and the match graph share (data-row).
     """
     raw = info.get("fusion") == "raw"
     delta = (lambda value: delta_cell(value, scale)) if raw and "clip_delta" in info else (lambda value: "")  # noqa: E731
     active = info.get("channel_active", [True, True])[0 if key == "objects" else 1]
     cells = []
-    rows = zip(info[key], split["row_parts"][key], split["row_shares"][key])
-    for item, part, share in sorted(rows, key=lambda row: -row[0]["channel_term" if raw else "contribution"]):
-        query_note, image_note = count_notes(item)
+    for number, _, index, item in [row for row in (numbered or ordered_rows(info, raw)) if row[1] == key]:
+        part, share = split["row_parts"][key][index], split["row_shares"][key][index]
+        query_note = count_notes(item)[0]
         if raw:
             match = num(item["row_score"], 2)
             cell = share_cell(share, part, hover=f"phần có a lớn nhất: a = {item['a_ij']:.2f}, sim = {item['sim_ij']:.3f}")
         else:
             match, cell = num(item["a_ij"] * item["sim_ij"], 2), share_cell(share, part, item["contribution"])
-        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code>{query_note}</td>' + num(item["w_i"], 2)
-                     + f'<td><code>{esc(part_text(item["image_part"]))}</code>{image_note}</td>' + match + cell
-                     + delta(item.get("delta")))
+        cells.append((number, f'<td><span class="rn">{number}</span><code>{esc(part_text(item["query_part"]))}</code>'
+                              f'{query_note}</td>' + num(item["w_i"], 2) + matches_cell(item, number) + match + cell
+                              + delta(item.get("delta"))))
     fill = split.get("fill_parts", {}).get(key)
     if fill is not None and any(item["reason"] == "image_empty" for item in info.get("unmatched", {}).get(key, [])):
-        cells.append("<td>cả kênh</td>" + DASH + f'<td>— <span class="muted">{FILLED[key]}</span></td>'
-                     + num(fill / weight if weight else None, 2) + share_cell(split["fill_shares"][key], fill)
-                     + delta(info.get("fill_deltas", {}).get(key)))
+        cells.append((None, "<td>cả kênh</td>" + DASH + f'<td>— <span class="muted">{FILLED[key]}</span></td>'
+                      + num(fill / weight if weight else None, 2) + share_cell(split["fill_shares"][key], fill)
+                      + delta(info.get("fill_deltas", {}).get(key))))
     for item in info.get("unmatched", {}).get(key, []):
         reason = UNMATCHED_REASONS.get(item["reason"], item["reason"])
         reason = reason[key] if isinstance(reason, dict) else reason
-        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code></td>' + DASH
-                     + f'<td>— <span class="muted">{esc(reason)}</span></td>' + DASH + DASH + delta(None))
+        cells.append((None, f'<td><code>{esc(part_text(item["query_part"]))}</code></td>' + DASH
+                      + f'<td>— <span class="muted">{esc(reason)}</span></td>' + DASH + DASH + delta(None)))
     if not cells:
-        cells.append("<td>—</td>" + DASH + f'<td>— <span class="muted">{NO_QUERY_PARTS[key]}</span></td>'
-                     + DASH + DASH + delta(None))
+        cells.append((None, "<td>—</td>" + DASH + f'<td>— <span class="muted">{NO_QUERY_PARTS[key]}</span></td>'
+                      + DASH + DASH + delta(None)))
     if raw:
         note = '<span class="muted">Σw = 1</span>' if info[key] else ""
     else:
         note = '<span class="muted">Σw = 1</span>' if active else '<span class="muted">(không dùng)</span>'
     head = f'<td class="channel" rowspan="{len(cells)}"><b>{title}</b> {weight:.0%}<br>{note}</td>'
-    return [f'<tr class="{cls}{" group-start" if i == 0 else ""}">{head if i == 0 else ""}{row}</tr>'
-            for i, row in enumerate(cells)]
+    return [f'<tr class="{cls}{" group-start" if i == 0 else ""}"{row_attr(number)}>{head if i == 0 else ""}{row}</tr>'
+            for i, (number, row) in enumerate(cells)]
+
+
+def row_attr(number: int | None) -> str:
+    return "" if number is None else f' data-row="{number}"'
 
 
 def score_summary(fused: float, split: dict) -> str:
@@ -213,7 +250,19 @@ def delta_summary(info: dict) -> str:
             + "</p>")
 
 
-def raw_explanation(info: dict, hit: Hit) -> str:
+def match_notes(boxes: bool) -> list[str]:
+    """How to read the top matches of a row and the boxes on the image."""
+    notes = ["Ô Phần khớp liệt kê 3 phần của ảnh có a × sim lớn nhất, kèm a, sim và % = a × sim của phần đó / Σ a × sim "
+             "của dòng. Attention trải đều thì 3 phần cộng lại còn xa 100%: dòng đó khớp với nhiều phần của ảnh cùng "
+             "lúc, không chỉ với phần đầu."]
+    if boxes:
+        notes.append("Hộp trên ảnh mang số của dòng: dòng vật thể khoanh phần khớp nhất, dòng bộ ba khoanh chủ thể và "
+                     "đối tượng nối bằng mũi tên. Rê chuột lên một dòng, một hộp hoặc một node của đồ thị con để làm nổi "
+                     "nó cùng phần khớp thứ 2, 3 (nét đứt); bấm để giữ, bấm lại để bỏ.")
+    return notes
+
+
+def raw_explanation(info: dict, hit: Hit, numbered: list | None = None, boxes: bool = False) -> str:
     """Raw fusion: fused = a × cosine + b × S_obj + c × S_tri, every row an exact part of the final score."""
     a, b, c = info["weights_abc"]
     split = split_raw_score(hit.score, a, hit.clip_score,
@@ -228,7 +277,7 @@ def raw_explanation(info: dict, hit: Hit) -> str:
             + share_cell(split["clip_share"], split["clip_part"])
             + (delta_cell(info["clip_delta"], scale) if deltas else "") + "</tr>"]
     for (key, title, cls), weight in zip(CHANNELS, (b, c)):
-        rows += channel_rows(key, title, cls, weight, info, split, scale)
+        rows += channel_rows(key, title, cls, weight, info, split, scale, numbered)
     total_share = "100%" if hit.score > 0 else signed(hit.score, ".3f")
     total_delta = f'<td class="num">{signed(info["delta_total"], "+.4f")}</td>' if deltas else ""
     rows.append(f'<tr class="total"><td>Tổng</td><td></td>{EMPTY}<td></td>{EMPTY}'
@@ -241,8 +290,8 @@ def raw_explanation(info: dict, hit: Hit) -> str:
     if not deltas:
         notes.pop()
     notes += [
-             "Mỗi dòng = trọng số kênh × w × Độ khớp, với Độ khớp = Σ a × sim trên mọi phần của ảnh theo attention; "
-             "cột Phần khớp ghi phần có a lớn nhất (rê chuột lên ô % để xem a và sim của nó).",
+             "Mỗi dòng = trọng số kênh × w × Độ khớp, với Độ khớp = Σ a × sim trên mọi phần của ảnh theo attention.",
+             *match_notes(boxes),
              "Cạnh kNN không nhãn ([none]) và node tổng chỉ dùng lúc truyền tin trong GAT, không được so khớp nên không "
              "thành dòng."]
     if any(item.get("query_count", "unknown") != "unknown" for item in info["objects"]):
@@ -262,10 +311,10 @@ def raw_explanation(info: dict, hit: Hit) -> str:
             + "".join(f'<p class="muted">{note}</p>' for note in notes))
 
 
-def graph_explanation(info: dict, hit: Hit) -> str:
+def graph_explanation(info: dict, hit: Hit, numbered: list | None = None, boxes: bool = False) -> str:
     """Matched part pairs exactly as the reranker scored them, with each row's share of the final score."""
     if info.get("fusion") == "raw":
-        return raw_explanation(info, hit)
+        return raw_explanation(info, hit, numbered, boxes)
     a, b, c = info["weights_abc"]
     active = dict(zip(("objects", "triples"), info.get("channel_active", [True, True])))
     split = split_final_score(hit.score, a, info["z_clip"], hit.graph_score,
@@ -275,7 +324,7 @@ def graph_explanation(info: dict, hit: Hit) -> str:
             f'<td class="num">cosine {hit.clip_score:.4f}</td>'
             + share_cell(split["clip_share"], split["clip_part"]) + "</tr>"]
     for (key, title, cls), weight in zip(CHANNELS, (b, c)):
-        rows += channel_rows(key, title, cls, weight, info, split)
+        rows += channel_rows(key, title, cls, weight, info, split, numbered=numbered)
     unused = not all(active.values())
     total_share = "100%" if hit.score > 0 else signed(hit.score, ".3f")
     rows.append(f'<tr class="total"><td>Tổng</td><td></td>{EMPTY}<td></td>{EMPTY}'
@@ -283,7 +332,8 @@ def graph_explanation(info: dict, hit: Hit) -> str:
     notes = ["Tầng CLIP / đồ thị là tách đúng theo công thức điểm cuối "
              "(điểm cuối = a × z(CLIP) + (1 − a) × điểm đồ thị).",
              "Chia phần đồ thị cho từng dòng là xấp xỉ theo tỉ lệ đóng góp thô (trọng số kênh × w × a × sim, "
-             "xem khi rê chuột lên ô %), vì z-score trừ trung bình của 50 ứng viên."]
+             "xem khi rê chuột lên ô %), vì z-score trừ trung bình của 50 ứng viên.",
+             *match_notes(boxes)]
     if unused:
         notes.append("(không dùng): kênh không có phần nào so khớp được hoặc điểm kênh như nhau trên cả top-50, "
                      "nên bị bỏ khỏi điểm đồ thị; điểm đồ thị chỉ lấy từ kênh còn lại.")
@@ -297,6 +347,33 @@ def graph_explanation(info: dict, hit: Hit) -> str:
             + "".join(f'<p class="muted">{note}</p>' for note in notes))
 
 
+NO_BOXES = ("Đồ thị ảnh của mô hình này (cấp 1) không lưu hộp của node, nên không khoanh được vị trí trên ảnh. Bảng và "
+            "đồ thị con bên dưới vẫn lấy từ chính lần xếp hạng.")
+
+
+def explanation_view(info: dict, hit: Hit) -> str:
+    """The image with the boxes of every row, the table, then the caption ↔ image match graph.
+
+    One container (.mx) holds all three, so hovering or clicking a row, a box or a graph node focuses the same row
+    number everywhere (match_view.focus_css, FOCUS_JS)."""
+    numbered = ordered_rows(info, info.get("fusion") == "raw")
+    matched, boxes = any(row.get("top_matches") for _, _, _, row in numbered), has_boxes(numbered)
+    frame = image_frame(hit.image_path, info.get("image_size")) if boxes else None
+    uid = str(hit.image_id)
+    if frame:
+        figure = f'<div class="mx-fig">{overlay_svg(numbered, frame, uid)}</div>'
+    else:
+        figure = f'<p class="muted">{NO_BOXES}</p>' if matched and not boxes else ""
+    graph = match_graph_svg(numbered, frame, uid)
+    if graph:
+        crops = " (ô vuông nhỏ là vùng ảnh của phần đó)" if frame else ""
+        graph = ('<h4>Đồ thị con: câu ↔ ảnh</h4>' + graph
+                 + f'<p class="muted">Trái: các phần của câu, số như trong bảng. Phải: các phần của ảnh nằm trong top-3 '
+                   f'của từng dòng{crops}; một phần ảnh nằm trong top-3 của nhiều dòng là một node. Nét càng dày thì '
+                   f'w × a × sim càng lớn, tức phần ảnh đó góp vào điểm kênh của dòng càng nhiều.</p>')
+    return f'<div class="mx">{figure}{graph_explanation(info, hit, numbered, frame is not None)}{graph}</div>'
+
+
 def describe(hit: Hit, mode: str) -> str:
     out = [f"<h3>Hạng {hit.rank} · ảnh <code>{hit.image_id}</code></h3><ul>",
            f"<li>Điểm cuối: <b>{hit.score:.4f}</b></li>",
@@ -307,7 +384,7 @@ def describe(hit: Hit, mode: str) -> str:
         out.append(f"<li>Điểm đồ thị ({label}): {hit.graph_score:.4f}</li>")
     out.append("</ul><h4>Giải thích</h4>")
     if hit.explanation and isinstance(hit.explanation[0], dict):
-        out.append(graph_explanation(hit.explanation[0], hit))
+        out.append(explanation_view(hit.explanation[0], hit))
     elif hit.explanation:
         out.append("<ul>" + "".join("<li>" + esc(" ; ".join(f"{h} –{r}→ {t}" for h, r, t in path)) + "</li>"
                                     for path in hit.explanation) + "</ul>")
@@ -358,11 +435,12 @@ def build(service: SearchService, split: str) -> gr.Blocks:
                 lucky = gr.Button("Caption ngẫu nhiên của pool")
         note = gr.Markdown(elem_id="note")
         with gr.Row(elem_id="results"):
-            # 11:9 split gives the detail panel ~45% of the width so the explanation table fits unwrapped;
-            # the detail component ignores scale/min_width, so it sits in a Column that carries them
-            gallery = gr.Gallery(label="Kết quả", columns=5, object_fit="contain", scale=11, elem_id="gallery")
-            with gr.Column(scale=9, min_width=480, elem_id="detail-col"):
-                detail = gr.HTML(START_TEXT, elem_id="detail")
+            # 1:1 split gives the detail panel half the width so the explanation table, with the top-3 image parts of
+            # every row, fits without a horizontal scroll at 1440 px; the detail component ignores scale/min_width, so
+            # it sits in a Column that carries them
+            gallery = gr.Gallery(label="Kết quả", columns=5, object_fit="contain", scale=10, elem_id="gallery")
+            with gr.Column(scale=10, min_width=480, elem_id="detail-col"):
+                detail = gr.HTML(START_TEXT, elem_id="detail", js_on_load=FOCUS_JS)
 
         outputs = [gallery, note, detail, hits_state]
         go.click(run, [query, mode, k, gold_state], outputs)

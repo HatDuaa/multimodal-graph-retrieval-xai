@@ -6,6 +6,9 @@ import torch
 from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS
 from src.models.graph_reranker import masked_softmax, part_similarity, part_summary, slot_similarity
 
+# Image parts listed per explanation row, ordered by their term a_ij * sim_ij of row_score.
+TOP_MATCHES = 3
+
 
 def remove_parts(graph, object_indices=(), relation_indices=()):
     """Remove indexed instances and incident relations; preserve original object IDs."""
@@ -20,7 +23,7 @@ def remove_parts(graph, object_indices=(), relation_indices=()):
     return out
 
 
-def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=0):
+def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=0, top_k=TOP_MATCHES):
     """Per channel, each query part's most similar image part with the quantities the ranking used.
 
     detail must come from model(batch, return_encoded=True); image_row indexes the encoded images of that batch.
@@ -29,7 +32,9 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
     includes. row_score = sum_j a_ij * sim_ij over every image part, and channel_term = channel weight * w_i *
     row_score: the channel score is sum_i w_i * row_score_i, so under the raw fusion the channel terms of one image
     add up exactly to its part of the final score. image_terms splits the same part by image part instead:
-    term_j = channel weight * sum_i w_i * a_ij * sim_ij.
+    term_j = channel weight * sum_i w_i * a_ij * sim_ij. top_matches lists the top_k image parts j of each row by
+    a_ij * sim_ij, the terms of row_score, with share = a_ij * sim_ij / row_score (None when row_score <= 0); the
+    first one is image_index whenever the similarities are positive, since a_ij grows with sim_ij.
     """
     weights = detail['weights'][query_row]
     result = {'objects': [], 'triples': [], 'image_terms': {'objects': [], 'triples': []}}
@@ -53,7 +58,9 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
         attention = torch.softmax(sims / tau, -1)
         w = torch.softmax(part_summary(q[None])[0] @ u, -1)
         best = sims.argmax(-1)
-        row_scores = (attention * sims).sum(-1)
+        terms = attention * sims
+        row_scores = terms.sum(-1)
+        top = terms.topk(min(top_k, terms.shape[-1]), dim=-1).indices.tolist()
         slots = slot_similarity(torch.einsum('isd,jsd->ijs', q, p)) if q.dim() == 3 else None
         # Encoded query objects keep only scorable parts (part_mask), so the index list must be masked the same way.
         q_indices = ([i for i, keep in zip(query_parts['node_indices'], query_parts['part_mask']) if keep]
@@ -73,6 +80,13 @@ def matched_pairs(model, detail, query_parts, image_parts, image_row, query_row=
                 # e.g. caption "2 dog", image "2 dog": count_bias = g["2", "2"]; sim_ij already includes it.
                 row.update(query_count=CAPTION_CLASSES[int(counts[0][i])], image_count=IMAGE_BUCKETS[int(counts[1][j])],
                            count_bias=float(counts[2][i, j]))
+            row['top_matches'] = []
+            for k in top[i]:
+                match = {'image_index': p_indices[k], 'a_ij': float(attention[i, k]), 'sim_ij': float(sims[i, k]),
+                         'share': float(terms[i, k] / row_scores[i]) if row_scores[i] > 0 else None}
+                if counts is not None:
+                    match.update(image_count=IMAGE_BUCKETS[int(counts[1][k])], count_bias=float(counts[2][i, k]))
+                row['top_matches'].append(match)
             result[channel].append(row)
     if 'pool_query' in detail:
         # Graph-level channel: pooled-vector cosine, with the pooling weight of every scorable node on both sides.
