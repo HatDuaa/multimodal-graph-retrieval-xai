@@ -1,0 +1,32 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/scripts/improve/triple_perturbation.py", line 160, in <module>
+    main()
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/scripts/improve/triple_perturbation.py", line 134, in main
+    added = add_part_vectors(store, cfg, set().union(*(part_keys(v) for v in variants.values())), device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/scripts/improve/triple_perturbation.py", line 85, in add_part_vectors
+    encoder = ClipEncoder.from_config(cfg, device=str(device))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/features/extract_clip.py", line 30, in from_config
+    return cls(c["model"], c["pretrained"], device, c["batch_size"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/features/extract_clip.py", line 25, in __init__
+    self.model.eval().to(self.device)
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ^^^^^
+RuntimeError: NVML_SUCCESS == DriverAPI::get()->nvmlInit_v2_() INTERNAL ASSERT FAILED at "/__w/pytorch/pytorch/c10/cuda/PeerToPeerAccess.cpp":83, please report a bug to PyTorch. 

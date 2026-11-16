@@ -1,0 +1,28 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+countonly_factual_r3_seed0 other_image 0 {"recall@1": 0.22580645161290322, "mrr": 0.3520276741671339}
+countonly_factual_r3_seed0 other_image 1 {"recall@1": 0.22778143515470706, "mrr": 0.3536467525524617}
+countonly_factual_r3_seed0 other_image 2 {"recall@1": 0.22260885921188753, "mrr": 0.35300038007813905}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/other_image_countonly_factual_r3_seed0.json
+countonly_factual_r3_seed0 rewire 0 {"recall@1": 0.48622213862503527, "mrr": 0.6073686377084655}
+countonly_factual_r3_seed0 rewire 1 {"recall@1": 0.4835888272359635, "mrr": 0.6056485963490449}
+countonly_factual_r3_seed0 rewire 2 {"recall@1": 0.48518762343647137, "mrr": 0.6068842432891662}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/rewire_countonly_factual_r3_seed0.json
+countonly_factual_r3_seed1 other_image 0 {"recall@1": 0.20351735164111728, "mrr": 0.3305448271469624}
+countonly_factual_r3_seed1 other_image 1 {"recall@1": 0.20812564657199284, "mrr": 0.33424893511086917}
+countonly_factual_r3_seed1 other_image 2 {"recall@1": 0.20718517821875293, "mrr": 0.33439097305409504}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/other_image_countonly_factual_r3_seed1.json
+countonly_factual_r3_seed1 rewire 0 {"recall@1": 0.4830245462240196, "mrr": 0.6045940550177763}
+countonly_factual_r3_seed1 rewire 1 {"recall@1": 0.4815197968588357, "mrr": 0.6036048590795303}
+countonly_factual_r3_seed1 rewire 2 {"recall@1": 0.4827424057180476, "mrr": 0.6049146647701806}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/rewire_countonly_factual_r3_seed1.json
+countonly_factual_r3_seed2 other_image 0 {"recall@1": 0.22448979591836735, "mrr": 0.3507209239118503}
+countonly_factual_r3_seed2 other_image 1 {"recall@1": 0.22853380983729898, "mrr": 0.35502500448260055}
+countonly_factual_r3_seed2 other_image 2 {"recall@1": 0.22373742123577542, "mrr": 0.3518108796829999}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/other_image_countonly_factual_r3_seed2.json
+countonly_factual_r3_seed2 rewire 0 {"recall@1": 0.4817078905294837, "mrr": 0.6031149355416268}
+countonly_factual_r3_seed2 rewire 1 {"recall@1": 0.4826483588827236, "mrr": 0.6032829809792454}
+countonly_factual_r3_seed2 rewire 2 {"recall@1": 0.4818019373648077, "mrr": 0.6031753409429987}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/controls/rewire_countonly_factual_r3_seed2.json

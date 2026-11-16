@@ -1,0 +1,27 @@
+# Data version count_v1 (experiment 5): the merge_v1 image graphs, unchanged and not grouped, with a count bucket per
+# node (same-type instances in the image, scripts/improve/package_counts.py), and the group_v1 caption graphs, which
+# are the factual_v1 caption graphs with a count class per node. CLIP top-50 candidates and caption vectors are
+# factual_v1's; extra_parts holds the merge_v1 part vectors that the factual_v1 table lacks.
+# Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]          # main experiments are reported as mean ± std over these
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features/factual_v1
+  extra_parts: data/features/merge_v1/vg_coco_graph_parts_extra   # file stem (.npy + .ids.json), appended to the part table
+  graphs: data/graphs/merge_v1
+  count_buckets: data/graphs/count_v1/count_buckets.json           # image node counts, merge_v1 node order
+  processed: data/processed/group_v1
+  experiments: experiments
+
+clip:
+  model: ViT-B-32-quickgelu   # open_clip model name; OpenAI weights need the QuickGELU config (experiments/checks, section 5)
+  pretrained: openai      # open_clip pretrained tag
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+retrieval:
+  top_k: 50

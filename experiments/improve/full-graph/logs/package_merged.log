@@ -1,0 +1,50 @@
+train {"images": 46944, "nodes_before": 1255685, "nodes_after": 1168021, "edges_before": 847129, "edges_after": 822515, "merged_nodes": 60277} 12s
+val {"images": 2126, "nodes_before": 56181, "nodes_after": 52230, "edges_before": 38066, "edges_after": 36954, "merged_nodes": 2664} 17s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{
+  "version": "merge_v1",
+  "date": "2026-10-21 20:42:14 +0700",
+  "base": "factual_v1",
+  "rule": {
+    "same_type": "src/graph/dedup.py same_type",
+    "iou": 0.7,
+    "label": "largest box (ties: lowest node index)",
+    "box": "union of the merged boxes",
+    "edges": "re-pointed; duplicate (s, p, o) and self-loops dropped"
+  },
+  "source_graphs": "data/graphs/vg_coco_scene_graphs.jsonl",
+  "source_graphs_sha256": "1f65f3e24e4f2bcb9e390e1092aa12f764154a398d3e163fffc237b837f41788",
+  "splits": {
+    "train": {
+      "images": 46944,
+      "nodes_before": 1255685,
+      "nodes_after": 1168021,
+      "edges_before": 847129,
+      "edges_after": 822515,
+      "merged_nodes": 60277
+    },
+    "val": {
+      "images": 2126,
+      "nodes_before": 56181,
+      "nodes_after": 52230,
+      "edges_before": 38066,
+      "edges_after": 36954,
+      "merged_nodes": 2664
+    }
+  },
+  "objects_train_sha256": "3a7633f156d9b581b27d2bbec8da57f60c20ebb9544a714520bd27a146c6614c",
+  "objects_val_sha256": "d0e306c81ec2247f1081286f266cd6dd60d6fce61bbbe8bba85626cfb51abcc2",
+  "extra_parts": {
+    "keys": 8768,
+    "by_kind": {
+      "node": 0,
+      "rel": 0,
+      "triple": 8768
+    },
+    "encoder": "ViT-B-32-quickgelu/openai",
+    "reencoded_factual_v1_sample": 1000,
+    "reencoded_max_abs_error": 0.0
+  },
+  "seconds": 26.69466543197632
+}

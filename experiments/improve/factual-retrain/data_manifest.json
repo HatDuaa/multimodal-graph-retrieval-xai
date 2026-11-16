@@ -1,0 +1,44 @@
+{
+  "version": "factual_v1",
+  "date": "2026-10-18 18:43:56 +0700",
+  "parser": "lizhuang144/flan-t5-large-VG-factual-sg",
+  "parse_script": "scripts/improve/parse_captions.py --parser factual-large",
+  "splits": {
+    "train": {
+      "captions": 234854,
+      "source": "data/processed/parsers/query_graphs_train_factual-large.json",
+      "source_sha256": "c37f500cf8707bcb7a4e7e4fee5769edb22c5b12f3b1ae924d54548bcb6d415e",
+      "candidates": "symlink to level-1 candidates_train.npz",
+      "captions_with_triple": 228524
+    },
+    "val": {
+      "captions": 10633,
+      "source": "data/processed/parsers/query_graphs_val_factual-large.json",
+      "source_sha256": "ac21794024c1d058ca85bb24f8cd6c6e7d4c8dd2fffbd07d4bf5648556f25b6b",
+      "candidates": "symlink to level-1 candidates_val.npz",
+      "captions_with_triple": 10342
+    },
+    "test": {
+      "captions": 10696,
+      "source": "data/processed/parsers/query_graphs_test_factual-large.json",
+      "source_sha256": "ec8c2699f06c40ccc12c9c36e3862191dc2bf2d2ac34d60854df619254628f5d",
+      "candidates": "symlink to level-1 candidates_test.npz",
+      "captions_with_triple": 10413
+    }
+  },
+  "part_table": {
+    "level1_keys": 582085,
+    "new_keys": 155659,
+    "new_by_kind": {
+      "node": 1828,
+      "rel": 5269,
+      "triple": 148562
+    },
+    "caption_part_keys": 209365,
+    "encoder": "ViT-B-32-quickgelu/openai",
+    "reencoded_level1_sample": 1000,
+    "reencoded_max_abs_error": 0.0,
+    "level1_table_sha256": "555eebcfef67d57bdd56d4813abfa109186de910e12beb4b7266244ed1adc5d3"
+  },
+  "seconds": 58.272602558135986
+}

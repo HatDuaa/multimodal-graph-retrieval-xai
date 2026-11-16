@@ -1,0 +1,12 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+baseline experiments/improve/count-only/countonly_factual_r3_seed0 {"all": 0.4915, "with_triple": 0.4959, "triple_only_with_triple": 0.1081, "third_only_all": 0.1142}
+baseline experiments/improve/count-only/countonly_factual_r3_seed1 {"all": 0.4885, "with_triple": 0.4934, "triple_only_with_triple": 0.1098, "third_only_all": 0.1159}
+baseline experiments/improve/count-only/countonly_factual_r3_seed2 {"all": 0.4874, "with_triple": 0.4921, "triple_only_with_triple": 0.1456, "third_only_all": 0.1507}
+verb_swap experiments/improve/count-only/countonly_factual_r3_seed0 {"all": 0.4793, "with_triple": 0.4834, "triple_only_with_triple": 0.0712, "third_only_all": 0.0782}
+verb_swap experiments/improve/count-only/countonly_factual_r3_seed1 {"all": 0.4783, "with_triple": 0.483, "triple_only_with_triple": 0.075, "third_only_all": 0.082}
+verb_swap experiments/improve/count-only/countonly_factual_r3_seed2 {"all": 0.475, "with_triple": 0.4794, "triple_only_with_triple": 0.1006, "third_only_all": 0.1068}
+subject_object_swap experiments/improve/count-only/countonly_factual_r3_seed0 {"all": 0.4847, "with_triple": 0.489, "triple_only_with_triple": 0.0897, "third_only_all": 0.0963}
+subject_object_swap experiments/improve/count-only/countonly_factual_r3_seed1 {"all": 0.4841, "with_triple": 0.4889, "triple_only_with_triple": 0.0932, "third_only_all": 0.0997}
+subject_object_swap experiments/improve/count-only/countonly_factual_r3_seed2 {"all": 0.4856, "with_triple": 0.4902, "triple_only_with_triple": 0.1225, "third_only_all": 0.1282}
+wrote experiments/improve/count-only/triple_perturbation.json in 43s

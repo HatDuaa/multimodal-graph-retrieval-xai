@@ -1,0 +1,25 @@
+# Data version merge_v1 (experiment 3): factual_v1 with duplicate boxes merged in the image graphs
+# (scripts/improve/package_merged.py). Caption graphs, CLIP top-50 candidates and caption vectors are factual_v1's;
+# the image graphs carry boxes and image sizes; extra_parts holds the part vectors that the factual_v1 table lacks.
+# Paths are relative to the repository root.
+
+seed: 0
+seeds: [0, 1, 2]          # main experiments are reported as mean ± std over these
+
+paths:
+  raw: data/raw
+  splits: data/splits
+  features: data/features/factual_v1
+  extra_parts: data/features/merge_v1/vg_coco_graph_parts_extra   # file stem (.npy + .ids.json), appended to the part table
+  graphs: data/graphs/merge_v1
+  processed: data/processed/factual_v1
+  experiments: experiments
+
+clip:
+  model: ViT-B-32-quickgelu   # open_clip model name; OpenAI weights need the QuickGELU config (experiments/checks, section 5)
+  pretrained: openai      # open_clip pretrained tag
+  batch_size: 256
+  concept_prompt: "a photo of a {}"
+
+retrieval:
+  top_k: 50

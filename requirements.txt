@@ -14,6 +14,15 @@ tqdm==4.70.1
 spacy==3.8.16
 # Install the parser model with: python -m spacy download en_core_web_sm
 SceneGraphParser==0.1.0
+# Vietnamese MMKG: wikitext infobox parsing
+mwparserfromhell==0.7.2
 pytest==9.1.1
 # demo app (not needed for experiments)
 gradio==6.28.0
+# FACTUAL-T5 caption parser (improvement phase; demo with countonly_factual_r3). Install the parser package itself with
+#   pip install --no-deps FactualSceneGraph==0.7.3
+# because its declared dependencies would downgrade torch to 2.6.0.
+transformers==5.20.1
+nltk==3.10.3
+# figures in experiment reports (scripts/improve/alpha_groups_countonly.py)
+matplotlib==3.11.2

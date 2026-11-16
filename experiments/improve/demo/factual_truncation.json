@@ -1,0 +1,67 @@
+{
+  "train": {
+    "captions": 234854,
+    "truncated": 4283,
+    "truncated_share": 0.018236862050465395,
+    "dropped_word_piece": 603,
+    "dropped_word_piece_share": 0.0025675526071516773,
+    "dropped_only_punctuation": 3680,
+    "examples": {
+      "102377_1": "S",
+      "103967_4": "AD",
+      "104486_3": "way",
+      "106952_4": "TER",
+      "109246_3": "Y",
+      "109324_4": "S",
+      "109752_3": "TES",
+      "109869_4": "bench",
+      "110593_4": "phone",
+      "11107_3": "s"
+    }
+  },
+  "val": {
+    "captions": 10633,
+    "truncated": 186,
+    "truncated_share": 0.01749271137026239,
+    "dropped_word_piece": 25,
+    "dropped_word_piece_share": 0.0023511708830997835,
+    "dropped_only_punctuation": 161,
+    "examples": {
+      "106235_1": "ABLE",
+      "182021_3": "RT",
+      "183766_0": "knife",
+      "186165_4": "S",
+      "188866_4": "UT",
+      "237463_2": "and",
+      "238310_1": "ONE",
+      "25807_2": "from shore.",
+      "277329_0": "mountain",
+      "314515_3": "AS"
+    }
+  },
+  "val_verify": {
+    "captions": 25,
+    "alone_equals_packaged": 25,
+    "untruncated_equals_packaged": 6
+  },
+  "test": {
+    "captions": 10696,
+    "truncated": 205,
+    "truncated_share": 0.019166043380703067,
+    "dropped_word_piece": 33,
+    "dropped_word_piece_share": 0.0030852655198204937,
+    "dropped_only_punctuation": 172,
+    "examples": {
+      "171443_3": "awaiting a frisbee.",
+      "172265_3": "background",
+      "195645_4": "table",
+      "195750_3": "UNT",
+      "216006_2": "WAY",
+      "218996_1": "IT",
+      "224647_4": "background",
+      "273493_4": "T",
+      "275611_3": "UND",
+      "282365_3": "ING"
+    }
+  }
+}

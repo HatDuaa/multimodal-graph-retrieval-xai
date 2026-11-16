@@ -1,0 +1,7 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+step0_frozen_clip {"objects": {"mean": 0.7889466285705566, "p05": 0.695584774017334, "p95": 0.867635190486908}, "triples": {"mean": 0.683735191822052, "p05": 0.5680038332939148, "p95": 0.7927899956703186}}
+step0_graph {"objects": {"mean": 0.7889466285705566, "p05": 0.695584774017334, "p95": 0.867635190486908}, "graph_vectors": {"mean": 0.9602903127670288, "p05": 0.9194133281707764, "p95": 0.9836398363113403}}
+graph_channel_seed0 {"objects": {"mean": 0.11033903807401657, "p05": -0.2286943793296814, "p95": 0.4548300504684448}, "graph_vectors": {"mean": 0.3141856789588928, "p05": -0.02005779929459095, "p95": 0.6885634064674377}}
+graph_channel_seed1 {"objects": {"mean": 0.13326700031757355, "p05": -0.2098427712917328, "p95": 0.474282830953598}, "graph_vectors": {"mean": 0.4080619812011719, "p05": 0.08701013773679733, "p95": 0.7310676574707031}}
+graph_channel_seed2 {"objects": {"mean": 0.202035054564476, "p05": -0.1420217603445053, "p95": 0.5193701982498169}, "graph_vectors": {"mean": 0.47332465648651123, "p05": 0.19332194328308105, "p95": 0.7488594651222229}}

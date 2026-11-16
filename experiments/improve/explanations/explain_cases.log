@@ -1,0 +1,90 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+countonly_factual_r3_seed0 {"success": 1528, "broken": 463, "both_wrong": 4944, "both_right": 3698, "n": 10633, "model_better": 4211, "model_worse": 1689, "recall@1": 0.49148876140317876, "stored_recall@1": 0.49148876140317876}
+countonly_factual_r3_seed1 {"success": 1548, "broken": 515, "both_wrong": 4924, "both_right": 3646, "n": 10633, "model_better": 4164, "model_worse": 1801, "recall@1": 0.48847926267281105, "stored_recall@1": 0.48847926267281105}
+countonly_factual_r3_seed2 {"success": 1483, "broken": 462, "both_wrong": 4989, "both_right": 3699, "n": 10633, "model_better": 4155, "model_worse": 1706, "recall@1": 0.48735070064892316, "stored_recall@1": 0.48735070064892316}
+main_r3_seed0 {"success": 1235, "broken": 434, "both_wrong": 5237, "both_right": 3727, "n": 10633, "model_better": 3987, "model_worse": 1735, "recall@1": 0.46666039687764505, "stored_recall@1": 0.46666039687764505}
+main_r3_seed1 {"success": 1241, "broken": 451, "both_wrong": 5231, "both_right": 3710, "n": 10633, "model_better": 3978, "model_worse": 1751, "recall@1": 0.46562588168908114, "stored_recall@1": 0.46562588168908114}
+main_r3_seed2 {"success": 1186, "broken": 434, "both_wrong": 5286, "both_right": 3727, "n": 10633, "model_better": 3975, "model_worse": 1716, "recall@1": 0.4620521019467695, "stored_recall@1": 0.4620521019467695}
+comparison {"explicit_share": 0.11614784162512931, "pairs": {"seed0": {"fixed": 747, "broken": 483, "both_right": 4479, "both_wrong": 4924, "fixed_explicit": 109, "broken_explicit": 54, "explicit": 1235}, "seed1": {"fixed": 750, "broken": 507, "both_right": 4444, "both_wrong": 4932, "fixed_explicit": 101, "broken_explicit": 60, "explicit": 1235}, "seed2": {"fixed": 717, "broken": 448, "both_right": 4465, "both_wrong": 5003, "fixed_explicit": 89, "broken_explicit": 60, "explicit": 1235}}}
+success 302038_1 clip 2 model 1
+success 422698_1 clip 8 model 1
+success 357943_3 clip 3 model 1
+success 445695_1 clip 4 model 1
+success 574350_4 clip 2 model 1
+broken 1153_3 clip 1 model 2
+broken 279933_1 clip 1 model 5
+broken 159627_2 clip 1 model 3
+both_wrong 34471_0 clip 13 model 17
+both_wrong 526446_0 clip 17 model 28
+count_fixed 472772_2 clip 1 main_r3 5 countonly 1
+merge_fixed 237041_4 clip 1 main_r3 4 countonly 1
+count_bad_match 151938_1 clip 10 main_r3 6 countonly 1
+{
+ "countonly_factual_r3_seed0": {
+  "success": 1528,
+  "broken": 463,
+  "both_wrong": 4944,
+  "both_right": 3698,
+  "n": 10633,
+  "model_better": 4211,
+  "model_worse": 1689,
+  "recall@1": 0.49148876140317876,
+  "stored_recall@1": 0.49148876140317876
+ },
+ "countonly_factual_r3_seed1": {
+  "success": 1548,
+  "broken": 515,
+  "both_wrong": 4924,
+  "both_right": 3646,
+  "n": 10633,
+  "model_better": 4164,
+  "model_worse": 1801,
+  "recall@1": 0.48847926267281105,
+  "stored_recall@1": 0.48847926267281105
+ },
+ "countonly_factual_r3_seed2": {
+  "success": 1483,
+  "broken": 462,
+  "both_wrong": 4989,
+  "both_right": 3699,
+  "n": 10633,
+  "model_better": 4155,
+  "model_worse": 1706,
+  "recall@1": 0.48735070064892316,
+  "stored_recall@1": 0.48735070064892316
+ },
+ "main_r3_seed0": {
+  "success": 1235,
+  "broken": 434,
+  "both_wrong": 5237,
+  "both_right": 3727,
+  "n": 10633,
+  "model_better": 3987,
+  "model_worse": 1735,
+  "recall@1": 0.46666039687764505,
+  "stored_recall@1": 0.46666039687764505
+ },
+ "main_r3_seed1": {
+  "success": 1241,
+  "broken": 451,
+  "both_wrong": 5231,
+  "both_right": 3710,
+  "n": 10633,
+  "model_better": 3978,
+  "model_worse": 1751,
+  "recall@1": 0.46562588168908114,
+  "stored_recall@1": 0.46562588168908114
+ },
+ "main_r3_seed2": {
+  "success": 1186,
+  "broken": 434,
+  "both_wrong": 5286,
+  "both_right": 3727,
+  "n": 10633,
+  "model_better": 3975,
+  "model_worse": 1716,
+  "recall@1": 0.4620521019467695,
+  "stored_recall@1": 0.4620521019467695
+ }
+}

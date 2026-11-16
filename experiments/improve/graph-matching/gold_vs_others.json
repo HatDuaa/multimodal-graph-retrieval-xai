@@ -1,0 +1,16 @@
+{
+  "srfgw": {
+    "captions": 6231,
+    "gold_mean": -0.07267813307605189,
+    "others_mean": -0.09242955066808081,
+    "gold_above_others_mean": 0.734553041245386
+  },
+  "consistency": {
+    "captions": 6133,
+    "gold_mean": 0.36872973168831646,
+    "others_mean": 0.3790195444931913,
+    "gold_above_others_mean": 0.381216370454916,
+    "gold_fully_consistent": 0.31893037665090496,
+    "others_fully_consistent": 0.3117267242784934
+  }
+}

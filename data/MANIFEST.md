@@ -108,3 +108,22 @@ Bản 2026-09-25 (v2 — ảnh lấy từ kho tác giả MMRNS thay vì Wikimedi
 | `data/features/mkgw_caption.npy` (8 920 × 512) | 18268288 | `59de0cf337a14ae3c468131bb9ca6952d85d3f4be577f971303a2c042de17d2d` |
 
 Ảnh chuẩn hoá `data/raw/images/<qid>.jpg` (8 961 file, 476 MB, JPEG cạnh dài 640) sinh lại được từ zip + index nên không cần checksum từng file. Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.
+
+## MMKG tiếng Việt (cấp độ 3, Khang)
+
+Bản 2026-10-26, cache thô tải ngày 2026-10-24.
+- Đóng gói bằng `scripts/archive_vnmmkg_raw.py`, chia sẻ qua Drive (link trong `data/README.md`, mục MMKG tiếng Việt) và Hugging Face (`duongkhang2100/graphml-vietnamese-mmkg`).
+- Dựng bằng `python -m src.data.build_vnmmkg` (seed 0).
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/raw/vnmmkg_raw_2026-10-24.zip` | 137913533 | `7215a609f957fa1eaa6f350aa784898b6f72872a214933e5df61ce2c38c9f506` |
+| `vietnamese-mmkg/entities.jsonl` | 54729 | `743d99fec526d33c7365b0a0aaa6a68d41ff32948fc2547c353116f6ef7850fb` |
+| `vietnamese-mmkg/triples.jsonl` | 40181 | `06391fb60b3a56cc88749608d7b803e3b005999aba2c00cb4434a69fe950c1ba` |
+| `vietnamese-mmkg/images.jsonl` | 223663 | `48174233fd9067300238229458b649589709b40295f190d3fc0b4804ab9cd776` |
+| `vietnamese-mmkg/queries_auto.jsonl` | 55229 | `0f5e239e84c57ccedad73025f40430c696476358fb5649ab8eb12f637b3d9fc8` |
+| `vietnamese-mmkg/queries_hand.json` | 7930 | `fe311fa0bc44aa7f8e237fe33b33d01e7a8b82b0d434c7c73fe04ee116bb8c1e` |
+| `data/splits/vnmmkg_val.json` | 86978 | `910847b4000eb65a05223a9a7194131bfa0d8f40a695650edc9720caf0963508` |
+| `data/splits/vnmmkg_test.json` | 88504 | `56d939c13461187204b860a2ed99bb1fbd430bde2be9f37be8c11364dd654574` |
+
+Ảnh `data/raw/vnmmkg/images/<image_id>.jpg` sinh lại từ zip bằng lệnh build; SHA-256 từng ảnh nằm trong `images.jsonl`.

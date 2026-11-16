@@ -1,0 +1,72 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[W1018 01:32:48.471781285 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3657433088 bytes (free: 3411869696, total: 25243287552).
+[W1018 01:32:48.728839945 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3672113152 bytes (free: 1906114560, total: 25243287552).
+[W1018 01:32:48.953453995 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1105002496, total: 25243287552).
+[W1018 01:32:48.997123283 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1264386048, total: 25243287552).
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: nvmlInit_v2 failed; omitting per-process memory info from CUDA out-of-memory messages. (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDACachingAllocator.cpp:1348.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Traceback (most recent call last):
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 296, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 293, in main
+    train(args, store, run_dir, device, cfg)
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 240, in train
+    (loss * (len(part) / len(batch))).backward()
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.74 GiB. GPU 0 has a total capacity of 23.51 GiB of which 1.18 GiB is free. Of the allocated memory 18.70 GiB is allocated by PyTorch, and 3.12 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[W1018 01:32:59.886749679 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3657433088 bytes (free: 3411869696, total: 25243287552).
+[W1018 01:32:59.143271570 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3672113152 bytes (free: 1906114560, total: 25243287552).
+[W1018 01:33:00.367935708 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1105002496, total: 25243287552).
+[W1018 01:33:00.411172989 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1264386048, total: 25243287552).
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: nvmlInit_v2 failed; omitting per-process memory info from CUDA out-of-memory messages. (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDACachingAllocator.cpp:1348.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Traceback (most recent call last):
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 296, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 293, in main
+    train(args, store, run_dir, device, cfg)
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 240, in train
+    (loss * (len(part) / len(batch))).backward()
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.74 GiB. GPU 0 has a total capacity of 23.51 GiB of which 1.18 GiB is free. Of the allocated memory 18.70 GiB is allocated by PyTorch, and 3.12 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[W1018 01:33:10.907028735 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3657433088 bytes (free: 3411869696, total: 25243287552).
+[W1018 01:33:10.165370449 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3672113152 bytes (free: 1906114560, total: 25243287552).
+[W1018 01:33:11.389177661 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1105002496, total: 25243287552).
+[W1018 01:33:11.433111416 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 4011851776 bytes (free: 1264386048, total: 25243287552).
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: nvmlInit_v2 failed; omitting per-process memory info from CUDA out-of-memory messages. (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDACachingAllocator.cpp:1348.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Traceback (most recent call last):
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 296, in <module>
+    if __name__ == "__main__": main()
+                               ^^^^^^
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 293, in main
+    train(args, store, run_dir, device, cfg)
+  File "/home/loc.nguyen/multimodal-graph-retrieval-xai/src/train_graph_reranker.py", line 240, in train
+    (loss * (len(part) / len(batch))).backward()
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/_tensor.py", line 623, in backward
+    torch.autograd.backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/__init__.py", line 395, in backward
+    _engine_run_backward(
+  File "/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.74 GiB. GPU 0 has a total capacity of 23.51 GiB of which 1.18 GiB is free. Of the allocated memory 18.70 GiB is allocated by PyTorch, and 3.12 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

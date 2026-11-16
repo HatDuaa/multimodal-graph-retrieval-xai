@@ -1,0 +1,80 @@
+{
+  "split": "val",
+  "n_queries": 10633,
+  "per_run": {
+    "experiments/improve/count-only/countonly_factual_r3_seed0": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.30767256021499634,
+        "median": 0.32325440645217896,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.18632850050926208,
+        "median": 0.18727554380893707,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.333355188369751,
+        "median": 0.3452446460723877,
+        "queries": 10633
+      }
+    },
+    "experiments/improve/count-only/countonly_factual_r3_seed1": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.27249768376350403,
+        "median": 0.2941664457321167,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.16298820078372955,
+        "median": 0.16143636405467987,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.33701837062835693,
+        "median": 0.3499196767807007,
+        "queries": 10633
+      }
+    },
+    "experiments/improve/count-only/countonly_factual_r3_seed2": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.3459494709968567,
+        "median": 0.37579429149627686,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.2110268771648407,
+        "median": 0.2133936583995819,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.32808294892311096,
+        "median": 0.3392305374145508,
+        "queries": 10633
+      }
+    }
+  },
+  "aggregate": {
+    "countonly_factual_r3": {
+      "objects~third": {
+        "mean": 0.30870657165845233,
+        "std": 0.036736809152297455
+      },
+      "clip~third": {
+        "mean": 0.18678119281927744,
+        "std": 0.024022537435873455
+      },
+      "clip~objects": {
+        "mean": 0.3328188359737396,
+        "std": 0.004491792034608854
+      },
+      "third_channel_active": {
+        "mean": 0.9726323485374451,
+        "std": 0.0
+      }
+    }
+  }
+}

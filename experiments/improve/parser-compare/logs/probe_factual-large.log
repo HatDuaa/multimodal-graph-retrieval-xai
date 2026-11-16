@@ -1,0 +1,6 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+factual-large 0.02 {"alpha": 0.5, "beta": 0.6, "recall@1": 0.43618922223267187, "mrr": 0.5596158371389102}
+factual-large 0.05 {"alpha": 0.5, "beta": 0.6, "recall@1": 0.434872566538136, "mrr": 0.5588377427274905}
+factual-large 0.1 {"alpha": 0.7, "beta": 0.6, "recall@1": 0.4220821969340732, "mrr": 0.5501561043453086}
+{"best": {"temperature": 0.02, "alpha": 0.5, "beta": 0.6, "n_queries": 10633, "recall@1": 0.43618922223267187, "recall@5": 0.7039405624000752, "recall@10": 0.8107777673281295, "mrr": 0.5596158371389102}, "reference_point": {"alpha": 0.6, "beta": 0.7, "temperature": 0.05, "n_queries": 10633, "recall@1": 0.434590426032164, "recall@5": 0.7115583560613186, "recall@10": 0.8171729521301608, "mrr": 0.5613296447614589}}

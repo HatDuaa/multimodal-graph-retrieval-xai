@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/improve/triple-factorized/factorized_seed0 {"all": 0.4602, "with_triple": 0.4684, "triple_only_with_triple": 0.1766, "third_only_all": 0.2018}
+baseline experiments/improve/triple-factorized/factorized_seed1 {"all": 0.4601, "with_triple": 0.4684, "triple_only_with_triple": 0.1742, "third_only_all": 0.1998}
+baseline experiments/improve/triple-factorized/factorized_seed2 {"all": 0.4598, "with_triple": 0.4676, "triple_only_with_triple": 0.1785, "third_only_all": 0.2034}
+verb_swap experiments/improve/triple-factorized/factorized_seed0 {"all": 0.4597, "with_triple": 0.4678, "triple_only_with_triple": 0.1577, "third_only_all": 0.1856}
+verb_swap experiments/improve/triple-factorized/factorized_seed1 {"all": 0.4598, "with_triple": 0.468, "triple_only_with_triple": 0.1557, "third_only_all": 0.1839}
+verb_swap experiments/improve/triple-factorized/factorized_seed2 {"all": 0.4588, "with_triple": 0.4664, "triple_only_with_triple": 0.1641, "third_only_all": 0.1911}
+subject_object_swap experiments/improve/triple-factorized/factorized_seed0 {"all": 0.4582, "with_triple": 0.4661, "triple_only_with_triple": 0.1235, "third_only_all": 0.1563}
+subject_object_swap experiments/improve/triple-factorized/factorized_seed1 {"all": 0.4601, "with_triple": 0.4684, "triple_only_with_triple": 0.1177, "third_only_all": 0.1513}
+subject_object_swap experiments/improve/triple-factorized/factorized_seed2 {"all": 0.4575, "with_triple": 0.465, "triple_only_with_triple": 0.1245, "third_only_all": 0.1572}
+wrote experiments/improve/triple-factorized/triple_perturbation.json in 32s

@@ -1,0 +1,491 @@
+{
+  "thresholds": [
+    0.5,
+    0.7,
+    0.9
+  ],
+  "criteria": [
+    "a",
+    "b",
+    "ab",
+    "near"
+  ],
+  "splits": {
+    "train": {
+      "images": 46944,
+      "duplicate_node_share": {
+        "0.5": 0.1621226661145112,
+        "0.7": 0.11781696842759132,
+        "0.9": 0.02977657613175279
+      },
+      "variants": {
+        "before": {
+          "nodes_per_image": 26.74857276755283,
+          "edges_per_image": 18.045522324471712,
+          "components_per_image": 10.959462338104975,
+          "largest_component_mean": 10.490818847989093,
+          "largest_component_share": 0.4359750802823372,
+          "degree_one_share": 0.558583561960205,
+          "isolated_share": 0.22134691423406347
+        },
+        "merge0.5": {
+          "nodes_per_image": 24.11375255623722,
+          "edges_per_image": 17.319316632583504,
+          "components_per_image": 9.382753919563736,
+          "largest_component_mean": 11.01241905248807,
+          "largest_component_share": 0.4876367715872011,
+          "degree_one_share": 0.5176961756048608,
+          "isolated_share": 0.23156972286121152
+        },
+        "merge0.5+a": {
+          "nodes_per_image": 21.82713445807771,
+          "edges_per_image": 14.694934389911383,
+          "components_per_image": 9.382753919563736,
+          "largest_component_mean": 9.292177914110429,
+          "largest_component_share": 0.46497805906399403,
+          "degree_one_share": 0.5042438757315891,
+          "isolated_share": 0.2558329502768254,
+          "group_nodes_per_image": 2.577006646216769,
+          "images_with_group": 0.7476993865030674,
+          "mean_group_size": 2.909749948336433,
+          "two_tier_extra_nodes_per_image": 2.577006646216769,
+          "two_tier_member_edges_per_image": 7.498444955691888
+        },
+        "merge0.5+b": {
+          "nodes_per_image": 18.947959270620313,
+          "edges_per_image": 14.44836400817996,
+          "components_per_image": 7.308324812542604,
+          "largest_component_mean": 10.002087593728698,
+          "largest_component_share": 0.5535174816125331,
+          "degree_one_share": 0.4709401872752231,
+          "isolated_share": 0.24303170457777634,
+          "group_nodes_per_image": 3.497912406271302,
+          "images_with_group": 0.8587678936605317,
+          "mean_group_size": 3.2300768546825327,
+          "two_tier_extra_nodes_per_image": 3.497912406271302,
+          "two_tier_member_edges_per_image": 11.298525903203817
+        },
+        "merge0.5+ab": {
+          "nodes_per_image": 18.782293796864348,
+          "edges_per_image": 14.268255794137696,
+          "components_per_image": 7.308324812542604,
+          "largest_component_mean": 9.880005964553511,
+          "largest_component_share": 0.5518218861799209,
+          "degree_one_share": 0.47005498369089366,
+          "isolated_share": 0.24518325628660476,
+          "group_nodes_per_image": 3.519768234492161,
+          "images_with_group": 0.8630069870483981,
+          "mean_group_size": 3.263296455892321,
+          "two_tier_extra_nodes_per_image": 3.519768234492161,
+          "two_tier_member_edges_per_image": 11.486047205180641
+        },
+        "merge0.5+near": {
+          "nodes_per_image": 21.841172460804362,
+          "edges_per_image": 16.181556748466257,
+          "components_per_image": 8.246272154055896,
+          "largest_component_mean": 10.71732276755283,
+          "largest_component_share": 0.5157618476782655,
+          "degree_one_share": 0.5082062825754502,
+          "isolated_share": 0.2247559767173309,
+          "group_nodes_per_image": 2.8400647580095435,
+          "images_with_group": 0.7687883435582822,
+          "mean_group_size": 2.7279184542918005,
+          "two_tier_extra_nodes_per_image": 2.8400647580095435,
+          "two_tier_member_edges_per_image": 7.74746506475801
+        },
+        "merge0.7": {
+          "nodes_per_image": 24.881156271301975,
+          "edges_per_image": 17.521195466939332,
+          "components_per_image": 9.799889229720518,
+          "largest_component_mean": 10.954072937968643,
+          "largest_component_share": 0.4741642822969047,
+          "degree_one_share": 0.531151409092816,
+          "isolated_share": 0.22878098938289637
+        },
+        "merge0.7+a": {
+          "nodes_per_image": 22.461081288343557,
+          "edges_per_image": 14.772367075664622,
+          "components_per_image": 9.799889229720518,
+          "largest_component_mean": 9.16298142467621,
+          "largest_component_share": 0.45023782178636296,
+          "degree_one_share": 0.5187824884556621,
+          "isolated_share": 0.2534357979273776,
+          "group_nodes_per_image": 2.3027010906612135,
+          "images_with_group": 0.7286554192229039,
+          "mean_group_size": 2.8619400913985458,
+          "two_tier_extra_nodes_per_image": 2.3027010906612135,
+          "two_tier_member_edges_per_image": 6.590192569870484
+        },
+        "merge0.7+b": {
+          "nodes_per_image": 18.98159509202454,
+          "edges_per_image": 14.454009032038174,
+          "components_per_image": 7.3310753237900474,
+          "largest_component_mean": 10.009798909338787,
+          "largest_component_share": 0.5531726440899456,
+          "degree_one_share": 0.4712133250736192,
+          "isolated_share": 0.24369186777275012,
+          "group_nodes_per_image": 3.4670245398773005,
+          "images_with_group": 0.8574897750511248,
+          "mean_group_size": 3.240243063235764,
+          "two_tier_extra_nodes_per_image": 3.4670245398773005,
+          "two_tier_member_edges_per_image": 11.23400221540559
+        },
+        "merge0.7+ab": {
+          "nodes_per_image": 18.81509884117246,
+          "edges_per_image": 14.273496080436264,
+          "components_per_image": 7.3310753237900474,
+          "largest_component_mean": 9.88667348329925,
+          "largest_component_share": 0.551462039272926,
+          "degree_one_share": 0.4702000326066282,
+          "isolated_share": 0.245856240999212,
+          "group_nodes_per_image": 3.4905845262440356,
+          "images_with_group": 0.8618140763462849,
+          "mean_group_size": 3.272821032332084,
+          "two_tier_extra_nodes_per_image": 3.4905845262440356,
+          "two_tier_member_edges_per_image": 11.424058452624404
+        },
+        "merge0.7+near": {
+          "nodes_per_image": 21.816057430129515,
+          "edges_per_image": 16.160425187457395,
+          "components_per_image": 8.235386843899114,
+          "largest_component_mean": 10.717876618950239,
+          "largest_component_share": 0.5162076990382528,
+          "degree_one_share": 0.5085511354482279,
+          "isolated_share": 0.2247432706494176,
+          "group_nodes_per_image": 2.8276670074982957,
+          "images_with_group": 0.7687883435582822,
+          "mean_group_size": 2.744376308930105,
+          "two_tier_extra_nodes_per_image": 2.8276670074982957,
+          "two_tier_member_edges_per_image": 7.760182344921609
+        },
+        "merge0.9": {
+          "nodes_per_image": 26.3296693933197,
+          "edges_per_image": 17.86319870483981,
+          "components_per_image": 10.658060668029993,
+          "largest_component_mean": 10.64519427402863,
+          "largest_component_share": 0.44563682517086695,
+          "degree_one_share": 0.5554699762139771,
+          "isolated_share": 0.2224802187666866
+        },
+        "merge0.9+a": {
+          "nodes_per_image": 23.693528459441037,
+          "edges_per_image": 14.914238241308793,
+          "components_per_image": 10.658060668029993,
+          "largest_component_mean": 8.77500852079073,
+          "largest_component_share": 0.4200522604134531,
+          "degree_one_share": 0.5465287623767272,
+          "isolated_share": 0.2472387524960239,
+          "group_nodes_per_image": 1.7468899113837764,
+          "images_with_group": 0.6772111451942741,
+          "mean_group_size": 2.748847645294247,
+          "two_tier_extra_nodes_per_image": 1.7468899113837764,
+          "two_tier_member_edges_per_image": 4.801934219495569
+        },
+        "merge0.9+b": {
+          "nodes_per_image": 19.005666325835037,
+          "edges_per_image": 14.452539195637355,
+          "components_per_image": 7.352228186775733,
+          "largest_component_mean": 10.013079413769598,
+          "largest_component_share": 0.5528755273017149,
+          "degree_one_share": 0.47122512614856277,
+          "isolated_share": 0.24447826837420225,
+          "group_nodes_per_image": 3.438266871165644,
+          "images_with_group": 0.8563394683026585,
+          "mean_group_size": 3.251979480316717,
+          "two_tier_extra_nodes_per_image": 3.438266871165644,
+          "two_tier_member_edges_per_image": 11.181173312883436
+        },
+        "merge0.9+ab": {
+          "nodes_per_image": 18.841790218132243,
+          "edges_per_image": 14.275242842535787,
+          "components_per_image": 7.352228186775733,
+          "largest_component_mean": 9.891871165644172,
+          "largest_component_share": 0.5512056341215836,
+          "degree_one_share": 0.4701297556045218,
+          "isolated_share": 0.24661252740220846,
+          "group_nodes_per_image": 3.463104976141786,
+          "images_with_group": 0.8607489775051125,
+          "mean_group_size": 3.2831483896365916,
+          "two_tier_extra_nodes_per_image": 3.463104976141786,
+          "two_tier_member_edges_per_image": 11.369887525562373
+        },
+        "merge0.9+near": {
+          "nodes_per_image": 21.76167348329925,
+          "edges_per_image": 16.131944444444443,
+          "components_per_image": 8.2142978868439,
+          "largest_component_mean": 10.716193762781186,
+          "largest_component_share": 0.517177872563018,
+          "degree_one_share": 0.5087433191722626,
+          "isolated_share": 0.22510816578241546,
+          "group_nodes_per_image": 2.8071958077709613,
+          "images_with_group": 0.7687883435582822,
+          "mean_group_size": 2.776470052587247,
+          "two_tier_extra_nodes_per_image": 2.8071958077709613,
+          "two_tier_member_edges_per_image": 7.7940950920245395
+        }
+      },
+      "role_pairs": {
+        "merge0.5": {
+          "pairs_a": 212827,
+          "pairs_b": 466128,
+          "pairs_both": 188744,
+          "conflict_a_not_b": 37207,
+          "conflict_b_not_a": 24532
+        },
+        "merge0.7": {
+          "pairs_a": 221428,
+          "pairs_b": 538366,
+          "pairs_both": 195240,
+          "conflict_a_not_b": 39592,
+          "conflict_b_not_a": 30033
+        },
+        "merge0.9": {
+          "pairs_a": 234978,
+          "pairs_b": 718988,
+          "pairs_both": 205460,
+          "conflict_a_not_b": 42111,
+          "conflict_b_not_a": 39227
+        }
+      },
+      "seconds": 40.144317626953125
+    },
+    "val": {
+      "images": 2126,
+      "duplicate_node_share": {
+        "0.5": 0.16263505455581068,
+        "0.7": 0.11774443317135687,
+        "0.9": 0.030722130257560386
+      },
+      "variants": {
+        "before": {
+          "nodes_per_image": 26.425682031984948,
+          "edges_per_image": 17.904985888993416,
+          "components_per_image": 10.849952963311383,
+          "largest_component_mean": 10.45343367826905,
+          "largest_component_share": 0.44605314560486237,
+          "degree_one_share": 0.5585340239582777,
+          "isolated_share": 0.221231377155978
+        },
+        "merge0.5": {
+          "nodes_per_image": 23.793979303857007,
+          "edges_per_image": 17.16650987770461,
+          "components_per_image": 9.246472248353715,
+          "largest_component_mean": 10.977892756349952,
+          "largest_component_share": 0.49775171816548175,
+          "degree_one_share": 0.5193334124065947,
+          "isolated_share": 0.23026133712884989
+        },
+        "merge0.5+a": {
+          "nodes_per_image": 21.569143932267167,
+          "edges_per_image": 14.588899341486359,
+          "components_per_image": 9.246472248353715,
+          "largest_component_mean": 9.273753527751646,
+          "largest_component_share": 0.4749886461130712,
+          "degree_one_share": 0.5066294487090021,
+          "isolated_share": 0.2540125610607118,
+          "group_nodes_per_image": 2.5183443085606774,
+          "images_with_group": 0.7450611476952023,
+          "mean_group_size": 2.92846469929025,
+          "two_tier_extra_nodes_per_image": 2.5183443085606774,
+          "two_tier_member_edges_per_image": 7.374882408278457
+        },
+        "merge0.5+b": {
+          "nodes_per_image": 18.70178739416745,
+          "edges_per_image": 14.335371589840076,
+          "components_per_image": 7.19379115710254,
+          "largest_component_mean": 9.933678269049858,
+          "largest_component_share": 0.5598876084748682,
+          "degree_one_share": 0.4698943661971831,
+          "isolated_share": 0.24225352112676057,
+          "group_nodes_per_image": 3.4553151458137346,
+          "images_with_group": 0.848071495766698,
+          "mean_group_size": 3.2353661856792812,
+          "two_tier_extra_nodes_per_image": 3.4553151458137346,
+          "two_tier_member_edges_per_image": 11.179209783631233
+        },
+        "merge0.5+ab": {
+          "nodes_per_image": 18.5343367826905,
+          "edges_per_image": 14.152869238005644,
+          "components_per_image": 7.19379115710254,
+          "largest_component_mean": 9.810442144873,
+          "largest_component_share": 0.5580607543101677,
+          "degree_one_share": 0.46906405441071974,
+          "isolated_share": 0.24446756674449294,
+          "group_nodes_per_image": 3.4731890874882407,
+          "images_with_group": 0.8499529633113829,
+          "mean_group_size": 3.272074756229686,
+          "two_tier_extra_nodes_per_image": 3.4731890874882407,
+          "two_tier_member_edges_per_image": 11.36453433678269
+        },
+        "merge0.5+near": {
+          "nodes_per_image": 21.58043273753528,
+          "edges_per_image": 16.05409219190969,
+          "components_per_image": 8.140169332079022,
+          "largest_component_mean": 10.62793979303857,
+          "largest_component_share": 0.521575512367712,
+          "degree_one_share": 0.5086312118570183,
+          "isolated_share": 0.2238666085440279,
+          "group_nodes_per_image": 2.7718720602069613,
+          "images_with_group": 0.7474129821260583,
+          "mean_group_size": 2.7480061089428136,
+          "two_tier_extra_nodes_per_image": 2.7718720602069613,
+          "two_tier_member_edges_per_image": 7.617121354656632
+        },
+        "merge0.7": {
+          "nodes_per_image": 24.567262464722482,
+          "edges_per_image": 17.381937911571026,
+          "components_per_image": 9.67074317968015,
+          "largest_component_mean": 10.923330197554092,
+          "largest_component_share": 0.4841796258177302,
+          "degree_one_share": 0.5325866360329312,
+          "isolated_share": 0.22758950794562513
+        },
+        "merge0.7+a": {
+          "nodes_per_image": 22.207902163687677,
+          "edges_per_image": 14.670272812793979,
+          "components_per_image": 9.67074317968015,
+          "largest_component_mean": 9.13546566321731,
+          "largest_component_share": 0.45990602264155556,
+          "degree_one_share": 0.5206082941500403,
+          "isolated_share": 0.25176854322870335,
+          "group_nodes_per_image": 2.2361241768579494,
+          "images_with_group": 0.7248353715898401,
+          "mean_group_size": 2.886201093815734,
+          "two_tier_extra_nodes_per_image": 2.2361241768579494,
+          "two_tier_member_edges_per_image": 6.453904045155221
+        },
+        "merge0.7+b": {
+          "nodes_per_image": 18.74035747883349,
+          "edges_per_image": 14.339134524929445,
+          "components_per_image": 7.219661335841956,
+          "largest_component_mean": 9.948259642521167,
+          "largest_component_share": 0.5596620566917268,
+          "degree_one_share": 0.4702073189096933,
+          "isolated_share": 0.24308518648662217,
+          "group_nodes_per_image": 3.4195672624647226,
+          "images_with_group": 0.8471307619943556,
+          "mean_group_size": 3.247455295735901,
+          "two_tier_extra_nodes_per_image": 3.4195672624647226,
+          "two_tier_member_edges_per_image": 11.104891815616181
+        },
+        "merge0.7+ab": {
+          "nodes_per_image": 18.57714016933208,
+          "edges_per_image": 14.160865475070555,
+          "components_per_image": 7.219661335841956,
+          "largest_component_mean": 9.827375352775165,
+          "largest_component_share": 0.5578601395682206,
+          "degree_one_share": 0.4692999113811875,
+          "isolated_share": 0.2452462337004684,
+          "group_nodes_per_image": 3.4412041392285984,
+          "images_with_group": 0.8490122295390404,
+          "mean_group_size": 3.2807545106615636,
+          "two_tier_extra_nodes_per_image": 3.4412041392285984,
+          "two_tier_member_edges_per_image": 11.289746001881468
+        },
+        "merge0.7+near": {
+          "nodes_per_image": 21.55126999059266,
+          "edges_per_image": 16.02681091251176,
+          "components_per_image": 8.130291627469425,
+          "largest_component_mean": 10.631232361241768,
+          "largest_component_share": 0.5221701226540435,
+          "degree_one_share": 0.5090357501418656,
+          "isolated_share": 0.22399493648784322,
+          "group_nodes_per_image": 2.7544684854186263,
+          "images_with_group": 0.7474129821260583,
+          "mean_group_size": 2.7696379781420766,
+          "two_tier_extra_nodes_per_image": 2.7544684854186263,
+          "two_tier_member_edges_per_image": 7.628880526810913
+        },
+        "merge0.9": {
+          "nodes_per_image": 25.997177798682973,
+          "edges_per_image": 17.71354656632173,
+          "components_per_image": 10.53857008466604,
+          "largest_component_mean": 10.579492003762935,
+          "largest_component_share": 0.45475933496788434,
+          "degree_one_share": 0.5556178758820337,
+          "isolated_share": 0.22194680658585128
+        },
+        "merge0.9+a": {
+          "nodes_per_image": 23.43744120413923,
+          "edges_per_image": 14.825023518344308,
+          "components_per_image": 10.53857008466604,
+          "largest_component_mean": 8.725305738476012,
+          "largest_component_share": 0.4284996638768938,
+          "degree_one_share": 0.5466605121618368,
+          "isolated_share": 0.24618688287709722,
+          "group_nodes_per_image": 1.6857949200376294,
+          "images_with_group": 0.6749764816556915,
+          "mean_group_size": 2.7726004464285716,
+          "two_tier_extra_nodes_per_image": 1.6857949200376294,
+          "two_tier_member_edges_per_image": 4.674035747883349
+        },
+        "merge0.9+b": {
+          "nodes_per_image": 18.761523988711193,
+          "edges_per_image": 14.335841956726247,
+          "components_per_image": 7.2398871119473185,
+          "largest_component_mean": 9.948730009407338,
+          "largest_component_share": 0.5592298226219248,
+          "degree_one_share": 0.47012811191616316,
+          "isolated_share": 0.2438137739112994,
+          "group_nodes_per_image": 3.400752587017874,
+          "images_with_group": 0.8461900282220132,
+          "mean_group_size": 3.253665283540802,
+          "two_tier_extra_nodes_per_image": 3.400752587017874,
+          "two_tier_member_edges_per_image": 11.064910630291628
+        },
+        "merge0.9+ab": {
+          "nodes_per_image": 18.606302916274693,
+          "edges_per_image": 14.167450611476951,
+          "components_per_image": 7.2398871119473185,
+          "largest_component_mean": 9.834901222953905,
+          "largest_component_share": 0.5575850809553429,
+          "degree_one_share": 0.4691963495715044,
+          "isolated_share": 0.24587304396187779,
+          "group_nodes_per_image": 3.422859830667921,
+          "images_with_group": 0.848071495766698,
+          "mean_group_size": 3.2844578809949154,
+          "two_tier_extra_nodes_per_image": 3.422859830667921,
+          "two_tier_member_edges_per_image": 11.242238946378174
+        },
+        "merge0.9+near": {
+          "nodes_per_image": 21.5,
+          "edges_per_image": 16.000470366886173,
+          "components_per_image": 8.103951081843839,
+          "largest_component_mean": 10.629350893697083,
+          "largest_component_share": 0.5231603705600979,
+          "degree_one_share": 0.508871338248485,
+          "isolated_share": 0.2243540659388742,
+          "group_nodes_per_image": 2.7408278457196613,
+          "images_with_group": 0.7474129821260583,
+          "mean_group_size": 2.797151192723528,
+          "two_tier_extra_nodes_per_image": 2.7408278457196613,
+          "two_tier_member_edges_per_image": 7.66650987770461
+        }
+      },
+      "role_pairs": {
+        "merge0.5": {
+          "pairs_a": 9397,
+          "pairs_b": 20140,
+          "pairs_both": 8337,
+          "conflict_a_not_b": 1654,
+          "conflict_b_not_a": 1002
+        },
+        "merge0.7": {
+          "pairs_a": 9869,
+          "pairs_b": 23509,
+          "pairs_both": 8737,
+          "conflict_a_not_b": 1782,
+          "conflict_b_not_a": 1244
+        },
+        "merge0.9": {
+          "pairs_a": 10550,
+          "pairs_b": 32159,
+          "pairs_both": 9238,
+          "conflict_a_not_b": 1926,
+          "conflict_b_not_a": 1634
+        }
+      },
+      "seconds": 5.117744207382202
+    }
+  }
+}

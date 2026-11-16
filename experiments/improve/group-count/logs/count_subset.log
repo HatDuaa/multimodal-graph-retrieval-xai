@@ -1,0 +1,8 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+groupcount_factual_r3 experiments/improve/group-count/groupcount_factual_r3_seed0 {"all": 0.4793, "known_count": 0.5041, "explicit": 0.5538, "plural_or_group_only": 0.4855, "unknown_only": 0.4608}
+groupcount_factual_r3 experiments/improve/group-count/groupcount_factual_r3_seed1 {"all": 0.475, "known_count": 0.497, "explicit": 0.5312, "plural_or_group_only": 0.4843, "unknown_only": 0.4586}
+groupcount_factual_r3 experiments/improve/group-count/groupcount_factual_r3_seed2 {"all": 0.4782, "known_count": 0.5019, "explicit": 0.5417, "plural_or_group_only": 0.487, "unknown_only": 0.4606}
+fullgraph_factual_r3 experiments/improve/full-graph/fullgraph_factual_r3_seed0 {"all": 0.4821, "known_count": 0.5025, "explicit": 0.5231, "plural_or_group_only": 0.4949, "unknown_only": 0.4668}
+fullgraph_factual_r3 experiments/improve/full-graph/fullgraph_factual_r3_seed1 {"all": 0.4856, "known_count": 0.5012, "explicit": 0.5287, "plural_or_group_only": 0.4909, "unknown_only": 0.4739}
+fullgraph_factual_r3 experiments/improve/full-graph/fullgraph_factual_r3_seed2 {"all": 0.4839, "known_count": 0.5047, "explicit": 0.5255, "plural_or_group_only": 0.497, "unknown_only": 0.4683}

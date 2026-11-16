@@ -1,0 +1,12 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+baseline experiments/level1/gat/main_r3_seed0 {"all": 0.4667, "with_triple": 0.4758, "triple_only_with_triple": 0.0608}
+baseline experiments/level1/gat/main_r3_seed1 {"all": 0.4656, "with_triple": 0.475, "triple_only_with_triple": 0.0627}
+baseline experiments/level1/gat/main_r3_seed2 {"all": 0.4621, "with_triple": 0.4705, "triple_only_with_triple": 0.0637}
+verb_swap experiments/level1/gat/main_r3_seed0 {"all": 0.4614, "with_triple": 0.4697, "triple_only_with_triple": 0.0449}
+verb_swap experiments/level1/gat/main_r3_seed1 {"all": 0.4615, "with_triple": 0.4701, "triple_only_with_triple": 0.0502}
+verb_swap experiments/level1/gat/main_r3_seed2 {"all": 0.4589, "with_triple": 0.4667, "triple_only_with_triple": 0.048}
+subject_object_swap experiments/level1/gat/main_r3_seed0 {"all": 0.4607, "with_triple": 0.4689, "triple_only_with_triple": 0.0464}
+subject_object_swap experiments/level1/gat/main_r3_seed1 {"all": 0.4577, "with_triple": 0.4657, "triple_only_with_triple": 0.0482}
+subject_object_swap experiments/level1/gat/main_r3_seed2 {"all": 0.4589, "with_triple": 0.4667, "triple_only_with_triple": 0.0461}
+wrote experiments/improve/triple-perturbation/main_r3.json in 32s

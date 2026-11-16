@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/improve/factual-retrain/main_factual_r3_seed0 {"all": 0.4708, "with_triple": 0.4751, "triple_only_with_triple": 0.0833, "third_only_all": 0.09}
+baseline experiments/improve/factual-retrain/main_factual_r3_seed1 {"all": 0.4698, "with_triple": 0.4739, "triple_only_with_triple": 0.12, "third_only_all": 0.1257}
+baseline experiments/improve/factual-retrain/main_factual_r3_seed2 {"all": 0.4764, "with_triple": 0.4805, "triple_only_with_triple": 0.0824, "third_only_all": 0.0892}
+verb_swap experiments/improve/factual-retrain/main_factual_r3_seed0 {"all": 0.4646, "with_triple": 0.4687, "triple_only_with_triple": 0.0526, "third_only_all": 0.0602}
+verb_swap experiments/improve/factual-retrain/main_factual_r3_seed1 {"all": 0.4591, "with_triple": 0.463, "triple_only_with_triple": 0.0777, "third_only_all": 0.0846}
+verb_swap experiments/improve/factual-retrain/main_factual_r3_seed2 {"all": 0.4669, "with_triple": 0.4707, "triple_only_with_triple": 0.0522, "third_only_all": 0.0598}
+subject_object_swap experiments/improve/factual-retrain/main_factual_r3_seed0 {"all": 0.4626, "with_triple": 0.4666, "triple_only_with_triple": 0.0532, "third_only_all": 0.0608}
+subject_object_swap experiments/improve/factual-retrain/main_factual_r3_seed1 {"all": 0.4621, "with_triple": 0.466, "triple_only_with_triple": 0.0737, "third_only_all": 0.0807}
+subject_object_swap experiments/improve/factual-retrain/main_factual_r3_seed2 {"all": 0.4663, "with_triple": 0.47, "triple_only_with_triple": 0.0487, "third_only_all": 0.0564}
+wrote experiments/improve/factual-retrain/triple_perturbation.json in 31s

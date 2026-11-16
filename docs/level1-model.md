@@ -1,7 +1,9 @@
 # Mô hình re-ranker đồ thị cấp độ 1, theo code hiện tại
 
-Tài liệu mô tả đúng những gì code đang làm ở commit `268b5b6` trên nhánh `feat/graph-reranker-model`. Không chép từ plan:
-mọi số đo (số tham số, kích thước, khởi tạo, thời gian) lấy bằng cách khởi tạo mô hình thật và đọc code.
+Tài liệu mô tả đúng những gì code đang làm. Không chép từ plan: mọi số đo (số tham số, kích thước, khởi tạo, thời
+gian) lấy bằng cách khởi tạo mô hình thật và đọc code. Bản đầu viết ở commit `268b5b6` (2026-09-23), trước khi chạy r3
+và test. Bản này cập nhật ngày 2026-09-26 theo code ở PR #13 (nhánh `feat/level1-explanations`), sau khi test đã được
+chấm một lần. Những câu nói về trạng thái trước khi chạy test được ghi rõ là "(trạng thái trước test)".
 Code chính: [src/models/graph_reranker.py](../src/models/graph_reranker.py),
 [src/data/graph_store.py](../src/data/graph_store.py), [src/train_graph_reranker.py](../src/train_graph_reranker.py).
 Người viết code: Lộc (cùng agent Codex và Claude, ghi trong commit); người viết tài liệu: Claude, theo yêu cầu của Lộc ngày 2026-09-23.
@@ -50,7 +52,7 @@ Chi tiết từng bước, kèm kích thước:
 5. **Bảng vector phần tử, đóng băng** (`vg_coco_graph_parts.npy`, 582 085 × 512, float32): 71 388 khoá `node:<nhãn>`
    được mã hoá bằng prompt `"a photo of a {nhãn}"`, 21 088 khoá `rel:<nhãn>` mã hoá nguyên văn, 489 609 khoá
    `triple:<chủ> <quan hệ> <đối>` mã hoá nguyên văn. Bảng gồm chữ của cả ba split. Encoder đóng băng nên không có gì
-   được khớp trên test; điểm số trên test chưa hề được tính.
+   được khớp trên test.
 6. **Tính sẵn chỉ số** (`GraphIndex`, từ commit `67448ba`): lúc khởi động, mỗi đồ thị train/val được đổi một lần thành
    các mảng số nguyên (dòng trong bảng cho node / quan hệ / bộ ba, và `edge_index` cục bộ). Mỗi batch chỉ gom chỉ số
    rồi lấy vector bằng `table[rows]` trên GPU. Kết quả `PackedBatch` giống từng bit với `Batch.from_data_list` của PyG
@@ -174,9 +176,9 @@ score = a·z(S_CLIP) + (1 − a)·Graph                               # dòng 36
 | Dừng sớm | theo R@1 val cuối mỗi epoch; dừng khi 2 epoch liền không tăng; tối đa 10 epoch; giữ `checkpoint_best.pt` |
 | Checkpoint | `checkpoint_last.pt` mỗi epoch (model, optimizer, epoch, best, stale, metrics, trạng thái RNG); `--resume` chạy tiếp y như chạy liền (test trên CPU) |
 | Seed | 0, 1, 2; `set_seed` cố định Python, NumPy, torch, CUDA, cuDNN deterministic. Scatter của PyG trên GPU không tất định nên hai lần chạy cùng seed có thể lệch nhẹ |
-| Thời gian | ~286 s mỗi epoch trên RTX 4090 ở micro-batch 128, gồm cả chấm val; các run `_r2` dừng sau 5–10 epoch, tức khoảng 25–50 phút mỗi run |
-| Val dùng cho | dừng sớm, chọn checkpoint tốt nhất, so các ablation. Không dùng để quét α |
-| Test | GraphStore từ chối nạp test (`splits` chỉ gồm train/val); chưa có `candidates_test.npz`; chưa tính điểm mô hình nào trên test |
+| Thời gian | ~286 s mỗi epoch trên RTX 4090 ở micro-batch 128, gồm cả chấm val; các run `_r3` dừng sau 3–10 epoch, khoảng 15–55 phút mỗi run |
+| Val dùng cho | dừng sớm, chọn checkpoint tốt nhất, so các ablation; quét α cho dòng a, b, c cố định (chỉ đánh giá, `scripts/checks/alpha_sweep.py`, kết quả `experiments/level1/controls/alpha_sweep_*.json`), chỉ báo trên val |
+| Test | Huấn luyện không bao giờ nạp test: `GraphStore` từ chối test trừ khi gọi `GraphStore(splits=("test",), allow_test=True)`, và chỉ `scripts/evaluate_test.py` làm vậy. Test chấm đúng một lần sau khi chốt mô hình chính: commit `f738de3` (mô hình chính, bản không huấn luyện) và `8b36243` (7 dòng ablation); kết quả ở `experiments/level1/test/metrics_*.json`. `candidates_test.npz` đóng gói từ `top50_test.json` của baseline và phải tái tạo đúng số CLIP thuần trước khi chấm |
 
 ## 6. Cờ ablation
 
@@ -193,22 +195,35 @@ Mỗi cờ là một mô hình huấn luyện lại từ đầu với cùng côn
 | `--no-adaptive-weights` | `W` khoá ở 0 và không có trong optimizer; `bias` vẫn học sau epoch 1, nên a, b, c là ba hằng số học trên train, dùng chung cho mọi câu | 1 052 678 |
 | `--no-query-graph-encoder` | phía câu dùng thẳng `f` (không GAT, không MLP bộ ba, không `U`); phía ảnh giữ nguyên | 1 054 214 (không mất module nào, vì ảnh vẫn dùng mọi module) |
 
-Các đối chứng phá dữ liệu đồ thị (đồ thị của ảnh khác, nối lại cạnh giữ bậc) **chưa có trong code**.
+Thêm hai cờ cho các dòng phụ (commit `7b81561`):
+- `--rewire-seed k`: huấn luyện và chấm trên đồ thị ảnh đã nối lại cạnh giữ bậc; nhãn quan hệ đi theo cạnh, cụm bộ ba mới
+  được mã hoá lại (`src/graph/corruption.py`, `scripts/build_rewired_parts.py`).
+- `--loss lambda_mrr`: loss LambdaRank theo MRR thay cross-entropy.
+
+Không cờ nào đổi số tham số.
+
+Hai đối chứng phá dữ liệu đồ thị chỉ đánh giá, không huấn luyện: gán đồ thị của một ảnh khác (hoán vị không điểm bất
+động), và nối lại cạnh giữ bậc. Cả hai nằm trong `scripts/checks/graph_controls.py`, kết quả ở
+`experiments/level1/controls/`. (Trạng thái trước test: hai đối chứng này chưa có trong code.)
 
 ## 7. Chỗ code khác plan v7
 
 Plan: `local-docs/plans/level1-graph-reranker-plan.md`, bản 7, 2026-09-20.
 
-1. **Dòng "a, b, c cố định" không quét trên val.** Plan ghi dòng này là "a, b, c cố định quét trên val" để khớp chữ
-   "chọn α trên validation" của đề. Code (`--no-adaptive-weights`) học ba hằng số trên train qua `bias`. Chưa có script
-   quét α trên val cho mô hình đã huấn luyện. Nếu muốn đúng plan thì cần thêm một bước quét α (hoặc a, b, c) trên val
-   dùng checkpoint của dòng này.
+1. **Dòng "a, b, c cố định" dùng a, b, c học trên train, không dùng α chọn trên val.** Plan ghi dòng này là "a, b, c
+   cố định quét trên val", để khớp chữ "chọn α trên validation" của đề. Code (`--no-adaptive-weights`) học ba hằng số
+   trên train qua `bias`, dùng chung cho mọi câu; số val và test của dòng này là số của các hằng số đã học đó. Bước quét
+   α trên val (`scripts/checks/alpha_sweep.py`, giữ β = b/(b+c) đã học) được làm sau và **chỉ báo trên val**: α học được
+   (0,477–0,499) kém α tốt nhất trên lưới tối đa 0,19 điểm R@1. Test không chấm lại với α chọn trên val, vì như vậy là
+   chạm test thêm một lần sau khi đã thấy số. Mô hình học α (tức a) thay vì chọn tay, đúng tinh thần "điều chỉnh cách
+   kết hợp điểm nếu giải thích được cơ chế" của đề.
 2. **Ngưỡng kiểm tra bước 0 là 1e-4, không phải 1e-5.** Plan ghi "sai số ≤ 1e-5". Script kiểm tra dùng `atol = 1e-4`
    cho 200 câu đầu và ±1e-6 cho R@1 toàn val. Lệch đo được là 1,96e-5 ở `z_objects`, lớn hơn 1e-5 của plan. Thứ hạng
    giống hệt và R@1 khớp đến 1e-14. Nguồn lệch là float32 (torch, batch) so với NumPy của phép thử. Ngưỡng không bị nới
    trong đợt này; đây là ngưỡng đã có từ khi viết script.
-3. **Hai đối chứng phá đồ thị chưa được cài** ("scene graph của ảnh khác", "nối lại cạnh" lúc đánh giá và lúc huấn
-   luyện lại). Plan có hai dòng này trong bảng kết quả.
+3. **Hai đối chứng phá đồ thị** được cài sau bản đầu của tài liệu này (commit `7b81561`): đồ thị của ảnh khác chỉ
+   đánh giá trên val; nối lại cạnh vừa đánh giá trên val vừa huấn luyện lại (`rewire_r3`, chấm cả trên test). Khớp plan.
+   (Trạng thái trước test: chưa được cài.)
 4. **Micro-batch và cộng dồn gradient** không có trong plan: batch 256 một lần không vừa GPU, nên code cộng dồn
    2 × 128. Toán học tương đương batch 256 (có test).
 5. **Weight decay 1e-4 cố định** trên W, U, u và các lớp. Plan để "nếu cần thì chọn trên val"; chưa ai chọn, giá trị

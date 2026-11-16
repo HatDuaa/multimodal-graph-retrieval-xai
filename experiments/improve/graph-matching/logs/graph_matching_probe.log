@@ -1,0 +1,17 @@
+frozen fgw 12s finite 0.9883287877362926
+frozen srfgw 22s finite 0.9883287877362926
+frozen consistency 0s finite 0.5790388413429888
+seed0 fgw 10s finite 0.9883287877362926
+seed0 srfgw 10s finite 0.9883287877362926
+seed0 consistency 0s finite 0.5790388413429888
+seed1 fgw 11s finite 0.9883287877362926
+seed1 srfgw 11s finite 0.9883287877362926
+seed1 consistency 0s finite 0.5790388413429888
+seed2 fgw 10s finite 0.9883287877362926
+seed2 srfgw 10s finite 0.9883287877362926
+seed2 consistency 0s finite 0.5790388413429888
+{"frozen/fgw": 12.479713201522827, "frozen/srfgw": 22.11024045944214, "frozen/consistency": 0.48479700088500977, "seed0/fgw": 10.399237155914307, "seed0/srfgw": 10.47123098373413, "seed0/consistency": 0.4214611053466797, "seed1/fgw": 10.784149169921875, "seed1/srfgw": 10.559502124786377, "seed1/consistency": 0.4688301086425781, "seed2/fgw": 10.197343349456787, "seed2/srfgw": 9.66441011428833, "seed2/consistency": 0.4326741695404053}
+
+real	1m44.814s
+user	17m1.735s
+sys	0m20.172s

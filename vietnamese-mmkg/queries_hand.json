@@ -1,0 +1,444 @@
+[
+ {
+  "query_id": "hand_direct_01",
+  "group": "direct",
+  "text": "Ngôi điện gỗ nhỏ mái ngói cong đặt trên một trụ đá duy nhất giữa hồ nước vuông, có cầu thang dẫn lên",
+  "pattern": [],
+  "gold_qids": [
+   "Q1186292"
+  ]
+ },
+ {
+  "query_id": "hand_direct_02",
+  "group": "direct",
+  "text": "Nhà thờ gạch đỏ có hai tháp chuông nhọn cân xứng hai bên mặt tiền, ở giữa có cửa sổ hoa hồng tròn",
+  "pattern": [],
+  "gold_qids": [
+   "Q428129"
+  ]
+ },
+ {
+  "query_id": "hand_direct_03",
+  "group": "direct",
+  "text": "Cụm tháp gạch nung màu cam cổ kính dưới trời xanh, phía trên khung cửa đá có phù điêu chạm hình người",
+  "pattern": [],
+  "gold_qids": [
+   "Q600269"
+  ]
+ },
+ {
+  "query_id": "hand_direct_04",
+  "group": "direct",
+  "text": "Khối công trình đá xám vuông vức với hàng cột vuông phía trên, đặt trên nền nhiều bậc, trước mặt là quảng trường rộng",
+  "pattern": [],
+  "gold_qids": [
+   "Q874234"
+  ]
+ },
+ {
+  "query_id": "hand_direct_05",
+  "group": "direct",
+  "text": "Tòa nhà tường vàng có ba mái nhọn hình tam giác lợp ngói đỏ nối nhau ở mặt tiền, phía trước là sân rộng",
+  "pattern": [],
+  "gold_qids": [
+   "Q3096348"
+  ]
+ },
+ {
+  "query_id": "hand_direct_06",
+  "group": "direct",
+  "text": "Công trình bằng đá xám có nhiều tầng mái cong như đình chùa, trên đỉnh có cây thánh giá",
+  "pattern": [],
+  "gold_qids": [
+   "Q782099"
+  ]
+ },
+ {
+  "query_id": "hand_direct_07",
+  "group": "direct",
+  "text": "Ngọn tháp bát giác bảy tầng thon dần lên cao, đứng giữa hàng cây xanh",
+  "pattern": [],
+  "gold_qids": [
+   "Q975568"
+  ]
+ },
+ {
+  "query_id": "hand_direct_08",
+  "group": "direct",
+  "text": "Lăng mộ bằng đá đen sẫm với nhiều bậc thang rộng dẫn lên, hai bên có trụ biểu nhọn cao và hàng tượng người bằng đá",
+  "pattern": [],
+  "gold_qids": [
+   "Q7818621"
+  ]
+ },
+ {
+  "query_id": "hand_direct_09",
+  "group": "direct",
+  "text": "Nhà thờ sơn màu hồng toàn bộ, tháp chuông nhọn ở giữa mặt tiền có mặt đồng hồ tròn",
+  "pattern": [],
+  "gold_qids": [
+   "Q7682043"
+  ]
+ },
+ {
+  "query_id": "hand_direct_10",
+  "group": "direct",
+  "text": "Nhà thờ tường hồng mái ngói nâu dốc với hàng cửa mái hình tam giác, cầu thang màu đỏ hai bên dẫn lên lối vào, xung quanh có cây thông",
+  "pattern": [],
+  "gold_qids": [
+   "Q10800882"
+  ]
+ },
+ {
+  "query_id": "hand_direct_11",
+  "group": "direct",
+  "text": "Ngọn tháp gạch đỏ nhiều tầng cao vút bên mặt hồ rộng, xung quanh có hàng cau",
+  "pattern": [],
+  "gold_qids": [
+   "Q864770"
+  ]
+ },
+ {
+  "query_id": "hand_direct_12",
+  "group": "direct",
+  "text": "Nhà thờ đá xám xây kiểu Gothic với tháp chuông vuông có đồng hồ và dãy vòm cửa nhọn chạy dọc thân",
+  "pattern": [],
+  "gold_qids": [
+   "Q2942901"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_01",
+  "group": "indirect",
+  "text": "Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý",
+  "pattern": [
+   [
+    "P31",
+    "Q5393308"
+   ],
+   [
+    "P131",
+    "Q1858"
+   ],
+   [
+    "P2348",
+    "Q878309"
+   ]
+  ],
+  "gold_qids": [
+   "Q1186292"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_02",
+  "group": "indirect",
+  "text": "Công trình do vua Lý Thái Tông sáng lập",
+  "pattern": [
+   [
+    "P112",
+    "Q711472"
+   ]
+  ],
+  "gold_qids": [
+   "Q180566",
+   "Q1186292"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_03",
+  "group": "indirect",
+  "text": "Di sản thế giới nằm ở Hà Nội",
+  "pattern": [
+   [
+    "P131",
+    "Q1858"
+   ],
+   [
+    "P1435",
+    "Q9259"
+   ]
+  ],
+  "gold_qids": [
+   "Q206219"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_04",
+  "group": "indirect",
+  "text": "Di sản thế giới nằm ở tỉnh Quảng Bình",
+  "pattern": [
+   [
+    "P131",
+    "Q23533"
+   ],
+   [
+    "P1435",
+    "Q9259"
+   ]
+  ],
+  "gold_qids": [
+   "Q23513"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_05",
+  "group": "indirect",
+  "text": "Nơi thờ tự của đạo Cao Đài",
+  "pattern": [
+   [
+    "P140",
+    "Q470364"
+   ]
+  ],
+  "gold_qids": [
+   "Q10825817",
+   "Q10825819",
+   "Q10831162"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_06",
+  "group": "indirect",
+  "text": "Nhà thờ Công giáo ở Ninh Bình",
+  "pattern": [
+   [
+    "P131",
+    "Q36900"
+   ],
+   [
+    "P140",
+    "Q1841"
+   ]
+  ],
+  "gold_qids": [
+   "Q782099"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_07",
+  "group": "indirect",
+  "text": "Nhà thờ Công giáo ở Khánh Hòa",
+  "pattern": [
+   [
+    "P131",
+    "Q33369"
+   ],
+   [
+    "P140",
+    "Q1841"
+   ]
+  ],
+  "gold_qids": [
+   "Q2942901"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_08",
+  "group": "indirect",
+  "text": "Ngôi đền ở Hà Nội thờ theo Đạo giáo",
+  "pattern": [
+   [
+    "P31",
+    "Q44539"
+   ],
+   [
+    "P131",
+    "Q1858"
+   ],
+   [
+    "P825",
+    "Q9598"
+   ]
+  ],
+  "gold_qids": [
+   "Q5370148"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_09",
+  "group": "indirect",
+  "text": "Ngôi chùa do Lý Quốc Sư sáng lập",
+  "pattern": [
+   [
+    "P31",
+    "Q5393308"
+   ],
+   [
+    "P112",
+    "Q10788110"
+   ]
+  ],
+  "gold_qids": [
+   "Q3360468"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_10",
+  "group": "indirect",
+  "text": "Ngôi chùa do Thích Nhất Hạnh sáng lập",
+  "pattern": [
+   [
+    "P31",
+    "Q5393308"
+   ],
+   [
+    "P112",
+    "Q310913"
+   ]
+  ],
+  "gold_qids": [
+   "Q482355"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_11",
+  "group": "indirect",
+  "text": "Nhà thờ được đặt theo tên thánh Phanxicô Xaviê",
+  "pattern": [
+   [
+    "P138",
+    "Q163900"
+   ]
+  ],
+  "gold_qids": [
+   "Q6837230"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_12",
+  "group": "indirect",
+  "text": "Nhà thờ ở Hà Nội được đặt theo tên thánh Antôn thành Padova",
+  "pattern": [
+   [
+    "P131",
+    "Q1858"
+   ],
+   [
+    "P138",
+    "Q167477"
+   ]
+  ],
+  "gold_qids": [
+   "Q1932222"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_13",
+  "group": "indirect",
+  "text": "Vườn quốc gia được công nhận là khu Ramsar",
+  "pattern": [
+   [
+    "P31",
+    "Q46169"
+   ],
+   [
+    "P1435",
+    "Q19683138"
+   ]
+  ],
+  "gold_qids": [
+   "Q586985",
+   "Q1421202",
+   "Q1583627",
+   "Q1968747"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_14",
+  "group": "indirect",
+  "text": "Hồ nước được công nhận là khu Ramsar",
+  "pattern": [
+   [
+    "P31",
+    "Q23397"
+   ],
+   [
+    "P1435",
+    "Q19683138"
+   ]
+  ],
+  "gold_qids": [
+   "Q1328473"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_15",
+  "group": "indirect",
+  "text": "Ngôi chùa ở Thành phố Hồ Chí Minh được xây dựng dưới thời Lê trung hưng",
+  "pattern": [
+   [
+    "P31",
+    "Q5393308"
+   ],
+   [
+    "P131",
+    "Q1854"
+   ],
+   [
+    "P2348",
+    "Q10800791"
+   ]
+  ],
+  "gold_qids": [
+   "Q3360457"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_16",
+  "group": "indirect",
+  "text": "Ngôi chùa ở Huế được xây dựng dưới thời Lê trung hưng",
+  "pattern": [
+   [
+    "P31",
+    "Q5393308"
+   ],
+   [
+    "P131",
+    "Q36399"
+   ],
+   [
+    "P2348",
+    "Q10800791"
+   ]
+  ],
+  "gold_qids": [
+   "Q975568"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_17",
+  "group": "indirect",
+  "text": "Công trình thuộc một quần thể di sản thế giới, được xây dựng trong thời Pháp thuộc",
+  "pattern": [
+   [
+    "P1435",
+    "Q43113623"
+   ],
+   [
+    "P2348",
+    "Q2523849"
+   ]
+  ],
+  "gold_qids": [
+   "Q7818621"
+  ]
+ },
+ {
+  "query_id": "hand_indirect_18",
+  "group": "indirect",
+  "text": "Nhà thờ ở Thành phố Hồ Chí Minh thờ Đức Mẹ Maria",
+  "pattern": [
+   [
+    "P131",
+    "Q1854"
+   ],
+   [
+    "P825",
+    "Q345"
+   ]
+  ],
+  "gold_qids": [
+   "Q428129"
+  ]
+ }
+]

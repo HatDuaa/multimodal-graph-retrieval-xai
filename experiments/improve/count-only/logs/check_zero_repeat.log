@@ -1,0 +1,14 @@
+# PYTORCH_CUDA_ALLOC_CONF=expandable_segments:False python experiments/improve/count-only/logs/repeat_eval.py configs/count_v1.yaml configs/merge_v1.yaml
+# fullgraph_factual_r3_seed0 best checkpoint; "plain" = model without count table, "zero" = count table g = 0; columns: R@1, MRR
+configs/count_v1.yaml plain 0.48208407787077967 0.6038081193405188
+configs/count_v1.yaml zero 0.48208407787077967 0.6038083943312654
+configs/count_v1.yaml plain 0.48208407787077967 0.6038083943312654
+configs/count_v1.yaml zero 0.48208407787077967 0.6038083943312654
+configs/count_v1.yaml plain 0.48208407787077967 0.6038083943312654
+configs/count_v1.yaml zero 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml plain 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml zero 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml plain 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml zero 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml plain 0.48208407787077967 0.6038083943312654
+configs/merge_v1.yaml zero 0.48208407787077967 0.6038083943312654

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scene ranker trên countonly</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]})"></script>
+<style>
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --ink: #1d1d1f; --muted: #5f6368; --line: #e3e1dc;
+  --accent: #2f5fd0; --accent-soft: #e8eefb; --new: #b4530f; --new-soft: #fdf0e4;
+  --ok: #1f7a4d; --ok-soft: #e5f4ec; --example: #6b4fbb; --example-soft: #f1edfa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141517; --surface: #1c1d20; --ink: #ececec; --muted: #a2a6ad; --line: #33353a;
+    --accent: #8fb0ff; --accent-soft: #1f2a44; --new: #f0a865; --new-soft: #3a2a1b;
+    --ok: #6fd3a0; --ok-soft: #17322a; --example: #b9a6f2; --example-soft: #29233d;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141517; --surface: #1c1d20; --ink: #ececec; --muted: #a2a6ad; --line: #33353a;
+  --accent: #8fb0ff; --accent-soft: #1f2a44; --new: #f0a865; --new-soft: #3a2a1b;
+  --ok: #6fd3a0; --ok-soft: #17322a; --example: #b9a6f2; --example-soft: #29233d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+main { max-width: 880px; margin: 0 auto; padding: 40px 16px 72px; }
+h1 { font-size: 30px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font-size: 22px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 18px; margin: 0; }
+p { margin: 8px 0; }
+.lead { color: var(--muted); margin: 0 0 20px; }
+code { font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--accent-soft);
+  padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 16px 0 8px; }
+.flow div { flex: 1 1 120px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px; font-size: 14px; }
+.flow b { display: block; color: var(--accent); font-size: 13px; }
+.flow .train { border-style: dashed; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 12px 0; background: var(--surface); }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.best td { font-weight: 600; }
+.wrap { overflow-x: auto; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; margin: 18px 0; }
+.step header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.badge { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--surface);
+  display: grid; place-items: center; font-weight: 700; flex: none; }
+.pill { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--accent-soft);
+  color: var(--accent); white-space: nowrap; }
+.pill.new { background: var(--new-soft); color: var(--new); }
+.pill.frozen { background: var(--line); color: var(--muted); }
+.formula { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+td code { white-space: nowrap; }
+dl.symbols { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 10px 0; font-size: 14.5px; }
+dl.symbols dt { text-align: right; }
+dl.symbols dd { margin: 0; color: var(--muted); }
+.example { border-left: 4px solid var(--example); background: var(--example-soft); border-radius: 0 10px 10px 0;
+  padding: 10px 14px; margin: 12px 0 4px; font-size: 15px; }
+.example > b:first-child { color: var(--example); display: block; font-size: 13px; letter-spacing: 0.02em; }
+.change { border-left: 4px solid var(--new); background: var(--new-soft); border-radius: 0 10px 10px 0;
+  padding: 10px 14px; margin: 12px 0 4px; font-size: 15px; }
+.change > b:first-child { color: var(--new); display: block; font-size: 13px; }
+.graphs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.graphs figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+.graphs figcaption { font-size: 13px; color: var(--muted); padding: 0 4px 4px; }
+svg text { font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--ink); }
+svg .node { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+svg .edge { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+svg .label { font-size: 12px; fill: var(--muted); }
+.mass { display: grid; grid-template-columns: max-content max-content 1fr; gap: 4px 14px; align-items: baseline;
+  font-size: 14.5px; margin: 4px 0 6px; }
+.mass .to { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.note { font-size: 13.5px; color: var(--muted); }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.kpi span { display: block; color: var(--muted); font-size: 13px; }
+.kpi strong { font-size: 24px; font-variant-numeric: tabular-nums; }
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; overflow-x: auto;
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+@media (max-width: 640px) {
+  main { padding-top: 24px; }
+  h1 { font-size: 24px; }
+  .step { padding: 16px 14px; }
+  .graphs { grid-template-columns: 1fr; }
+  .kpi { padding: 10px; }
+  .kpi strong { font-size: 20px; }
+  table { font-size: 13px; }
+  th, td { padding: 7px 6px; }
+  dl.symbols { grid-template-columns: 1fr; gap: 0; }
+  dl.symbols dt { text-align: left; margin-top: 6px; }
+  .formula .katex-display { font-size: 0.92em; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Scene ranker trên countonly: training, inference và kết quả</h1>
+<p class="lead">Mô hình chính <code>countonly_factual_r3</code> cộng thêm bốn cờ lấy từ scene ranker B/32.
+Mỗi cờ mặc định tắt, nên tắt hết thì mô hình đúng là countonly.</p>
+
+<div class="wrap"><table>
+<thead><tr><th>Cờ</th><th>Bước</th><th>Thay đổi so với countonly</th></tr></thead>
+<tbody>
+<tr><td><code>--concept-gat</code></td><td>3</td><td>Nút được cộng thêm vector concept, học bằng GAT trên graph concept (WordNet, ConceptNet, đồng xuất hiện VG trên train).</td></tr>
+<tr><td><code>--part-match sinkhorn</code></td><td>4</td><td>Khớp bằng Sinkhorn có thùng rác thay cho softmax: mỗi phần của ảnh nhận tối đa 1 đơn vị.</td></tr>
+<tr><td><code>--scene-terms</code></td><td>5</td><td>Cộng 4 term cố định (attributes, attributes_soft, salience, soft_objects) với trọng số học được.</td></tr>
+<tr><td><code>--graph-loss-weight 0.3</code></td><td>6</td><td>Thêm loss phụ trên điểm graph đứng một mình, không có CLIP.</td></tr>
+</tbody>
+</table></div>
+
+<div class="flow">
+  <div><b>1 · Đầu vào</b>1 câu + top-50 CLIP</div>
+  <div><b>2 · Graph</b>Graph câu, graph ảnh</div>
+  <div><b>3 · Mã hóa nút</b>GAT, nâng về CLIP</div>
+  <div><b>4 · Khớp</b>Từng phần câu ↔ ảnh</div>
+  <div><b>5 · Điểm</b>CLIP + graph + term</div>
+  <div class="train"><b>6 · Loss</b>Chỉ khi train</div>
+</div>
+
+<div class="example"><b>VÍ DỤ XUYÊN SUỐT</b>
+Caption val <code>289521</code>: “A woman hitting a tennis ball with a tennis racquet.”
+Ảnh đúng là VG <code>2389999</code>, CLIP xếp hạng 7.
+Các số trong khung tím lấy từ run 0056 của scene ranker B/32 (repo cá nhân), mô hình nguồn của bốn cờ.
+</div>
+
+<h2>Training</h2>
+
+<section class="step">
+<header><span class="badge">1</span><h3>Đầu vào: một câu và 50 ứng viên của CLIP</h3><span class="pill frozen">đóng băng</span></header>
+<div class="formula">$$s_{\text{clip}}(q, I) = \mathbf{t}_q^{\top}\mathbf{v}_I, \qquad \mathcal{C}(q) = \operatorname{top\text{-}50}_{I \in \mathcal{G}(q)}\ s_{\text{clip}}(q, I)$$</div>
+<dl class="symbols">
+<dt>\(q\)</dt><dd>Câu truy vấn (một caption).</dd>
+<dt>\(\mathbf{t}_q, \mathbf{v}_I\)</dt><dd>Vector CLIP ViT-B/32 của câu và của ảnh, chuẩn hóa độ dài 1, tính một lần.</dd>
+<dt>\(\mathcal{G}(q)\)</dt><dd>Lúc train: nhóm khoảng 2.140 ảnh train chứa ảnh đúng. Lúc chạy thật: cả 2.126 ảnh val.</dd>
+<dt>\(\mathcal{C}(q)\)</dt><dd>50 ứng viên; caption train có ảnh đúng ngoài top-50 bị bỏ.</dd>
+</dl>
+<div class="example"><b>VÍ DỤ</b>CLIP thấy “phụ nữ chơi tennis” ở cả 4 ảnh đầu và đặt ảnh đúng ở hạng 7. Việc của graph là soát từng chi tiết của câu trong 50 ảnh này.</div>
+</section>
+
+<section class="step">
+<header><span class="badge">2</span><h3>Graph cho câu và cho ảnh</h3><span class="pill frozen">đóng băng</span><span class="pill new">mới: concept, thuộc tính</span></header>
+<div class="formula">$$\begin{gathered}
+G_q = (V_q, E_q), \quad G_I = (V_I, E_I), \quad e = (s, p, o) \in E \\
+\kappa(n) \in \{1, \dots, K\} \cup \{\varnothing\}
+\end{gathered}$$</div>
+<dl class="symbols">
+<dt>\(G_q\)</dt><dd>Graph câu, sinh bằng FACTUAL-T5 large: nút là thực thể (tên, thuộc tính, lớp số lượng), cạnh là bộ ba.</dd>
+<dt>\(G_I\)</dt><dd>Graph ảnh <code>merge_v1</code> từ Visual Genome: khung trùng đã gộp, 6 đặc trưng hình học trên cạnh, cạnh kNN <code>[none]</code>, một nút tổng, mức số lượng.</dd>
+<dt>\((s, p, o)\)</dt><dd>Chủ thể, vị từ, đối tượng của một cạnh.</dd>
+<dt>\(\kappa(n)\)</dt><dd>Concept của nhãn nút \(n\): concept cùng tên, nếu không có thì theo từ cuối (“tennis racquet” → “racquet”), nếu vẫn không có thì \(\varnothing\). \(K\) là số concept, gồm các nhãn có trong ít nhất 20 ảnh train.</dd>
+<dt>\(A(n)\)</dt><dd>Thuộc tính VG của nút ảnh (“green”, “yellow”), dùng cho term ở bước 5. Nút gộp lấy hợp thuộc tính của các khung con.</dd>
+</dl>
+<div class="graphs">
+<figure>
+<figcaption>Câu</figcaption>
+<svg viewBox="0 0 320 150" width="100%" role="img" aria-label="Graph câu: woman hit tennis ball, woman hit with tennis racquet">
+  <path class="edge" d="M92 75 L196 34" marker-end="url(#a)"/>
+  <path class="edge" d="M92 75 L196 116" marker-end="url(#a)"/>
+  <text class="label" x="118" y="44">hit</text>
+  <text class="label" x="112" y="116">hit with</text>
+  <rect class="node" x="14" y="58" width="78" height="34" rx="17"/><text x="53" y="80" text-anchor="middle">woman</text>
+  <rect class="node" x="196" y="17" width="108" height="34" rx="17"/><text x="250" y="39" text-anchor="middle">tennis ball</text>
+  <rect class="node" x="196" y="99" width="116" height="34" rx="17"/><text x="254" y="121" text-anchor="middle">tennis racquet</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor" style="color: var(--muted)"/></marker></defs>
+</svg>
+</figure>
+<figure>
+<figcaption>Ảnh đúng (chỉ vẽ phần được khớp)</figcaption>
+<svg viewBox="0 0 320 150" width="100%" role="img" aria-label="Graph ảnh: woman holding racket, ball không có cạnh">
+  <path class="edge" d="M92 75 L196 116" marker-end="url(#b)"/>
+  <text class="label" x="112" y="116">holding</text>
+  <rect class="node" x="14" y="58" width="78" height="34" rx="17"/><text x="53" y="80" text-anchor="middle">woman</text>
+  <rect class="node" x="196" y="17" width="108" height="34" rx="17"/><text x="250" y="39" text-anchor="middle">ball</text>
+  <rect class="node" x="196" y="99" width="116" height="34" rx="17"/><text x="254" y="121" text-anchor="middle">racket</text>
+  <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor" style="color: var(--muted)"/></marker></defs>
+</svg>
+</figure>
+</div>
+<div class="example"><b>VÍ DỤ</b>Ảnh có “woman holding racket”, nhưng không quan hệ nào nói về quả bóng. Nút “ball” mang thuộc tính “green, yellow”.</div>
+</section>
+
+<section class="step">
+<header><span class="badge">3</span><h3>Mã hóa nút</h3><span class="pill">học</span><span class="pill new">mới: --concept-gat</span></header>
+<p>Graph concept đi qua GAT có loại cạnh trước, rồi mỗi nút cộng vector concept của mình vào đầu vào.</p>
+<div class="formula">$$\begin{aligned}
+\alpha_{c \leftarrow c'} &= \operatorname{softmax}_{c'}\Big(\operatorname{LeakyReLU}\big(\mathbf{a}_s^{\top} W\mathbf{z}_{c'} + \mathbf{a}_t^{\top} W\mathbf{z}_c + \mathbf{r}_{\tau(c',c)}\big) + \log w_{c'c}\Big) \\
+\mathbf{z}'_c &= \textstyle\sum_{c'} \alpha_{c \leftarrow c'}\, W\mathbf{z}_{c'}
+\end{aligned}$$</div>
+<div class="formula">$$\begin{aligned}
+\mathbf{h}^{(0)}_n &= P_{\text{node}}\,\mathbf{x}_n + \underbrace{P_{\text{con}}\,\mathbf{z}_{\kappa(n)}}_{\text{mới, } P_{\text{con}} = 0 \text{ lúc đầu}} \\
+\mathbf{h}^{(\ell+1)} &= \operatorname{ELU}\big(\operatorname{GATv2}(\mathbf{h}^{(\ell)}, E, \mathbf{e})\big), \quad \ell = 0, 1 \\
+\mathbf{p}_n &= \operatorname{normalize}\big(\mathbf{x}_n + U\mathbf{h}^{(2)}_n\big)
+\end{aligned}$$</div>
+<dl class="symbols">
+<dt>\(\mathbf{z}_c\)</dt><dd>Vector concept: lúc đầu là vector CLIP text của tên concept; qua 2 lớp (4 head, rồi 1 head).</dd>
+<dt>\(w_{c'c}, \tau\)</dt><dd>Trọng số cố định và loại cạnh: <code>vg_prior</code> (đồng xuất hiện chủ thể → đối tượng trên ảnh train), <code>hypernym</code> (WordNet), <code>cn_related</code>, <code>cn_function</code> (ConceptNet). Cộng \(\log w\) sau LeakyReLU, nên khi các logit học được bằng nhau thì attention đúng bằng trọng số graph đã chuẩn hóa.</dd>
+<dt>\(\mathbf{x}_n\)</dt><dd>Vector CLIP text 512 chiều của nhãn nút, prompt “a photo of a {}”, đóng băng.</dd>
+<dt>\(\mathbf{e}\)</dt><dd>Vector cạnh: chiếu vector CLIP của vị từ, cộng MLP của 6 đặc trưng hình học.</dd>
+<dt>\(U\)</dt><dd>Ma trận nâng 256 → 512 chiều, khởi tạo 0: chưa train thì \(\mathbf{p}_n = \mathbf{x}_n\).</dd>
+<dt>\(\mathbf{p}_n\)</dt><dd>Vector cuối của nút, dùng để khớp. Bộ ba có vector riêng: \(\operatorname{normalize}(\mathbf{x}_{spo} + U\,\mathrm{MLP}[\mathbf{h}_s; \mathbf{e}; \mathbf{h}_o])\).</dd>
+</dl>
+<div class="example"><b>VÍ DỤ</b>Chưa train thì nút chỉ là vector CLIP text của nhãn: “tennis ball” giống “ball” 0,90 nhưng cũng giống “racket” 0,81. Vector concept thêm thông tin mà nhãn không có: concept <code>tennis_ball.n.01</code> nối lên <code>ball.n.01</code> theo hypernym.</div>
+</section>
+
+<section class="step">
+<header><span class="badge">4</span><h3>Khớp từng phần của câu với từng phần của ảnh</h3><span class="pill">học</span><span class="pill new">mới: --part-match sinkhorn</span></header>
+<p>Hai kênh chạy riêng: thực thể ↔ vật thể, và bộ ba ↔ bộ ba. Với mỗi cặp phần, độ giống là</p>
+<div class="formula">$$\sigma_{ij} = \mathbf{p}_i^{\top}\mathbf{p}_j + g[\text{lớp}_i, \text{mức}_j]$$</div>
+<p>countonly dùng softmax, nên nhiều phần của câu có thể cùng dựa vào một vật thể. Cờ mới thay bằng kế hoạch vận chuyển:</p>
+<div class="formula">$$\begin{aligned}
+\text{countonly:}\quad P_{ij} &= \operatorname{softmax}_j(\sigma_{ij}/\tau) \\
+\text{mới:}\quad P &= \operatorname{Sinkhorn}\!\left(\begin{bmatrix} \sigma/\tau & z/\tau \\ z/\tau & z/\tau \end{bmatrix}\right) \\
+&\phantom{=}\ \textstyle\sum_j P_{ij} \le 1, \quad \sum_i P_{ij} \le 1
+\end{aligned}$$</div>
+<dl class="symbols">
+<dt>\(i, j\)</dt><dd>Một phần của câu, một phần của ảnh ứng viên.</dd>
+<dt>\(g\)</dt><dd>Bảng số lượng của countonly (lớp số lượng của câu × mức số lượng của ảnh), chỉ ở kênh vật thể.</dd>
+<dt>\(\tau\)</dt><dd>Nhiệt độ học được của mỗi kênh; với Sinkhorn bắt đầu ở 0,02.</dd>
+<dt>\(z\)</dt><dd>Điểm thùng rác học được, bắt đầu ở 0,85: phần nào không có đối tác giống hơn \(z\) thì đi vào thùng rác và góp 0 điểm.</dd>
+<dt>\(P_{ij}\)</dt><dd>Khối lượng phần \(i\) gửi sang phần \(j\); 20 vòng Sinkhorn trong miền log.</dd>
+</dl>
+<div class="example"><b>VÍ DỤ · SAU TRAIN</b>
+<div class="mass">
+  <span>woman</span><span class="to">96% →</span><span>woman</span>
+  <span>tennis ball</span><span class="to">94% →</span><span>ball</span>
+  <span>tennis racquet</span><span class="to">93% →</span><span>racket</span>
+  <span>woman hit tennis ball</span><span class="to">100% →</span><span>thùng rác</span>
+  <span>woman hit with tennis racquet</span><span class="to">72% →</span><span>woman holding racket</span>
+</div>
+<p class="note">Bộ ba “hit tennis ball” không có đối tác trong ảnh nên vào thùng rác, thay vì bị ép khớp với “holding racket” đã có chủ. Điểm thùng rác học được: 0,85 → 0,588.</p>
+</div>
+</section>
+
+<section class="step">
+<header><span class="badge">5</span><h3>Điểm của từng ứng viên</h3><span class="pill">học</span><span class="pill new">mới: --scene-terms</span></header>
+<div class="formula">$$\begin{aligned}
+S_{\text{ch}} &= \textstyle\sum_i w_i \sum_j P_{ij}\,\sigma_{ij}, \qquad \text{ch} \in \{\text{obj}, \text{tri}\} \\
+\text{graph} &= b\,S_{\text{obj}} + c\,S_{\text{tri}} + \underbrace{\textstyle\sum_{t} d_t\,T_t/\bar\sigma_t}_{\text{mới}} \\
+s &= a\,s_{\text{clip}} + \text{graph}
+\end{aligned}$$</div>
+<dl class="symbols">
+<dt>\(w_i\)</dt><dd>Trọng số học được của phần \(i\) trong câu, \(\sum_i w_i = 1\).</dd>
+<dt>\(a, b, c\)</dt><dd>Trọng số theo từng câu: \(\operatorname{softmax}(W\mathbf{t}_q + \mathbf{b})\), trộn điểm thô (không z-score) như countonly.</dd>
+<dt>\(T_t\)</dt><dd>4 term cố định, tính sẵn bằng <code>scripts/build_concept_data.py</code>:
+<b>attributes</b> (tỷ lệ cặp “thuộc tính, thực thể” của câu có trên vật thể cùng concept),
+<b>attributes_soft</b> (cosine CLIP text tốt nhất giữa “red bus” và các chuỗi “thuộc tính + nhãn” của ảnh),
+<b>salience</b> (diện tích khung lớn nhất của các concept được nhắc),
+<b>soft_objects</b> (cosine tốt nhất từ nhãn thực thể tới nhãn vật thể, trọng số IDF trên train).</dd>
+<dt>\(\bar\sigma_t, d_t\)</dt><dd>Thang chia cố định (độ lệch chuẩn trong 50 ứng viên, trung bình trên train) và trọng số học được, \(d_t = 0\) lúc đầu.</dd>
+</dl>
+<div class="example"><b>VÍ DỤ</b>So ảnh đúng với ảnh xếp trên nó, CLIP nghiêng về ảnh kia 0,48 điểm, còn phần graph bù lại 0,61 điểm. Ảnh đúng lên hạng 1. Run 0056 trộn bằng α = 0,65 cố định; model nhóm học \(a, b, c\) theo từng câu.</div>
+</section>
+
+<section class="step">
+<header><span class="badge">6</span><h3>Loss</h3><span class="pill">chỉ khi train</span><span class="pill new">mới: --graph-loss-weight</span></header>
+<div class="formula">$$\begin{aligned}
+\mathcal{L} &= \operatorname{CE}\!\left(\frac{s}{T}, y\right) + \underbrace{\lambda\,\operatorname{CE}\!\left(\frac{\text{graph}}{T_g}, y\right)}_{\text{mới}} \\
+\operatorname{CE}(\mathbf{u}, y) &= -\log\frac{e^{u_y}}{\sum_{k=1}^{50} e^{u_k}}
+\end{aligned}$$</div>
+<dl class="symbols">
+<dt>\(y\)</dt><dd>Vị trí của ảnh đúng trong 50 ứng viên.</dd>
+<dt>\(T, T_g\)</dt><dd>Hai nhiệt độ học được; \(T_g\) bắt đầu bằng \(T\).</dd>
+<dt>\(\lambda\)</dt><dd>0,3. Loss phụ buộc graph tự xếp được ảnh đúng, thay vì chỉ sửa sai cho CLIP.</dd>
+</dl>
+<div class="example"><b>VÍ DỤ</b>\(\mathcal{L} = -\ln 0{,}248 + 0{,}3 \times (-\ln 0{,}241) = 1{,}40 + 0{,}43 = 1{,}82\).
+Gradient đẩy xác suất của ảnh đúng lên và kéo 49 ảnh còn lại xuống.</div>
+<p>Lặp lại trên mọi caption train: batch 256, tối đa 10 epoch, chọn epoch theo R@1 val, dừng sớm sau 2 epoch không tăng.</p>
+</section>
+
+<h2>Inference</h2>
+<p>Lúc chạy thật dùng lại bước 1-5 với trọng số đã chốt, bỏ bước 6.</p>
+<div class="wrap"><table>
+<thead><tr><th></th><th>Training</th><th>Inference</th></tr></thead>
+<tbody>
+<tr><td>Ứng viên</td><td>Top-50 trong nhóm khoảng 2.140 ảnh train</td><td>Top-50 trong 2.126 ảnh val (hoặc test)</td></tr>
+<tr><td>Ảnh đúng ngoài top-50</td><td>Bỏ caption</td><td>Giữ hạng CLIP</td></tr>
+<tr><td>Trọng số</td><td>Cập nhật sau mỗi batch</td><td>Cố định ở epoch tốt nhất</td></tr>
+<tr><td>Đầu ra</td><td>\(\mathcal{L}\)</td><td>Xếp 50 ứng viên theo \(s\), kèm phần điểm của từng cặp khớp</td></tr>
+</tbody>
+</table></div>
+<div class="example"><b>VÍ DỤ</b>Ảnh đúng từ hạng 7 lên hạng 1. Lý do đọc được ngay từ các số hạng: khớp “woman”, “ball”, “racket”, “woman holding racket”, còn “hit tennis ball” vào thùng rác.</div>
+
+<h2>Kết quả</h2>
+<p>Các cờ trong repo nhóm chưa được train; bảng dưới là kết quả của scene ranker B/32 (run 0056), mô hình nguồn của bốn cờ.</p>
+<div class="kpis">
+  <div class="kpi"><span>R@1 val</span><strong>49,67</strong></div>
+  <div class="kpi"><span>MRR val</span><strong>61,68</strong></div>
+  <div class="kpi"><span>MRR so với CLIP</span><strong>+9,29</strong></div>
+</div>
+<div class="wrap"><table>
+<thead><tr><th>Mô hình (val)</th><th class="num">R@1</th><th class="num">R@5</th><th class="num">R@10</th><th class="num">MRR</th></tr></thead>
+<tbody>
+<tr><td>CLIP ViT-B/32</td><td class="num">39,14</td><td class="num">67,89</td><td class="num">78,98</td><td class="num">52,39</td></tr>
+<tr><td>Chỉ điểm graph của run 0056 (không CLIP)</td><td class="num">37,10</td><td class="num">64,41</td><td class="num">76,59</td><td class="num">50,05</td></tr>
+<tr><td>countonly_factual_r3 (3 seed)</td><td class="num">48,91 ± 0,21</td><td class="num">75,22 ± 0,05</td><td class="num">84,96 ± 0,25</td><td class="num">60,86 ± 0,22</td></tr>
+<tr class="best"><td>Scene ranker B/32 (run 0056, seed 0)</td><td class="num">49,67</td><td class="num">76,01</td><td class="num">84,99</td><td class="num">61,68</td></tr>
+</tbody>
+</table></div>
+<p>So với CLIP trên cùng 10.630 caption, run 0056 tăng R@1 10,53 điểm (CI95% 9,47 đến 11,61) và MRR 9,29 điểm (CI95% 8,48 đến 10,12), bootstrap theo ảnh.</p>
+<p class="note">Nguồn số: <code>0056_rank-train/metrics.json</code> của repo cá nhân (gallery 2.126 ảnh, 10.630 caption) và <code>experiments/improve/README.md</code> cho countonly (10.633 caption). Split ảnh hai bên trùng nhau.</p>
+
+<h2>Chạy</h2>
+<pre>python scripts/build_concept_data.py --config configs/concept_v1.yaml   # dựng gói concept_v1 một lần
+bash experiments/improve/scene-ranker/run.sh                             # 3 seed, cùng công thức countonly + 4 cờ</pre>
+<p class="note">Code: <code>src/models/graph_reranker.py</code> (Sinkhorn, term, loss phụ), <code>src/models/concept_gat.py</code>, <code>src/graph/concepts.py</code>, <code>src/graph/scene_terms.py</code>, <code>src/data/graph_store.py</code>.</p>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,6 @@
+train 40s {"nodes_per_image": 26.74857276755283, "edges_per_image": 18.045522324471712, "components_per_image": 10.959462338104975, "largest_component_mean": 10.490818847989093, "largest_component_share": 0.4359750802823372, "degree_one_share": 0.558583561960205, "isolated_share": 0.22134691423406347}
+val 5s {"nodes_per_image": 26.425682031984948, "edges_per_image": 17.904985888993416, "components_per_image": 10.849952963311383, "largest_component_mean": 10.45343367826905, "largest_component_share": 0.44605314560486237, "degree_one_share": 0.5585340239582777, "isolated_share": 0.221231377155978}
+
+real	0m45.398s
+user	4m8.677s
+sys	0m5.061s

@@ -1,0 +1,297 @@
+{
+  "split": "val",
+  "variants": [
+    "before",
+    "merge0.5",
+    "merge0.5+a",
+    "merge0.5+b",
+    "merge0.5+ab",
+    "merge0.5+near",
+    "merge0.7",
+    "merge0.7+a",
+    "merge0.7+b",
+    "merge0.7+ab",
+    "merge0.7+near",
+    "merge0.9",
+    "merge0.9+a",
+    "merge0.9+b",
+    "merge0.9+ab",
+    "merge0.9+near"
+  ],
+  "consistency": {
+    "before": {
+      "captions": 5957,
+      "gold_mean": 0.36960765112939026,
+      "others_mean": 0.3784469079185082,
+      "gold_minus_others": -0.008839256789117955,
+      "gold_above_others_mean": 0.38223938223938225,
+      "gold_fully_consistent": 0.31945610206479774,
+      "others_fully_consistent": 0.3166605571219591
+    },
+    "merge0.5": {
+      "captions": 5957,
+      "gold_mean": 0.3883431850823155,
+      "others_mean": 0.38744040156242415,
+      "gold_minus_others": 0.0009027835198913703,
+      "gold_above_others_mean": 0.4007050528789659,
+      "gold_fully_consistent": 0.3370824240389458,
+      "others_fully_consistent": 0.3245744159674949
+    },
+    "merge0.5+a": {
+      "captions": 5957,
+      "gold_mean": 0.4000101315318706,
+      "others_mean": 0.39691113930047534,
+      "gold_minus_others": 0.003098992231395259,
+      "gold_above_others_mean": 0.411616585529629,
+      "gold_fully_consistent": 0.34916904482121874,
+      "others_fully_consistent": 0.33322484609086206
+    },
+    "merge0.5+b": {
+      "captions": 5957,
+      "gold_mean": 0.42089732307123606,
+      "others_mean": 0.4153218568052394,
+      "gold_minus_others": 0.0055754662659966425,
+      "gold_above_others_mean": 0.4315930837669968,
+      "gold_fully_consistent": 0.36847406412623807,
+      "others_fully_consistent": 0.35013857817761984
+    },
+    "merge0.5+ab": {
+      "captions": 5957,
+      "gold_mean": 0.42148486713704103,
+      "others_mean": 0.4160385109617359,
+      "gold_minus_others": 0.005446356175305145,
+      "gold_above_others_mean": 0.4320966929662582,
+      "gold_fully_consistent": 0.36914554305858654,
+      "others_fully_consistent": 0.35079292754536767
+    },
+    "merge0.5+near": {
+      "captions": 5957,
+      "gold_mean": 0.40172799846712887,
+      "others_mean": 0.39505292352167487,
+      "gold_minus_others": 0.006675074945453996,
+      "gold_above_others_mean": 0.4146382407251972,
+      "gold_fully_consistent": 0.3498405237535672,
+      "others_fully_consistent": 0.33156670423751167
+    },
+    "merge0.7": {
+      "captions": 5957,
+      "gold_mean": 0.3825628706063488,
+      "others_mean": 0.38421000638087976,
+      "gold_minus_others": -0.0016471357745309612,
+      "gold_above_others_mean": 0.3949974819540037,
+      "gold_fully_consistent": 0.33137485311398357,
+      "others_fully_consistent": 0.32163155676909005
+    },
+    "merge0.7+a": {
+      "captions": 5957,
+      "gold_mean": 0.39556158360506183,
+      "others_mean": 0.3936940115309205,
+      "gold_minus_others": 0.0018675720741413437,
+      "gold_above_others_mean": 0.40775558166862513,
+      "gold_fully_consistent": 0.34463656202786636,
+      "others_fully_consistent": 0.3303368014991795
+    },
+    "merge0.7+b": {
+      "captions": 5957,
+      "gold_mean": 0.4208133882046925,
+      "others_mean": 0.41515371214396624,
+      "gold_minus_others": 0.00565967606072626,
+      "gold_above_others_mean": 0.4317609535000839,
+      "gold_fully_consistent": 0.36830619439315093,
+      "others_fully_consistent": 0.3499844120962133
+    },
+    "merge0.7+ab": {
+      "captions": 5957,
+      "gold_mean": 0.42137295398164964,
+      "others_mean": 0.4157646451877307,
+      "gold_minus_others": 0.005608308793918937,
+      "gold_above_others_mean": 0.4322645626993453,
+      "gold_fully_consistent": 0.3688098035924123,
+      "others_fully_consistent": 0.3505291322505165
+    },
+    "merge0.7+near": {
+      "captions": 5957,
+      "gold_mean": 0.4022539902974685,
+      "others_mean": 0.3955708843578467,
+      "gold_minus_others": 0.006683105939621792,
+      "gold_above_others_mean": 0.4149739801913715,
+      "gold_fully_consistent": 0.3503441329528286,
+      "others_fully_consistent": 0.3320326283946515
+    },
+    "merge0.9": {
+      "captions": 5957,
+      "gold_mean": 0.3728811109245892,
+      "others_mean": 0.3795280170868319,
+      "gold_minus_others": -0.006646906162242727,
+      "gold_above_others_mean": 0.38576464663421184,
+      "gold_fully_consistent": 0.32230988752727885,
+      "others_fully_consistent": 0.31752046126491557
+    },
+    "merge0.9+a": {
+      "captions": 5957,
+      "gold_mean": 0.3870213381082946,
+      "others_mean": 0.3880441239866786,
+      "gold_minus_others": -0.0010227858783840027,
+      "gold_above_others_mean": 0.3990263555480947,
+      "gold_fully_consistent": 0.3365788148396844,
+      "others_fully_consistent": 0.32530413541948594
+    },
+    "merge0.9+b": {
+      "captions": 5957,
+      "gold_mean": 0.42123306253741033,
+      "others_mean": 0.415055456432031,
+      "gold_minus_others": 0.0061776061053793185,
+      "gold_above_others_mean": 0.43260030216551953,
+      "gold_fully_consistent": 0.36864193385932514,
+      "others_fully_consistent": 0.34987820879568887
+    },
+    "merge0.9+ab": {
+      "captions": 5957,
+      "gold_mean": 0.4216247585812803,
+      "others_mean": 0.41563290596602515,
+      "gold_minus_others": 0.005991852615255144,
+      "gold_above_others_mean": 0.4329360416316938,
+      "gold_fully_consistent": 0.3689776733254994,
+      "others_fully_consistent": 0.3503989475595509
+    },
+    "merge0.9+near": {
+      "captions": 5957,
+      "gold_mean": 0.4029254692298171,
+      "others_mean": 0.39592932903144384,
+      "gold_minus_others": 0.006996140198373246,
+      "gold_above_others_mean": 0.4158133288568071,
+      "gold_fully_consistent": 0.3510156118851771,
+      "others_fully_consistent": 0.3323546642091451
+    }
+  },
+  "counts": {
+    "before": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.24913194444444445,
+      "stated_count_match_largest_node": 0.0,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.38148984198645597,
+      "plural_with_group_node": 0.0
+    },
+    "merge0.5": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.3125,
+      "stated_count_match_largest_node": 0.08333333333333333,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.35327313769751695,
+      "plural_with_group_node": 0.14424379232505644
+    },
+    "merge0.5+a": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2204861111111111,
+      "stated_count_match_largest_node": 0.171875,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.37855530474040633,
+      "plural_with_group_node": 0.23476297968397292
+    },
+    "merge0.5+b": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2109375,
+      "stated_count_match_largest_node": 0.1796875,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.363882618510158,
+      "plural_with_group_node": 0.3054176072234763
+    },
+    "merge0.5+ab": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2109375,
+      "stated_count_match_largest_node": 0.1796875,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.363882618510158,
+      "plural_with_group_node": 0.3115124153498871
+    },
+    "merge0.5+near": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.23697916666666666,
+      "stated_count_match_largest_node": 0.1814236111111111,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3747178329571106,
+      "plural_with_group_node": 0.27923250564334084
+    },
+    "merge0.7": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.3020833333333333,
+      "stated_count_match_largest_node": 0.0763888888888889,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.36297968397291197,
+      "plural_with_group_node": 0.11128668171557562
+    },
+    "merge0.7+a": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.23697916666666666,
+      "stated_count_match_largest_node": 0.17274305555555555,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.381038374717833,
+      "plural_with_group_node": 0.21399548532731377
+    },
+    "merge0.7+b": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2109375,
+      "stated_count_match_largest_node": 0.17881944444444445,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3618510158013544,
+      "plural_with_group_node": 0.3015801354401806
+    },
+    "merge0.7+ab": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2109375,
+      "stated_count_match_largest_node": 0.17881944444444445,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3618510158013544,
+      "plural_with_group_node": 0.30699774266365687
+    },
+    "merge0.7+near": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2361111111111111,
+      "stated_count_match_largest_node": 0.17708333333333334,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3744920993227991,
+      "plural_with_group_node": 0.27900677200902935
+    },
+    "merge0.9": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2621527777777778,
+      "stated_count_match_largest_node": 0.06944444444444445,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3760722347629797,
+      "plural_with_group_node": 0.04266365688487585
+    },
+    "merge0.9+a": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2326388888888889,
+      "stated_count_match_largest_node": 0.1909722222222222,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3821670428893905,
+      "plural_with_group_node": 0.18171557562076748
+    },
+    "merge0.9+b": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.20833333333333334,
+      "stated_count_match_largest_node": 0.17708333333333334,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3618510158013544,
+      "plural_with_group_node": 0.30090293453724604
+    },
+    "merge0.9+ab": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.20833333333333334,
+      "stated_count_match_largest_node": 0.17708333333333334,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3618510158013544,
+      "plural_with_group_node": 0.3060948081264108
+    },
+    "merge0.9+near": {
+      "stated_count_nodes": 1152,
+      "stated_count_match_instances": 0.2378472222222222,
+      "stated_count_match_largest_node": 0.1779513888888889,
+      "plural_nodes_without_count": 4430,
+      "plural_with_two_or_more": 0.3744920993227991,
+      "plural_with_group_node": 0.27900677200902935
+    }
+  }
+}

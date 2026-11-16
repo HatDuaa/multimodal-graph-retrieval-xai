@@ -1,0 +1,80 @@
+{
+  "split": "val",
+  "n_queries": 10633,
+  "per_run": {
+    "experiments/improve/fusion/floor/floor_factual_r3_seed0": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.27776163816452026,
+        "median": 0.2863381505012512,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.1911831647157669,
+        "median": 0.19201436638832092,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.31546634435653687,
+        "median": 0.3236442804336548,
+        "queries": 10633
+      }
+    },
+    "experiments/improve/fusion/floor/floor_factual_r3_seed1": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.21590137481689453,
+        "median": 0.22369256615638733,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.13429316878318787,
+        "median": 0.13868996500968933,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.3257908523082733,
+        "median": 0.33550870418548584,
+        "queries": 10633
+      }
+    },
+    "experiments/improve/fusion/floor/floor_factual_r3_seed2": {
+      "third_channel_active": 0.9726323485374451,
+      "objects~third": {
+        "mean": 0.2140202820301056,
+        "median": 0.2191668450832367,
+        "queries": 10342
+      },
+      "clip~third": {
+        "mean": 0.13658355176448822,
+        "median": 0.14270943403244019,
+        "queries": 10342
+      },
+      "clip~objects": {
+        "mean": 0.3250761330127716,
+        "median": 0.33224108815193176,
+        "queries": 10633
+      }
+    }
+  },
+  "aggregate": {
+    "floor_factual_r3": {
+      "objects~third": {
+        "mean": 0.2358944316705068,
+        "std": 0.0362702614027994
+      },
+      "clip~third": {
+        "mean": 0.154019961754481,
+        "std": 0.032204645694473254
+      },
+      "clip~objects": {
+        "mean": 0.3221111098925273,
+        "std": 0.005765621188480468
+      },
+      "third_channel_active": {
+        "mean": 0.9726323485374451,
+        "std": 0.0
+      }
+    }
+  }
+}

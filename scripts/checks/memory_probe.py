@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.graph_store import GraphStore  # noqa: E402
 from src.models.graph_reranker import GraphReranker  # noqa: E402
 from src.train_graph_reranker import batch_loss, rows_for, shuffled_rows  # noqa: E402
+from src.utils.config import load_config  # noqa: E402
 from src.utils.seed import set_seed  # noqa: E402
 
 
@@ -41,13 +42,24 @@ def main():
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--steps", type=int, default=30)
     parser.add_argument("--output", type=Path, default=Path("experiments/checks/memory_probe.jsonl"))
+    parser.add_argument("--triple-match", default="phrase")
+    parser.add_argument("--graph-channel", action="store_true")
+    parser.add_argument("--config", type=Path, help="Data configuration (default configs/default.yaml).")
+    parser.add_argument("--fusion", default="zscore")
+    parser.add_argument("--edge-geometry", action="store_true")
+    parser.add_argument("--knn-edges", type=int, default=0)
+    parser.add_argument("--global-node", action="store_true")
     args = parser.parse_args()
     before = machine_snapshot()
     set_seed(0)
     device = torch.device("cuda")
-    store = GraphStore()
+    store = GraphStore(load_config(args.config), structure={"knn_edges": args.knn_edges, "global_node": args.global_node})
+    precompute_started = time.time()
     store.precompute()
-    model = GraphReranker().to(device).train()
+    precompute_seconds = time.time() - precompute_started
+    model = GraphReranker(triple_match=args.triple_match, graph_channel=args.graph_channel, fusion=args.fusion,
+                          edge_geometry=args.edge_geometry, completion_edges=args.knn_edges > 0,
+                          global_node=args.global_node).to(device).train()
     model.set_epoch(1)
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
     rows = shuffled_rows(list(rows_for(store, store.candidates("train"))), 0, 1)
@@ -68,7 +80,12 @@ def main():
             during = machine_snapshot()
     torch.cuda.synchronize()
     seconds = time.time() - started
-    record = {"micro_batch_size": args.micro_batch_size, "batch_size": args.batch_size, "steps": args.steps,
+    record = {"triple_match": args.triple_match, "graph_channel": args.graph_channel,
+              "config": str(args.config or "configs/default.yaml"), "fusion": args.fusion,
+              "edge_geometry": args.edge_geometry, "knn_edges": args.knn_edges, "global_node": args.global_node,
+              "precompute_seconds": precompute_seconds,
+              "image_edges": int(store.image_index.edge_counts.sum()), "image_nodes": int(store.image_index.node_counts.sum()),
+              "allocator": os.environ.get("PYTORCH_CUDA_ALLOC_CONF", ""), "micro_batch_size": args.micro_batch_size, "batch_size": args.batch_size, "steps": args.steps,
               "seconds_per_step": seconds / args.steps,
               "estimated_train_seconds_per_epoch": seconds / args.steps * len(rows) / args.batch_size,
               "rss_peak_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,

@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/improve/graph-channel/graph_channel_seed0 {"all": 0.461, "with_triple": 0.4697, "triple_only_with_triple": 0.1582, "third_only_all": 0.1568}
+baseline experiments/improve/graph-channel/graph_channel_seed1 {"all": 0.4621, "with_triple": 0.4701, "triple_only_with_triple": 0.1536, "third_only_all": 0.1519}
+baseline experiments/improve/graph-channel/graph_channel_seed2 {"all": 0.4637, "with_triple": 0.4721, "triple_only_with_triple": 0.151, "third_only_all": 0.1481}
+verb_swap experiments/improve/graph-channel/graph_channel_seed0 {"all": 0.462, "with_triple": 0.4708, "triple_only_with_triple": 0.157, "third_only_all": 0.1557}
+verb_swap experiments/improve/graph-channel/graph_channel_seed1 {"all": 0.4622, "with_triple": 0.4702, "triple_only_with_triple": 0.1542, "third_only_all": 0.1524}
+verb_swap experiments/improve/graph-channel/graph_channel_seed2 {"all": 0.4638, "with_triple": 0.4723, "triple_only_with_triple": 0.1489, "third_only_all": 0.1462}
+subject_object_swap experiments/improve/graph-channel/graph_channel_seed0 {"all": 0.4589, "with_triple": 0.4673, "triple_only_with_triple": 0.1605, "third_only_all": 0.1588}
+subject_object_swap experiments/improve/graph-channel/graph_channel_seed1 {"all": 0.4594, "with_triple": 0.467, "triple_only_with_triple": 0.152, "third_only_all": 0.1506}
+subject_object_swap experiments/improve/graph-channel/graph_channel_seed2 {"all": 0.4605, "with_triple": 0.4684, "triple_only_with_triple": 0.1505, "third_only_all": 0.1477}
+wrote experiments/improve/graph-channel/triple_perturbation.json in 24s

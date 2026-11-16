@@ -1,0 +1,4242 @@
+{
+ "reviewer": "",
+ "exported": "2026-10-25",
+ "decisions": {
+  "File:-i---i- (39312478014).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:0040223 Brahma, Cham Hindu deity, Museum of Cham Sculpture, Da Nang Vietnam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:0040223 Ganesha, Cham Hindu deity, Museum of Cham Sculpture, Da Nang Vietnam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:0040223 My Son UNESCO site entrance, Cham Hindu temples complex, Vietnam.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:01 Map of the Mausoleum of Emperor Minh Mạng, Huế (unannotated).png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:02 Map of the Mausoleum of Emperor Minh Mạng, Huế (annotated with numbers).png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03 Map of the Mausoleum of Emperor Minh Mạng, Huế (with text).png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03429-Hanoi (32800171462).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:03435-Hanoi (32953976695).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:03687-Hanoi (32791895705).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03688-Hanoi (32791890785).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03690-Hanoi (32411713580).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03692-Hanoi (32751489966).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:03695-Hanoi (32751493016).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:03730-Hanoi (32638585692).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03731-Hanoi (32638587812).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03739-Hanoi (31948788874).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03744-Hanoi (31948794264).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03801-Hanoi (32800622512).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:03806-Hanoi (32111269204).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:03816-Hanoi (32111273334).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:03819-Hanoi (32111279854).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:03826-Hanoi (32342212946).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:03828-Hanoi (32800667972).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03831-Hanoi (32231033732).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03849-Hanoi (32573797760).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03860-Hanoi (32140131533).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03880-Hanoi (32800721692).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03882-Hanoi (32231069692).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:03934-Hanoi (32573170290).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 115.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 117.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 150.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 152.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 155.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 158.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 166.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 170.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 175.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 184.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 186.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04052023 Ponagar Hindu temples complex, Nha Trang Vietnam - 240.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04102-Hanoi (31979711710).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:04142-Hanoi (32317496486).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04190-Hanoi (32913770726).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:04242-Hanoi (32236511651).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:04254-Hanoi (31979406784).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:04261-Hanoi (32007887633).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04269-Hanoi (32007894323).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:04274-Hanoi (32822196565).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04309-Hanoi (32317550906).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04310-Hanoi (32206496412).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:04315-Hanoi (32317555126).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04322-Hanoi (32206501532).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04329-Hanoi (32509095230).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04332-Hanoi (32074630743).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04333-Hanoi (32509111190).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04334-Hanoi (32848541346).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04342-Hanoi (32848567036).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04343-Hanoi (32074669473).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04345-Hanoi (32074672983).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04348-Hanoi (32765501271).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04349-Hanoi (32074688553).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04529-Hanoi (32206504662).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:04546-Hanoi (32206503032).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04547-Hanoi (31545552143).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04565-Hanoi (32356688435).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04566-Hanoi (31545570363).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04599-Hanoi (32356693795).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04693-Hanoi (32236622411).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:04700-Hanoi (32317628166).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:1 Hội An Jardin intérieur.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:1000tay1000mat.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10511-Hoi-An (37158496013).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10519-Hoi-An (37621340030).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10545-Hoi-An (37621344830).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10549-Hoi-An (37621348460).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10562-Hoi-An (37621351830).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10568-Hoi-An (37158506483).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:105mm gun at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10641-Hoi-An (40682086590).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10654-Hoi-An (42438247002).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10678-Hoi-An (41587070385).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10694-Hoi-An (42438273742).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:10844-Hoi-An (37847304932).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10847-Hoi-An (37847309242).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:10848-Hoi-An (37878626011).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:12-gieng vua-dan te nam giao.JPG": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:130 mm towed field gun M1954 (M-46).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:130mm gun at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:16th century stone angel in Phat Diem cathedral.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:18 photogr. d'Annam et du Tonkin, par P. Dieulefils, photogr. à Hanoi, et Rigal, dont les portraits du jeune roi d'Annam, Tam-thaï, et du défunt roi, Dong-Khanh, don Camille Paris en 1892 - btv1b531743452 (14 of 18).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:191120-D-AP390-3053 (49102338987).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:191120-D-AP390-3109 (49101588318).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:195 cartes postales d'Inde, Birmanie, Indochine vers 1906, don Collin de Plancy en 1928 - btv1b53216123p (267 of 382).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:195 cartes postales d'Inde, Birmanie, Indochine vers 1906, don Collin de Plancy en 1928 - btv1b53216123p (305 of 382).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:20-Ngói đầu đao.jpg": {
+   "keep": false,
+   "reason": "triple sai"
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 3.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 5.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 6.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 7.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 8.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2003, Ho Chi Minh's house on a rainy day 9.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2008-01-27 Pagoda Buddha Nha-Trang.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2008-02-0709.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2012 Ho Chi Minh Mausoleum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2012.01.25 Hanoi, Ho Chi Minh-Mausoleum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2013-10-19-IMG 0546 (16281009626).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2013-10-19-IMG 0555 (16306079332).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2013-10-20-IMG 0580 (16281007856).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2013-10-20-IMG 0590 (16119568980).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2016-Vietnam-Abuelita mochilera 02.jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:2016-Vietnam-Abuelita mochilera 04.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:20171031 Administration office Xuan Thuy National Park HDR.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2019-01-08 seven-storied stupa.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-3.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-4.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-5.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-6.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-7.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-8.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190923 Notre-Dame Cathedral Basilica of Saigon-9.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-10.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-11.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-12.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-13.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:20190926 Ha Long Bay-14.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Notre-Dame Cathedral Basilica of Saigon (Nhà thờ chính tòa Đức Bà Sài Gòn) 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Notre-Dame Cathedral Basilica of Saigon (Nhà thờ chính tòa Đức Bà Sài Gòn) 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 04.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 06.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 07.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 08.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 09.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Saint Philip Church, Saigon 10.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 03.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 06.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 07.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 08.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 09.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 16.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2023-12-10 Xá Lợi Pagoda, Saigon 17.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:225Park der Thien Mu Pagode.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:2tranganbaidinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:30 phot. d'Annam et du Tonkin, par P. Dieulefils, Pérot, Rigal, don Camille Paris en 1892 - btv1b53174374v (03 of 30).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:30 phot. d'Annam et du Tonkin, par P. Dieulefils, Pérot, Rigal, don Camille Paris en 1892 - btv1b53174374v (04 of 30).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:30 phot. d'Annam et du Tonkin, par P. Dieulefils, Pérot, Rigal, don Camille Paris en 1892 - btv1b53174374v (09 of 30).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:303 Vietnam Wahrzeichen von Hue bei der Pagode der himmlischen Frau.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:3tranganbaidinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-32 (35792236574).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-33 (35792226214).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-34 (36458160422).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-36 (36627246135).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-37 (35817925883).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-39 (36627231505).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-43 (36489209221).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-44 (36580706436).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:4.4 Hue-45 (36580696536).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-46 (35792133084).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-47 (35792123054).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-49 (36627171105).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-50 (36452523882).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4.4 Hue-58 (36483450781).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4G4A0773 HDR.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4G4A3956 HDR.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4G4A3973A HDR.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4G4A7753 HDR.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:4tranganbaidinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:57mm anti-aircraft gun at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:680 Der Wasserfall des Nam Nang.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:702 Ausblick auf die Witweninsel.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:76mm gun at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:7tranganbaidinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:80 years Hong An Catholic church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:9th century sandstone statue of a dancer, Khuong My style, Gandhara, Hoi An Museum of History and Culture.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:A DKB rocket launcher of the Vietnam People's Army.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:A Single Pillar (2802508059).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:A clear summer day at Vinpearl Nam Hoi An.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:A far view of the ruins at My Son (30992152933).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:A view of Bai Dinh Pagoda - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:A-37 Dragonfly at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AATTV and U.S. Marine advisers check for booby-traps before entering an imperial tomb near Hue.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AK-47s, B-40 and B-41 at Hoi An Museum.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AP0028-Sallet Environs de Hué, 1930 – Tombeau de Gia Long – Un pagodon.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AP0030-Sallet Environs de Hué, vers 1930 – Pagode Thien Mu.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:AP1514-Sogny-Marien Annam, Dong Duong, 1933 – Visite de S.M. Bao Dai au sanctuaire cham (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AP1526-Sogny-Marien Hué, sd – Entrée du Musée Khai Dinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:AP1533-Sogny-Marien Annam, Dong Duong, 1933 – Visite de S.M. Bao Dai (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AP1636-Sogny-Marien Annam, Dong Duong, 1933 – Visite de S.M. Bao Dai (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:AP1637-Sogny-Marien Annam, Dong Duong, 1933 – Visite de S.M. Bao Dai (4).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:ASI of India helps Vietnam to restore the Mỹ Sơn Sanctuary.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:ATSUBETSUGAWA HIKOBOSHI.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:ATSUBETSUGAWA ORIHIME.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Aboard the Boat on Ba Be Lake - Ba Be National Park - Vietnam (48102408917).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Admiralty Chart No 3875 Haiphong to Cam Pha, Published 1944.jpg": {
+   "keep": false,
+   "reason": "bản đồ / sơ đồ"
+  },
+  "File:Aegithina tiphia on Cassia javanica.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (4).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (5).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Agribank - Hoi An Bearch Resort - panoramio (6).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Album de 26 phot. de Cochinchine, don Y. de Coppet, en 1943, en souvenir de son frère, Paul Marre Philipon - btv1b532464100 (07 of 36).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Alloy bell from Vietnam, 1806, Hoi An Museum of History and Culture.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Am Mekong gegenüber von Vietiane- Fluchtursachen (1981).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:An Quang Pagoda (10017883254).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017886424).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017935175).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017935795).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017937455).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017938195).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017938845).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017948626).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10017949256).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An Quang Pagoda (10018025893).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An ancient engraved rock of Sapa.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An impressive arch leads up to the temple (31417104356).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:An lang.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Anastomus oscitans Tràm Chim 1.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Anastomus oscitans Tràm Chim 2.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ancistrocladus tectorius CTNP RPB flowers.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ancistrocladus tectorius CTNP RPB roofing.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ancistrocladus tectorius CTNP RPB tendrils.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Anh tuyet 1.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Anh tuyet 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Anh tuyet 5.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Annam - Hué - Pagode de Confucius La Tour, les Pagodons de la Cloche du Génie et du Tam-Tam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Annam - Hué - Pagode où se font les cérémonies rituelles au tombeau de Minh-Mang.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Annam - Hué - Pavillons sur le bassin fleuri au Tombeau de Tu-Duc.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Annam - Hué - Porte de l'enceinte extérieure au tombeau de Minh Mang.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Annam - Hué - Porte de l'enceinte extérieure au tombeau de Tu-Duc.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Annam. Près Hué. Au tombeau de Thieu-tri, vue vers la colline où le corps est caché - (photogr.) A. S(alles) - btv1b53013120r (1 of 2).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Area with shrines for the ashes of departed monks (31454177605).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Aries Tottle - 5619728787.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Around Na Hang, near Ba Be lake (6223574117).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Arrival on Cat Ba.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:At the beach, Cat Ba Island (4856529828).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Audio guide.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BASEMENT BLAST SHELTER MUSEUM OF THE REVOLUTION SAIGON VIETNAM JAN 2012 (7015160135).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BBQ bên hồ bơi - Thung Nham Resort.jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:BUDDIST TEMPLE TRAIMAT VIETNAM JAN 2012 (6818228324).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:BUDDIST TEMPLE TRAIMAT VIETNAM JAN 2012 (6818230776).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:BUDDIST TEMPLE TRAIMAT VIETNAM JAN 2012 (6818233472).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BUDDIST TEMPLE TRAIMAT VIETNAM JAN 2012 (7031903879).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be (43867711525).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be (49309919936).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Cave (33215585468).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake - 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake - 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 2014.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 3.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 4.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 5.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake 6464.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Lake Morning (40116008593).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be National Park (47749294741).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be National Park I.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be National Park II.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Rice Fields (32179973487).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be Rice Fields (46197199985).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Be, Nth Vietnam (42614419150).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Dinh Platz- Hồ Chí Minh Mausoleum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ba Dinh Square 2007.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Babenp 2007 01 3.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bac Bo Museum Saigon Vietnam.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bac Ma Temple - there's the white horse.jpg": {
+   "keep": false,
+   "reason": "triple sai"
+  },
+  "File:Bai Dinh Pagoda (36519413585).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bai tam Cat Ba 1.JPG": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Bai tam Cat Ba.JPG": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Bai tam Dao Khi.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:BaiDing Cong TamQuan.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:BaiDinh Chuong.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BaiDinh Dien PhapChu Chuong.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BaiDinh Dien PhapChu Trai.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BaiDinh Dien PhapChu.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Balustrade, But Thap pagoda, Bac Ninh province, 1647 AD, stone - Vietnam National Museum of Fine Arts - Hanoi, Vietnam - DSC04947.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ban do Phong Nha-Ke Bang.jpg": {
+   "keep": false,
+   "reason": "bản đồ / sơ đồ"
+  },
+  "File:Ban thờ Bác Hồ tại Bảo tàng Bến Nhà Rồng năm 2018.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bank Erosion at Song Tien of Mekong, Binh Dai, Ben Tre, Vietnam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bao tang 5a.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bar y piscina del Hotel Heritage By Night, Phong Nha, Vietnam (40523001205).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Bareliefo de Long Mã en pagodo Linh Phước (Dalato).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Barquero en el Río Son, Phong Nha, Vietnam (43409828472).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Bas-relief behind St Joseph Cathedral, Hanoi, Vietnam - 54567955567.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Basílica de Nuestra Señora, Ciudad Ho Chi Minh, Vietnam, 2013-08-14, DD 09.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bateau Phong Nha.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Battle of Long Tan, fifth anniversary service, August 1971.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Beach in Cat Ba.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Beach of Cat Ba in 2015 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Beach of Cat Ba in 2015 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Beach of Cat Ba in 2015 03.jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Beach of Cat Ba in 2015 04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bell UH-1 Huey in the Ho Chi Minh City Museum (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bell UH-1 Huey in the Ho Chi Minh City Museum (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bell UH-1H-BF Iroquois ‘541’ (39996725755).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bell tower.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Belltower at the Linh Phuoc Pagoda, Dalat.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ben Duoc Tempel Cu Chi Tunnel (241604061).jpeg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Duoc Tempel Cu Chi Tunnel (38647672175).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Duoc Temple Cu Chi tunnel (39514032832).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Duoc Temple Cu Chi tunnel Saigon (39543810821).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ben Nha Rong 2.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Nha Rong 3.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Nha Rong ve dem.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben Nha Rong.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ben ngoai nha tho giao xu Cua Bac.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BenCu forest structure 23Dec08.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Benstonea cf. humilis in CTNP.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Betel nut kit - Vietnam Museum of Ethnology - Hanoi, Vietnam - DSC02556.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Betel-nut box, shell inlaid, view 1 - Vietnam Museum of Ethnology - Hanoi, Vietnam - DSC02489.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Betel-nut box, shell inlaid, view 2 - Vietnam Museum of Ethnology - Hanoi, Vietnam - DSC02493.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bi đình Lăng Khải Định.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bia ky niem xay dung nha tho Cho Quan.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:BiaTS1838Hue.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Big bell in Chùa Linh Phước - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bike carrying fishtraps, used from 1982-1997 in Red River delta - Vietnam Museum of Ethnology - Hanoi, Vietnam - DSC02593.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bird, But Thap pagoda, Bac Ninh province, 1647 AD, stone - Vietnam National Museum of Fine Arts - Hanoi, Vietnam - DSC04952.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Boat by the water - Hoi An (16922189291).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bodhi Tree Giac Lam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bodhi tree.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bodhisattva and candle 1.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bronze Coins from China (15241774248).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bronze bell from Vietnam, 1677, Hoi An Museum of History and Culture.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Budai.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buddha (Vietnam).JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buddha statue Giac Lam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buddhist flags at the One Piller Pagoda in 2016 (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buddhist flags at the One Piller Pagoda in 2016 (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buddhist flags at the One Piller Pagoda in 2016 (3).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Buddhist temple, Hanoi (32423639148).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Buddhist temple, Hanoi (44478572010).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Budhisma statuo en nefinita parto de pagodo Linh Phước (Dalato).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Budhismaj statuoj en nefinita parto de pagodo Linh Phước (Dalato) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Budhismaj statuoj en nefinita parto de pagodo Linh Phước (Dalato) 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Budhismaj statuoj en nefinita parto de pagodo Linh Phước (Dalato).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Building in park across from Vietnam History Museum (9980947315).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bush's visit in Hanoi church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Busto de Alexandre Yersin apud la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Busto de Yersin en la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:But Thap Plan.png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:But Thap Temple - 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:But Thap Temple - 17.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:But Thap Temple - 21.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:But Thap Temple - Butterfly 1.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:But Thap Temple - Butterfly 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Buu Thap Xa Loi Giac Lam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bánh xe cửa Đoan Môn, Hoàng thành Thăng Long, Hà Nội 001.JPG": {
+   "keep": false,
+   "reason": "triple sai"
+  },
+  "File:Bãi đá cổ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bên trong Nhà thờ Mai Anh.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bên trong nhà thờ.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bên trong Đền Bến Dược.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bên trong Động Vái Giời.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Bên trong đền vua Hùng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bình quý ở chùa Thiên Mụ, tháng 3 năm 2021 (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bình quý ở chùa Thiên Mụ, tháng 3 năm 2021 (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo Trâm Phượng Duyên 김은철 이준호 최광모 Saigon Hotpot tourguides Ông Bổn Pagoda - Nhị Phủ Temple 20180412-07.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo Trâm Phượng Duyên 김은철 이준호 최광모 Saigon Hotpot tourguides Ông Bổn Pagoda - Nhị Phủ Temple 20180412-08.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo Trâm Phượng Duyên 김은철 이준호 최광모 Saigon Hotpot tourguides Ông Bổn Pagoda - Nhị Phủ Temple 20180412-09.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tháp của Chùa Thiên Mụ (con đường), tháng 3 năm 2021 (10).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tháp của Chùa Thiên Mụ (con đường), tháng 3 năm 2021 (11).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tháp của Chùa Thiên Mụ (con đường), tháng 3 năm 2021 (12).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tháp của Chùa Thiên Mụ (con đường), tháng 3 năm 2021 (13).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tàng Bến Nhà Rồng năm 2015 (Xe của CT.HCM do Việt Kiều tặng) (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Bến Nhà Rồng năm 2015 (Xe của CT.HCM do Việt Kiều tặng) (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Bến Nhà Rồng năm 2015 (xe xích lô) (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Bến Nhà Rồng năm 2015 (xe xích lô) (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Bến Nhà Rồng năm 2015 (xe xích lô) (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Cổ vật Cung đình Huế (15245479432).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tàng LSVN.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Lịch sử VN.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Mỹ Thuật.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Nghệ thuật điêu khắc Chàm Đà Nẵng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Phụ nữ Việt Nam.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tàng TP (kiến trúc nội thất, bức tường).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng TP (kiến trúc nội thất, căn phòng bên trong) (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng TP (kiến trúc nội thất, căn phòng bên trong) (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng TP (kiến trúc nội thất, căn phòng bên trong) (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bảo tàng Thành phố Hồ Chí Minh 7.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bảo tàngLSVN.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bến Dược temple.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Bến dược , Củ Chi, Phú hiệp , Phú Mỹ hưng, Tphcmvn - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bộ sưu tập hỏa lò.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bộ sưu tập Đồ Bạc.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bức tượng Phật Tổ ở Chùa Giác Lâm, tháng 4 năm 2021 (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bức tượng Phật Tổ ở Chùa Giác Lâm, tháng 4 năm 2021 (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bức tượng Phật Tổ ở Chùa Giác Lâm, tháng 4 năm 2021 (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bức tượng Phật Tổ ở Chùa Giác Lâm, tháng 4 năm 2021 (4).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Bửu tháp Đức Hộ Pháp.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:C 050.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:C 051.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Can Tho Museum 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Can Tho Museum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Can canh mat ngang thap chuong Nha tho Cho Quan 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Can canh mat ngang thap chuong Nha tho Cho Quan.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See (10037411064).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See (10037431054).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See (10037470936).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See (10037555833).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See (10037561643).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cao Dai Holy See, main entrance.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Caodaism Symbol.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Carved Box with Figure Design.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cat Ba Vietnam-Feb06.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cat Tien National Park diorama at Dong Nai Museum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cat Tien National Park, Vietnam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cat Tien Park, Vietnam, Lowland tropical plains.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cat Tien Park, Vietnam, Tree canopy over blue sky.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cat Tien Park, Vietnam, Tree canopy.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Catedral de San José in Hanoi.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Catedral de San José, Hanoi, Vietnam (36400423110).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral Tet DN 1.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cathedral Tet DN 2.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat (1).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat (2).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 05.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 06.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 06.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 07.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 07.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 08.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 08.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of Da Lat 09.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of St Joseph, Hanoi, Vietnam - 54569052933.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedral of St Joseph, Hanoi, Vietnam - 54569053218.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedrale Cần Thơ 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cathedrale Cần Thơ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:CathedraleSTJosephHanoi.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Catholic church at Hue Vietnam.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Caybode.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ceramic, 1st - 3rd centery, at Hanoi Museum.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cerámica vietnamita Guimet 08.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cessna A-37B Dragonfly ‘10 - 14821’ (39981758103).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cessna A-37B Dragonfly ‘10 - 14821’ (39981779573).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cha Tam Church (10018161394).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cha Tam Church (10018161514).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cha Tam Church (10018216585).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cha Tam Church (10018217485).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chammuseum.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chammuseum3.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Charles Carpeaux at Mỹ Sơn.jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Charles Carpeaux before a gopura de Court I at Đồng Dương.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chiang Saen, Mekong River, Thailand.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chim Hạc ở Vườn Quốc Gia Tràm Chim.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chinese Flag on Barge along Mekong River - Laos on Other Side - Chiang Saen - Golden Triangle - Thailand (34478955674).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chinhdien2.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chiếc máy ủi công thần của Thụng Nham.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Cho Quan Parish Roman Catholic Church (10018216946).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cholon - Eglise Catholique Chinoise.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cholon - Pagode de Phnoc Kien.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Christ the King Cathedral Nha Trang.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Christian message banners outside of a Hanoi church in 2015 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Christian message banners outside of a Hanoi church in 2015 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Christian message banners outside of a Hanoi church in 2015 04.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Christian message banners outside of a Hanoi church in 2015 05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chua Giac Lam Gate.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chua Long Son, Nha Trang.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chua Mot Cot-hanoi-Vietnam2011 - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ChuaDau Chinh.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:ChuaDau Thap.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ChuaDau ToanCanh.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ChuaGiacLam02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ChuaXaLoi001.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chuabuoisang.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Church of the Sacred Heart of Jesus, Ho Chi Minh City.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chuông nhà thờ Sở Kiện.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chính điện, đền Hai Bà Trưng, quận Hai Bà Trưng, Hà Nội.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chòi Canh vuon Tram Chim, phu Duc, Tam Nong, Dong Thap,Vietnam - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Bút Tháp.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, bên trong ngày 27 tháng 5 năm 2015 (13).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, bên trong ngày 27 tháng 5 năm 2015 (14).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, ngày 27 tháng 5 năm 2015 (10).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, ngày 27 tháng 5 năm 2015 (11).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, ngày 27 tháng 5 năm 2015 (7).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, ngày 27 tháng 5 năm 2015 (8).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, ngày 27 tháng 5 năm 2015 (9).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Long Sơn (chùa Phật Trắng), Nha Trang, pháp giới, ngày 27 tháng 5 năm 2015 (14).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Trấn Quốc, Hà Nội.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Tây Phương 2.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Tây Phương.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Vĩnh Tràng (01).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa Vĩnh Tràng (02).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Vĩnh Tràng 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Chùa Vĩnh Tràng.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Chùa cổ Vĩnh Tràng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Citadelle et temple de Hue.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Coins, Han Dynasty, Hanoi Museum.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Communist propaganda poster in from of the national museum of Viet Nam 2017.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cong An lang.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cong ben hong Nha tho Cho Quan 2020.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cotu tomb, Museum of Ethnology, Hanoi (1) (38439650856).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cotu tomb, Museum of Ethnology, Hanoi (2) (38495337181).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cotu tomb, Museum of Ethnology, Hanoi (3) (38463336412).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cotu tomb, Museum of Ethnology, Hanoi (4) (37608582825).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cour d'honneur (Tombeau de Khai Dinh).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cow at Khai Dinh tomb Hue (24675759957).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Crucifixion Scene at Huyen Sy Roman Catholic Church (10017941005).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cu Chi banner Bến Dược Memorial Temple.png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cu Chi, Phú hiep,Phu my Hung,hmcnvn - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cua ong 2007 005.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cua ong 2007 007.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cua-Bac-church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cung An Định.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cung thanh Nha tho Cho Quan 2019.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cyrtodactylus phongnhakebangensis.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Các tháp mộ tại chùa Vĩnh Tràng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cánh cửa bằng đồng ở lăng Gia Long.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cúng đàn Đại lễ Đức Chí Tôn, Tây Ninh, 2022.png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cổng Bắc thành nhà Hồ .jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cổng Nam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cổng chùa Vĩnh Tràng.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cổng đền Hai Bà Trưng, quận Hai Bà Trưng, Hà Nội.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cổng đền Hùng (Phú Thọ).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cụm tâm linh chiêm bái Thung Nham.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Cửa Bắc Church, Our Lady of Hanoi.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cửa Bắc Church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cửa Bắc church.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cửa Chánh Bắc.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Cửa Chánh Môn - 072015.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cửa chính Vương cung thánh đường Phú Nhai.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cửa ra Động Tiên Cá - Thung Nham Ninh Bình.jpg": {
+   "keep": false,
+   "reason": "triple sai"
+  },
+  "File:Cửa vòm.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Cửa Ông Temple 2017.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DA LAT CATHEDERAL VIETNAM JAN 2012 (6821878370).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DA LAT GA VIETNAM JAN 2012 (6821825330).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:DA LAT GA VIETNAM JAN 2012 (6821839496).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:DA LAT GA VIETNAM JAN 2012 (6964311027).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DGJ 1396 - Start Walking (4 pics) (3480780630).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DGJ 1397 - This way up.. (3480784942).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DGJ 1398 (3479981047).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DGJ 1401 - Smile (3479985135).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DL train stn back.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:DSC 0003 -1 NT Tan Dinh (27324177439).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat - Linh Phuoc Temple 03.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat - Train Station.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat train station 16.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat train station 20.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat train station 22.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat train station 23.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Lat train station 26.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Lat train station 27.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Lat train station 37.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral - Da Nang, Vietnam - DSC02464.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral 20190919.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral 2026 05 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 04.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da Nang Cathedral in 2015 06.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Da co Sa Pa.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Daco at Sapa.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dai Thanh gate.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dan Nam Giao Hue.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dan da thanh Tay Do.png": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Dan toc hoc 1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dau pagoda.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Den Hung, Ho Chi Minh City.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Den Tho Vua Hung.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Den va quat Nha tho Cho Lon.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Deutsch Vietnamurlaub 2395a JM 03.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Di chỉ Gò Cây Thị.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Di tích Gò Cây Thị A.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Di tích Gò Cây Thị B.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Di tích Nhà thờ Tam Tòa 2, Đồng Hới, Quảng Bình.jpeg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Di tích Nhà thờ Tam Tòa, Đồng Hới, Quảng Bình.jpeg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên .jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên 3.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên 4.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên 6.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dinastía Nguyên 7.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Diên Thọ Chính Điện.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Documental \"EL RIU DELS SET NOMS\", de Sergi Ricart.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:DoiSon-HegoIV.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domain de marie church 90.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Domaine de Marie (22439934044).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (22441534963).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (23036604156).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (23036632416).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (23036736316).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (23036776336).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Domaine de Marie (23073871061).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Domaine de Marie (August 7, 2017) (43120498865).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Domaine de Marie 00.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (18347).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (19075).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (24670).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (24972).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (25104).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dong Hoi Phong Nha grotten (33416).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Down The Mekong River (23495549714).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496932043).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496944343).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496947703).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496951663).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496961843).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Down The Mekong River (23496979863).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Dragon Pillar (26606708958).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dragon steps (39767683804).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Du khách picnic bên Lăng Gia Long.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng Lễ vật tại Đền thờ Vua Hùng ở Sở thú ngày 21 tháng 4 năm 2021 (nhằm 10 tháng 3 Âm lịch) (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng Lễ vật tại Đền thờ Vua Hùng ở Sở thú ngày 21 tháng 4 năm 2021 (nhằm 10 tháng 3 Âm lịch) (2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng Lễ vật tại Đền thờ Vua Hùng ở Sở thú ngày 21 tháng 4 năm 2021 (nhằm 10 tháng 3 Âm lịch) (3).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng lễ tại Đền thờ Vua Hùng ở Sở thú, ngày 21 tháng 4 năm 2021 (nhằm ngày 10 tháng 3 Âm lịch) (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng lễ tại Đền thờ Vua Hùng ở Sở thú, ngày 21 tháng 4 năm 2021 (nhằm ngày 10 tháng 3 Âm lịch) (10).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng lễ tại Đền thờ Vua Hùng ở Sở thú, ngày 21 tháng 4 năm 2021 (nhằm ngày 10 tháng 3 Âm lịch) (11).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Dâng lễ tại Đền thờ Vua Hùng ở Sở thú, ngày 21 tháng 4 năm 2021 (nhằm ngày 10 tháng 3 Âm lịch) (13).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Décor de toiture de la pagode But Thap.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ecole Francaise dExtreme Orient Section des Antiquites Chames en Tourane..jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ede longhouse, Museum of Ethnology, Hanoi (37608576475).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Eglise catholique chinoise à Cholon.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ekspozicio de la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ekspozicio de la muzeo de Yersin (Nha Trang) 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ekspozicio en la muzeo de Yersin (Nha Trang) 04.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ekspozicio en la muzeo de Yersin (Nha Trang) 05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ekspozicio en la muzeo de Yersin 03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Elephant, rhino, and horse, Le Loi mausoleum, Thanh Hoa province, 1433 AD, stone - Vietnam National Museum of Fine Arts - Hanoi, Vietnam - DSC04853.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Emperor Khai Dinh in Hue (39543600561).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Enirejo de la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Entrance My Son 2026-04.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Entrance of Nha Trang Cathedral.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Entrance to Quan Tanh temple (7360945292).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Entrée du tombeau de la 2e femme de Gia-Long.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Everyday objects display - Vietnamese Women's Museum - Hanoi, Vietnam - DSC04214.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Exterior view - Vietnam Museum of Ethnology - Hanoi, Vietnam - DSC03432.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:F5E FIGHTER PLANE at Museum of Ho Chi Minh Campaign, HCMC, Vietnam.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Farbulous lion.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Father Vallet Tomb.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Female dancer decorated brick, Long Doi pagoda, Duy Tien, Ha Nam, 1118-1121 AD, terracotta - Vietnam National Museum of Fine Arts - Hanoi, Vietnam - DSC04768.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Fera lito en la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Flag presented by Comité cubano de solidaridad con Viet-Nam del Sur.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Folklore My Son - Vietnam.jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Forest and river at My Son.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Forest at My Son.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Foto de la stratosigno ĉe kruciĝo de la stratoj Yersin kaj Pasteur en la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Four Battle of Long Tan veterans at the Long Tan memorial service on 18 August 1970.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:French explorers in Đồng Dương.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ghi chú trong Lăng Minh Mạng, tháng 3 năm 2021.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Gia đình đâng lễ.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Gian Chính nhà thờ Tân Định.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Giang sinh Ham Long.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Gift from Japan Chivalry Association of Traffic and Transport.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Giếng Ngọc - Thung Nham Resort.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Giếng cổ đền Hùng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Goc chup ngang Nha tho Cho Quan 2020 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Goc chup ngang Nha tho Cho Quan 2020.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Goc chup thang Nha tho Jeanne d'Arc.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Goc chup thang Nha tho Tan Dinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Grazing buffalos in corezone.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Guangzhou Tianhe Guangdong Sheng Bowuguan 2024-01-30 15.31.41.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Guangzhou Tianhe Guangdong Sheng Bowuguan 2024-01-30 15.32.25.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Gà đồi Thung Nham.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Gò Cây Thị.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Gần gũi với thiên nhiên.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:H12 Type 63 multiple rocket launcher.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:HA 53-32 R25 Femmes et enfants se recueillant au cours de l'anniversaire de l'insurrection des soeurs Trung.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:HA 53-32 R32 La délégation du lycée Trung Vuong est présente pour célébrer l'anniversaire de l'insurrection des soeurs Trung.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hai Bà Trưng Temple, Hanoi.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hai Bà Trưng Temple.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hall of Vietnamese Women's Museum.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hall of the Vietnamese Women's Museum.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Halong ensemble (colour corrected).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ham Long Church.png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi (1344420427).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi (1344420743).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi - Hanoi1612.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi - Quan-Thanh-Tempel 0001.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi - Quán Thánh temple - 1.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi - Quán Thánh temple - 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Catholic Cathedral.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 1st floor 01.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 1st floor 02.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 2nd floor 01.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 2nd floor 02.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 2nd floor 03.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 3rd floor 01.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 3rd floor 02.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum - 4th floor 01.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoi Museum.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi St Joseph's cathedral.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi Temple of Literature.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi, Vietnam (12041825854).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hanoi, Vietnam (49534800801).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:HanoiHilton.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hanoï - Pagode du Grand Bouddha.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hattuongdemhoi.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hiện vật Bảo tàng Chăm.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ho Chi Minh House 1463237026 5317a7aaed.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ho Chi Minh Museum (9753364471).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ho Chi Minh Museum, Saigon.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ho Chi Minh's prison diary in 2016.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ho dynasty's citadel, Vietnam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hoa sen ở Chùa Vĩnh Tràng, Mỹ Tho.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoangthanh4.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hoi An Museum detail.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoi An Museum garden.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoi An Museum gate.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoi An Museum main building.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hoi An Museum of History and Culture 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoi An Museum of History and Culture.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoi An Museum of Trade Ceramics.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hommage à Ho Chi Minh (centre d'interprétation de My Son).jpg": {
+   "keep": false,
+   "reason": "người là chủ thể chính"
+  },
+  "File:Hon Gai Church 2021.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Horaro de la muzeo de Yersin (Nha Trang) 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoàng bào triều Nguyễn.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoàng Đầu Ấn (Xyris indica) ở VQGTC.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hoành phi ghi chữ 永長古寺 Vĩnh Trường Cổ Tự ở Chùa Vĩnh Tràng, Mỹ Tho.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hoành phi ở Chùa Vĩnh Tràng, Mỹ Tho.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-04a.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Gia-Long-06.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Minh-Mang-04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Minh-Mang-05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue Vietnam Tomb-of-Emperor-Minh-Mang-08.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hue church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hue, le Temple de la littérature.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hueciteimperiale.png": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hué. Pagode et cour d'honneur du tombeau de Thieu Tri.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hué. Tombeau de l'empereur Thieu Tri.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 03.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 05.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 06.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 07.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 08.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Huế 2024 - Church of the Saviour (Nhà thờ Dòng Chúa Cứu Thế, Huế) - img 09.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hòa mình với thiên nhiên.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Hùng Kings Temple, Ho Chi Minh City, Vietnam - DSC06242.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hùng Vương từ khảo (雄王祠考).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hùng miếu kỉ niệm bi (雄廟紀念碑).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hậu điện Nhị Phủ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hậu điện miếu Nhị Phủ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hồ bơi Thung Nham - Viên ngọc xanh giữa lòng thung lũng.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Hồ trước đền Hai Bà Trưng, quận Hai Bà Trưng, Hà Nội.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Hội An, Ancient Town, 2020-01 CN-06.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hội An, Museum of Trade Ceramics, 2020-01 CN-01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Hội An, Museum of Trade Ceramics, 2020-01 CN-02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ICDaNangChamMuseum03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Immaculate Conception church, Nhai Phú.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Inscriptions (musée Cham, Da Nang) (4394713255).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Inside St. Francis Xavier Parish Church, Cholon (52765992415).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Inside Đền Quán Thánh Temple (219835629).jpeg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Interior view - Museum of Cham Sculpture - Danang, Vietnam - DSC01931.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Interior view - Vietnamese Women's Museum - Hanoi, Vietnam - DSC04226.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Japanese - Kozuka with the Celestial Shepard (Jp \"Hikoboshi\") - Walters 51675 - Back.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Japanese - Kozuka with the Celestial Shepard (Jp \"Hikoboshi\") - Walters 51675.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Jeanne d'Arc catholic church.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Just in case your life's desire is to see Uncle Ho's used cars. (1344753510).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Kato en la pagodo Bút Tháp.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Khu chòi canh vuon quoc gia Tram Chim, Tam Nong, Dong thap - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Khu di tích Gò Cây Thị.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Khu ẩm thực Thung Nham xanh mướt giữa thiên nhiên.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Khán báo lan.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Khánh đồng, đền Quán Thánh.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Kikuchi Tsunekatsu - Tsuba with Tanabata Festival Decorations - Walters 51387 - Back.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Kikuchi Tsunekatsu - Tsuba with Tanabata Festival Decorations - Walters 51387 - Mark A.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Kikuchi Tsunekatsu - Tsuba with Tanabata Festival Decorations - Walters 51387.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Kimsonk8.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ky-bi-doi-rong-da-mat-dau-o-thanh-nha-ho.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:La cour du musée Cham de Da Nang - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:La thanh 2.jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Lam Kinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Landscape Xuan Thuy National Park.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Laterite - Đá ong 1.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Laterite - Đá ong 2.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Laterite - Đá ong thềm chùa Tây Phương.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Le Vietnam, du nord au centre. (4419564263).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Le centre dinterprétation de My Son (4399059447).jpg": {
+   "keep": false,
+   "reason": "không nhận ra di tích"
+  },
+  "File:Le musée Cham (Da Nang) (4395751687).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Le tombeau du Prince Kiên-Thái-Vương - vue prise de la terrasse du tombeau; portique, temple cultuel de S.M. Dong-Khanh.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Legendary lion (Nghe), Le Thanh Tong king's temple, Thanh Hoa province, early 17th century AD, lacquered wood - Vietnam National Museum of Fine Arts - Hanoi, Vietnam - DSC04875.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lienhoabatdiep.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Linga.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lingga.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Long Corridor-牛朗织女鹊桥会.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Long Doi Son Bronze Drum a.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Long Doi Son Bronze Drum b.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Long Doi Son bronze drum, Type IV, heger, Duy Tien district, Ha Nam province, bronze - National Museum of Vietnamese History - Hanoi, Vietnam - DSC05550.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Long Tan Cross at the AWM August 2012.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:LuTram.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:LyBatDeShrine.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:LýTháiTông.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lăng Bác - NKS.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Lăng Minh Mạng - Mausoleum of Emperor Minh Mạng (2024) - img 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Lăng hài cốt tử đạo Phú Nhai.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lăng vua Thiệu Trị 2.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lăng vua Thiệu Trị 3.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Lăng vua Thiệu Trị.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:M40 recoilless rifle at Hoi An Museum.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:M79s at Hoi An Museum.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Machine tag presented to the IV National Congress of the Communist Party by workers of Nam Đinh Mechanical Factory.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Main Gate - Citadel of Hanoi.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mangrove forest in phase of regeneration.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Map of Oc Eo Culture (9736194940).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Martyr Saints of China.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 02.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 03.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 06.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 07.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 08.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 09.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 10.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Emperor Dong Khanh (Hue) - Lăng Đồng Khánh (2024 July) - img 20.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mausoleum of Hung King.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Memorial plaque on the Long Tan cross.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Memorial service at Long Tan Cross, 18 August 1970.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Minh Ky Grave.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mixed flock of wading birds in flooded grassland at Tràm Chim National Park, Vietnam, 19 July 2026.png": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mixed flock of waterbirds above wetland woodland at Tràm Chim National Park, Vietnam, 19 July 2026.png": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Miếu Nhị Phủ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Muiten.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Museum of Ho Chi Minh Campaign.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mushroom Club Xuan Thuy National Park.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mái vòm nhà thờ hạnh thông tây.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mật độ sếu đầu đỏ tại Vườn quốc gia Tràm Chim.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Mằng Lăng Church, front view.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mằng Lăng Church, side view.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mặt bên Nhà thờ núi 2.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mặt bên Vương cung thánh đường Phú Nhai.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mặt tiền Nhà thờ Núi.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mặt tiền và hông nhà thờ Hòn Gai.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Mộ giám mục Lợi.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:NHA TRANG CATHEDERAL VIETNAM JAN 2012 (7009676387).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nelumbo lutea in Tram Chim, Vietnam.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ngulongmon1.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ngulongmon2.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ngulongmon3.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ngulongmon4.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nha Tho Con Ga Da Nang.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nha Trang Cathedral.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nha Trang, Vietnam - 53120927853.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nha tho Domaine de Marie - Huy Phuong 1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nha tho Tan Dinh (4).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nha tho chay.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nha tho giao xu Cua Bac.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhathocoquangbinh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhathodaphatdiem2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhathohanhthongtay.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà Thờ Măng Lăng -4.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà Thờ Măng Lăng -5.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhà Thờ Măng Lăng -6.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhà ThờNgã Sáu,Ngô gia Tự, quận 5, hcmvn - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà tho Phát Diem.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Bà Rịa.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Cha Tam (Chợ Lớn).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Cha Tam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Chánh tòa - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Chính tòa Giáo phận Bà Rịa.png": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Chính tòa Giáo phận Lạng Sơn và Cao Bằng.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Chợ Quán.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Cần Thơ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Dòng Chúa Cứu Thế, Huế1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Hàm Long.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Mằng Lăng - Phú Yên.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Núi Nha Trang.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Phát Diệm 1.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Phát Diệm, Ninh Bình.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ PhátDiệm1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Sở Kiện - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Sở Kiện, Hà Nam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Sở Kiện, phía sau nhà thờ - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Sở Kiện, phía đầu hồi phải - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Sở Kiện, thị trấn Kiện Khê - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhà thờ Thánh Tâm Chúa Giêsu, Thành phố Hồ Chí Minh.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Thánh nữ Jeanne d'Arc Ngã Sáu.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Thánh nữ Jeanne d'Arc, mặt sau.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Thánh nữ Jeanne d'Arc.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Tân Định - quận 1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Tân Định, l'Église Rose de Sài Gòn (32571419807).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Tân Định.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ Vương cung thánh đường Phú Nhai.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ chính tòa Ban Ma Thuột.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ huyện Sỹ ở HCM.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ hạnh thông tây xưa còn tháp chuông nhọn.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ hạnh thông tây, đường quang trung, Gò vấp tp Hcm vn - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà thờ phụ nhà thờ hạnh thông tây.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhà thờ trung lao (ảnh năm 2012).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nhà triển lãm trong khu đền Hùng 18-09-2015.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nhị Phủ.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Niulang and Zhinv (Long Corridor).JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Noi that nha tho.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ntct3.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Nội thất miếu Nhị Phủ (ảnh 1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nội thất miếu Nhị Phủ (ảnh 2).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Nội thất vương cung thánh đường Phú Nhai.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Oceo.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Office Xuan Thuy National Park.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Ong Bon Pagoda (10018163314).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ong Bon Pagoda (10018163844).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:P1460588 - chùa Quán Thánh ( Trấn Vũ Quán ) - Hoàn Kiếm - Hà Nội.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:P1460607 - chùa Quán Thánh ( Trấn Vũ Quán ) - Hoàn Kiếm - Hà Nội.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Pagode du Tombeau de Duc-Duc.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Pedestal of Đồng Dương.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Phat Diem Cathedral (font).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phat Diem Stone Cathedral.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phatdiem.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Phatdiem1.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Phatdiemk-77.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phgch.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phongnhatourism.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phuong Chinh Church.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phù điêu các thánh tử đạo.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Phùng Khoang church building.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Phần đế bia Sùng Thiện Diên Linh.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Phụ nữ trong Lịch sử.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Pipers lament at the dedication of the Long Tan Cross in 1969.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Portes d'entrees du Tombeau de Duc-Duc.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Ruins of Nam Linh Son archaeological site, Oc Eo.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Sa Huynh (15428520545).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh (15428527555).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Archaeological Site on Cham Island (15428549565).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Artifact (15241989178).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Bronze (15241690370).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Cemetery (15405523966).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Culture in Hoi An (15428552575).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Earrings (15241701070).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Earrings (15405322876).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Iron Spears (15428506285).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sa Huynh Museum, Hoi An.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Saigon Cao Dai Temple - 53750432924.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Saigon Cao Dai Temple.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Saint Jeanne d'Arc (Joan of Arc) Roman Catholic Church (10018210985).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Sau lưng nhà thờ Hòn Gai.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Sculpture of a deity from Đồng Dương.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Seymour Vietnam Veterans Commemorative Walk Long Tan Cross 001.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Seymour Vietnam Veterans Commemorative Walk Long Tan Cross 002.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Seymour Vietnam Veterans Commemorative Walk Long Tan Cross 003.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Seymour Vietnam Veterans Commemorative Walk Long Tan Cross Plaque.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sites of Oc Eo Culture in Southern Vietnam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:St. Joseph's Cathedral - 50129345872.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Statue of Vajrapāṇi, Long Đoị Pagoda, Hà Nam Province (1118–1121), Vietnam National Museum of Fine Arts, Hanoi, Vietnam - 20131030.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Statue of a tiger, Lê Lợi mausoleum, Thanh Hóa Province (1433), Vietnam National Museum of Fine Arts, Hanoi, Vietnam - 20131030.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Stele bearing list of doctors.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Sunlit spider webs across wet grassland at Tràm Chim National Park, Vietnam, 19 July 2026.png": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Súng lục bà Quế.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:T54 Hanoi - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tam Kỳ Phổ Độ Thánh Thất - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tam Toa Church, Dong Hoi.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:TamToa.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tay Do castle East gate.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tay Do castle North gate.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tay Do castle South gate.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Temple Hai Bà Trưng (1).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Temple Hai Bà Trưng (2).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Temple Hai Bà Trưng.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Temple Main gate.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Temple near Huế.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thanh That Saigon , duong tran hung dao, phuong Cầu Kho, Quận 1, TPHCM, Việt Nam - panoramio.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh le Chu Nhat Nha tho Cho Quan.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 00.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 01.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 02.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 03.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 04.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 05.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 06.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 07.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 08.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 09.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thanh that Da Phuoc 10.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:The Long Tan Cross on display at the Australian War Memorial.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:The Long Tan Memorial Cross.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:ThienMuPagoda.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Thieu tri imperial edict01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thuong temple.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:ThuyenchienDaiViet1.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Thánh thất Sài Gòn 0714.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tháp chính đền Bến Dược.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tháp Đồng Dương 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tháp Đồng Dương.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tomb of ThieuTri.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tomb of ThieuTri2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tombe de Gia Long.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tombeau Empereur Thieu Tri, portique.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tombeau Empereur Thieu Tri.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tombeau de Duc-Duc - Portique du temple de Culte.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Traditional fishery.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tran Quoc Tang Statue.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trang An Scenic Landscape Complex, northern Vietnam (354) (38540830421).jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Trang phục Kinh.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tranh gốm Bến Dược (cropped).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tranh gốm Bến Dược (full).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trung tâm dịch vụ đền Hùng 18-09-2015.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trung tâm lễ hội đền Hùng 18-09-2015 1.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Trung tâm lễ hội đền Hùng 18-09-2015 10.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trung tâm lễ hội đền Hùng 18-09-2015 2.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trung tâm lễ hội đền Hùng 18-09-2015 3.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trên Viên Đàn.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Trống Đồng building, Vietnam Museum of Ethnology.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:TuDucTombeau 06.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tân Định Church 20190922.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Tây Sơn, Hương Sơn, Hà Tĩnh, Việt Nam.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tòa Thánh Tây Ninh 1214.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tượng Giesu.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tượng Thánh Denis.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tượng Đức Mẹ Maria.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tượng đức mẹ maria nhà thờ hạnh thông tây.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Tờ cuối tập thơ Nhật ký trong tù.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:VN But Thap3 tango7174.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:VanMieuHue.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam 2007 633.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam History Museum HCMC.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Aircraft rocket pod inscriptions.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Aircraft rocket pod.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - B52 wreckage part.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Diplomatic gift.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Early cannon.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Gift by Communist Party of the USA.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Gisement d'étain Tinh Tuc.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution - Le Travail newspaper.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vietnam Museum of Revolution.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnam National Museum of History, Hanoi, Vietnam.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnam Women Museum 01.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnam, Hue, Imperial City of Hue, Meridian Gate 2.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnamese Women's Museum Building.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Vietnamese Women's Museum, Women's Fashion section.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:View from Cửa Ông Temple.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vòm nhà thờ.JPG": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Vương cung thánh đường Phú Nhai.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Woodblocks of the Nguyễn Dynasty 01.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Woodblocks of the Nguyễn Dynasty 02.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Woodblocks of the Nguyễn Dynasty 03.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Xuan Thuy NP banner.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Yersin Museum (Nha Trang).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Église Can Tho.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Đường vào nhà thờ Sở Kiện - panoramio - ngocchat1014.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Đường vào nhà thờ Sở Kiện - panoramio.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Đền Quán Thánh.JPG": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Đền thờ Vua Hùng ở Sở thú, ngày 21 tháng 4 năm 2021 (5).jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Đền Đô Đình Bảng.jpeg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Đồng Dương 2011.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Đồng Dương, Court I, main tower.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Đồng cỏ và chim nước.jpg": {
+   "keep": true,
+   "reason": ""
+  },
+  "File:Đồng hồ tại mặt tiền nhà thờ Sở Kiện.jpg": {
+   "keep": false,
+   "reason": ""
+  },
+  "File:Độc thư lan.jpg": {
+   "keep": true,
+   "reason": ""
+  }
+ }
+}

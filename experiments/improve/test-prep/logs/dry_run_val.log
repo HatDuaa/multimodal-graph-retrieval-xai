@@ -1,0 +1,8 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+clip_only val {"recall@1": 0.391328881783128, "recall@5": 0.6788300573685695, "recall@10": 0.7897112762155554, "mrr": 0.5233535974637776}
+countonly_factual_r3_seed0 val {"recall@1": 0.49148876140317876, "recall@5": 0.7527508699332267, "recall@10": 0.8523464685413336, "mrr": 0.6109571106970852}
+countonly_factual_r3_seed1 val {"recall@1": 0.48847926267281105, "recall@5": 0.7520925420859588, "recall@10": 0.847644126775134, "mrr": 0.6079596324349427}
+countonly_factual_r3_seed2 val {"recall@1": 0.48735070064892316, "recall@5": 0.7517163547446628, "recall@10": 0.8487726887990219, "mrr": 0.6067866956088908}
+countonly_factual_r3 val {"recall@1": {"mean": 0.489106241574971, "std": 0.0021390917720595514}, "recall@5": {"mean": 0.7521865889212828, "std": 0.0005236306181538604}, "recall@10": {"mean": 0.8495877613718298, "std": 0.0024548445970659655}, "mrr": {"mean": 0.6085678129136396, "std": 0.0021506982872920716}}
+dry run on val: every run reproduces its metrics.json

@@ -1,13 +1,14 @@
 """Demo: type a query, see the top-k images and why each one was returned.
 
 Runs fully offline once features and the test/val images are on disk:
-    python app/demo_app.py [--split test] [--port 7860]
+    python app/demo_app.py [--split test] [--port 7860] [--run countonly_factual_r3_seed0 | main_r3_seed0]
 then open http://localhost:7860
 
 The page only calls SearchService.search(); ranking modes added to the service (for example
 CLIP + graph) appear in the "Chế độ xếp hạng" selector automatically.
 """
 import argparse
+import html
 import random
 import sys
 from pathlib import Path
@@ -15,6 +16,8 @@ from pathlib import Path
 import gradio as gr
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.explain.score_breakdown import split_final_score, split_raw_score  # noqa: E402
+from src.service.graph_mode import DEFAULT_RUN, GraphRerankMode  # noqa: E402
 from src.service.search_service import Hit, SearchService  # noqa: E402
 from src.utils.config import load_config, resolve  # noqa: E402
 
@@ -35,27 +38,289 @@ footer { display: none !important; }
 #gallery .gallery-container { height: 100% !important; display: flex; flex-direction: column; }
 #gallery .grid-wrap { height: 100% !important; max-height: none !important; flex: 1 1 0; min-height: 0; overflow-y: auto !important; }
 #gallery .thumbnail-item { background: var(--neutral-100, #f3f4f6); }
-#detail { height: 100% !important; overflow-y: auto; padding-right: 6px; }
+#detail-col { display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important; overflow: hidden; }
+#detail { flex: 1 1 0 !important; height: auto !important; min-height: 0 !important; overflow-y: auto !important; padding-right: 6px; }
+#detail h3 { margin: 0 0 6px; font-size: 1.1rem; }
+#detail h4 { margin: 14px 0 6px; }
+#detail ul { margin: 0 0 4px; padding-left: 20px; }
+#detail code { font-size: 0.85em; padding: 1px 4px; border-radius: 4px; background: var(--neutral-100, #f3f4f6); }
+/* explanation tables: text cells wrap only between words, numeric cells (w, a, sim, đóng góp) never wrap */
+#detail table { display: table; width: 100%; table-layout: auto; border-collapse: collapse; margin: 4px 0;
+                word-break: normal !important; }
+#detail th, #detail td { word-break: normal !important; overflow-wrap: normal !important; hyphens: none;
+                         padding: 4px 6px; border-bottom: 1px solid var(--neutral-200, #e5e7eb); text-align: left; }
+#detail th { white-space: nowrap; font-weight: 600; }
+#detail th.text { white-space: normal; }
+#detail .num { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+/* one table, one row group per channel; a light tint of the channel colour tells the groups apart */
+#detail .ch-clip { --ch: #2563eb; --tint: rgba(37, 99, 235, 0.06); }
+#detail .ch-obj { --ch: #ea580c; --tint: rgba(234, 88, 12, 0.06); }
+#detail .ch-tri { --ch: #9333ea; --tint: rgba(147, 51, 234, 0.06); }
+#detail tbody tr { background: var(--tint); }
+#detail tbody tr.group-start > td { border-top: 2px solid var(--neutral-300, #d1d5db); }
+#detail td.channel { border-left: 3px solid var(--ch); vertical-align: top; white-space: nowrap; }
+#detail td.channel b { color: var(--ch); }
+#detail tr.total > td { font-weight: 600; border-top: 2px solid var(--neutral-400, #9ca3af); background: none; }
+#detail .muted { color: var(--body-text-color-subdued, #6b7280); font-size: 0.85rem; margin: 2px 0; }
+#detail .summary { margin: 0 0 6px; font-variant-numeric: tabular-nums; }
+#detail .summary .clip { color: #2563eb; font-weight: 600; }
+#detail .summary .graph { color: #374151; font-weight: 600; }
+#detail .share { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; }
+#detail .sbar { display: inline-block; width: 40px; height: 6px; border-radius: 3px; overflow: hidden;
+                background: var(--neutral-200, #e5e7eb); }
+#detail .sbar > span { display: block; height: 100%; background: var(--ch); opacity: 0.75; }
+#detail .sbar.neg > span { background: var(--neutral-400, #9ca3af); }
+#detail .dbar { display: inline-block; width: 40px; height: 6px; border-radius: 3px; overflow: hidden;
+                background: var(--neutral-200, #e5e7eb); }
+#detail .dbar > span { display: block; height: 100%; background: #16a34a; }
+#detail .dbar.neg > span { background: #dc2626; }
+#detail .summary .up { color: #16a34a; font-weight: 600; }
+#detail .summary .down { color: #dc2626; font-weight: 600; }
 """
+
+# Short reason shown in place of the matched image part; codes come from src.service.graph_mode.unmatched_parts.
+UNMATCHED_REASONS = {
+    "pronoun": {"objects": "đại từ, bị loại", "triples": "chứa đại từ, bị loại"},
+    "empty_label": "nhãn rỗng, bị che",
+    "dangling": "thiếu một đầu quan hệ",
+    "image_empty": {"objects": "ảnh không có vật thể", "triples": "ảnh không có bộ ba"},
+}
+NO_QUERY_PARTS = {"objects": "câu không có vật thể", "triples": "câu không có quan hệ"}
+FILLED = {"objects": "ảnh không có vật thể: lấy điểm kênh trung bình của các ảnh ứng viên",
+          "triples": "ảnh không có bộ ba: lấy điểm kênh trung bình của các ảnh ứng viên"}
+CHANNELS = (("objects", "Vật thể", "ch-obj"), ("triples", "Bộ ba", "ch-tri"))
+EMPTY = '<td class="num"></td>'
+DASH = '<td class="num">—</td>'
+
+
+def esc(value) -> str:
+    return html.escape(str(value))
+
+
+def part_text(value) -> str:
+    return f"{value[0]} –{value[1]}→ {value[2]}" if isinstance(value, (list, tuple)) else str(value)
+
+
+def signed(value: float, fmt: str) -> str:
+    """Number with a typographic minus, so negative parts stand out."""
+    return format(value, fmt).replace("-", "−")
+
+
+def num(value: float | None, digits: int) -> str:
+    return EMPTY if value is None else f'<td class="num">{signed(value, f".{digits}f")}</td>'
+
+
+def share_cell(share: float | None, part: float | None, raw: float | None = None, hover: str | None = None) -> str:
+    """% of the final score with a small bar; the absolute part when the final score is not positive."""
+    if part is None:
+        return DASH
+    hover = hover or (f"đóng góp thô = {raw:.4f}" if raw is not None else None)
+    title = f' title="{esc(hover)}"' if hover else ""
+    if share is None:
+        return f'<td class="num"{title}>{signed(part, ".3f")}</td>'
+    bar = (f'<span class="sbar{" neg" if share < 0 else ""}">'
+           f'<span style="width:{min(abs(share), 1) * 100:.1f}%"></span></span>')
+    return f'<td class="num"{title}><span class="share">{bar}{signed(share, ".0%")}</span></td>'
+
+
+def clean(value: float) -> float:
+    """0 for float noise, so a filled channel (exactly 0 in theory) does not print as −0.0000."""
+    return 0. if abs(value) < 1e-9 else value
+
+
+def delta_cell(delta: float | None, scale: float) -> str:
+    """This row minus its mean over the 50 candidates, with a green (above) or red (below) bar scaled to the table."""
+    if delta is None:
+        return DASH
+    delta = clean(delta)
+    width = min(abs(delta) / scale, 1) * 100 if scale > 0 else 0
+    bar = f'<span class="dbar{" neg" if delta < 0 else ""}"><span style="width:{width:.1f}%"></span></span>'
+    return (f'<td class="num" title="giá trị dòng ở ảnh này − trung bình của dòng đó trên 50 ứng viên">'
+            f'<span class="share">{bar}{signed(delta, "+.4f")}</span></td>')
+
+
+def count_notes(item: dict) -> tuple[str, str]:
+    """Count class of the caption node and count bucket + g of the matched image node, for a stated count."""
+    if item.get("query_count", "unknown") == "unknown":
+        return "", ""
+    return (f' <span class="muted">số lượng {esc(item["query_count"])}</span>',
+            f' <span class="muted">số lượng {esc(item["image_count"])} · g = {signed(item["count_bias"], "+.3f")}</span>')
+
+
+def channel_rows(key: str, title: str, cls: str, weight: float, info: dict, split: dict, scale: float = 0.) -> list[str]:
+    """Row group of one channel: matched parts by contribution, then query parts without a match and why.
+
+    z-score fusion: Độ khớp is a × sim of the best image part and the row part is the proportional share. Raw fusion:
+    Độ khớp is sum_j a_j × sim_j over the image parts and the row part, channel weight × w × Độ khớp, is exact; a
+    last column compares it with its mean over the 50 candidates.
+    """
+    raw = info.get("fusion") == "raw"
+    delta = (lambda value: delta_cell(value, scale)) if raw and "clip_delta" in info else (lambda value: "")  # noqa: E731
+    active = info.get("channel_active", [True, True])[0 if key == "objects" else 1]
+    cells = []
+    rows = zip(info[key], split["row_parts"][key], split["row_shares"][key])
+    for item, part, share in sorted(rows, key=lambda row: -row[0]["channel_term" if raw else "contribution"]):
+        query_note, image_note = count_notes(item)
+        if raw:
+            match = num(item["row_score"], 2)
+            cell = share_cell(share, part, hover=f"phần có a lớn nhất: a = {item['a_ij']:.2f}, sim = {item['sim_ij']:.3f}")
+        else:
+            match, cell = num(item["a_ij"] * item["sim_ij"], 2), share_cell(share, part, item["contribution"])
+        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code>{query_note}</td>' + num(item["w_i"], 2)
+                     + f'<td><code>{esc(part_text(item["image_part"]))}</code>{image_note}</td>' + match + cell
+                     + delta(item.get("delta")))
+    fill = split.get("fill_parts", {}).get(key)
+    if fill is not None and any(item["reason"] == "image_empty" for item in info.get("unmatched", {}).get(key, [])):
+        cells.append("<td>cả kênh</td>" + DASH + f'<td>— <span class="muted">{FILLED[key]}</span></td>'
+                     + num(fill / weight if weight else None, 2) + share_cell(split["fill_shares"][key], fill)
+                     + delta(info.get("fill_deltas", {}).get(key)))
+    for item in info.get("unmatched", {}).get(key, []):
+        reason = UNMATCHED_REASONS.get(item["reason"], item["reason"])
+        reason = reason[key] if isinstance(reason, dict) else reason
+        cells.append(f'<td><code>{esc(part_text(item["query_part"]))}</code></td>' + DASH
+                     + f'<td>— <span class="muted">{esc(reason)}</span></td>' + DASH + DASH + delta(None))
+    if not cells:
+        cells.append("<td>—</td>" + DASH + f'<td>— <span class="muted">{NO_QUERY_PARTS[key]}</span></td>'
+                     + DASH + DASH + delta(None))
+    if raw:
+        note = '<span class="muted">Σw = 1</span>' if info[key] else ""
+    else:
+        note = '<span class="muted">Σw = 1</span>' if active else '<span class="muted">(không dùng)</span>'
+    head = f'<td class="channel" rowspan="{len(cells)}"><b>{title}</b> {weight:.0%}<br>{note}</td>'
+    return [f'<tr class="{cls}{" group-start" if i == 0 else ""}">{head if i == 0 else ""}{row}</tr>'
+            for i, row in enumerate(cells)]
+
+
+def score_summary(fused: float, split: dict) -> str:
+    def term(name, cls, part, share):
+        return (f'<span class="{cls}">{name} {signed(part, ".3f")}</span>'
+                + ("" if share is None else f" ({signed(share, '.0%')})"))
+    return (f'<p class="summary">Điểm cuối <b>{signed(fused, ".3f")}</b> = '
+            + term("CLIP", "clip", split["clip_part"], split["clip_share"]) + " + "
+            + term("Đồ thị", "graph", split["graph_part"], split["graph_share"]) + "</p>")
+
+
+def delta_summary(info: dict) -> str:
+    """Hơn trung bình top-50: +X = CLIP + vật thể + bộ ba, each the sum of its rows' deltas."""
+    parts = [("CLIP", info["clip_delta"])] + [
+        (title, clean(sum(item["delta"] for item in info[key]) + (info["fill_deltas"].get(key) or 0.)))
+        for key, title, _ in CHANNELS]
+    total = info["delta_total"]
+    word = "Hơn" if total >= 0 else "Kém"
+    cls = lambda value: "up" if value >= 0 else "down"  # noqa: E731
+    return (f'<p class="summary">{word} trung bình top-50: <span class="{cls(total)}">{signed(total, "+.4f")}</span> = '
+            + " + ".join(f'{name} <span class="{cls(value)}">{signed(value, "+.4f")}</span>' for name, value in parts)
+            + "</p>")
+
+
+def raw_explanation(info: dict, hit: Hit) -> str:
+    """Raw fusion: fused = a × cosine + b × S_obj + c × S_tri, every row an exact part of the final score."""
+    a, b, c = info["weights_abc"]
+    split = split_raw_score(hit.score, a, hit.clip_score,
+                            {key: [item["channel_term"] for item in info[key]] for key, _, _ in CHANNELS},
+                            info.get("fills", {}))
+    deltas = "clip_delta" in info
+    values = [info["clip_delta"]] + [item["delta"] for key, _, _ in CHANNELS for item in info[key]] if deltas else []
+    scale = max((abs(v) for v in values), default=0.)
+    rows = ['<tr class="ch-clip group-start"><td class="channel"><b>CLIP</b> ' f"{a:.0%}</td>"
+            "<td>cả câu</td>" + DASH + "<td>cả ảnh</td>"
+            f'<td class="num">cosine {hit.clip_score:.4f}</td>'
+            + share_cell(split["clip_share"], split["clip_part"])
+            + (delta_cell(info["clip_delta"], scale) if deltas else "") + "</tr>"]
+    for (key, title, cls), weight in zip(CHANNELS, (b, c)):
+        rows += channel_rows(key, title, cls, weight, info, split, scale)
+    total_share = "100%" if hit.score > 0 else signed(hit.score, ".3f")
+    total_delta = f'<td class="num">{signed(info["delta_total"], "+.4f")}</td>' if deltas else ""
+    rows.append(f'<tr class="total"><td>Tổng</td><td></td>{EMPTY}<td></td>{EMPTY}'
+                f'<td class="num">{total_share}</td>{total_delta}</tr>')
+    notes = ["Điểm cuối = a × cosine CLIP + b × S(vật thể) + c × S(bộ ba) (fusion raw, không chuẩn hoá trong top-50), "
+             "nên mọi phần đều tách đúng: các % cộng lại bằng 100%.",
+             "Cột So với TB top-50 = giá trị dòng ở ảnh này trừ trung bình của đúng dòng đó trên 50 ứng viên (trọng số "
+             "kênh và w không đổi giữa các ứng viên, chỉ Σ a × sim đổi). Cột này cho biết dòng nào đẩy ảnh lên hay kéo "
+             "xuống so với các ảnh khác: một dòng có thể chiếm nhiều % điểm cuối mà gần như không giúp xếp hạng."]
+    if not deltas:
+        notes.pop()
+    notes += [
+             "Mỗi dòng = trọng số kênh × w × Độ khớp, với Độ khớp = Σ a × sim trên mọi phần của ảnh theo attention; "
+             "cột Phần khớp ghi phần có a lớn nhất (rê chuột lên ô % để xem a và sim của nó).",
+             "Cạnh kNN không nhãn ([none]) và node tổng chỉ dùng lúc truyền tin trong GAT, không được so khớp nên không "
+             "thành dòng."]
+    if any(item.get("query_count", "unknown") != "unknown" for item in info["objects"]):
+        notes.append("Vật thể có số lượng trong câu: sim đã cộng g[số lượng của câu, nhóm số lượng của node ảnh] "
+                     "(bảng g học lúc train; số lượng không rõ thì g = 0).")
+    if any(part is not None for part in split["fill_parts"].values()):
+        notes.append("Kênh mà ảnh không có phần nào để so khớp: fusion raw lấy điểm kênh trung bình của các ảnh ứng "
+                     "viên có phần đó, nên kênh này không đẩy ảnh lên hay xuống (So với TB top-50 = 0).")
+    if hit.score <= 0:
+        notes.append("Điểm cuối không dương nên cột % điểm cuối ghi giá trị tuyệt đối của từng phần.")
+    return (score_summary(hit.score, split) + (delta_summary(info) if deltas else "")
+            + '<table><thead><tr><th>Kênh</th><th class="text">Phần của câu</th><th class="num">w</th>'
+            '<th class="text">Phần khớp trong ảnh</th>'
+            '<th class="text">Độ khớp (Σ a × sim)</th><th class="text">% điểm cuối</th>'
+            + ('<th class="text">So với TB top-50</th>' if deltas else "") + "</tr>"
+            "</thead><tbody>" + "".join(rows) + "</tbody></table>"
+            + "".join(f'<p class="muted">{note}</p>' for note in notes))
+
+
+def graph_explanation(info: dict, hit: Hit) -> str:
+    """Matched part pairs exactly as the reranker scored them, with each row's share of the final score."""
+    if info.get("fusion") == "raw":
+        return raw_explanation(info, hit)
+    a, b, c = info["weights_abc"]
+    active = dict(zip(("objects", "triples"), info.get("channel_active", [True, True])))
+    split = split_final_score(hit.score, a, info["z_clip"], hit.graph_score,
+                              {key: [item["contribution"] for item in info[key]] for key, _, _ in CHANNELS}, active)
+    rows = ['<tr class="ch-clip group-start"><td class="channel"><b>CLIP</b> ' f"{a:.0%}</td>"
+            "<td>cả câu</td>" + DASH + "<td>cả ảnh</td>"
+            f'<td class="num">cosine {hit.clip_score:.4f}</td>'
+            + share_cell(split["clip_share"], split["clip_part"]) + "</tr>"]
+    for (key, title, cls), weight in zip(CHANNELS, (b, c)):
+        rows += channel_rows(key, title, cls, weight, info, split)
+    unused = not all(active.values())
+    total_share = "100%" if hit.score > 0 else signed(hit.score, ".3f")
+    rows.append(f'<tr class="total"><td>Tổng</td><td></td>{EMPTY}<td></td>{EMPTY}'
+                f'<td class="num">{total_share}</td></tr>')
+    notes = ["Tầng CLIP / đồ thị là tách đúng theo công thức điểm cuối "
+             "(điểm cuối = a × z(CLIP) + (1 − a) × điểm đồ thị).",
+             "Chia phần đồ thị cho từng dòng là xấp xỉ theo tỉ lệ đóng góp thô (trọng số kênh × w × a × sim, "
+             "xem khi rê chuột lên ô %), vì z-score trừ trung bình của 50 ứng viên."]
+    if unused:
+        notes.append("(không dùng): kênh không có phần nào so khớp được hoặc điểm kênh như nhau trên cả top-50, "
+                     "nên bị bỏ khỏi điểm đồ thị; điểm đồ thị chỉ lấy từ kênh còn lại.")
+    if hit.score <= 0:
+        notes.append("Điểm cuối không dương nên cột % điểm cuối ghi giá trị tuyệt đối của từng phần.")
+    return (score_summary(hit.score, split)
+            + '<table><thead><tr><th>Kênh</th><th class="text">Phần của câu</th><th class="num">w</th>'
+            '<th class="text">Phần khớp trong ảnh</th>'
+            '<th class="text">Độ khớp (a × sim)</th><th class="text">% điểm cuối</th></tr>'
+            "</thead><tbody>" + "".join(rows) + "</tbody></table>"
+            + "".join(f'<p class="muted">{note}</p>' for note in notes))
 
 
 def describe(hit: Hit, mode: str) -> str:
-    lines = [f"### Hạng {hit.rank} · ảnh `{hit.image_id}`",
-             f"- Điểm cuối: **{hit.score:.4f}**",
-             f"- Điểm CLIP (cosine): {hit.clip_score:.4f}"]
+    out = [f"<h3>Hạng {hit.rank} · ảnh <code>{hit.image_id}</code></h3><ul>",
+           f"<li>Điểm cuối: <b>{hit.score:.4f}</b></li>",
+           f"<li>Điểm CLIP (cosine): {hit.clip_score:.4f}</li>"]
     if hit.graph_score is not None:
-        lines.append(f"- Điểm đồ thị: {hit.graph_score:.4f}")
-    lines.append("\n**Giải thích**")
-    if hit.explanation:
-        for path in hit.explanation:
-            lines.append("- " + " ; ".join(f"{h} –{r}→ {t}" for h, r, t in path))
+        raw = hit.explanation and isinstance(hit.explanation[0], dict) and hit.explanation[0].get("fusion") == "raw"
+        label = "b × S(vật thể) + c × S(bộ ba)" if raw else "z-score trong top-50"
+        out.append(f"<li>Điểm đồ thị ({label}): {hit.graph_score:.4f}</li>")
+    out.append("</ul><h4>Giải thích</h4>")
+    if hit.explanation and isinstance(hit.explanation[0], dict):
+        out.append(graph_explanation(hit.explanation[0], hit))
+    elif hit.explanation:
+        out.append("<ul>" + "".join("<li>" + esc(" ; ".join(f"{h} –{r}→ {t}" for h, r, t in path)) + "</li>"
+                                    for path in hit.explanation) + "</ul>")
     elif mode == "clip":
-        lines.append("- Chế độ CLIP thuần chỉ so khớp vector, không dùng đồ thị nên không có đường đi giải thích.")
+        out.append("<ul><li>Chế độ CLIP thuần chỉ so khớp vector, không dùng đồ thị nên không có đường đi giải thích."
+                   "</li></ul>")
     else:
-        lines.append("- Không có đường đi nào nối truy vấn với ảnh này; chỉ điểm CLIP đóng góp.")
-    lines.append("\n**Caption gốc của ảnh (COCO)**")
-    lines += [f"- {c}" for c in hit.captions]
-    return "\n".join(lines)
+        out.append("<ul><li>Không có đường đi nào nối truy vấn với ảnh này; chỉ điểm CLIP đóng góp.</li></ul>")
+    out.append("<h4>Caption gốc của ảnh (COCO)</h4><ul>" + "".join(f"<li>{esc(c)}</li>" for c in hit.captions) + "</ul>")
+    return "".join(out)
+
+
+START_TEXT = "<p>Nhập truy vấn để bắt đầu.</p>"
 
 
 def build(service: SearchService, split: str) -> gr.Blocks:
@@ -69,7 +334,7 @@ def build(service: SearchService, split: str) -> gr.Blocks:
             rank = service.rank_of(query, gold_id, mode)
             where = f"hạng **{rank}**" if rank else f"ngoài top-{service.pool_k}"
             note += f"\n\nẢnh đúng của caption này là `{gold_id}`: {where}."
-        detail = describe(hits[0], mode) if hits else "Nhập truy vấn để bắt đầu."
+        detail = describe(hits[0], mode) if hits else START_TEXT
         return gallery, note, detail, hits
 
     def pick(hits, mode, evt: gr.SelectData):
@@ -93,8 +358,11 @@ def build(service: SearchService, split: str) -> gr.Blocks:
                 lucky = gr.Button("Caption ngẫu nhiên của pool")
         note = gr.Markdown(elem_id="note")
         with gr.Row(elem_id="results"):
-            gallery = gr.Gallery(label="Kết quả", columns=6, object_fit="contain", scale=3, elem_id="gallery")
-            detail = gr.Markdown("Nhập truy vấn để bắt đầu.", elem_id="detail")
+            # 11:9 split gives the detail panel ~45% of the width so the explanation table fits unwrapped;
+            # the detail component ignores scale/min_width, so it sits in a Column that carries them
+            gallery = gr.Gallery(label="Kết quả", columns=5, object_fit="contain", scale=11, elem_id="gallery")
+            with gr.Column(scale=9, min_width=480, elem_id="detail-col"):
+                detail = gr.HTML(START_TEXT, elem_id="detail")
 
         outputs = [gallery, note, detail, hits_state]
         go.click(run, [query, mode, k, gold_state], outputs)
@@ -111,10 +379,19 @@ def main() -> None:
     ap.add_argument("--split", default="test", choices=["test", "val"])
     ap.add_argument("--port", type=int, default=7860)
     ap.add_argument("--host", default="127.0.0.1")
+    ap.add_argument("--run", default=DEFAULT_RUN,
+                    help="trained graph reranker run for the CLIP + Đồ thị mode (name or folder); default: the main "
+                         "model countonly_factual_r3, seed 0 = best val R@1 of its 3 seeds; main_r3_seed0 = level 1")
+    ap.add_argument("--no-graph", action="store_true", help="CLIP mode only (no model checkpoint needed)")
+    ap.add_argument("--device", default=None, help="cuda or cpu (default: cuda if available)")
+    ap.add_argument("--parser-device", default=None, help="device of the FACTUAL caption parser (default: --device)")
     args = ap.parse_args()
 
     cfg = load_config()
     service = SearchService.from_config(split=args.split, cfg=cfg)
+    if not args.no_graph:
+        service.add_mode("clip_graph", GraphRerankMode(cfg, args.split, service.encoder, args.run, args.device,
+                                                       args.parser_device))
     missing = [m["path"].name for m in service.meta.values() if not m["path"].exists()]
     if missing:
         sys.exit(f"{len(missing)} images missing; run: python scripts/download_images.py --splits {args.split}")

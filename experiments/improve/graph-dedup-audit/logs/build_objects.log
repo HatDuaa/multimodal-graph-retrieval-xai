@@ -1,0 +1,2 @@
+{"split": "val", "images": 2126, "objects": 56181, "objects_without_box": 0, "seconds": 19.518205165863037}
+{"split": "train", "images": 46944, "objects": 1255685, "objects_without_box": 0, "seconds": 27.949939250946045}

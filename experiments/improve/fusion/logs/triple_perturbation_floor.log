@@ -1,0 +1,14 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+baseline experiments/improve/fusion/floor/floor_factual_r3_seed0 {"all": 0.4716, "with_triple": 0.476, "triple_only_with_triple": 0.1265, "third_only_all": 0.132}
+baseline experiments/improve/fusion/floor/floor_factual_r3_seed1 {"all": 0.4726, "with_triple": 0.4769, "triple_only_with_triple": 0.0739, "third_only_all": 0.0809}
+baseline experiments/improve/fusion/floor/floor_factual_r3_seed2 {"all": 0.4749, "with_triple": 0.4794, "triple_only_with_triple": 0.0751, "third_only_all": 0.0821}
+verb_swap experiments/improve/fusion/floor/floor_factual_r3_seed0 {"all": 0.4609, "with_triple": 0.465, "triple_only_with_triple": 0.0808, "third_only_all": 0.0877}
+verb_swap experiments/improve/fusion/floor/floor_factual_r3_seed1 {"all": 0.4636, "with_triple": 0.4676, "triple_only_with_triple": 0.0495, "third_only_all": 0.0572}
+verb_swap experiments/improve/fusion/floor/floor_factual_r3_seed2 {"all": 0.4632, "with_triple": 0.4673, "triple_only_with_triple": 0.0467, "third_only_all": 0.0545}
+subject_object_swap experiments/improve/fusion/floor/floor_factual_r3_seed0 {"all": 0.4672, "with_triple": 0.4715, "triple_only_with_triple": 0.0918, "third_only_all": 0.0983}
+subject_object_swap experiments/improve/fusion/floor/floor_factual_r3_seed1 {"all": 0.4635, "with_triple": 0.4675, "triple_only_with_triple": 0.0521, "third_only_all": 0.0597}
+subject_object_swap experiments/improve/fusion/floor/floor_factual_r3_seed2 {"all": 0.4621, "with_triple": 0.4663, "triple_only_with_triple": 0.0496, "third_only_all": 0.0573}
+wrote experiments/improve/fusion/floor/triple_perturbation.json in 26s

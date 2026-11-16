@@ -1,0 +1,8 @@
+/home/loc.nguyen/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+clip_only test {"recall@1": 0.3932311144353029, "recall@5": 0.6638930441286462, "recall@10": 0.7731862378459237, "mrr": 0.5199921545657556}
+countonly_factual_r3_seed0 test {"recall@1": 0.4806469708302169, "recall@5": 0.7475691847419597, "recall@10": 0.8446148092744952, "mrr": 0.6032327090544465}
+countonly_factual_r3_seed1 test {"recall@1": 0.47784218399401646, "recall@5": 0.7480366492146597, "recall@10": 0.8429319371727748, "mrr": 0.6004644696689513}
+countonly_factual_r3_seed2 test {"recall@1": 0.4798990276738968, "recall@5": 0.7480366492146597, "recall@10": 0.8438668661181751, "mrr": 0.6006970169938953}
+countonly_factual_r3 test {"recall@1": {"mean": 0.47946272749937674, "std": 0.0014524034153242406}, "recall@5": {"mean": 0.7478808277237597, "std": 0.00026989073914997436}, "recall@10": {"mean": 0.8438045375218151, "std": 0.0008431656231905647}, "mrr": {"mean": 0.6014647319057644, "std": 0.001535521723480742}}
+wrote /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/test/metrics_countonly_factual_r3.json and /home/loc.nguyen/multimodal-graph-retrieval-xai/experiments/improve/test/metrics_clip_only.json

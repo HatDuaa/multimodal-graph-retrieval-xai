@@ -1,0 +1,186 @@
+{
+  "images": {
+    "level1_factual_v1": {
+      "train": {
+        "graphs": 46944,
+        "empty_graphs": 643,
+        "nodes_per_graph": 27.120040603874646,
+        "components_per_graph": 11.111660655277424,
+        "components_median": 10.0,
+        "connected_share": 0.03684585646098357,
+        "largest_component_share": 0.4359750802823372,
+        "isolated_node_share": 0.22134691423406347,
+        "labelled_edges_per_graph": 18.045522324471712,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      },
+      "val": {
+        "graphs": 2126,
+        "empty_graphs": 30,
+        "nodes_per_graph": 26.803912213740457,
+        "components_per_graph": 11.005248091603054,
+        "components_median": 10.0,
+        "connected_share": 0.04723282442748092,
+        "largest_component_share": 0.44605314560486237,
+        "isolated_node_share": 0.221231377155978,
+        "labelled_edges_per_graph": 17.904985888993416,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      }
+    },
+    "merge_v1": {
+      "train": {
+        "graphs": 46944,
+        "empty_graphs": 643,
+        "nodes_per_graph": 25.22669056823827,
+        "components_per_graph": 9.935984104015033,
+        "components_median": 9.0,
+        "connected_share": 0.03937279972354809,
+        "largest_component_share": 0.4741642822969047,
+        "isolated_node_share": 0.22878098938289637,
+        "labelled_edges_per_graph": 17.521195466939332,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      },
+      "val": {
+        "graphs": 2126,
+        "empty_graphs": 30,
+        "nodes_per_graph": 24.918893129770993,
+        "components_per_graph": 9.80916030534351,
+        "components_median": 9.0,
+        "connected_share": 0.04961832061068702,
+        "largest_component_share": 0.4841796258177302,
+        "isolated_node_share": 0.22758950794562513,
+        "labelled_edges_per_graph": 17.381937911571026,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      }
+    },
+    "merge_v1+knn5": {
+      "train": {
+        "graphs": 46944,
+        "empty_graphs": 643,
+        "nodes_per_graph": 25.22669056823827,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 8.818334601860754e-05,
+        "labelled_edges_per_graph": 17.521195466939332,
+        "completion_edges_per_graph": 115.7648048738923,
+        "bridge_edges_per_graph": 0.02142978868438991,
+        "graphs_with_bridge": 0.010374062713019768
+      },
+      "val": {
+        "graphs": 2126,
+        "empty_graphs": 30,
+        "nodes_per_graph": 24.918893129770993,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 0.00011487650775416428,
+        "labelled_edges_per_graph": 17.381937911571026,
+        "completion_edges_per_graph": 114.34666039510819,
+        "bridge_edges_per_graph": 0.01975540921919097,
+        "graphs_with_bridge": 0.009877704609595485
+      }
+    },
+    "merge_v1+knn5+global": {
+      "train": {
+        "graphs": 46944,
+        "empty_graphs": 0,
+        "nodes_per_graph": 25.881156271301975,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 0.0005292333524010979,
+        "labelled_edges_per_graph": 17.521195466939332,
+        "completion_edges_per_graph": 115.7648048738923,
+        "bridge_edges_per_graph": 0.02142978868438991,
+        "graphs_with_bridge": 0.010374062713019768
+      },
+      "val": {
+        "graphs": 2126,
+        "empty_graphs": 0,
+        "nodes_per_graph": 25.567262464722482,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 0.0005519169916844507,
+        "labelled_edges_per_graph": 17.381937911571026,
+        "completion_edges_per_graph": 114.34666039510819,
+        "bridge_edges_per_graph": 0.01975540921919097,
+        "graphs_with_bridge": 0.009877704609595485
+      }
+    }
+  },
+  "sentences": {
+    "factual_v1": {
+      "train": {
+        "graphs": 234854,
+        "empty_graphs": 4,
+        "nodes_per_graph": 2.808111560570577,
+        "components_per_graph": 1.0531147540983608,
+        "components_median": 1.0,
+        "connected_share": 0.9484692356823504,
+        "largest_component_share": 0.9805491076708875,
+        "isolated_node_share": 0.020361342562757304,
+        "labelled_edges_per_graph": 1.77169645822511,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      },
+      "val": {
+        "graphs": 10633,
+        "empty_graphs": 0,
+        "nodes_per_graph": 2.7993981002539265,
+        "components_per_graph": 1.055393586005831,
+        "components_median": 1.0,
+        "connected_share": 0.946205210194677,
+        "largest_component_share": 0.9797588818279122,
+        "isolated_node_share": 0.02150104145669556,
+        "labelled_edges_per_graph": 1.7613091319477099,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      }
+    },
+    "factual_v1+global": {
+      "train": {
+        "graphs": 234854,
+        "empty_graphs": 0,
+        "nodes_per_graph": 3.808063733212975,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 4.472576953481846e-06,
+        "labelled_edges_per_graph": 1.77169645822511,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      },
+      "val": {
+        "graphs": 10633,
+        "empty_graphs": 0,
+        "nodes_per_graph": 3.7993981002539265,
+        "components_per_graph": 1.0,
+        "components_median": 1.0,
+        "connected_share": 1.0,
+        "largest_component_share": 1.0,
+        "isolated_node_share": 0.0,
+        "labelled_edges_per_graph": 1.7613091319477099,
+        "completion_edges_per_graph": 0.0,
+        "bridge_edges_per_graph": 0.0,
+        "graphs_with_bridge": 0.0
+      }
+    }
+  }
+}

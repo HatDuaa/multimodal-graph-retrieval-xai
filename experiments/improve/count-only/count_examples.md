@@ -1,0 +1,50 @@
+# Ví dụ giải thích có số lượng (countonly_factual_r3_seed0, val)
+
+Mỗi câu val chọn ngẫu nhiên (seed 0) trong các câu có số nêu rõ. Dòng là node vật thể của câu và node ảnh giống nó nhất trong ảnh đúng: số lượng hai bên, g cộng vào độ giống, sim_ij (đã gồm g) và đóng góp.
+
+## 438615_3: A bed is shown with two pillow cases and a wuilt.
+
+Ảnh đúng 2334809, điểm cuối 0.5872.
+
+- câu: unknown bed — ảnh: 2 bed → g = +0.000; sim_ij 0.959, đóng góp +0.0193
+- câu: 2 pillow case — ảnh: 2 bed pillows → g = +0.071; sim_ij 0.863, đóng góp +0.0101
+- câu: unknown wall — ảnh: 1 wall → g = +0.000; sim_ij 0.938, đóng góp +0.0297
+
+## 47624_2: Three children dressed in white holding tennis rackets.
+
+Ảnh đúng 2323299, điểm cuối 0.4906.
+
+- câu: 3-4 child — ảnh: 3-4 child → g = +0.105; sim_ij 1.019, đóng góp +0.0184
+- câu: >=2 tennis racket — ảnh: 3-4 tennis racket → g = +0.035; sim_ij 0.989, đóng góp +0.0195
+- câu: unknown clothe — ảnh: 1 tennis outfit → g = +0.000; sim_ij 0.698, đóng góp +0.0069
+
+## 129903_2: Two street signs sitting on top of each other on a metal pole.
+
+Ảnh đúng 2332001, điểm cuối 0.5275.
+
+- câu: unknown pole — ảnh: 2 pole → g = +0.000; sim_ij 0.946, đóng góp +0.0224
+- câu: 2 street sign — ảnh: 3-4 sign → g = +0.035; sim_ij 0.937, đóng góp +0.0141
+
+## 31735_0: A red living room filled with furniture and two windows.
+
+Ảnh đúng 2338925, điểm cuối 0.4580.
+
+- câu: unknown living room — ảnh: >=5 table → g = +0.000; sim_ij 0.813, đóng góp +0.0058
+- câu: unknown furniture — ảnh: >=5 table → g = +0.000; sim_ij 0.760, đóng góp +0.0054
+- câu: 2 window — ảnh: 1 window → g = -0.081; sim_ij 0.826, đóng góp +0.0281
+
+## 550432_2: A lone surfer is carrying is board out to the waves.
+
+Ảnh đúng 2382287, điểm cuối 0.4791.
+
+- câu: unknown board — ảnh: 1 surfboard → g = +0.000; sim_ij 0.736, đóng góp +0.0137
+- câu: >=2 wave — ảnh: 2 wave → g = -0.005; sim_ij 0.869, đóng góp +0.0111
+- câu: 1 surfer — ảnh: 1 surfboard → g = +0.087; sim_ij 0.880, đóng góp +0.0118
+
+## 530407_3: there are two elephants that are embracing in the wild
+
+Ảnh đúng 2372757, điểm cuối 0.4313.
+
+- câu: 2 elephant — ảnh: 2 elephant → g = +0.071; sim_ij 0.973, đóng góp +0.0215
+- câu: unknown wild — ảnh: 2 elephant → g = +0.000; sim_ij 0.637, đóng góp +0.0051
+

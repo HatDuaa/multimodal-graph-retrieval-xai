@@ -32,7 +32,7 @@ Giảng viên hướng dẫn: **TS. Lê Ngọc Thành**.
 | Giai đoạn | Bộ dữ liệu | Việc chính |
 |---|---|---|
 | 0. Nền chung | — | Khung repo + config theo seed; trích đặc trưng CLIP + FAISS; module đánh giá (Recall@1/5/10, MRR, ≥3 seed); thử CLIP đa ngữ cho truy vấn tiếng Việt để chốt encoder. |
-| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng đồ thị (VG150 + ConceptNet) → nối truy vấn vào đồ thị → GAT + điểm đồ thị → re-rank, chọn α trên validation → ablation bỏ/xáo cạnh → hiển thị đường đi → platform demo (web app nhỏ: nhập truy vấn → top-k, so CLIP với CLIP + Graph, đường đi giải thích; Lộc phụ trách) → phân tích 5 thành công / 5 thất bại. |
+| 1. Cấp độ 1 | Visual Genome ∩ COCO | Join `coco_id`, tập con cố định, split Karpathy → baseline CLIP → dựng scene graph từng ảnh (nhãn mở của Visual Genome, không lọc VG150, không ConceptNet) → tách truy vấn thành đồ thị → GAT + hai kênh khớp vật thể / bộ ba → re-rank với trọng số a, b, c học theo từng câu (quét α trên validation cho dòng trọng số cố định) → ablation và đối chứng bỏ/xáo cạnh → hiển thị đường đi → platform demo (web app nhỏ: nhập truy vấn → top-k, so CLIP với CLIP + Graph, đường đi giải thích; Lộc phụ trách) → phân tích 5 thành công / 5 thất bại. |
 | 2. Cấp độ 2 | + MKG-W | Sinh truy vấn từ mô tả thực thể, chia truy vấn và triple theo split → chạy lại CLIP và CLIP + GNN → tái lập NativE/AdaMF-MAT (a: link prediction gốc, so với bài báo; b: embedding thay GNN trong điểm đồ thị) → bộ ≥20 truy vấn mỗi tập, báo cáo tách trực tiếp / gián tiếp. |
 | 3. Cấp độ 3 | + MMKG tiếng Việt | Chốt định nghĩa và cài đặt fidelity / validity / sparsity trên ≥10 truy vấn → xây MMKG tiếng Việt (50–150 thực thể, 300–1.000 triple, 200–500 ảnh) + data card → chạy phương pháp tốt nhất, phân tích chuyển giao. |
 | 4. Mở rộng | 2 tập công khai | Ưu tiên hướng (a): α thích nghi theo truy vấn hoặc cách chọn đường đi giải thích. Hướng (c) khảo sát người dùng nếu còn thời gian. Bỏ hướng video. |
@@ -57,7 +57,7 @@ Metric bắt buộc: Recall@1/5/10, MRR; so CLIP thuần với CLIP + Graph trê
 
 - **Nhánh A (text-to-image)** là bắt buộc. Image-to-text làm sau nếu còn thời gian.
 - **Ba bộ dữ liệu (chốt 2026-09-17), mỗi bộ chạy riêng, chung một pipeline:**
-  1. **Visual Genome, phần giao với MS-COCO** (join theo `coco_id`): truy vấn = caption COCO (split Karpathy), đồ thị = scene graph Visual Genome (lọc kiểu VG150) + cạnh tri thức ConceptNet. Tính là **một** tập. Dùng cho cấp độ 1. Thay cho FB15k-237-IMG vì bộ này có sẵn cả truy vấn lẫn đồ thị gán tay; FB15k-237-IMG không có caption, phải tự sinh truy vấn.
+  1. **Visual Genome, phần giao với MS-COCO** (join theo `coco_id`): truy vấn = caption COCO (split Karpathy), đồ thị = scene graph Visual Genome của từng ảnh, nhãn mở đã chuẩn hoá alias, không lọc VG150, không dùng ConceptNet ở cấp độ 1 (thiết kế cuối, xem `docs/level1-model.md`). Tính là **một** tập. Dùng cho cấp độ 1. Thay cho FB15k-237-IMG vì bộ này có sẵn cả truy vấn lẫn đồ thị gán tay; FB15k-237-IMG không có caption, phải tự sinh truy vấn.
   2. **MKG-W** (tải từ kho NativE / MMRNS): truy vấn sinh từ mô tả thực thể + bộ ≥20 câu soạn tay; đồ thị = triple. Dùng cho cấp độ 2.
   3. **MMKG tiếng Việt tự xây**: cấp độ 3.
 - **Phương pháp tái lập cấp độ 2:** ưu tiên **NativE (SIGIR 2024)** hoặc **AdaMF-MAT (LREC-COLING 2024)**, chọn theo cái nào chạy lại được trước. Embedding thực thể của nó thay embedding GNN trong điểm đồ thị.
@@ -82,6 +82,9 @@ Cần Python 3.11 hoặc 3.12 (bộ phiên bản trong `requirements.txt` đã k
 ```bash
 python3.12 -m venv ~/venvs/mgrx && source ~/venvs/mgrx/bin/activate
 pip install -r requirements.txt
+pip install --no-deps FactualSceneGraph==0.7.3   # parser FACTUAL; cài kèm deps sẽ hạ torch xuống 2.6.0
+python -m spacy download en_core_web_sm
+python -m nltk.downloader wordnet   # WordNet cho test và cho bước đóng gói gộp trùng / số lượng (src/graph/dedup.py)
 pytest                              # kiểm tra các module dùng chung
 python scripts/download_data.py     # tải chú thích Visual Genome + split Karpathy (~170 MB, chưa có ảnh)
 python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh: join → tải ảnh → CLIP → FAISS → top-k
@@ -89,14 +92,54 @@ python scripts/smoke_test.py        # chạy thử đầu-cuối trên 100 ảnh
 
 ### Chạy platform demo
 
-Cần: 4 file đặc trưng trong `data/features/` (tải từ Drive, xem [data/README.md](data/README.md)) và ảnh của split muốn xem.
+Cần các file sau (checksum ở `data/MANIFEST.md`). Tất cả nằm trên Drive nhóm, thư mục `DLDT/multimodal-graph-retrieval-xai-data/`, cùng cấu trúc `data/` và `experiments/` như repo; tải về đặt đúng đường dẫn (xem thêm [data/README.md](data/README.md)):
+
+- `data/features/vg_coco_image.npy` và `vg_coco_caption.npy`, mỗi file kèm `.ids.json`: cho chế độ CLIP thuần.
+- Thêm cho chế độ **CLIP + Đồ thị** với mô hình chính `countonly_factual_r3` (mặc định, seed 0 = seed có R@1 val cao nhất
+  trong 3 seed):
+  - `data/features/factual_v1/vg_coco_graph_parts.npy` và `.ids.json` (1,5 GB);
+  - `data/features/merge_v1/vg_coco_graph_parts_extra.*` (pool val) hoặc `data/features/count_v1_test/vg_coco_graph_parts_extra.*` (pool test);
+  - đồ thị ảnh: `data/graphs/merge_v1/vg_coco_scene_graphs.jsonl` + `data/graphs/count_v1/count_buckets.json` (val), hoặc
+    `data/graphs/count_v1_test/vg_coco_scene_graphs.jsonl` + `count_buckets.json` (test);
+  - checkpoint `experiments/improve/count-only/countonly_factual_r3_seed0/checkpoint_best.pt` (4,3 MB, SHA-256
+    `b065eb16…ae3631`), `config.json` có sẵn trong git;
+  - parser FACTUAL: `pip install transformers==5.20.1 nltk==3.10.3` rồi `pip install --no-deps FactualSceneGraph==0.7.3`;
+    riêng demo không cần dữ liệu nltk, nhưng `pytest` và các script đóng gói gộp trùng / số lượng cần WordNet
+    (`python -m nltk.downloader wordnet`);
+    model `lizhuang144/flan-t5-large-VG-factual-sg` (3,1 GB) tự tải từ Hugging Face lần chạy đầu.
+- Mô hình cấp 1 `--run main_r3_seed0` cần `data/features/vg_coco_graph_parts.npy` + `.ids.json` (1,2 GB),
+  `data/graphs/vg_coco_scene_graphs.jsonl` và checkpoint `experiments/level1/gat/main_r3_seed0/checkpoint_best.pt`
+  (4,2 MB, SHA-256 `7575951f…991e6d`).
+- Mô hình spaCy cho parser: `python -m spacy download en_core_web_sm`.
+- Ảnh của split muốn xem.
 
 ```bash
 python scripts/download_images.py --splits test    # 2 138 ảnh, một lần
 python app/demo_app.py --split test                 # mở http://localhost:7860
+python app/demo_app.py --split test --run main_r3_seed0   # mô hình cấp 1 để so sánh
+python app/demo_app.py --split test --no-graph      # chỉ CLIP thuần, không cần checkpoint
 ```
 
-Nhập truy vấn tiếng Anh rồi bấm **Tìm** → lưới top-k ảnh kèm hạng và điểm; bấm vào một ảnh để xem điểm, giải thích và caption gốc. Nút **Lấy ngẫu nhiên một caption của pool** lấy một truy vấn có sẵn đáp án và báo ảnh đúng đứng hạng mấy. Chạy offline, có GPU hay không đều được. Hiện có chế độ **CLIP thuần**; chế độ CLIP + Đồ thị sẽ tự hiện trong mục "Chế độ xếp hạng" khi bộ xếp hạng lại được đăng ký vào `SearchService.add_mode()` (`src/service/search_service.py`).
+Nhập một câu tiếng Anh rồi bấm **Tìm**, chọn chế độ **CLIP thuần** hoặc **CLIP + Đồ thị**. Bấm vào một ảnh trong lưới để xem:
+điểm cuối, điểm CLIP, điểm đồ thị, trọng số a / b / c của câu, và bảng các cặp khớp giữa câu và ảnh (w, độ khớp, % điểm
+cuối). Bảng này lấy từ chính lần xếp hạng (`src/explain/graph_explainer.matched_pairs`), không phải tìm đường đi sau khi
+đã có kết quả. Nút **Caption ngẫu nhiên của pool** lấy một caption có sẵn đáp án và báo ảnh đúng đứng hạng mấy.
+
+Chế độ đồ thị (`src/service/graph_mode.py`) lấy top-50 của CLIP, tách câu bằng parser mà run đã dùng, mã hoá ngay bằng
+CLIP những nhãn chưa có trong bảng vector, rồi xếp lại bằng mô hình của run:
+- **`countonly_factual_r3`:**
+  - câu được tách bằng FACTUAL-T5 large, kèm luật số lượng của count_v1;
+  - đồ thị ảnh là merge_v1, có cạnh hình học, cạnh kNN `[none]`, node tổng và nhóm số lượng;
+  - điểm dùng fusion raw cùng bảng g;
+  - vì fusion raw, các % trong bảng cộng đúng bằng 100%.
+- **`main_r3_seed0`:** câu được tách bằng `sng_parser`, điểm dùng fusion z-score.
+
+Kiểm tra trên val (`scripts/checks/demo_parity.py`, chi tiết ở
+[experiments/improve/demo/README.md](experiments/improve/demo/README.md)):
+- **countonly**, 200 caption: điểm cuối lệch đường đánh giá đã đóng gói tối đa 4e-6, top-1 trùng 200/200.
+- **main_r3**, 100 caption: lệch tối đa 3e-4, top-1 trùng 100/100.
+
+Kịch bản video dự phòng (quay với mô hình chính `countonly_factual_r3_seed0`, pool val): [docs/demo-video-script.md](docs/demo-video-script.md).
 
 Quy ước làm việc nhóm: [CONTRIBUTING.md](CONTRIBUTING.md). Format dùng chung giữa các gói: [docs/interfaces.md](docs/interfaces.md). Dữ liệu: [data/README.md](data/README.md).
 
@@ -119,3 +162,4 @@ multimodal-graph-retrieval-xai/
 
 - 2026-09-09: chốt đề Project 3, chưa bắt đầu code.
 - 2026-09-17: nhóm 7 đủ 5 người; chốt 3 bộ dữ liệu (Visual Genome ∩ COCO, MKG-W, MMKG tiếng Việt); lập khung kế hoạch và file phân công. Việc tiếp theo: cả nhóm chọn việc trong `task-assignment.xlsx`, bắt đầu giai đoạn 0.
+- 2026-10-26: MMKG tiếng Việt (cấp độ 3) dựng xong: 150 thực thể, 325 triple, 331 ảnh đã duyệt; bộ truy vấn soạn tay đã khoá (Khang). Việc tiếp theo: dòng 32, chạy phương pháp tốt nhất khi cấp 1/2 và encoder đa ngữ (dòng 9) đã chốt.

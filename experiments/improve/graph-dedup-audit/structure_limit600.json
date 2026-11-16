@@ -1,0 +1,459 @@
+{
+  "thresholds": [
+    0.5,
+    0.7,
+    0.9
+  ],
+  "criteria": [
+    "a",
+    "b",
+    "ab",
+    "near"
+  ],
+  "splits": {
+    "train": {
+      "images": 600,
+      "duplicate_node_share": {
+        "0.5": 0.17083276728705338,
+        "0.7": 0.1199565276457003,
+        "0.9": 0.021124847167504415
+      },
+      "variants": {
+        "before": {
+          "nodes_per_image": 24.536666666666665,
+          "edges_per_image": 15.976666666666667,
+          "components_per_image": 10.44,
+          "largest_component_mean": 8.156666666666666,
+          "degree_one_share": 0.6023638092650455,
+          "isolated_share": 0.19155006113299824
+        },
+        "merge0.5": {
+          "nodes_per_image": 21.951666666666668,
+          "edges_per_image": 14.958333333333334,
+          "components_per_image": 8.935,
+          "largest_component_mean": 8.573333333333334,
+          "degree_one_share": 0.558347885506036,
+          "isolated_share": 0.20583099233163768
+        },
+        "merge0.5+a": {
+          "nodes_per_image": 19.998333333333335,
+          "edges_per_image": 12.87,
+          "components_per_image": 8.935,
+          "largest_component_mean": 7.215,
+          "degree_one_share": 0.544045337111426,
+          "isolated_share": 0.22593549462455204,
+          "group_nodes_per_image": 2.3233333333333333,
+          "images_with_group": 0.7133333333333334,
+          "mean_group_size": 2.953371592539455,
+          "two_tier_extra_nodes_per_image": 2.3233333333333333,
+          "two_tier_member_edges_per_image": 6.861666666666666
+        },
+        "merge0.5+b": {
+          "nodes_per_image": 17.383333333333333,
+          "edges_per_image": 12.62,
+          "components_per_image": 7.03,
+          "largest_component_mean": 8.08,
+          "degree_one_share": 0.5000958772770854,
+          "isolated_share": 0.2227229146692234,
+          "group_nodes_per_image": 3.131666666666667,
+          "images_with_group": 0.8233333333333334,
+          "mean_group_size": 3.284193720063864,
+          "two_tier_extra_nodes_per_image": 3.131666666666667,
+          "two_tier_member_edges_per_image": 10.285
+        },
+        "merge0.5+ab": {
+          "nodes_per_image": 17.251666666666665,
+          "edges_per_image": 12.48,
+          "components_per_image": 7.03,
+          "largest_component_mean": 7.988333333333333,
+          "degree_one_share": 0.4996618684185103,
+          "isolated_share": 0.2244227610858854,
+          "group_nodes_per_image": 3.1533333333333333,
+          "images_with_group": 0.8316666666666667,
+          "mean_group_size": 3.3102536997885834,
+          "two_tier_extra_nodes_per_image": 3.1533333333333333,
+          "two_tier_member_edges_per_image": 10.438333333333333
+        },
+        "merge0.5+near": {
+          "nodes_per_image": 19.778333333333332,
+          "edges_per_image": 13.923333333333334,
+          "components_per_image": 7.828333333333333,
+          "largest_component_mean": 8.433333333333334,
+          "degree_one_share": 0.5385522878570826,
+          "isolated_share": 0.20325271762029157,
+          "group_nodes_per_image": 2.6633333333333336,
+          "images_with_group": 0.7483333333333333,
+          "mean_group_size": 2.7866082603254068,
+          "two_tier_extra_nodes_per_image": 2.6633333333333336,
+          "two_tier_member_edges_per_image": 7.421666666666667
+        },
+        "merge0.7": {
+          "nodes_per_image": 22.77,
+          "edges_per_image": 15.176666666666666,
+          "components_per_image": 9.366666666666667,
+          "largest_component_mean": 8.548333333333334,
+          "degree_one_share": 0.5756843800322061,
+          "isolated_share": 0.20245937637241984
+        },
+        "merge0.7+a": {
+          "nodes_per_image": 20.708333333333332,
+          "edges_per_image": 12.981666666666667,
+          "components_per_image": 9.366666666666667,
+          "largest_component_mean": 7.101666666666667,
+          "degree_one_share": 0.5622535211267605,
+          "isolated_share": 0.22261569416498994,
+          "group_nodes_per_image": 1.9883333333333333,
+          "images_with_group": 0.68,
+          "mean_group_size": 2.925398155909472,
+          "two_tier_extra_nodes_per_image": 1.9883333333333333,
+          "two_tier_member_edges_per_image": 5.816666666666666
+        },
+        "merge0.7+b": {
+          "nodes_per_image": 17.403333333333332,
+          "edges_per_image": 12.62,
+          "components_per_image": 7.041666666666667,
+          "largest_component_mean": 8.098333333333333,
+          "degree_one_share": 0.500287301283279,
+          "isolated_share": 0.2233288642022601,
+          "group_nodes_per_image": 3.098333333333333,
+          "images_with_group": 0.8183333333333334,
+          "mean_group_size": 3.302313071543841,
+          "two_tier_extra_nodes_per_image": 3.098333333333333,
+          "two_tier_member_edges_per_image": 10.231666666666667
+        },
+        "merge0.7+ab": {
+          "nodes_per_image": 17.276666666666667,
+          "edges_per_image": 12.485,
+          "components_per_image": 7.041666666666667,
+          "largest_component_mean": 8.006666666666666,
+          "degree_one_share": 0.49980706154736637,
+          "isolated_share": 0.2249662357707891,
+          "group_nodes_per_image": 3.118333333333333,
+          "images_with_group": 0.8266666666666667,
+          "mean_group_size": 3.3281667557455905,
+          "two_tier_extra_nodes_per_image": 3.118333333333333,
+          "two_tier_member_edges_per_image": 10.378333333333334
+        },
+        "merge0.7+near": {
+          "nodes_per_image": 19.761666666666667,
+          "edges_per_image": 13.913333333333334,
+          "components_per_image": 7.821666666666666,
+          "largest_component_mean": 8.436666666666667,
+          "degree_one_share": 0.5388378173231003,
+          "isolated_share": 0.20325546090916757,
+          "group_nodes_per_image": 2.651666666666667,
+          "images_with_group": 0.7483333333333333,
+          "mean_group_size": 2.800754242614708,
+          "two_tier_extra_nodes_per_image": 2.651666666666667,
+          "two_tier_member_edges_per_image": 7.426666666666667
+        },
+        "merge0.9": {
+          "nodes_per_image": 24.275,
+          "edges_per_image": 15.595,
+          "components_per_image": 10.253333333333334,
+          "largest_component_mean": 8.251666666666667,
+          "degree_one_share": 0.6032955715756951,
+          "isolated_share": 0.19491932715413662
+        },
+        "merge0.9+a": {
+          "nodes_per_image": 22.046666666666667,
+          "edges_per_image": 13.238333333333333,
+          "components_per_image": 10.253333333333334,
+          "largest_component_mean": 6.793333333333333,
+          "degree_one_share": 0.5945721197459933,
+          "isolated_share": 0.21462050196552768,
+          "group_nodes_per_image": 1.395,
+          "images_with_group": 0.6166666666666667,
+          "mean_group_size": 2.78494623655914,
+          "two_tier_extra_nodes_per_image": 1.395,
+          "two_tier_member_edges_per_image": 3.885
+        },
+        "merge0.9+b": {
+          "nodes_per_image": 17.41,
+          "edges_per_image": 12.603333333333333,
+          "components_per_image": 7.056666666666667,
+          "largest_component_mean": 8.083333333333334,
+          "degree_one_share": 0.5004786521156424,
+          "isolated_share": 0.22391345969749185,
+          "group_nodes_per_image": 3.0716666666666668,
+          "images_with_group": 0.815,
+          "mean_group_size": 3.320130222463375,
+          "two_tier_extra_nodes_per_image": 3.0716666666666668,
+          "two_tier_member_edges_per_image": 10.198333333333334
+        },
+        "merge0.9+ab": {
+          "nodes_per_image": 17.288333333333334,
+          "edges_per_image": 12.473333333333333,
+          "components_per_image": 7.056666666666667,
+          "largest_component_mean": 7.995,
+          "degree_one_share": 0.4999517979369517,
+          "isolated_share": 0.22548925093994024,
+          "group_nodes_per_image": 3.0933333333333333,
+          "images_with_group": 0.825,
+          "mean_group_size": 3.3432112068965516,
+          "two_tier_extra_nodes_per_image": 3.0933333333333333,
+          "two_tier_member_edges_per_image": 10.341666666666667
+        },
+        "merge0.9+near": {
+          "nodes_per_image": 19.701666666666668,
+          "edges_per_image": 13.895,
+          "components_per_image": 7.791666666666667,
+          "largest_component_mean": 8.443333333333333,
+          "degree_one_share": 0.5383639286016412,
+          "isolated_share": 0.20353607985788005,
+          "group_nodes_per_image": 2.64,
+          "images_with_group": 0.7483333333333333,
+          "mean_group_size": 2.831439393939394,
+          "two_tier_extra_nodes_per_image": 2.64,
+          "two_tier_member_edges_per_image": 7.475
+        }
+      },
+      "role_pairs": {
+        "merge0.5": {
+          "pairs_a": 2904,
+          "pairs_b": 5938,
+          "pairs_both": 2656,
+          "conflict_a_not_b": 312,
+          "conflict_b_not_a": 333
+        },
+        "merge0.7": {
+          "pairs_a": 2987,
+          "pairs_b": 7115,
+          "pairs_both": 2777,
+          "conflict_a_not_b": 274,
+          "conflict_b_not_a": 394
+        },
+        "merge0.9": {
+          "pairs_a": 3013,
+          "pairs_b": 9602,
+          "pairs_both": 2777,
+          "conflict_a_not_b": 294,
+          "conflict_b_not_a": 433
+        }
+      },
+      "seconds": 5.308008432388306
+    },
+    "val": {
+      "images": 600,
+      "duplicate_node_share": {
+        "0.5": 0.22236040293495835,
+        "0.7": 0.16048998880736226,
+        "0.9": 0.03482153960950131
+      },
+      "variants": {
+        "before": {
+          "nodes_per_image": 26.803333333333335,
+          "edges_per_image": 16.496666666666666,
+          "components_per_image": 11.471666666666666,
+          "largest_component_mean": 9.038333333333334,
+          "degree_one_share": 0.6102474816565104,
+          "isolated_share": 0.20737470463872654
+        },
+        "merge0.5": {
+          "nodes_per_image": 23.085,
+          "edges_per_image": 15.416666666666666,
+          "components_per_image": 9.316666666666666,
+          "largest_component_mean": 9.678333333333333,
+          "degree_one_share": 0.5536062378167641,
+          "isolated_share": 0.22648184246624792
+        },
+        "merge0.5+a": {
+          "nodes_per_image": 20.511666666666667,
+          "edges_per_image": 12.62,
+          "components_per_image": 9.316666666666666,
+          "largest_component_mean": 7.818333333333333,
+          "degree_one_share": 0.5368489477533112,
+          "isolated_share": 0.2548955878768181,
+          "group_nodes_per_image": 3.0866666666666664,
+          "images_with_group": 0.8183333333333334,
+          "mean_group_size": 3.0383369330453562,
+          "two_tier_extra_nodes_per_image": 3.0866666666666664,
+          "two_tier_member_edges_per_image": 9.378333333333334
+        },
+        "merge0.5+b": {
+          "nodes_per_image": 17.67,
+          "edges_per_image": 12.51,
+          "components_per_image": 7.19,
+          "largest_component_mean": 8.656666666666666,
+          "degree_one_share": 0.490096208262592,
+          "isolated_share": 0.24495378230522544,
+          "group_nodes_per_image": 3.905,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.338881775501494,
+          "two_tier_extra_nodes_per_image": 3.905,
+          "two_tier_member_edges_per_image": 13.038333333333334
+        },
+        "merge0.5+ab": {
+          "nodes_per_image": 17.436666666666667,
+          "edges_per_image": 12.268333333333333,
+          "components_per_image": 7.19,
+          "largest_component_mean": 8.5,
+          "degree_one_share": 0.48852991779774424,
+          "isolated_share": 0.24823169566048556,
+          "group_nodes_per_image": 3.921666666666667,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.388440288992775,
+          "two_tier_extra_nodes_per_image": 3.921666666666667,
+          "two_tier_member_edges_per_image": 13.288333333333334
+        },
+        "merge0.5+near": {
+          "nodes_per_image": 20.516666666666666,
+          "edges_per_image": 14.161666666666667,
+          "components_per_image": 8.091666666666667,
+          "largest_component_mean": 9.233333333333333,
+          "degree_one_share": 0.533387489845654,
+          "isolated_share": 0.22258326563769293,
+          "group_nodes_per_image": 3.4516666666666667,
+          "images_with_group": 0.8366666666666667,
+          "mean_group_size": 2.8213423466924192,
+          "two_tier_extra_nodes_per_image": 3.4516666666666667,
+          "two_tier_member_edges_per_image": 9.738333333333333
+        },
+        "merge0.7": {
+          "nodes_per_image": 24.19,
+          "edges_per_image": 15.708333333333334,
+          "components_per_image": 9.901666666666667,
+          "largest_component_mean": 9.603333333333333,
+          "degree_one_share": 0.5750310045473336,
+          "isolated_share": 0.22033898305084745
+        },
+        "merge0.7+a": {
+          "nodes_per_image": 21.451666666666668,
+          "edges_per_image": 12.763333333333334,
+          "components_per_image": 9.901666666666667,
+          "largest_component_mean": 7.656666666666666,
+          "degree_one_share": 0.5611063631419471,
+          "isolated_share": 0.24846554269287546,
+          "group_nodes_per_image": 2.691666666666667,
+          "images_with_group": 0.795,
+          "mean_group_size": 2.988235294117647,
+          "two_tier_extra_nodes_per_image": 2.691666666666667,
+          "two_tier_member_edges_per_image": 8.043333333333333
+        },
+        "merge0.7+b": {
+          "nodes_per_image": 17.708333333333332,
+          "edges_per_image": 12.518333333333333,
+          "components_per_image": 7.208333333333333,
+          "largest_component_mean": 8.675,
+          "degree_one_share": 0.4908235294117647,
+          "isolated_share": 0.24527058823529413,
+          "group_nodes_per_image": 3.87,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.350129198966408,
+          "two_tier_extra_nodes_per_image": 3.87,
+          "two_tier_member_edges_per_image": 12.965
+        },
+        "merge0.7+ab": {
+          "nodes_per_image": 17.476666666666667,
+          "edges_per_image": 12.28,
+          "components_per_image": 7.208333333333333,
+          "largest_component_mean": 8.516666666666667,
+          "degree_one_share": 0.4892237268739271,
+          "isolated_share": 0.24852183864199887,
+          "group_nodes_per_image": 3.8933333333333335,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.3955479452054793,
+          "two_tier_extra_nodes_per_image": 3.8933333333333335,
+          "two_tier_member_edges_per_image": 13.22
+        },
+        "merge0.7+near": {
+          "nodes_per_image": 20.466666666666665,
+          "edges_per_image": 14.136666666666667,
+          "components_per_image": 8.068333333333333,
+          "largest_component_mean": 9.251666666666667,
+          "degree_one_share": 0.5338762214983713,
+          "isolated_share": 0.2226384364820847,
+          "group_nodes_per_image": 3.425,
+          "images_with_group": 0.8366666666666667,
+          "mean_group_size": 2.8501216545012165,
+          "two_tier_extra_nodes_per_image": 3.425,
+          "two_tier_member_edges_per_image": 9.761666666666667
+        },
+        "merge0.9": {
+          "nodes_per_image": 26.313333333333333,
+          "edges_per_image": 16.288333333333334,
+          "components_per_image": 11.12,
+          "largest_component_mean": 9.211666666666666,
+          "degree_one_share": 0.6074233595135546,
+          "isolated_share": 0.20933620471243983
+        },
+        "merge0.9+a": {
+          "nodes_per_image": 23.245,
+          "edges_per_image": 13.015,
+          "components_per_image": 11.12,
+          "largest_component_mean": 7.056666666666667,
+          "degree_one_share": 0.600129060012906,
+          "isolated_share": 0.23696852369685237,
+          "group_nodes_per_image": 1.8966666666666667,
+          "images_with_group": 0.7316666666666667,
+          "mean_group_size": 2.8760984182776803,
+          "two_tier_extra_nodes_per_image": 1.8966666666666667,
+          "two_tier_member_edges_per_image": 5.455
+        },
+        "merge0.9+b": {
+          "nodes_per_image": 17.721666666666668,
+          "edges_per_image": 12.513333333333334,
+          "components_per_image": 7.218333333333334,
+          "largest_component_mean": 8.68,
+          "degree_one_share": 0.4910185272265588,
+          "isolated_share": 0.24583842753691337,
+          "group_nodes_per_image": 3.855,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.3558149589277995,
+          "two_tier_extra_nodes_per_image": 3.855,
+          "two_tier_member_edges_per_image": 12.936666666666667
+        },
+        "merge0.9+ab": {
+          "nodes_per_image": 17.505,
+          "edges_per_image": 12.29,
+          "components_per_image": 7.218333333333334,
+          "largest_component_mean": 8.536666666666667,
+          "degree_one_share": 0.4896696182043226,
+          "isolated_share": 0.2488812720175188,
+          "group_nodes_per_image": 3.8766666666666665,
+          "images_with_group": 0.8733333333333333,
+          "mean_group_size": 3.3985382631126395,
+          "two_tier_extra_nodes_per_image": 3.8766666666666665,
+          "two_tier_member_edges_per_image": 13.175
+        },
+        "merge0.9+near": {
+          "nodes_per_image": 20.401666666666667,
+          "edges_per_image": 14.095,
+          "components_per_image": 8.04,
+          "largest_component_mean": 9.241666666666667,
+          "degree_one_share": 0.5341883833020178,
+          "isolated_share": 0.2232660730332489,
+          "group_nodes_per_image": 3.4033333333333333,
+          "images_with_group": 0.8366666666666667,
+          "mean_group_size": 2.8809990205680704,
+          "two_tier_extra_nodes_per_image": 3.4033333333333333,
+          "two_tier_member_edges_per_image": 9.805
+        }
+      },
+      "role_pairs": {
+        "merge0.5": {
+          "pairs_a": 3459,
+          "pairs_b": 6779,
+          "pairs_both": 3072,
+          "conflict_a_not_b": 533,
+          "conflict_b_not_a": 356
+        },
+        "merge0.7": {
+          "pairs_a": 3630,
+          "pairs_b": 8094,
+          "pairs_both": 3205,
+          "conflict_a_not_b": 596,
+          "conflict_b_not_a": 440
+        },
+        "merge0.9": {
+          "pairs_a": 3925,
+          "pairs_b": 11776,
+          "pairs_both": 3415,
+          "conflict_a_not_b": 682,
+          "conflict_b_not_a": 641
+        }
+      },
+      "seconds": 3.8178844451904297
+    }
+  }
+}
