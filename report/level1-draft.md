@@ -386,10 +386,21 @@ dữ liệu; mỗi truy vấn khoảng 0,4 giây trên RTX 4090. Kịch bản vi
 - Mới thực nghiệm trên một tập công khai; chênh lệch giữa các cấu hình chỉ kiểm định với 3 seed.
 - Xếp lại không cứu được 3,3% câu có ảnh đúng nằm ngoài top-50 của CLIP.
 
+## 10a. Hướng song song: scene ranker (Nhi)
+
+Nhi phát triển một mô hình khác trong repo cá nhân, trên cùng split và cùng CLIP ViT-B/32: khớp scene graph câu (FACTUAL-T5
+base) và ảnh bằng Sinkhorn có thùng rác, với GAT trên concept graph WordNet + ConceptNet + đồng xuất hiện VG (train). Test
+chạy một lần (3 seed): R@1 48,57 ± 0,36, MRR@50 60,76 ± 0,21, so với 47,95 ± 0,15 và 60,15 ± 0,15 của
+`countonly_factual_r3` (R@1 +0,63, Welch p = 0,079; MRR@50 +0,61, p = 0,018). Hai mô hình gần ngang nhau; tập câu test
+hai bên lệch 6 câu. Chi tiết, ablation và 10 truy vấn: `report/scene-ranker.md`.
+
 ## 11. Đóng góp
 
 Phần cấp 1 và phase cải tiến do Nguyễn Đình Lộc làm cùng công cụ AI; Lộc chốt thiết kế, chọn từng bước giữ lại và chọn mô
 hình chính trước khi chấm test. Chi tiết theo phần việc: `report/declaration-ai-oss.md`.
+
+Scene ranker (mục 10a, `report/scene-ranker.md`) và các cờ scene-ranker của `GraphReranker` (PR #33) do Nguyễn Bùi Mẫn Nhi
+làm cùng công cụ AI.
 
 ## 12. Nguồn số liệu
 
@@ -404,3 +415,4 @@ hình chính trước khi chấm test. Chi tiết theo phần việc: `report/de
 | Quét α, nhóm câu | `experiments/improve/alpha-groups/REPORT.md` |
 | 10 truy vấn | `experiments/improve/explanations/README.md`, `experiments/level1/explanations/README.md` |
 | Demo | `experiments/improve/demo/README.md` |
+| Scene ranker (mục 10a) | `experiments/improve/scene-ranker/personal-repo/`, `report/scene-ranker.md` |
