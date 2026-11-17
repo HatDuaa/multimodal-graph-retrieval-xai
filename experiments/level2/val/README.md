@@ -75,3 +75,44 @@ Lần chạy test dùng đúng các file trên, không đổi sang bản gốc n
   - `native_emb` (cosine giữa embedding thực thể NativE của ứng viên và của thực thể trong truy vấn) tăng R@1 2,3 điểm so với CLIP, ổn định qua 3 seed.
   - Khi đã có kênh đếm cạnh, val không chọn trọng số dương cho kênh này ở bất kỳ β nào.
 - **Phần tăng là do cạnh thật.** Xáo đuôi cạnh trong từng quan hệ làm R@1 tụt xuống 21,82, dưới cả CLIP.
+
+## Thêm kênh `kgc`: điểm bộ ba của chính NativE (17/11, sau lần chạy trên)
+
+Kênh cosine ở trên không dùng tới quan hệ. Vì vậy nhóm (Lộc duyệt) thêm kênh `kgc`, chốt **trước** khi chạy val:
+
+- **Định nghĩa.** kgc(c, L) là giá trị lớn nhất của điểm `AdvRelRotatE.forward` (checkpoint `rmask` cùng seed), lấy max qua:
+  - mọi thực thể liên kết e ∈ L, với e ≠ ứng viên c;
+  - 169 quan hệ;
+  - cả hai chiều, (c, r, e) và (e, r, c).
+- **Code.** `src/retrieval/native_kgc.py` tính lại đúng hàm `forward()` của NativE c72291c:
+  - gồm embedding cấu trúc, ảnh và văn bản, ghép bằng attention có nhiệt độ theo quan hệ;
+  - các bảng ảnh/văn bản là bản `rmask` lưu trong checkpoint;
+  - test `tests/test_native_kgc.py` so với `forward()` gốc trên checkpoint thật.
+- **Điền giá trị.** Truy vấn không liên kết được thực thể nào: 0 cho mọi ứng viên. Ứng viên chỉ liên kết với chính nó: lấy trung bình các giá trị của truy vấn.
+- **Ba dòng mới:**
+  - `native_kgc` = CLIP + kgc + đếm cạnh, là **dòng chính cấp 2**, chốt trước khi xem val;
+  - `kgc_only` (β = 1), bỏ kênh đếm cạnh;
+  - `random_kgc`: dùng α, β của `native_kgc`, nhưng embedding cấu trúc thay bằng nhiễu Gauss, giữ nguyên chuẩn của từng dòng.
+
+α, β chọn trên val bằng sweep riêng (`alpha_beta_sweep_kgc.json`), cùng quy tắc: R@1 trước, hoà thì MRR.
+
+Chạy lại `python scripts/eval_mkgw_level2.py --split val` trên máy Lộc (RTX 3070), commit `0a77935`. Kiểm tra sau khi chạy:
+- 6 file `metrics_*.json` cũ và `alpha_beta_sweep.json` giống từng byte bản trước;
+- các khoá cũ trong `choice.json` không đổi.
+
+| Dòng | R@1 | R@5 | R@10 | MRR |
+|---|---|---|---|---|
+| `native_kgc` (dòng chính) | 32,40 ± 0,00 | 50,78 ± 0,00 | 57,62 ± 0,00 | 41,18 ± 0,00 |
+| `kgc_only` | 28,25 ± 0,11 | 45,85 ± 0,51 | 54,37 ± 0,70 | 36,97 ± 0,08 |
+| `random_kgc` | 32,40 ± 0,00 | 50,78 ± 0,00 | 57,62 ± 0,00 | 41,18 ± 0,00 |
+
+R@1 nhóm có liên kết: `kgc_only` 25,89 (CLIP 20,91, `native_emb` 23,85, `kg_triple` 31,15).
+
+**Nhận xét:**
+- **Điểm của NativE tốt hơn cosine.** Đứng một mình, `kgc_only` tăng R@1 3,9 điểm so với CLIP, còn `native_emb` (cosine) chỉ tăng 2,3. Kết quả ổn định qua 3 seed. Vậy dùng đúng hàm chấm điểm có quan hệ của mô hình KGC thì có ích hơn.
+- **Val vẫn chọn β = 0** cho `native_kgc` ở cả 3 seed, nên dòng chính trùng `kg_triple`, và `random_kgc` trùng theo.
+- **Mọi β > 0 đều làm R@1 giảm.**
+  - Tốt nhất ở β = 0,25 là khoảng 30,0–30,4.
+  - Khi α = 0 và β = 0,25, R@1 chỉ còn 24,0, tức là để kgc thay CLIP làm tiêu chí phá hoà giữa các ứng viên cùng số cạnh thì tệ hơn hẳn.
+  - Cách hiểu: khi đáp án có cạnh train trực tiếp tới thực thể trong truy vấn (45,6 % truy vấn val), đếm cạnh đã chứa đúng thông tin đó. Với phần còn lại, điểm NativE yếu hơn CLIP.
+- Lần chạy test dùng nguyên `choice.json` này, không chỉnh thêm.
