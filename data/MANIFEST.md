@@ -135,7 +135,27 @@ Lộc chạy các bước này; lệnh và log ở `experiments/level2/native-tr
 | `~/work/NativE/checkpoint/rmask_seed2_e1000.ckpt` | 80745984 | `07095b5ca98a4b764e83df078e22c6604d8e5efa49e7f826f3d4708b427504bb` |
 | `~/work/NativE/checkpoint/repro_seed42_e1000.ckpt` (MKG-W gốc, bước a) | 80746013 | `43f2aa8da52da18e8a5cdfa16f0793373b42db90a6f7a48008ca64fa074ed62e` |
 
-Checkpoint chỉ nằm trên máy 4090. Embedding của lần chạy `repro` không được xuất, vì bước b chỉ dùng các lần chạy `rmask`.
+Checkpoint nằm trên máy 4090. Ba checkpoint `rmask` có thêm một bản trên máy Lộc, vì kênh `kgc` cần nạp chúng khi đánh giá. Embedding của lần chạy `repro` không được xuất, vì bước b chỉ dùng các lần chạy `rmask`.
+
+### Bản dựng lại, dùng cho mọi kết quả cấp 2 đã báo cáo (17/11/2026)
+
+Bản gốc của đặc trưng CLIP và cache Wikidata (bảng đầu mục này) không có trên Drive nhóm, nên được dựng lại bằng chính các script ở trên. Kết quả val/test trong `experiments/level2/` dùng **các file dưới đây**, không dùng bản gốc. Chi tiết kiểm tra ở `experiments/level2/val/README.md`.
+
+- `mkgw_img.zip` và `ent_links.tsv` tải lại, khớp SHA bảng trên.
+- `author_images_index.json` khớp SHA bảng trên sau khi đổi CRLF thành LF, nghĩa là các ảnh được chọn giống hệt bản gốc.
+- Đặc trưng CLIP tính lại trên RTX 3070. SHA khác bản gốc do sai số số học giữa các GPU. Trên val, R@1 của CLIP vẫn là 24,33, đúng bằng số đã commit.
+- Cache Wikidata lấy lại ngày 17/11 (Wikidata đã sửa từ tháng 9). Độ phủ liên kết thực thể trên val:
+  - truy vấn có ít nhất một thực thể được liên kết: 703, bản gốc 704;
+  - đáp án có cạnh trực tiếp tới thực thể đó: 407, bản gốc 403.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/features/mkgw_image.npy` (8 920 × 512) | 18268288 | `f4de9e4ee51a6e2557e3fd1c92fcea0c5f62cd307794075e4aeb718db60b7a90` |
+| `data/features/mkgw_image.ids.json` | 55893 | `1c893c30618da232ab69562f0e353d660809b49cc690f4b7eb1e7c56e26e4095` |
+| `data/features/mkgw_caption.npy` (8 920 × 512) | 18268288 | `ea8679cbd5402e68abeadc15164fab020513e6507a57458c3d9cee6c279e2667` |
+| `data/features/mkgw_caption.ids.json` | 120869 | `8cc753a267a938a07610fba144e148e09067439cc1d5a58ffb90c83276c9d722` |
+| `data/raw/mkgw/wikidata_entities.jsonl` | 3532544 | `dd47e44dbb068c0f209e89bee562efd8c07f7d932aefd6706196585f6718425c` |
+| `data/raw/mkgw/wikidata_relations.json` | 9452 | `f0760499881f04319a32ea936f6e3f8fe65d7860857d93000716fd96755344f8` |
 
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 
