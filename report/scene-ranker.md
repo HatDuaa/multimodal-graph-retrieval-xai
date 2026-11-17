@@ -174,6 +174,7 @@ Nguyên nhân chính của thất bại là annotation thiếu trong ảnh đún
 
 Repo cá nhân có notebook `notebooks/demo.ipynb`: nhập một câu tự do, trả về top-k ảnh của gallery val, mỗi ảnh có hạng so với CLIP, điểm tách thành từng phần và khung vật thể được khớp.
 Demo đi qua đúng chuỗi đã đánh giá; chạy lại 256 caption val qua demo như câu tự do cho ra cùng hạng với run đã lưu, điểm graph lệch tối đa 2,7·10⁻⁵.
+Bản đã chạy, kèm toàn bộ output, được lưu ở `notebooks/scene-ranker-demo.ipynb` của repo này; bản đó chỉ để xem, vì code và checkpoint nằm ở repo cá nhân.
 
 ![Output của notebook demo](figures/scene-ranker/fig_demo.png)
 
