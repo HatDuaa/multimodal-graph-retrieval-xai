@@ -36,7 +36,7 @@ Ba kết luận:
 
 1. **E trung thực theo thứ tự**: bỏ hay giữ các phần đầu của E làm thứ hạng đổi xa hơn hẳn ngẫu nhiên, và thứ tự của E khớp Shapley gần bằng occlusion.
 2. **E không trung thực theo độ lớn**: term của một phần không cho biết bỏ phần đó thì mất bao nhiêu điểm; với bộ ba, gần như không mất gì.
-3. **Attention của GAT không phải lời giải thích**: cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
+3. **Attention của GAT không phải lời giải thích** (đo đủ ở `main_r3`): cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
 
 Từ kết luận 2, demo thêm một cột kiểm chứng bằng chính mô hình cho mỗi dòng giải thích (mục 8).
 
@@ -123,8 +123,9 @@ Các điểm v2 sửa, và hệ quả cho số của countonly hiện lấy từ
 
 - **Phản thực tế (counterfactual):** k_flip là k nhỏ nhất (≤ 10) mà bỏ top-k làm ảnh mất hạng 1; với ảnh hạng 1 sai, ghi hạng của ảnh đúng sau khi bỏ top-k.
 - **Ngữ nghĩa:** với mỗi phần của câu, node ảnh có attention cao nhất có cùng loại với nó không.
-  - strict: synset của node ảnh trùng hoặc là hyponym của nghĩa danh từ đầu tiên của từ trong câu; người chỉ khớp với từ chung (person, people...).
-  - lenient (tiêu chí v1): cùng loại theo `dedup.same_type`, nên "woman" ~ "man" cũng tính là khớp.
+  - strict: cùng nhãn sau alias VG, hoặc synset của node ảnh trùng hay là hyponym của nghĩa danh từ đầu tiên của từ trong câu; người chỉ khớp với từ chung (person, people...).
+  - lenient (tiêu chí v1): cùng nhãn sau alias VG, hoặc cùng loại theo `dedup.same_type` (nên "woman" ~ "man" cũng tính là khớp), hoặc cosine CLIP đóng băng của hai node ≥ 0,955.
+  - Cả hai đều lấy "hoặc" của các điều kiện (`scripts/xai_metrics.py`, `LabelMatcher`); riêng alias đã khớp 51,6% dòng của `main_r3`.
   - Với bộ ba: chủ thể và đối tượng có khớp strict không, vị từ có khớp sau alias VG không.
 - **Khớp nhóm số lượng:** với node câu có số lượng nêu rõ, nhóm số lượng của node ảnh có tương thích không (chỉ countonly).
 
@@ -207,17 +208,19 @@ R@1 tính lại trong lúc đo: `main_r3` 46,67 / 46,56 / 46,21; countonly 49,15
 | 5 | 9,22 ± 1,46 | 0,501 ± 0,042 | 0,056 | −0,10 |
 
 - Điểm mất thật chỉ bằng khoảng 6% tổng term của top-3, và gần như không tương quan với tổng đó.
-- Cách giải thích phù hợp với số liệu, chưa kiểm riêng: term đo mức khớp tuyệt đối, phần lớn là mức nền mà mọi ứng viên đều có; z-score chỉ giữ chênh lệch giữa các ứng viên.
-- Occlusion (tỉ số 1,15, Spearman 0,89 ở k = 3) và IG (1,43, 0,82) cộng tính tốt hơn nhiều.
+- Cách giải thích phù hợp với số liệu, chưa kiểm riêng: term là a_ij · sim_ij, gồm cả mức khớp tuyệt đối; khi bỏ một phần, attention softmax chia lại cho các phần còn lại, nên phần lớn mức khớp đó được các phần còn lại bù lại.
+  Cơ chế này có ở cả hai mô hình; với `main_r3`, z-score còn bỏ thêm mức nền chung của 50 ứng viên.
+- Trên cùng các câu so sánh (977 câu mỗi seed, mục 6.7), ở k = 3: E có tỉ số 0,058 và Spearman −0,01, còn occlusion (1,15, 0,89) và IG (1,43, 0,82) cộng tính tốt hơn nhiều.
 - countonly: __,__ (chưa đo; v1 chỉ thấy cùng hiện tượng ở dạng chỉ giữ top-5 cho 117% hiệu ứng, vì bỏ phần khớp kém làm trung bình softmax tăng).
 
 ### 6.4. Validity
 
 **Phản thực tế** (`main_r3`):
 
-- Bỏ tối đa 10 phần đầu của E làm ảnh mất hạng 1 ở 60,3 ± 2,9% câu, trung vị k_flip là 3 (ảnh sai 74,4%, ảnh đúng 44,1%).
+- Bỏ tối đa 10 phần đầu của E làm ảnh mất hạng 1 ở 60,3 ± 2,9% câu (ảnh sai 74,4%, ảnh đúng 44,1%); trung vị k_flip là 3 (ảnh sai 2,3, ảnh đúng 3,0).
 - Với ảnh hạng 1 sai, bỏ top-5 của E làm ảnh đúng lên hạng ở 30,7% câu và lên hạng 1 ở 13,1% câu.
   E chỉ ra phần đã đẩy ảnh sai lên, nhưng bỏ chúng thường chưa đủ để ảnh đúng thắng.
+- countonly: __,__ (v1 chỉ có tỉ lệ mất hạng 1 của Fid+, mục 6.1; chưa có k_flip và hạng ảnh đúng).
 
 **Ngữ nghĩa:**
 
@@ -228,7 +231,8 @@ R@1 tính lại trong lúc đo: `main_r3` 46,67 / 46,56 / 46,21; countonly 49,15
 | Bộ ba, khớp đủ chủ thể, đối tượng, vị từ | 5,4 ± 0,2% | __,__ |
 | Khớp nhóm số lượng (dòng có số nêu rõ) | không chấm | 66,7 ± 0,8% |
 
-- Node ảnh được chú ý nhất cùng loại với node câu ở khoảng 58% dòng theo tiêu chí strict; tiêu chí lenient cộng thêm khoảng 5,5 điểm, chủ yếu là các cặp người khác loại như "woman" ~ "man".
+- Node ảnh được chú ý nhất cùng loại với node câu ở khoảng 58% dòng theo tiêu chí strict; tiêu chí lenient cộng thêm khoảng 5,5 điểm, từ hai điều kiện strict không có: cùng loại theo `same_type` (ví dụ "woman" ~ "man") và cosine CLIP ≥ 0,955.
+  Bảng hiện chưa tách phần đóng góp riêng của từng điều kiện.
 - Dòng bộ ba hầu như không khớp nghĩa: chỉ 5,4% khớp đủ.
 
 ### 6.5. Sparsity
@@ -251,8 +255,11 @@ R@1 tính lại trong lúc đo: `main_r3` 46,67 / 46,56 / 46,21; countonly 49,15
 | Top theo attention | −0,0011 ± 0,0007 | 1,0 ± 0,6% |
 | Ngẫu nhiên | −0,0010 ± 0,0005 | 0,7 ± 0,4% |
 
-- Cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
-- countonly (v1, dạng bỏ cả cạnh lẫn bộ ba): 6,6% so với 3,8%; khoảng một nửa số cạnh được chọn là cạnh kNN và một phần ba là cạnh từ node tổng.
+- Với `main_r3`, cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
+- countonly mới có số v1, đo theo cách cũ: bỏ cả cạnh lẫn bộ ba, và cạnh ngẫu nhiên bốc chung từ 3 node.
+  Δ điểm như nhau (+0,0013 cho cả top và ngẫu nhiên), nhưng tỉ lệ mất hạng 1 là 6,6 ± 1,8% so với 3,8 ± 0,9%, cao hơn ngẫu nhiên ở cả 3 seed.
+  Khoảng một nửa số cạnh được chọn là cạnh kNN và một phần ba là cạnh từ node tổng.
+  Vì vậy với countonly, kết luận chỉ là "cao hơn ngẫu nhiên chút ít"; cần chạy v2 (cắt đường truyền tin, bốc ngẫu nhiên theo từng node) mới kết luận được: __,__.
 - Ablation bỏ cạnh lúc train làm R@1 giảm 2,39 (`experiments/improve/no-edges/`): cạnh có ích ở tổng thể, nhưng tác dụng trải trên nhiều cạnh, không nằm ở vài cạnh có attention cao.
 
 ### 6.7. So sánh 9 cách giải thích (`main_r3`)
@@ -267,11 +274,14 @@ R@1 tính lại trong lúc đo: `main_r3` 46,67 / 46,56 / 46,21; countonly 49,15
 | clip | 0,28 | 0,23 | 0,047 / 0,021 | 0,35 | 35,4% |
 | gradient | 0,83 | −1,04 | 0,012 / 0,057 | −0,13 | 17,8% |
 | random | 0,84 | −0,62 | 0,013 / 0,053 | −0,01 | 14,3% |
+| lowest (E đảo ngược) | 1,01 | −2,30 | 0,002 / 0,068 | −0,46 | 2,1% |
 
 Số câu so sánh: 972–980 mỗi seed, trừ hai dòng ghi riêng.
 Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 1e−11 ở cả 3 seed, trừ clip.
 
-- **Shapley, occlusion và IG trung thực nhất trên mọi trục**; bỏ dần theo thứ tự của chúng làm điểm xuống dưới cả mức ảnh rỗng (deletion AUC âm).
+- **Shapley, occlusion và IG dẫn đầu ở deletion AUC và Fid_α**: bỏ dần theo thứ tự của chúng làm điểm xuống dưới cả mức ảnh rỗng (deletion AUC âm), và Fid_α+ > Fid_α−.
+  IG không dẫn đầu mọi trục: insertion AUC của IG (0,65) và độ khớp với Shapley (0,29) đều thấp hơn E (0,76 và 0,46).
+- **lowest** (E đảo ngược) kém nhất trên mọi trục, đúng như mong đợi của một phép kiểm tra: thứ tự của E mang thông tin thật.
 - **E đứng giữa**: tốt hơn hẳn ngẫu nhiên và gradient, ngang clip trên deletion, tốt hơn clip trên insertion.
 - **Về thứ tự tổng thể, E khớp Shapley gần bằng occlusion (0,46 so với 0,48)** mà không tốn lượt chấm nào; nhưng top-5 của E chỉ trùng 32% với Shapley, đúng ở chỗ bộ ba chen vào đầu E (mục 6.2).
 - **Gradient × input gần như ngẫu nhiên**: đạo hàm cục bộ không nói gì về việc bỏ hẳn một phần.
@@ -307,7 +317,7 @@ Chi tiết (top-5 của E, từng dòng vật thể và kết quả khớp nghĩ
   Câu 445695_1 (donut, bite) cũng vậy: bỏ thì xuống hạng 11, giữ thì vẫn hạng 1.
 - **Khi E gồm bộ ba, bỏ đi gần như không đổi gì.**
   Ở 10/13 câu, ba phần đầu của E đều là bộ ba, và ở cả 10 câu đó, bỏ cả ba thì ảnh vẫn hạng 1.
-  Câu 574350_4 (chó và ô) là ví dụ rõ nhất: E là "frame has frame", "man has pant", "woman wearing pant", không liên quan tới câu; trong khi bảng demo cho thấy bỏ node `dog` đưa ảnh xuống hạng 2.
+  Câu 574350_4 (chó và ô) là ví dụ rõ nhất: E là "frame has frame", "man has pant", "woman wearing pant", không liên quan tới câu; trong khi bỏ riêng node `dog` đưa ảnh xuống hạng 2 (`experiments/xai-metrics/cases.json`, v1, nơi `dog` đứng đầu E theo term thô: Fid+ k = 1).
 - **Chỉ giữ top-3, ảnh vẫn ở hạng 1–2 ở 10/13 câu**, kể cả khi top-3 là bộ ba.
   Điều này phù hợp với việc điểm kênh là trung bình softmax: giữ ít phần thì cũng bỏ đi các phần khớp kém đang làm loãng trung bình.
 - Các ca này khớp với số trên toàn val ở mục 6: E đúng ở chỗ phần nào mang điểm, nhưng các bộ ba đứng đầu E không phải là thứ quyết định thứ hạng.
@@ -322,7 +332,7 @@ Demo nay có thêm cột **Bỏ phần này** (`app/demo_app.py`, `src/service/g
 - hai ghi chú dưới bảng nói rõ % điểm cuối chỉ là cách chia điểm, không phải mức điểm mất khi bỏ phần.
 
 Đây là phép kiểm chứng bằng chính mô hình (occlusion của phần đang hiển thị), không phải một lời giải thích tìm sau khi đã có kết quả; các dòng giải thích vẫn lấy từ lần xếp hạng.
-Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the ball at a game.", bỏ node `catcher` đưa ảnh từ hạng 1 xuống hạng 43; câu về chó và ô, bỏ các bộ ba khớp nhiều % nhất không đổi hạng.
+Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the ball at a game.", bỏ node `catcher` đưa ảnh từ hạng 1 xuống hạng 43 (khớp đường cong deletion ở k = 1 trong `experiments/xai-metrics-v2/cases.json`); câu về chó và ô, bỏ các bộ ba khớp nhiều % nhất không đổi hạng.
 
 ## 9. Kết luận
 
@@ -335,11 +345,12 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
    Shapley là chuẩn tốt nhất nhưng tốn khoảng 740 lượt chấm mỗi câu.
 4. **Validity ngữ nghĩa vừa phải ở node, kém ở bộ ba:** 58% dòng vật thể khớp strict, chỉ 5% dòng bộ ba khớp đủ.
 5. **Sparsity theo hiệu ứng tốt:** ở hơn nửa số câu, 2–3 phần đầu của E giữ 80% hiệu ứng đồ thị.
-6. **Attention GAT không phải lời giải thích:** cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
+6. **Attention GAT không phải lời giải thích** ở `main_r3`: cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
+   Với countonly, số v1 (cách đo cũ) cho thấy cao hơn ngẫu nhiên chút ít; chưa có số v2.
 
 ## 10. Hạn chế
 
-- Mô hình chính countonly mới có số v1; phần so sánh 9 cách giải thích, tính cộng, validity strict và sparsity theo E chưa đo cho nó.
+- Mô hình chính countonly mới có số v1; chưa đo cho nó: so sánh 9 cách giải thích (gồm đường cong deletion / insertion và Fid_α), tính cộng, phản thực tế (k_flip, hạng ảnh đúng), validity strict và khớp bộ ba, sparsity theo E, và đồ thị con dạng chỉ cắt đường truyền tin.
   Cơ chế giải thích của hai mô hình giống nhau, chỉ khác cách trộn điểm, nên các kết luận nhiều khả năng vẫn đúng, nhưng chưa có số.
 - So sánh các cách giải thích dùng 1 000 câu; GNNExplainer và Shapley chỉ khoảng 195 câu, std qua seed của hai cách này lớn hơn.
 - Ảnh trung tính của IG và GNNExplainer là vector trung bình của từng loại phần; chọn mốc khác có thể đổi kết quả của hai cách này.
