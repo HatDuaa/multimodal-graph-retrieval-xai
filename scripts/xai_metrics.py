@@ -34,6 +34,10 @@ Changes from version 1:
   pooled edges of the three nodes).
 - Counterfactual: the smallest k whose removal costs the image rank 1 (k_flip, from the deletion curve), and, for a
   wrong rank-1 image, the gold image's rank after the top-k of E are removed.
+- Additivity of the decomposition: E's terms are a decomposition of the score, but removing parts is not additive
+  (softmax attention moves to the parts left, GAT mixes nodes). For k = 1, 3, 5 the sum of the top-k scaled terms
+  (predicted) is set against the score lost when those parts are removed (measured): pooled ratio, median ratio,
+  Spearman correlation, and |measured - predicted| as a share of the graph effect.
 
 Comparison of explainers (fixed sample of --compare captions, rng 2026, inside the val captions; only images with a
 positive graph effect, base - empty > 1e-4, since the curves are shares of it): every explainer
@@ -43,11 +47,14 @@ orders the same image parts and is measured the same way, by deletion and insert
 - lowest: E reversed;
 - clip: post hoc, frozen CLIP cosine of the caption vector with each part's vector (no model);
 - gradient: gradient x input of the final score with respect to each part's input vectors;
+- integrated_gradients: post hoc decomposition (Sundararajan et al., ICML 2017) from a neutral image (every part at its
+  kind's mean vector), 20 path steps; its attributions add up to f(image) - f(neutral), checked as ig_completeness;
 - gnnexplainer (on the first --gnn captions of the sample): a soft mask over the parts' input vectors, learned to keep
   the final score with a size and an entropy penalty (Ying et al., NeurIPS 2019, on features), parts ordered by mask.
 Per explainer: Fid+@k / Fid-@k, rank, lost rank 1, k_flip, and the normalized areas under the curves
 (deletion: mean over k = 1..K of the share of the graph effect still there, lower is better; insertion: mean share
-kept when only the first k parts stay, higher is better), with a paired Wilcoxon test against "model".
+kept when only the first k parts stay, higher is better), with a paired Wilcoxon test against "model", and, for the
+three decompositions (model, gradient, integrated_gradients), the additivity above on the same captions.
 
 Writes experiments/xai-metrics-v2/{metrics.json, cases.json}.
 """
@@ -63,7 +70,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphStore  # noqa: E402
+from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphIndex, GraphStore  # noqa: E402
 from src.explain.score_breakdown import top50_deltas  # noqa: E402
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count,  # noqa: E402
                                      message_drop, rank_of, real_nodes)
@@ -77,7 +84,7 @@ OUT = REPO_ROOT / "experiments" / "xai-metrics-v2"
 MODELS = {"countonly_factual_r3": (REPO_ROOT / "experiments" / "improve" / "count-only", "configs/count_v1.yaml"),
           "main_r3": (REPO_ROOT / "experiments" / "level1" / "gat", None)}
 KS, RANDOM, THRESHOLDS, SUB_NODES, SUB_EDGES, COSINE, CURVE = (1, 3, 5), 10, (0.8, 0.9), 3, 3, .955, 10
-EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "gnnexplainer")
+EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "gnnexplainer")
 GENERIC_PEOPLE = {"person", "people", "persons", "someone", "somebody", "human", "humans", "individual", "crowd"}
 KIND_NAMES = {EDGE_LABELLED: "labelled", EDGE_COMPLETION: "completion", EDGE_GLOBAL: "global"}
 CASES = REPO_ROOT / "experiments" / "improve" / "explanations" / "cases.json"
@@ -187,8 +194,13 @@ def part_name(graph, parts, kind, j):
     return f"{names[rel['subject']]} {rel['predicate']} {names[rel['object']]}"
 
 
-def curves(ctx, column, order, index, base, empty):
-    """Deletion and insertion of the first k parts of an order, k = 0..K: score, rank, share of the graph effect."""
+def curves(ctx, column, order, index, base, empty, attribution=None):
+    """Deletion and insertion of the first k parts of an order, k = 0..K: score, rank, share of the graph effect.
+
+    attribution: {part: value on the final score's scale} of a decomposition (the model's terms, gradient x input,
+    integrated gradients); then additivity[k] compares the sum over the first k parts (predicted) with the score
+    lost when they are removed (measured).
+    """
     sizes = list(range(min(CURVE, len(order)) + 1))
     edits = [edit(index, drop_nodes=split(order[:n])[0], drop_edges=split(order[:n])[1]) for n in sizes]
     edits += [keep_only(index, *split(order[:n])) for n in sizes]
@@ -202,6 +214,10 @@ def curves(ctx, column, order, index, base, empty):
     if effect > 1e-4 and count > 1:
         out["deletion_auc"] = float(np.mean([(s - empty) / effect for s in scores[1:count]]))
         out["insertion_auc"] = float(np.mean([(s - empty) / effect for s in scores[count + 1:]]))
+    if attribution is not None:
+        out["additivity"] = {k: {"predicted": float(sum(attribution[part] for part in order[:k])),
+                                 "measured": float(base - scores[k]), "effect": effect}
+                             for k in KS if k < count}
     return out
 
 
@@ -243,8 +259,55 @@ def gnnexplainer_order(ctx, column, index, base, empty, steps=100, size=2., entr
     return sorted(parts, key=lambda p: -p[2])
 
 
+def integrated_gradients(ctx, column, index, steps=20):
+    """Integrated gradients of the target's final score over its parts (Sundararajan et al., ICML 2017).
+
+    Baseline: the same graph with every node vector replaced by the image's mean node vector and every triple's
+    phrase and predicate vectors by the image's mean ones (the neutral parts of gnnexplainer_order). The path is
+    sampled at the midpoints of steps equal intervals, all in one batch. A part's attribution is
+    (input - baseline) . mean gradient, summed over its vectors; the attributions add up to f(input) - f(baseline)
+    up to the sampling error, which is returned as completeness = {"sum", "difference"}.
+    """
+    table = ctx.store.part_table(ctx.device)
+    n, m, size = real_nodes(index), labelled_count(index), int(index.node_counts[0])
+    images = GraphIndex.concat([index] * steps).to_batch(table, ctx.device)
+    alphas = ((torch.arange(steps, device=ctx.device) + .5) / steps)[:, None, None]
+    x0 = images.x.detach().view(steps, size, -1)[0]
+    x_base = x0.clone()
+    if n:
+        x_base[:n] = x0[:n].mean(0)
+    paths = [(x0, x_base)]
+    if m:
+        for value in (images.triple_f, images.edge_attr):
+            v0 = value.detach().view(steps, m, -1)[0]
+            paths.append((v0, v0.mean(0, keepdim=True).expand_as(v0)))
+    inputs = [(b + alphas * (v - b)).requires_grad_(True) for v, b in paths]
+    images.x = inputs[0].reshape(steps * size, -1)
+    if m:
+        images.triple_f = inputs[1].reshape(steps * m, -1)
+        images.edge_attr = inputs[2].reshape(steps * m, -1)
+    with torch.enable_grad():
+        fused, _ = ctx.score_images(column, images, steps)
+        grads = torch.autograd.grad(fused[:, column].sum(), inputs, allow_unused=True)
+    parts = [((v - b) * (g.mean(0) if g is not None else 0.)).sum(-1) for (v, b), g in zip(paths, grads)]
+    node = parts[0][:n].detach().cpu().numpy()
+    triple = (parts[1] + parts[2]).detach().cpu().numpy() if m else np.zeros(0)
+    ends = [index, index]
+    baseline = GraphIndex.concat(ends).to_batch(table, ctx.device)
+    baseline.x = torch.cat((x_base, x0))
+    if m:
+        baseline.triple_f = torch.cat((paths[1][1], paths[1][0]))
+        baseline.edge_attr = torch.cat((paths[2][1], paths[2][0]))
+    with torch.no_grad():
+        endpoints, _ = ctx.score_images(column, baseline, 2)
+    completeness = {"sum": float(node.sum() + triple.sum()),
+                    "difference": float(endpoints[1, column] - endpoints[0, column])}
+    attribution = [("node", j, float(v)) for j, v in enumerate(node)] + [("triple", j, float(v)) for j, v in enumerate(triple)]
+    return attribution, completeness
+
+
 def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty):
-    """Every explainer's order of the same image parts."""
+    """Every explainer's order of the same image parts, and the attributions of the decompositions among them."""
     store = ctx.store
     every = [(kind, j) for kind, j, _ in ranked]
     orders = {"model": [p[:2] for p in ranked], "lowest": [p[:2] for p in ranked[::-1]]}
@@ -258,9 +321,13 @@ def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty):
     node_grad, triple_grad = ctx.gradient_terms(column, index)
     grad = [("node", j, float(v)) for j, v in enumerate(node_grad)] + [("triple", j, float(v)) for j, v in enumerate(triple_grad)]
     orders["gradient"] = [p[:2] for p in sorted(grad, key=lambda p: -p[2])]
+    ig, completeness = integrated_gradients(ctx, column, index)
+    orders["integrated_gradients"] = [p[:2] for p in sorted(ig, key=lambda p: -p[2])]
     if gnn:
         orders["gnnexplainer"] = [p[:2] for p in gnnexplainer_order(ctx, column, index, base, empty)]
-    return orders
+    attributions = {"model": {p[:2]: p[2] for p in ranked}, "gradient": {p[:2]: p[2] for p in grad},
+                    "integrated_gradients": {p[:2]: p[2] for p in ig}}
+    return orders, attributions, completeness
 
 
 def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
@@ -336,6 +403,9 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
                          "random": {"delta": rand_score - base, "rank": float(np.mean([r for _, r in rand])),
                                     "lost_rank1": float(np.mean([r > 1 for _, r in rand])), "share": share(rand_score)}}
         out["fidelity"][k] = row
+    # additivity: the sum of E's top-k terms (final-score scale) against the score lost when they are removed
+    out["additivity"] = {k: {"predicted": float(sum(t for _, _, t in ranked[:k])),
+                             "measured": base - by[f"plus_top_{k}"][0][0], "effect": effect} for k in KS}
     out["subgraph"] = {"n_edges": len(chosen), "pool": sum(len(i) for i, _ in per_node),
                        "with_choice": any(len(i) > n for i, n in per_node if n),
                        "kinds": dict(collections.Counter(KIND_NAMES[int(kinds[e])] for e in chosen))}
@@ -392,9 +462,10 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
                                 "all": ends["subject"] and ends["object"] and predicate})
     out["triple_validity"] = triple_validity
     if compare and n_parts and effect > 1e-4:
-        orders = explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty)
-        out["explainers"] = {name: (model_curve if name == "model" else curves(ctx, column, order, index, base, empty))
+        orders, attributions, completeness = explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty)
+        out["explainers"] = {name: curves(ctx, column, order, index, base, empty, attributions.get(name))
                              for name, order in orders.items()}
+        out["ig_completeness"] = completeness
     if detail:
         out["explanation"] = [{"kind": kind, "part": part_name(graph, parts_info, kind, j), "term": t}
                               for kind, j, t in ranked[:5]]
@@ -434,6 +505,30 @@ def wilcoxon(a, b):
         return None
     x, y = np.array(pairs).T
     return {"n": len(pairs), "mean_difference": float(np.mean(x - y)), "p": float(stats.wilcoxon(x, y).pvalue)}
+
+
+def additivity_summary(items):
+    """Predicted (sum of the top-k attributions) against measured (score lost when they are removed), per k.
+
+    Only captions with a graph effect > 1e-4: pooled ratio sum(measured) / sum(predicted), median per-caption ratio
+    (predicted > 1e-4), Spearman correlation across captions, and the mean |measured - predicted| / effect.
+    """
+    from scipy import stats
+    out = {}
+    for k in KS:
+        rows = [i[k] for i in items if k in i and i[k]["effect"] > 1e-4]
+        if len(rows) < 3:
+            continue
+        predicted = np.array([r["predicted"] for r in rows])
+        measured = np.array([r["measured"] for r in rows])
+        effect = np.array([r["effect"] for r in rows])
+        positive = predicted > 1e-4
+        out[k] = {"captions": len(rows), "predicted_mean": float(predicted.mean()), "measured_mean": float(measured.mean()),
+                  "pooled_ratio": float(measured.sum() / predicted.sum()) if abs(predicted.sum()) > 1e-12 else None,
+                  "median_ratio": float(np.median(measured[positive] / predicted[positive])) if positive.any() else None,
+                  "spearman": float(stats.spearmanr(predicted, measured).statistic),
+                  "gap_share_of_effect": float(np.mean(np.abs(measured - predicted) / effect))}
+    return out
 
 
 def aggregate(records):
@@ -516,6 +611,11 @@ def aggregate(records):
                        "count_rows": len(counted), "count_compatible": mean(counted),
                        "triple_rows": len(triples),
                        **{f"triple_{k}": mean([v[k] for v in triples]) for k in ("subject", "object", "predicate", "all")}}
+    out["additivity"] = additivity_summary([r["additivity"] for r in usable])
+    ig = [r["ig_completeness"] for r in usable if "ig_completeness" in r]
+    if ig:
+        out["ig_completeness"] = {"captions": len(ig), "mean_abs_gap_share": mean(
+            [abs(c["sum"] - c["difference"]) / abs(c["difference"]) for c in ig if abs(c["difference"]) > 1e-6])}
     compared = [r for r in usable if "explainers" in r]
     if compared:
         out["explainers"] = {}
@@ -529,6 +629,8 @@ def aggregate(records):
             for k in KS:
                 entry[f"plus_{k}_lost_rank1"] = mean([c["deletion_rank"][k] > 1 for c in rows if len(c["sizes"]) > k])
                 entry[f"minus_{k}_rank"] = mean([c["insertion_rank"][k] for c in rows if len(c["sizes"]) > k])
+            if any("additivity" in c for c in rows):
+                entry["additivity"] = additivity_summary([c["additivity"] for c in rows if "additivity" in c])
             if name != "model":
                 both = [r for r in compared if name in r["explainers"]]
                 entry["vs_model"] = {m: wilcoxon([r["explainers"][name].get(m) for r in both],
