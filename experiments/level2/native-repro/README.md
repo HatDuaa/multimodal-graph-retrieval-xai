@@ -73,3 +73,27 @@ chính nhóm xây MKG-W (MMRNS, `MKG-W_img.zip` 6,4 GB + `ent_links` trên Drive
   (`scripts/extract_mkgw_images.py`).
 - Coverage check chạy lại trên split mới: link ≥1 thực thể 81,5% (train) / 78,9% (val);
   **đáp án có cạnh KGC-train trực tiếp 42,8% / 45,2%** (bản cũ: ~30%).
+
+## Kết quả tái lập bước a (RTX 4090, 17/11/2026)
+
+Lần chạy `repro_seed42_e1000` (Lộc) trên MKG-W gốc dùng đúng siêu tham số của `scripts/run_mkgw.sh` (1.000 epoch, dim 250, margin 4, 128 mẫu âm, lr 1e-4, batch 1024) và seed 42. Seed 42 là giá trị mặc định trong `args.py` của tác giả. Lệnh, log và thời gian chạy ghi trong `../native-train/` (`repro_seed42_e1000.log`, mất 1,10 giờ). Số liệu dưới đây lấy từ `metrics.json`.
+
+Đánh giá trên tập test KGC của NativE: 4.274 triple, thiết lập filtered, không ràng buộc kiểu, là dòng `averaged(filter)` do tester của tác giả in ra. Tester này không in số raw, vì các dòng in số raw đã bị comment trong `mmkgc/base/Test.h`.
+
+| | MRR | MR | Hits@1 | Hits@3 | Hits@10 |
+|---|---|---|---|---|---|
+| Bài báo: Bảng 2, cột MKG-W, dòng NativE (S+I+T); dòng NativE (All) cùng số | 36,58 | không báo cáo | 29,56 | không báo cáo | không báo cáo |
+| Nhóm tái lập (seed 42) | **36,99** | 862,2 | **30,17** | 39,95 | 49,32 |
+| Chênh lệch (nhóm − bài báo) | +0,41 | — | +0,61 | — | — |
+
+Nguồn số của bài báo: Zhang và cộng sự, *NativE: Multi-modal Knowledge Graph Completion in the Wild*, SIGIR 2024, arXiv 2406.17605v1, Bảng 2, trang 7. Với MKG-W, bài báo chỉ báo MRR và Hit@1. Bảng 3, Bảng 4 và Hình 3 chỉ dùng DB15K.
+
+**Nhận xét:**
+- Cả hai chỉ số có trong bài báo đều cao hơn một chút, chênh dưới 1 điểm. Theo tiêu chí ở `docs/level2-plan.md` (chênh khoảng 1 điểm trở xuống), **bước a tái lập được**.
+- Chỉ có một lần chạy, nên phần chênh này có thể nằm trong dao động giữa các lần chạy. Để tham khảo, ba seed `rmask` có std của MRR là 0,24 điểm, nhưng đó là bộ dữ liệu khác.
+- Đoán đuôi dễ hơn hẳn đoán đầu: MRR đoán đuôi `r(filter)` là 54,03, đoán đầu `l(filter)` là 19,96. Cả hai nằm trong `metrics.json`.
+
+**Khác biệt môi trường so với tác giả:**
+- Tác giả chạy trên A800 với Python 3.8 và torch 1.9.1. Nhóm chạy trên RTX 4090 với Python 3.12.3 và torch 2.14.0+cu130.
+- `Base.so` đã được biên dịch lại.
+- Bộ lấy mẫu âm viết bằng C không nhận seed (xem `../native-train/README.md`, mục Ghi chú).
