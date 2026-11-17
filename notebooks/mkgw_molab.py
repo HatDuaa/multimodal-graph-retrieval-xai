@@ -11,26 +11,26 @@ def _():
         r"""
         # MKG-W on molab — data, CLIP features, NativE training (level 2)
 
-        Runs the heavy part of level 2 on a molab GPU and keeps every output on a
-        Hugging Face dataset repo, so the laptop only downloads small files.
+        Runs the GPU-heavy part of level 2 on molab. **Every stage pushes its outputs to a
+        private Hugging Face dataset repo as soon as it finishes**, so a disconnect or the
+        molab shutdown (12 h per session, 90 min idle) loses nothing. Export of embeddings and
+        all evaluations run on the laptop from the HF copy (`scripts/pull_mkgw_from_hf.py`).
         Data steps follow Đạt's scripts on `dat/mkgw-data` (rows 20, 22, 23 of the task sheet);
         this notebook and the leakage mask are Khang's additions.
 
-        **Before you start:** turn on the GPU (notebook specs button), then fill in the
-        Hugging Face token below. Each stage has its own button; stages are idempotent
-        and **Restore** pulls finished outputs back after a session restart
-        (molab stops after 12 h, or after 90 min idle).
+        **Before you start:** turn on the GPU (notebook specs button) and fill in a Hugging Face
+        token with write access. Stages are idempotent: re-running skips finished work.
 
         | Stage | What | Time (rough) |
         |---|---|---|
         | 1 Setup | clone repo branch + NativE, install, build `Base.so` | 3 min |
-        | 2 Data | NativE embeddings, MMRNS image zip (6.4 GB), Wikidata labels, images, KGC triples | 30–60 min |
-        | 3 CLIP | frozen CLIP features for 8 920 images + queries | 5 min |
-        | 3b Probe | multilingual CLIP on 84 vi/en MKG-W val queries (row 9) | 10 min |
-        | 4 Train | NativE: paper reproduction (original MKG-W) + 3 seeds on the leakage-safe copy | hours |
-        | 5 Export | entity embeddings per run | 1 min |
-        | 6 Upload | push everything to the HF dataset repo | 5–10 min |
-        | 7 Eval | level-2 evaluation on val (3 seeds, ablations); upload again after it | 5 min |
+        | Restore | pull finished outputs back from HF after a restart | 2–5 min |
+        | 2 Data | NativE tables, MMRNS image zip (6.4 GB), Wikidata labels, images, KGC triples → HF | 30–60 min |
+        | 3 CLIP | frozen CLIP features for 8 920 images + queries → HF | 5 min |
+        | 3b Probe | multilingual CLIP on 84 vi/en MKG-W val queries (row 9) → HF | 10 min |
+        | 4 Train | start NativE runs **in the background** (cell returns at once) | hours |
+        | 4b Status | progress of each run; pushes checkpoint + log of finished runs → HF. Auto-refresh every 10 min while the tab is open | — |
+        | Files | download buttons for every log / JSON produced here | — |
         """
     )
     return (mo,)
@@ -54,7 +54,7 @@ def _(mo):
 @app.cell
 def _():
     import hashlib
-    import os
+    import json
     import shutil
     import subprocess
     import sys
@@ -66,12 +66,12 @@ def _():
     NATIVE = WORK / "NativE"             # matches configs/default.yaml (mkgw.native_repo)
     NATIVE_COMMIT = "c72291c3d571b36c754897935d21718aa4568fe7"
     PY = sys.executable
+    LOG_DIR = REPO / "experiments" / "level2" / "native-train"
 
-    def sh(cmd, cwd=None, check=True, env=None):
+    def sh(cmd, cwd=None, check=True):
         """Run a shell command, print its output, raise on failure."""
         print(f"$ {cmd}")
-        r = subprocess.run(cmd, shell=True, cwd=cwd, env=env, text=True,
-                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        r = subprocess.run(cmd, shell=True, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(r.stdout[-6000:])
         if check and r.returncode != 0:
             raise RuntimeError(f"exit {r.returncode}: {cmd}")
@@ -90,7 +90,37 @@ def _():
                 h.update(chunk)
         return h.hexdigest()
 
-    return NATIVE, NATIVE_COMMIT, PY, Path, REPO, WORK, os, pip, sh, sha256, shutil, subprocess, zipfile
+    def run_name(spec, n_epochs):
+        tag, dataset, seed = spec.split(":")
+        return f"{tag}_seed{seed}_e{n_epochs}", dataset, seed
+
+    return LOG_DIR, NATIVE, NATIVE_COMMIT, PY, Path, REPO, WORK, json, pip, run_name, sh, sha256, shutil, subprocess, zipfile
+
+
+@app.cell
+def _(Path, hf_repo, hf_token):
+    def push(local, path_in_repo):
+        """Upload one file or folder to the HF dataset repo right away (private repo, created if missing)."""
+        from huggingface_hub import HfApi
+        api = HfApi(token=hf_token.value)
+        api.create_repo(hf_repo.value, repo_type="dataset", private=True, exist_ok=True)
+        local = Path(local)
+        if local.is_dir():
+            api.upload_folder(repo_id=hf_repo.value, repo_type="dataset", folder_path=str(local),
+                              path_in_repo=path_in_repo)
+        else:
+            api.upload_file(repo_id=hf_repo.value, repo_type="dataset", path_or_fileobj=str(local),
+                            path_in_repo=path_in_repo)
+        print("pushed", local, "->", path_in_repo)
+
+    def remote_files():
+        from huggingface_hub import HfApi
+        try:
+            return set(HfApi(token=hf_token.value).list_repo_files(hf_repo.value, repo_type="dataset"))
+        except Exception:
+            return set()
+
+    return push, remote_files
 
 
 @app.cell
@@ -99,31 +129,12 @@ def _(mo):
     b_restore = mo.ui.run_button(label="Restore from HF")
     b_data = mo.ui.run_button(label="2 · Data")
     b_clip = mo.ui.run_button(label="3 · CLIP features")
-    b_train = mo.ui.run_button(label="4 · Train NativE")
-    b_export = mo.ui.run_button(label="5 · Export embeddings")
-    b_upload = mo.ui.run_button(label="6 · Upload to HF")
     b_probe = mo.ui.run_button(label="3b · Multilingual CLIP probe (row 9)")
-    b_eval = mo.ui.run_button(label="7 · Level-2 eval on val")
-    mo.hstack([b_setup, b_restore, b_data, b_clip, b_probe, b_train, b_export, b_eval, b_upload], wrap=True)
-    return b_clip, b_data, b_eval, b_export, b_probe, b_restore, b_setup, b_train, b_upload
-
-
-@app.cell
-def _(PY, REPO, b_probe, mo, pip, sh):
-    mo.stop(not b_probe.value, mo.md("Stage 3b not run yet."))
-    pip("sentence-transformers")
-    sh(f"{PY} scripts/checks/multilingual_clip_probe.py --large", cwd=REPO)
-    mo.md((REPO / "experiments" / "checks" / "multilingual_clip_probe.json").read_text(encoding="utf-8")[:4000])
-    return
-
-
-@app.cell
-def _(PY, REPO, b_eval, mo, sh):
-    mo.stop(not b_eval.value, mo.md("Stage 7 not run yet."))
-    # val only: chooses alpha/beta per seed. Test runs once, later, after the method is locked.
-    sh(f"{PY} scripts/eval_mkgw_level2.py --split val", cwd=REPO)
-    mo.md("Wrote `experiments/level2/val/` (summary.json, choice.json, metrics_*.json).")
-    return
+    b_train = mo.ui.run_button(label="4 · Start training (background)")
+    b_status = mo.ui.run_button(label="4b · Status + push finished runs")
+    auto = mo.ui.refresh(options=["10m"], default_interval="10m", label="auto status")
+    mo.hstack([b_setup, b_restore, b_data, b_clip, b_probe, b_train, b_status, auto], wrap=True)
+    return auto, b_clip, b_data, b_probe, b_restore, b_setup, b_status, b_train
 
 
 @app.cell
@@ -141,8 +152,7 @@ def _(NATIVE, NATIVE_COMMIT, REPO, WORK, b_setup, branch, mo, pip, sh):
         "pillow", "scikit-learn")
     # the shipped Base.so segfaults on some machines (experiments/level2/native-repro/README.md): always rebuild
     sh("bash make.sh", cwd=NATIVE / "mmkgc", check=False)
-    sh("ls -la release && nvidia-smi --query-gpu=name,memory.total --format=csv && nproc && df -h ~",
-       cwd=NATIVE / "mmkgc", check=False)
+    sh("nvidia-smi --query-gpu=name,memory.total --format=csv; nproc; df -h ~", check=False)
     mo.md("Setup done.")
     return
 
@@ -152,21 +162,21 @@ def _(NATIVE, Path, REPO, b_restore, hf_repo, hf_token, mo, shutil, zipfile):
     mo.stop(not b_restore.value, mo.md("Restore not run."))
     from huggingface_hub import snapshot_download as _snapshot_download
     _local = Path(_snapshot_download(hf_repo.value, repo_type="dataset", token=hf_token.value or None,
-                                   local_dir=str(Path.home() / "work" / "hf_mkgw")))
-    for _sub in ("data/raw/mkgw", "data/processed", "data/features", "experiments/level2"):
+                                     local_dir=str(Path.home() / "work" / "hf_mkgw")))
+    for _sub in ("data", "experiments"):
         if (_local / _sub).exists():
             shutil.copytree(_local / _sub, REPO / _sub, dirs_exist_ok=True)
     if (_local / "images" / "mkgw_images_640.zip").exists():
         zipfile.ZipFile(_local / "images" / "mkgw_images_640.zip").extractall(REPO / "data" / "raw" / "images")
-    if (_local / "native").exists():
-        shutil.copytree(_local / "native" / "embeddings", NATIVE / "embeddings", dirs_exist_ok=True)
-        shutil.copytree(_local / "native" / "checkpoint", NATIVE / "checkpoint", dirs_exist_ok=True)
+    for _sub in ("embeddings", "checkpoint"):
+        if (_local / "native" / _sub).exists():
+            shutil.copytree(_local / "native" / _sub, NATIVE / _sub, dirs_exist_ok=True)
     mo.md(f"Restored from `{hf_repo.value}`.")
     return
 
 
 @app.cell
-def _(NATIVE, PY, REPO, b_data, mo, sh, sha256, zipfile):
+def _(NATIVE, PY, REPO, b_data, json, mo, push, sh, sha256, zipfile):
     mo.stop(not b_data.value, mo.md("Stage 2 not run yet."))
     import gdown as _gdown
 
@@ -194,8 +204,7 @@ def _(NATIVE, PY, REPO, b_data, mo, sh, sha256, zipfile):
     sh(f"{PY} scripts/fetch_mkgw_relations.py", cwd=REPO)
 
     # (d) one 640px image per entity, then the KGC triples with their NativE split.
-    #     The retrieval split files are committed (Đạt, seed 0) and are NOT rebuilt here:
-    #     Wikidata descriptions drift, and every model must use the same split file.
+    #     The retrieval split files are committed (Đạt, seed 0) and are NOT rebuilt here.
     sh(f"{PY} scripts/extract_mkgw_images.py", cwd=REPO)
     sh(f"{PY} -c \"from pathlib import Path; from src.data.build_mkgw_split import copy_kgc_triples; "
        f"from src.utils.config import load_config, resolve; c=load_config(); "
@@ -203,10 +212,9 @@ def _(NATIVE, PY, REPO, b_data, mo, sh, sha256, zipfile):
        cwd=REPO)
 
     # (e) every split entity must have its image; compare checksums with data/MANIFEST.md (Đạt, 2026-09-25)
-    import json as _json
     _missing = []
     for _split in ("train", "val", "test"):
-        for _im in _json.loads((REPO / "data" / "splits" / f"mkgw_{_split}.json").read_text(encoding="utf-8"))["images"]:
+        for _im in json.loads((REPO / "data" / "splits" / f"mkgw_{_split}.json").read_text(encoding="utf-8"))["images"]:
             if not (REPO / "data" / "raw" / "images" / _im["file_name"]).exists():
                 _missing.append(_im["qid"])
     _expected = {
@@ -214,96 +222,119 @@ def _(NATIVE, PY, REPO, b_data, mo, sh, sha256, zipfile):
         "data/raw/mkgw/mkgw_img.zip": "0178f7bb3b6199309a56fad23c595c252f79506deb5dbecece58d814d5f0aede",
         "data/raw/mkgw/author_images_index.json": "0727dafebdf3d9c3fd988778e34f574d324eb3bf9dd9e144ce15c19631dd45bd",
         "data/processed/mkgw_triples.jsonl": "40ccfa72ce54d9d2c6a23e9ed50ea571255425e20cf1b0cf6c2c5e2e3cecbedb",
-        "data/raw/mkgw/wikidata_entities.jsonl": "8e1aa6387e9a21a5067b577b1d2deae1651232cba54d30f8232685908c689daf",
     }
     _rows = [f"| `{p}` | {'match' if sha256(REPO / p) == h else 'DIFFERENT'} |" for p, h in _expected.items()]
+
+    # (f) push right away: small raw files, triples, the 640px images, and the NativE tables
+    for _f in ("wikidata_entities.jsonl", "wikidata_relations.json", "ent_links.tsv", "author_images_index.json"):
+        push(_raw / _f, f"data/raw/mkgw/{_f}")
+    push(REPO / "data" / "processed" / "mkgw_triples.jsonl", "data/processed/mkgw_triples.jsonl")
+    _img_zip = REPO.parent / "mkgw_images_640.zip"
+    with zipfile.ZipFile(_img_zip, "w", zipfile.ZIP_STORED) as _zf:
+        for _p in sorted((REPO / "data" / "raw" / "images").glob("Q*.jpg")):
+            _zf.write(_p, _p.name)
+    push(_img_zip, "images/mkgw_images_640.zip")
+    for _p in _emb_dir.glob("MKG-W-*.pth"):
+        push(_p, f"native/embeddings/{_p.name}")
     mo.md(f"Split entities without an image: **{len(_missing)}** {_missing[:10]}\n\n"
-          "| File | vs MANIFEST |\n|---|---|\n" + "\n".join(_rows) +
-          "\n\n`wikidata_entities.jsonl` may differ (Wikidata changes over time); the split files do not depend on it.")
+          "| File | vs MANIFEST |\n|---|---|\n" + "\n".join(_rows) + "\n\nPushed to HF.")
     return
 
 
 @app.cell
-def _(PY, REPO, b_clip, mo, sh, sha256):
+def _(PY, REPO, b_clip, mo, push, sh, sha256):
     mo.stop(not b_clip.value, mo.md("Stage 3 not run yet."))
     sh(f"{PY} scripts/extract_features.py --dataset mkgw", cwd=REPO)
     _exp = {"mkgw_image.npy": "fe9739e40478cf58e87e6a720ceba9bf3ec4deee9bef9e92107a99f7ba2da827",
             "mkgw_caption.npy": "59de0cf337a14ae3c468131bb9ca6952d85d3f4be577f971303a2c042de17d2d"}
-    _rows = [f"| `{n}` | {'match' if sha256(REPO / 'data' / 'features' / n) == h else 'different (GPU numerics; compare metrics instead)'} |"
+    _rows = [f"| `{n}` | {'match' if sha256(REPO / 'data' / 'features' / n) == h else 'different (GPU numerics)'} |"
              for n, h in _exp.items()]
-    mo.md("| File | vs MANIFEST |\n|---|---|\n" + "\n".join(_rows))
+    for _n in ("mkgw_image", "mkgw_caption"):
+        for _ext in (".npy", ".ids.json"):
+            push(REPO / "data" / "features" / f"{_n}{_ext}", f"data/features/{_n}{_ext}")
+    mo.md("| File | vs MANIFEST |\n|---|---|\n" + "\n".join(_rows) + "\n\nPushed to HF.")
     return
 
 
 @app.cell
-def _(NATIVE, PY, REPO, b_train, epochs, mo, runs, sh, subprocess):
+def _(PY, REPO, b_probe, mo, pip, push, sh):
+    mo.stop(not b_probe.value, mo.md("Stage 3b not run yet."))
+    pip("sentence-transformers")
+    sh(f"{PY} scripts/checks/multilingual_clip_probe.py --large", cwd=REPO)
+    _out = REPO / "experiments" / "checks" / "multilingual_clip_probe.json"
+    push(_out, "experiments/checks/multilingual_clip_probe.json")
+    mo.md("```json\n" + _out.read_text(encoding="utf-8")[:5000] + "\n```")
+    return
+
+
+@app.cell
+def _(LOG_DIR, NATIVE, PY, REPO, b_train, epochs, mo, remote_files, run_name, runs, sh):
     mo.stop(not b_train.value, mo.md("Stage 4 not run yet."))
     # leakage-safe copy: modality rows of retrieval val/test entities set to zero
     sh(f"{PY} scripts/mask_native_modalities.py --name MKG-W-rmask", cwd=REPO)
-
-    _log_dir = REPO / "experiments" / "level2" / "native-train"
-    _log_dir.mkdir(parents=True, exist_ok=True)
-    _procs = {}
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    _done_remote = remote_files()
+    _started = []
     for _spec in runs.value:
-        _tag, _dataset, _seed = _spec.split(":")
-        _name = f"{_tag}_seed{_seed}_e{epochs.value}"
-        _ckpt = NATIVE / "checkpoint" / f"{_name}.ckpt"
-        if _ckpt.exists():
+        _name, _dataset, _seed = run_name(_spec, epochs.value)
+        if (NATIVE / "checkpoint" / f"{_name}.ckpt").exists() or f"native/checkpoint/{_name}.ckpt" in _done_remote:
             print("skip (checkpoint exists):", _name)
             continue
-        # hyper-parameters = the authors' scripts/run_mkgw.sh; only dataset, seed, epoch vary
+        # hyper-parameters = the authors' scripts/run_mkgw.sh; only dataset, seed, epoch vary.
+        # setsid + nohup: the run survives the notebook cell, a UI disconnect and a kernel restart.
         _cmd = (f"{PY} run_adv_wgan_gp.py -dataset={_dataset} -batch_size=1024 -margin=4 -epoch={epochs.value} "
-               f"-dim=250 -save=./checkpoint/{_name}.ckpt -neg_num=128 -mu=0.0001 -learning_rate=1e-4 "
-               f"-lrg=1e-4 -seed={_seed}")
-        _log = open(_log_dir / f"{_name}.log", "w")
-        _log.write(f"$ {_cmd}\n")
-        _log.flush()
-        _procs[_name] = subprocess.Popen(_cmd, shell=True, cwd=NATIVE, stdout=_log, stderr=subprocess.STDOUT)
-    for _name, _p in _procs.items():
-        _p.wait()
-        print(_name, "exit", _p.returncode)
-    sh(f"tail -n 12 {_log_dir}/*.log", check=False)
-    mo.md("Training finished; link-prediction results are at the end of each _log.")
+                f"-dim=250 -save=./checkpoint/{_name}.ckpt -neg_num=128 -mu=0.0001 -learning_rate=1e-4 "
+                f"-lrg=1e-4 -seed={_seed}")
+        _log = LOG_DIR / f"{_name}.log"
+        sh(f"echo '$ {_cmd}' > {_log}; setsid nohup {_cmd} >> {_log} 2>&1 < /dev/null & echo $! > {LOG_DIR}/{_name}.pid",
+           cwd=NATIVE)
+        _started.append(_name)
+    mo.md(f"Started in the background: {_started or 'nothing'}. Use **4b · Status** (or leave the tab open: "
+          "it refreshes every 10 min and pushes finished runs to HF).")
     return
 
 
 @app.cell
-def _(NATIVE, PY, REPO, b_export, epochs, mo, runs, sh):
-    mo.stop(not b_export.value, mo.md("Stage 5 not run yet."))
+def _(LOG_DIR, NATIVE, auto, b_status, epochs, mo, push, remote_files, run_name, runs):
+    auto.value  # re-run on every auto refresh tick
+    mo.stop(not (b_status.value or auto.value), mo.md("Status not checked yet."))
+    import os as _os
+    _remote = remote_files()
+    _rows = []
     for _spec in runs.value:
-        _tag, _dataset, _seed = _spec.split(":")
-        _name = f"{_tag}_seed{_seed}_e{epochs.value}"
-        _suffix = "_repro" if _tag == "repro" else f"_seed{_seed}"
-        sh(f"{PY} scripts/export_native_embeddings.py --checkpoint {NATIVE}/checkpoint/{_name}.ckpt "
-           f"--what ent img_proj text_proj --suffix {_suffix}", cwd=REPO)
-    mo.md("Exported to `data/features/mkgw_native_*`.")
+        _name, _, _ = run_name(_spec, epochs.value)
+        _log, _pid = LOG_DIR / f"{_name}.log", LOG_DIR / f"{_name}.pid"
+        _ckpt = NATIVE / "checkpoint" / f"{_name}.ckpt"
+        _text = _log.read_text(errors="replace") if _log.exists() else ""
+        _alive = False
+        if _pid.exists():
+            try:
+                _os.kill(int(_pid.read_text().strip()), 0)
+                _alive = True
+            except (OSError, ValueError):
+                pass
+        _finished = "averaged(filter)" in _text and _ckpt.exists()
+        _progress = _text.replace("\r", "\n").strip().splitlines()[-1][:160] if _text else "(no log)"
+        if _finished and f"native/checkpoint/{_name}.ckpt" not in _remote:
+            push(_ckpt, f"native/checkpoint/{_name}.ckpt")
+        if _log.exists():
+            push(_log, f"experiments/level2/native-train/{_name}.log")
+        _state = "finished, on HF" if _finished else ("running" if _alive else "not running")
+        _rows.append(f"| `{_name}` | {_state} | `{_progress}` |")
+    mo.md("| Run | State | Last log line |\n|---|---|---|\n" + "\n".join(_rows))
     return
 
 
 @app.cell
-def _(NATIVE, REPO, b_upload, hf_repo, hf_token, mo, shutil, zipfile):
-    mo.stop(not b_upload.value, mo.md("Stage 6 not run yet."))
-    from huggingface_hub import HfApi as _HfApi
-    _api = _HfApi(token=hf_token.value)
-    # private: the images are the MKG-W authors' crawl, redistributed for course use only
-    _api.create_repo(hf_repo.value, repo_type="dataset", private=True, exist_ok=True)
-    _stage = REPO.parent / "hf_upload"
-    shutil.rmtree(_stage, ignore_errors=True)
-    for _sub in ("data/raw/mkgw", "data/processed", "data/features", "experiments/level2"):
-        if (REPO / _sub).exists():
-            shutil.copytree(REPO / _sub, _stage / _sub,
-                            ignore=shutil.ignore_patterns("mkgw_img.zip", "vg_coco*", "vnmmkg*"))
-    (_stage / "images").mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(_stage / "images" / "mkgw_images_640.zip", "w", zipfile.ZIP_STORED) as _zf:
-        for _p in sorted((REPO / "data" / "raw" / "images").glob("Q*.jpg")):
-            _zf.write(_p, _p.name)
-    (_stage / "native" / "embeddings").mkdir(parents=True, exist_ok=True)
-    for _p in (NATIVE / "embeddings").glob("MKG-W*.pth"):
-        shutil.copy2(_p, _stage / "native" / "embeddings" / _p.name)
-    shutil.copytree(NATIVE / "checkpoint", _stage / "native" / "checkpoint",
-                    ignore=shutil.ignore_patterns("*.py"), dirs_exist_ok=True)
-    _api.upload_large_folder(repo_id=hf_repo.value, repo_type="dataset", folder_path=str(_stage))
-    mo.md(f"Uploaded to https://huggingface.co/datasets/{hf_repo.value}")
+def _(REPO, mo):
+    # download buttons for everything small this notebook writes
+    _files = sorted([*(REPO / "experiments" / "level2").rglob("*.log"),
+                     *(REPO / "experiments" / "level2").rglob("*.json"),
+                     *(REPO / "experiments" / "checks").glob("multilingual_clip_probe.json")]) if REPO.exists() else []
+    _items = [mo.download(data=p.read_bytes(), filename=p.name, label=str(p.relative_to(REPO)))
+              for p in _files if p.stat().st_size < 50_000_000]
+    mo.vstack([mo.md("### Files (re-run this cell to refresh)"), *_items] if _items
+              else [mo.md("### Files\nNothing produced yet.")])
     return
 
 

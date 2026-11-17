@@ -1,0 +1,133 @@
+{
+ "source": "final link-prediction block of each NativE training log on molab (filtered setting, type_constrain=False), copied 2026-11-17; full logs to be uploaded to the HF dataset repo",
+ "hyperparameters": "authors' scripts/run_mkgw.sh: dim 250, batch 1024, margin 4, neg 128, lr 1e-4, lrg 1e-4, mu 1e-4, epoch 1000",
+ "paper_table2_native_mkgw": {
+  "mrr": 36.58,
+  "hit@1": 29.56,
+  "note": "paper reports only MRR and Hit@1 for MKG-W"
+ },
+ "runs": {
+  "repro_seed42_e1000": {
+   "dataset": "MKG-W",
+   "seed": 42,
+   "head(l)": {
+    "mrr": 0.198781,
+    "mr": 1430.317749,
+    "hit@10": 0.303697,
+    "hit@3": 0.218531,
+    "hit@1": 0.142723
+   },
+   "tail(r)": {
+    "mrr": 0.542443,
+    "mr": 254.96701,
+    "hit@10": 0.685306,
+    "hit@3": 0.581891,
+    "hit@1": 0.463032
+   },
+   "averaged": {
+    "mrr": 0.370612,
+    "mr": 842.642395,
+    "hit@10": 0.494502,
+    "hit@3": 0.400211,
+    "hit@1": 0.302878
+   }
+  },
+  "rmask_seed0_e1000": {
+   "dataset": "MKG-W-rmask",
+   "seed": 0,
+   "head(l)": {
+    "mrr": 0.197624,
+    "mr": 1554.107178,
+    "hit@10": 0.298549,
+    "hit@3": 0.221572,
+    "hit@1": 0.140852
+   },
+   "tail(r)": {
+    "mrr": 0.53793,
+    "mr": 262.022461,
+    "hit@10": 0.684137,
+    "hit@3": 0.580721,
+    "hit@1": 0.456715
+   },
+   "averaged": {
+    "mrr": 0.367777,
+    "mr": 908.064819,
+    "hit@10": 0.491343,
+    "hit@3": 0.401146,
+    "hit@1": 0.298783
+   }
+  },
+  "rmask_seed1_e1000": {
+   "dataset": "MKG-W-rmask",
+   "seed": 1,
+   "head(l)": {
+    "mrr": 0.205208,
+    "mr": 1442.100098,
+    "hit@10": 0.312588,
+    "hit@3": 0.225316,
+    "hit@1": 0.146935
+   },
+   "tail(r)": {
+    "mrr": 0.538789,
+    "mr": 264.423492,
+    "hit@10": 0.686944,
+    "hit@3": 0.5854,
+    "hit@1": 0.455311
+   },
+   "averaged": {
+    "mrr": 0.371998,
+    "mr": 853.26178,
+    "hit@10": 0.499766,
+    "hit@3": 0.405358,
+    "hit@1": 0.301123
+   }
+  },
+  "rmask_seed2_e1000": {
+   "dataset": "MKG-W-rmask",
+   "seed": 2,
+   "head(l)": {
+    "mrr": 0.198392,
+    "mr": 1623.437256,
+    "hit@10": 0.299485,
+    "hit@3": 0.217361,
+    "hit@1": 0.144595
+   },
+   "tail(r)": {
+    "mrr": 0.535581,
+    "mr": 275.433075,
+    "hit@10": 0.682031,
+    "hit@3": 0.582592,
+    "hit@1": 0.451568
+   },
+   "averaged": {
+    "mrr": 0.366986,
+    "mr": 949.435181,
+    "hit@10": 0.490758,
+    "hit@3": 0.399977,
+    "hit@1": 0.298081
+   }
+  }
+ },
+ "rmask_aggregate_3_seeds": {
+  "mrr": {
+   "mean": 0.36892033333333335,
+   "std": 0.002694521169583445
+  },
+  "mr": {
+   "mean": 903.5872599999999,
+   "std": 48.24279392744119
+  },
+  "hit@10": {
+   "mean": 0.4939556666666667,
+   "std": 0.005040390494131704
+  },
+  "hit@3": {
+   "mean": 0.4021603333333334,
+   "std": 0.002830272837260263
+  },
+  "hit@1": {
+   "mean": 0.299329,
+   "std": 0.0015928050728196345
+  }
+ }
+}
