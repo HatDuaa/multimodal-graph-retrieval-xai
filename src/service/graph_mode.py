@@ -7,7 +7,8 @@ edges and a global node as in its config.json, count buckets) and parses with FA
 (src/graph/caption_parsers.FactualQueryParser). Part texts that the frozen part table lacks are encoded on the fly with
 the same frozen CLIP text encoder and the same conventions (nodes through the concept prompt, relations and triples
 verbatim). Every explanation row comes from the ranking pass itself (src/explain/graph_explainer.matched_pairs),
-never from a search after the fact.
+never from a search after the fact; its top image parts also get their labels and pixel boxes from the image graph
+(src/explain/match_view.image_part), which the demo draws over the image.
 """
 import json
 from pathlib import Path
@@ -17,6 +18,7 @@ import torch
 
 from src.data.graph_store import GraphIndex, GraphStore, attach_count_buckets
 from src.explain.graph_explainer import matched_pairs
+from src.explain.match_view import image_part
 from src.explain.score_breakdown import top50_deltas
 from src.graph.soft_match import PRONOUNS
 from src.models.graph_reranker import fill_known_mean
@@ -184,9 +186,15 @@ class GraphRerankMode:
                 q, i = query_graph["relations"][item["query_index"]], image_graph["relations"][item["image_index"]]
                 item["query_part"] = (qnames[q["subject"]], q["predicate"].lower(), qnames[q["object"]])
                 item["image_part"] = (inames[i["subject"]], i["predicate"], inames[i["object"]])
+            for key in ("objects", "triples"):
+                # label and pixel boxes of every listed image part (boxes are None for graphs without them, level 1)
+                for item in pairs[key]:
+                    for match in item["top_matches"]:
+                        match.update(image_part(image_graph, key, match["image_index"]) or {})
             hit.score = float(fused[0, row])
             hit.graph_score = float(detail["graph"][0, row])
             info = {"weights_abc": weights, **pairs, "fusion": self.fusion, "channel_active": active,
+                    "image_size": [image_graph.get("width"), image_graph.get("height")],
                     "unmatched": unmatched_parts(query_graph, query_parts, parts),
                     "query_graph": {"objects": [o["name"] for o in query_graph["objects"]],
                                     "relations": [(qnames[r["subject"]], r["predicate"].lower(), qnames[r["object"]])
