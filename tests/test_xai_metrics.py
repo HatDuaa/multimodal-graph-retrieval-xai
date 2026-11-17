@@ -4,7 +4,8 @@ import pytest
 import torch
 
 from src.data.graph_store import EDGE_LABELLED, GraphIndex
-from src.explain.xai_metrics import QueryContext, edit, image_index, keep_only, labelled_count, real_nodes
+from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count, message_drop,
+                                     real_nodes)
 from tests.test_demo_countonly import count_model_and_batch
 
 
@@ -88,3 +89,47 @@ def test_row_terms_add_up_to_the_channel_parts():
         expected = (w * ctx.detail[channel][0]).double().numpy()
         total = np.where(np.isnan(rows[channel]).all(1), np.nan, np.nansum(rows[channel], 1))
         np.testing.assert_allclose(total, expected, atol=1e-6)
+
+
+def test_dropping_messages_keeps_the_triple_while_dropping_the_edge_removes_it():
+    store, _, ctx = context()
+    column = ctx.ids.index(1)                              # image 1 has one labelled triple, edge 0
+    index = image_index(store, store.graphs[1])
+    every = np.ones(int(index.edge_counts[0]), dtype=bool)
+    scores, _ = ctx.rescore(column, [edit(index), edit(index)], message_masks=[None, every])
+    assert scores[0] == pytest.approx(scores[1], abs=1e-6)  # an all-True mask changes nothing
+    _, _, _, kept = ctx.rescore(column, [edit(index)], channels=True, message_masks=[message_drop(index, [0])])
+    _, _, _, dropped = ctx.rescore(column, [edit(index, drop_edges=[0])], channels=True)
+    assert np.isfinite(kept[0]) and np.isnan(dropped[0])
+    silent = message_drop(index, range(int(index.edge_counts[0])))
+    _, _, _, triples = ctx.rescore(column, [edit(index)], channels=True, message_masks=[silent])
+    assert np.isfinite(triples[0])                         # no message at all, the triple still scores
+
+
+def test_fusion_scales_are_one_under_the_raw_fusion():
+    _, _, ctx = context()
+    assert ctx.fusion_scales() == {"objects": 1., "triples": 1.}
+
+
+def test_gradient_terms_give_one_value_per_object_node_and_labelled_triple():
+    store, _, ctx = context()
+    column = ctx.ids.index(1)
+    index = image_index(store, store.graphs[1])
+    nodes, triples = ctx.gradient_terms(column, index)
+    assert nodes.shape == (real_nodes(index),) and triples.shape == (labelled_count(index),)
+    assert np.all(np.isfinite(nodes)) and np.all(np.isfinite(triples))
+
+
+def test_rescore_full_matches_the_forward_pass_for_an_unedited_graph():
+    store, _, ctx = context()
+    for column, image_id in enumerate(ctx.ids):
+        fused = ctx.rescore_full(column, image_index(store, store.graphs[image_id]))
+        assert fused.cpu().numpy() == pytest.approx(ctx.fused.cpu().numpy(), abs=1e-6)
+
+
+def test_strict_wordnet_accepts_hyponyms_only_and_people_for_generic_words():
+    from scripts.xai_metrics import strict_wordnet
+    assert strict_wordnet("animal", "animal.n.01", "dog.n.01")
+    assert not strict_wordnet("dog", "dog.n.01", "animal.n.01")
+    assert not strict_wordnet("woman", "woman.n.01", "man.n.01")
+    assert strict_wordnet("person", "person.n.01", "man.n.01")
