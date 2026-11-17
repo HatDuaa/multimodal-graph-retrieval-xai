@@ -98,6 +98,7 @@ Các thư mục chẩn đoán và kiểm soát hạ tầng: `triple-perturbation
 | `count-only/` | Đợt 4, thí nghiệm 5: chỉ số lượng + bảng g trên fullgraph, không gom nhóm — **mô hình chính** |
 | `test-prep/` | Dữ liệu test đóng gói theo chuỗi count_v1, kiểm tra và lệnh chấm test một lần |
 | `test/` | Kết quả test, chấm một lần ngày 25/10/2026: countonly_factual_r3 và CLIP thuần |
+| `scene-ranker/` | Scene ranker của Nhi: `run.sh` (cờ của PR #33 trên countonly, chưa chạy) và `personal-repo/` (kết quả val, test một lần và ablation từ repo cá nhân; báo cáo ở `report/scene-ranker.md`) |
 
 Mỗi thư mục có `run.sh` (lệnh chạy lại), `REPORT.md` (kết quả và nhận xét), log và file kết quả. Checkpoint `*.pt`
 không commit (`.gitignore`). Ở mỗi run, `config.json` lưu đủ cờ, seed và commit.

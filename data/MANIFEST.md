@@ -90,6 +90,73 @@ Sinh bởi `scripts/build_rewired_parts.py --seed k` (chỉ đồ thị train/va
 | `data/features/vg_coco_graph_parts_rewire_seed2.npy` | 721016960 | `fc1c076d410bc1b7ac8a67bfe3f0941459515ea2b18dcd78c767c5540da39e56` |
 | `data/features/vg_coco_graph_parts_rewire_seed2.ids.json` | 10622224 | `a3c2ed7fdaf63742a9d013047bac007aee3224828d8a9a9d9a6ab1c53de01a90` |
 
+## MKG-W (gói cấp độ 2, Đạt)
+
+Bản 2026-09-25 (v2 — ảnh lấy từ kho tác giả MMRNS thay vì Wikimedia Commons; bản v1 ngày 24/09 với 5 752 thực thể theo P18 đã bỏ). Cache Wikidata: `scripts/fetch_mkgw_wikidata.py` + `scripts/fetch_mkgw_relations.py`; ảnh: `scripts/extract_mkgw_images.py`; split + triple: `python -m src.data.build_mkgw_split` (seed 0); đặc trưng CLIP: `scripts/extract_features.py --dataset mkgw`. File không commit chia sẻ qua Drive nhóm, cấu trúc thư mục như dưới (riêng `mkgw_img.zip` tải từ Drive của MMRNS, link trong README repo `quqxui/MMRNS`).
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `data/raw/mkgw/wikidata_entities.jsonl` | 3564691 | `8e1aa6387e9a21a5067b577b1d2deae1651232cba54d30f8232685908c689daf` |
+| `data/raw/mkgw/ent_links.tsv` (MMRNS) | 1299610 | `4aa7e9f5ff3bbeea7dee3124669edba7903e65b22844529999325c6bec624511` |
+| `data/raw/mkgw/mkgw_img.zip` (MMRNS `MKG-W_img.zip`) | 6422519900 | `0178f7bb3b6199309a56fad23c595c252f79506deb5dbecece58d814d5f0aede` |
+| `data/raw/mkgw/author_images_index.json` | 624758 | `0727dafebdf3d9c3fd988778e34f574d324eb3bf9dd9e144ce15c19631dd45bd` |
+| `data/splits/mkgw_train.json` | 2020637 | `d731488f6618bf24937457f6deee75d849ab79bf20ec074f4ca56795264ba89a` |
+| `data/splits/mkgw_val.json` | 251533 | `4762f9c0731ffcc164baf8642a130b0e30d478f5998f812be4c3414646a2c0b2` |
+| `data/splits/mkgw_test.json` | 254576 | `6416ff37d6ab1e0e921fb21a74655e3a2654a72d497eaf07151bd6ab3c198886` |
+| `data/processed/mkgw_triples.jsonl` | 2262289 | `40ccfa72ce54d9d2c6a23e9ed50ea571255425e20cf1b0cf6c2c5e2e3cecbedb` |
+| `data/features/mkgw_image.npy` (8 920 × 512) | 18268288 | `fe9739e40478cf58e87e6a720ceba9bf3ec4deee9bef9e92107a99f7ba2da827` |
+| `data/features/mkgw_caption.npy` (8 920 × 512) | 18268288 | `59de0cf337a14ae3c468131bb9ca6952d85d3f4be577f971303a2c042de17d2d` |
+
+Ảnh chuẩn hoá `data/raw/images/<qid>.jpg` (8 961 file, 476 MB, JPEG cạnh dài 640) sinh lại được từ zip + index nên không cần checksum từng file. Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.
+
+### NativE trên máy 4090 (cấp độ 2, 17/11/2026)
+
+Lộc chạy các bước này; lệnh và log ở `experiments/level2/native-train/`.
+- Hai bảng đặc trưng của tác giả lấy từ `MKG.zip` (78 685 701 byte, SHA-256 `6508d4a2fbf263d5bd9ff2eb73f6d5ea90767516e0fa6e6d247feaf68b9812c4`), chỉ giải nén phần MKG-W.
+- Hai bảng `MKG-W-rmask-*.pth` sinh bằng `python scripts/mask_native_modalities.py --name MKG-W-rmask`.
+- Embedding cấu trúc xuất bằng `scripts/export_native_embeddings.py --what ent --suffix _seed<s>` từ checkpoint `rmask_seed<s>_e1000.ckpt`.
+  - Mỗi file gồm 15 000 × 500 số float32, đã chuẩn hoá L2, xếp theo thứ tự `entity2id`.
+  - Ba file `.ids.json` có cùng danh sách QID. Chúng chỉ khác nhau ở trường `encoder`, nơi ghi tên checkpoint.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `~/work/NativE/embeddings/MKG-W-visual.pth` (15 000 × 383) | 22980728 | `9cf9346fb7bcd1d7027a35a8e8bc637ca42f38b72e48f11495ef8c9c9d880afc` |
+| `~/work/NativE/embeddings/MKG-W-textual.pth` (15 000 × 384) | 23040760 | `13b765b5bddceaefeebe1ce5b2e99e4b6e0cffe2539a3d2490adcfefde012a2e` |
+| `~/work/NativE/embeddings/MKG-W-rmask-visual.pth` | 22981622 | `39d7ef7d2b93c486996465f2cfb6f4d353cb097fcd40aa9488c02ee9725f5a45` |
+| `~/work/NativE/embeddings/MKG-W-rmask-textual.pth` | 23041661 | `5d16ccb390db8a6acd0519954345342aaa00e124877ae44127409ff1f9ac8b1a` |
+| `data/features/mkgw_native_ent_seed0.npy` | 30000128 | `2e64d98d442a041f6a7a64dff8b4dbd7d1e40800410bb77026841e0fdd0155b5` |
+| `data/features/mkgw_native_ent_seed0.ids.json` | 173451 | `a882daf25a59de5cef0cb1f4597db152037ac7f64312e50e7ee50a4e8e69b622` |
+| `data/features/mkgw_native_ent_seed1.npy` | 30000128 | `46b22cac34db88173a0ae313b56ba1d5736189a0eb3385a6e3ef091bdb5a093a` |
+| `data/features/mkgw_native_ent_seed1.ids.json` | 173451 | `6266f0815d0b3a9c9e75c3ae1ba5c98d3a328ec83d618871e588a31cb8b01dcf` |
+| `data/features/mkgw_native_ent_seed2.npy` | 30000128 | `5f8730e609c6d64f9bcc0fae4a408da1614692e440c41393e117dcb65013295a` |
+| `data/features/mkgw_native_ent_seed2.ids.json` | 173451 | `0ae64f19e9e18a23c66fba6cafa3dd1c882e212f7ac4f4abc099aac0e6cd1378` |
+| `~/work/NativE/checkpoint/rmask_seed0_e1000.ckpt` | 80745984 | `562be25df84e2986a6007351d781aa09241835a2c47739a75c6cca139d60965b` |
+| `~/work/NativE/checkpoint/rmask_seed1_e1000.ckpt` | 80745984 | `d83f2909b1c79f511020d142812e5da31dfae68600f689f6b439a531fa8db3df` |
+| `~/work/NativE/checkpoint/rmask_seed2_e1000.ckpt` | 80745984 | `07095b5ca98a4b764e83df078e22c6604d8e5efa49e7f826f3d4708b427504bb` |
+| `~/work/NativE/checkpoint/repro_seed42_e1000.ckpt` (MKG-W gốc, bước a) | 80746013 | `43f2aa8da52da18e8a5cdfa16f0793373b42db90a6f7a48008ca64fa074ed62e` |
+
+Checkpoint nằm trên máy 4090. Ba checkpoint `rmask` có thêm một bản trên máy Lộc, vì kênh `kgc` cần nạp chúng khi đánh giá. Embedding của lần chạy `repro` không được xuất, vì bước b chỉ dùng các lần chạy `rmask`.
+
+### Bản dựng lại, dùng cho mọi kết quả cấp 2 đã báo cáo (17/11/2026)
+
+Bản gốc của đặc trưng CLIP và cache Wikidata (bảng đầu mục này) không có trên Drive nhóm, nên được dựng lại bằng chính các script ở trên. Kết quả val/test trong `experiments/level2/` dùng **các file dưới đây**, không dùng bản gốc. Chi tiết kiểm tra ở `experiments/level2/val/README.md`.
+
+- `mkgw_img.zip` và `ent_links.tsv` tải lại, khớp SHA bảng trên.
+- `author_images_index.json` khớp SHA bảng trên sau khi đổi CRLF thành LF, nghĩa là các ảnh được chọn giống hệt bản gốc.
+- Đặc trưng CLIP tính lại trên RTX 3070. SHA khác bản gốc do sai số số học giữa các GPU. Trên val, R@1 của CLIP vẫn là 24,33, đúng bằng số đã commit.
+- Cache Wikidata lấy lại ngày 17/11 (Wikidata đã sửa từ tháng 9). Độ phủ liên kết thực thể trên val:
+  - truy vấn có ít nhất một thực thể được liên kết: 703, bản gốc 704;
+  - đáp án có cạnh trực tiếp tới thực thể đó: 407, bản gốc 403.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `data/features/mkgw_image.npy` (8 920 × 512) | 18268288 | `f4de9e4ee51a6e2557e3fd1c92fcea0c5f62cd307794075e4aeb718db60b7a90` |
+| `data/features/mkgw_image.ids.json` | 55893 | `1c893c30618da232ab69562f0e353d660809b49cc690f4b7eb1e7c56e26e4095` |
+| `data/features/mkgw_caption.npy` (8 920 × 512) | 18268288 | `ea8679cbd5402e68abeadc15164fab020513e6507a57458c3d9cee6c279e2667` |
+| `data/features/mkgw_caption.ids.json` | 120869 | `8cc753a267a938a07610fba144e148e09067439cc1d5a58ffb90c83276c9d722` |
+| `data/raw/mkgw/wikidata_entities.jsonl` | 3532544 | `dd47e44dbb068c0f209e89bee562efd8c07f7d932aefd6706196585f6718425c` |
+| `data/raw/mkgw/wikidata_relations.json` | 9452 | `f0760499881f04319a32ea936f6e3f8fe65d7860857d93000716fd96755344f8` |
+
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 
 Bản 2026-10-26, cache thô tải ngày 2026-10-24.

@@ -1,0 +1,127 @@
+{
+  "method": "kgc_only",
+  "dataset": "mkgw",
+  "split": "test",
+  "per_seed": {
+    "0": {
+      "n_queries": 892,
+      "recall@1": 0.2713004484304933,
+      "recall@5": 0.4663677130044843,
+      "recall@10": 0.5639013452914798,
+      "mrr": 0.3659380520125257
+    },
+    "1": {
+      "n_queries": 892,
+      "recall@1": 0.2713004484304933,
+      "recall@5": 0.46524663677130046,
+      "recall@10": 0.5616591928251121,
+      "mrr": 0.3659545905335233
+    },
+    "2": {
+      "n_queries": 892,
+      "recall@1": 0.27466367713004486,
+      "recall@5": 0.4641255605381166,
+      "recall@10": 0.5627802690582959,
+      "mrr": 0.3683014856331817
+    }
+  },
+  "aggregate": {
+    "n_queries": 892,
+    "n_runs": 3,
+    "recall@1": {
+      "mean": 0.27242152466367714,
+      "std": 0.0019417609950323792
+    },
+    "recall@5": {
+      "mean": 0.46524663677130046,
+      "std": 0.0011210762331838597
+    },
+    "recall@10": {
+      "mean": 0.5627802690582959,
+      "std": 0.0011210762331838597
+    },
+    "mrr": {
+      "mean": 0.36673137605974354,
+      "std": 0.0013597799215758256
+    }
+  },
+  "config": {
+    "top_k": 50,
+    "clip": "ViT-B-32-quickgelu/openai",
+    "choice": {
+      "0": {
+        "native": [
+          0.0,
+          0.0
+        ],
+        "kg_triple": [
+          0.0,
+          0.0
+        ],
+        "native_emb": [
+          0.7,
+          1.0
+        ],
+        "native_kgc": [
+          0.0,
+          0.0
+        ],
+        "kgc_only": [
+          0.45,
+          1.0
+        ]
+      },
+      "1": {
+        "native": [
+          0.0,
+          0.0
+        ],
+        "kg_triple": [
+          0.0,
+          0.0
+        ],
+        "native_emb": [
+          0.6,
+          1.0
+        ],
+        "native_kgc": [
+          0.0,
+          0.0
+        ],
+        "kgc_only": [
+          0.45,
+          1.0
+        ]
+      },
+      "2": {
+        "native": [
+          0.0,
+          0.0
+        ],
+        "kg_triple": [
+          0.0,
+          0.0
+        ],
+        "native_emb": [
+          0.7,
+          1.0
+        ],
+        "native_kgc": [
+          0.0,
+          0.0
+        ],
+        "kgc_only": [
+          0.5,
+          1.0
+        ]
+      }
+    },
+    "native_prefix": "mkgw_native_ent_seed",
+    "kgc_checkpoints": {
+      "0": "C:\\Users\\loocn\\work\\NativE\\checkpoint\\rmask_seed0_e1000.ckpt",
+      "1": "C:\\Users\\loocn\\work\\NativE\\checkpoint\\rmask_seed1_e1000.ckpt",
+      "2": "C:\\Users\\loocn\\work\\NativE\\checkpoint\\rmask_seed2_e1000.ckpt"
+    },
+    "kgc": "NativE AdvRelRotatE.forward, max over linked e != candidate, 169 relations, both directions; no link -> 0; only self-linked -> query mean"
+  }
+}

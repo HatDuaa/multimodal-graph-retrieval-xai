@@ -1,0 +1,56 @@
+{
+  "method": "NativE (zjukg/NativE c72291c, run_adv_wgan_gp.py)",
+  "dataset": "MKG-W",
+  "split": "kgc_test (NativE test2id.txt, 4274 triples)",
+  "setting": "filtered link prediction, no type constraint, as printed by NativE's tester",
+  "per_seed": {
+    "42": {
+      "head": {
+        "mrr": 0.199588,
+        "mr": 1470.789429,
+        "hits@10": 0.300889,
+        "hits@3": 0.219701,
+        "hits@1": 0.143659
+      },
+      "tail": {
+        "mrr": 0.54027,
+        "mr": 253.585632,
+        "hits@10": 0.68554,
+        "hits@3": 0.579317,
+        "hits@1": 0.459757
+      },
+      "averaged": {
+        "mrr": 0.369929,
+        "mr": 862.1875,
+        "hits@10": 0.493215,
+        "hits@3": 0.399509,
+        "hits@1": 0.301708
+      }
+    }
+  },
+  "paper": {
+    "source": "arXiv 2406.17605v1, Table 2, MKG-W, NativE (S+I+T)",
+    "mrr": 0.3658,
+    "hits@1": 0.2956,
+    "mr": null,
+    "hits@3": null,
+    "hits@10": null,
+    "note": "null = not reported in the paper"
+  },
+  "hyper_parameters": {
+    "batch_size": 1024,
+    "margin": 4,
+    "epoch": 1000,
+    "dim": 250,
+    "neg_num": 128,
+    "mu": 0.0001,
+    "learning_rate": 0.0001,
+    "lrg": 0.0001
+  },
+  "commands": [
+    "/home/loc.nguyen/venvs/mgrx/bin/python -u run_adv_wgan_gp.py -dataset=MKG-W -batch_size=1024 -margin=4 -epoch=1000 -dim=250 -save=./checkpoint/repro_seed42_e1000.ckpt -neg_num=128 -mu=0.0001 -learning_rate=1e-4 -lrg=1e-4 -seed=42"
+  ],
+  "logs": [
+    "experiments/level2/native-train/repro_seed42_e1000.log"
+  ]
+}

@@ -1,0 +1,22 @@
+[2026-11-17 17:21:11] driver start: runs=[rmask:MKG-W-rmask:0 rmask:MKG-W-rmask:1 rmask:MKG-W-rmask:2 repro:MKG-W:42] epoch=1000 native=/home/loc.nguyen/work/NativE (c72291c)
+[2026-11-17 17:21:11] gpu: NVIDIA GeForce RTX 4090, 595.99.02, 24564 MiB
+[2026-11-17 17:21:12] python: 3.12.3 torch 2.14.0+cu130 cuda 13.0
+[2026-11-17 17:21:12] start rmask_seed0_e1000 (22 GB free)
+[2026-11-17 18:27:01] end rmask_seed0_e1000: exit 0, wall 3949 s (1.10 h)
+[2026-11-17 18:27:01] rmask_seed0_e1000 result: averaged(filter): 0.371363 831.808838 0.499649 0.404071 0.300889 
+ent: (15000, 500) -> /home/loc.nguyen/multimodal-graph-retrieval-xai/data/features/mkgw_native_ent_seed0.npy
+[2026-11-17 18:27:02] exported rmask_seed0_e1000 -> data/features/mkgw_native_ent_seed0.npy
+[2026-11-17 18:27:02] start rmask_seed1_e1000 (21 GB free)
+[2026-11-17 19:33:11] end rmask_seed1_e1000: exit 0, wall 3969 s (1.10 h)
+[2026-11-17 19:33:11] rmask_seed1_e1000 result: averaged(filter): 0.371330 859.103271 0.501053 0.405709 0.299953 
+ent: (15000, 500) -> /home/loc.nguyen/multimodal-graph-retrieval-xai/data/features/mkgw_native_ent_seed1.npy
+[2026-11-17 19:33:12] exported rmask_seed1_e1000 -> data/features/mkgw_native_ent_seed1.npy
+[2026-11-17 19:33:12] start rmask_seed2_e1000 (21 GB free)
+[2026-11-17 20:39:45] end rmask_seed2_e1000: exit 0, wall 3993 s (1.11 h)
+[2026-11-17 20:39:45] rmask_seed2_e1000 result: averaged(filter): 0.367145 946.731323 0.491109 0.399275 0.298666 
+ent: (15000, 500) -> /home/loc.nguyen/multimodal-graph-retrieval-xai/data/features/mkgw_native_ent_seed2.npy
+[2026-11-17 20:39:46] exported rmask_seed2_e1000 -> data/features/mkgw_native_ent_seed2.npy
+[2026-11-17 20:39:46] start repro_seed42_e1000 (21 GB free)
+[2026-11-17 21:45:59] end repro_seed42_e1000: exit 0, wall 3973 s (1.10 h)
+[2026-11-17 21:45:59] repro_seed42_e1000 result: averaged(filter): 0.369929 862.187500 0.493215 0.399509 0.301708 
+[2026-11-17 21:45:59] driver done

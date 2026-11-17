@@ -1,0 +1,334 @@
+{
+  "clip": {
+    "device": "mps",
+    "image_batch_size": {
+      "clip-b32": 64,
+      "clip-l14": 64
+    },
+    "image_workers": 4,
+    "models": [
+      "clip-b32",
+      "clip-l14"
+    ],
+    "precision": "fp32",
+    "text_batch_size": 512
+  },
+  "concepts": {
+    "alias_confidence": 0.95,
+    "alias_min_images": 20
+  },
+  "fallback_links": {
+    "graph_run": 36,
+    "vocabulary_min_images": 20
+  },
+  "fusion": {
+    "alpha_step": 0.05,
+    "epsilon": 1e-08
+  },
+  "graph": {
+    "conceptnet_min_weight": 1.0,
+    "hop_definition": "compressed_graph_edges",
+    "max_hops": 2,
+    "neighbor_policy": "either_endpoint",
+    "neighbors": 20,
+    "prior_min_images": 5,
+    "quota_per_family": 5,
+    "vocabulary_min_images": [
+      20,
+      30,
+      50
+    ]
+  },
+  "headroom": {
+    "decision": {
+      "mrr_range": 0.002,
+      "oracle_r1_gain": 0.005,
+      "train_captions": 20000
+    },
+    "diagnostics": {
+      "bootstrap_samples": 1000,
+      "enabled": true,
+      "hub_count": 20,
+      "hub_penalty": 0.5,
+      "npmi_shrinkage": [
+        5,
+        20,
+        50
+      ],
+      "parser_review_size": 40,
+      "pilot": {
+        "batch_size": 32,
+        "captions": 2048,
+        "epochs": 5,
+        "hidden": 64,
+        "learning_rate": 0.001,
+        "overfit_captions": 32,
+        "overfit_steps": 100,
+        "weight_decay": 0.0001
+      },
+      "seed": 0,
+      "stability": {
+        "enabled": true,
+        "reference_run": 6,
+        "variants": [
+          "original",
+          "normalize_embedding",
+          "fixed_temperature"
+        ]
+      },
+      "weight_floor": 1e-06
+    },
+    "gamma_one": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "gamma_ratio": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "relation_groups": {
+      "conceptnet": [
+        "cn_related",
+        "cn_function"
+      ],
+      "hypernym": [
+        "hypernym"
+      ],
+      "vg_prior": [
+        "vg_prior"
+      ]
+    }
+  },
+  "linker_fallback": {
+    "annotation_control": {
+      "case_caption_id": 329662,
+      "enabled": true,
+      "knn_min_votes": 10,
+      "knn_neighbors": 20,
+      "max_added": 5,
+      "positive_quantile": 0.9,
+      "reference_run": 9
+    },
+    "b1_run": 3,
+    "b2_run": 4,
+    "graph_run": 2,
+    "policy": "forced_top1",
+    "prior_control": {
+      "enabled": true,
+      "kappa": 5,
+      "reference_run": 8
+    },
+    "report_run": 7,
+    "split": "val"
+  },
+  "models": {
+    "clip-b32": {
+      "dimension": 512,
+      "filename": "open_clip_model.safetensors",
+      "name": "ViT-B-32-quickgelu",
+      "pretrained": "openai",
+      "repository": "timm/vit_base_patch32_clip_224.openai",
+      "revision": "a6f597a30f7b82c51704746581f9a4e41421e878",
+      "sha256": "e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31"
+    },
+    "clip-l14": {
+      "dimension": 768,
+      "filename": "open_clip_model.safetensors",
+      "name": "ViT-L-14-quickgelu",
+      "pretrained": "openai",
+      "repository": "timm/vit_large_patch14_clip_224.openai",
+      "revision": "18d0535469bb561bf468d76c1d73aa35156c922b",
+      "sha256": "9ce2e8a8ebfff3793d7d375ad6d3c35cb9aebf3de7ace0fc7308accab7cd207e"
+    }
+  },
+  "name": "level1",
+  "paths": {
+    "cache": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/artifacts/cache",
+    "processed": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/artifacts/processed",
+    "raw": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/artifacts/raw",
+    "reports": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/docs/reports",
+    "runs": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/artifacts/runs",
+    "split": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/splits/level1.json"
+  },
+  "profile_path": "/Users/nhinbm/Desktop/master/graph_ml/projects/multimodal-graph-retrieval-xai/configs/level1.json",
+  "query": {
+    "calibration_seed": 0,
+    "calibration_size": 200,
+    "concept_prompt": "a photo of a {name}",
+    "minimum_accepted": 20,
+    "sense_prompt": "a photo of {name}. {definition}",
+    "target_precision": 0.95
+  },
+  "rank_ablation": {
+    "draws": 3,
+    "model_run": 56,
+    "seed": 2026
+  },
+  "scene_ranking": {
+    "alpha": 0.65,
+    "alpha_step": 0.05,
+    "batch_size": 64,
+    "beta": [
+      0.7,
+      0.3
+    ],
+    "clip_norm": 5.0,
+    "device": "mps",
+    "edges": true,
+    "epochs": 10,
+    "eval_batch_size": 64,
+    "explanations_top": 10,
+    "facts": {
+      "count_words": {
+        "1": 1,
+        "10": 10,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "couple": 2,
+        "couple of": 2,
+        "eight": 8,
+        "five": 5,
+        "four": 4,
+        "lone": 1,
+        "nine": 9,
+        "one": 1,
+        "pair": 2,
+        "pair of": 2,
+        "seven": 7,
+        "single": 1,
+        "six": 6,
+        "ten": 10,
+        "three": 3,
+        "two": 2
+      },
+      "group_minimum": 3,
+      "group_words": [
+        "group of",
+        "group",
+        "herd",
+        "herd of",
+        "crowd",
+        "crowd of",
+        "multiple",
+        "many",
+        "several",
+        "bunch",
+        "bunch of",
+        "pile",
+        "pile of",
+        "flock",
+        "flock of",
+        "team of",
+        "lots of",
+        "number of"
+      ]
+    },
+    "factual": {
+      "batch_size": 32,
+      "beam_size": 5,
+      "files": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "spiece.model",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "max_input_len": 64,
+      "max_output_len": 128,
+      "prompt": "Generate Scene Graph: ",
+      "repository": "lizhuang144/flan-t5-base-VG-factual-sg",
+      "revision": "b7923dae0e6f924fe37957a1cee920dac1d50a7f",
+      "sha256": {
+        "model.safetensors": "d908ef724d0333fcbb6458aa16bdf348c77b1b65c312211382ab4b2468d8ec97",
+        "spiece.model": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86"
+      }
+    },
+    "fidelity": {
+      "queries": 10,
+      "random_deletions": 10,
+      "seed": 2026
+    },
+    "graph_loss": 0.3,
+    "groups": {
+      "count": 22,
+      "seed": 0
+    },
+    "heads": 4,
+    "hidden": 128,
+    "layers": 2,
+    "learning_rate": 0.001,
+    "links_run": 42,
+    "max_attributes": 4,
+    "max_concepts": 3,
+    "max_entities": 8,
+    "max_objects": 64,
+    "max_query_relations": 6,
+    "max_relations": 64,
+    "min_epochs": 2,
+    "patience": 2,
+    "scale_captions": 4096,
+    "scale_seed": 0,
+    "seed": 0,
+    "sinkhorn": {
+      "dustbin": 0.85,
+      "iterations": 20,
+      "temperature": 0.02
+    },
+    "top_k": 50,
+    "weight_decay": 0.0001
+  },
+  "search": {
+    "batch_size": 128,
+    "threads": 4,
+    "top_k": 100
+  },
+  "selection": {
+    "baseline": "B2",
+    "baseline_alpha": 0.85,
+    "selected_on": "val",
+    "vocabulary_min_images": 20
+  },
+  "sources": {
+    "conceptnet": {
+      "path": "conceptnet/5.7.0/assertions.csv.gz",
+      "size": 497963447,
+      "url": "https://s3.amazonaws.com/conceptnet/downloads/2019/edges/conceptnet-assertions-5.7.0.csv.gz",
+      "version": "5.7.0"
+    },
+    "spacy": {
+      "model": "en_core_web_sm",
+      "version": "3.8.0"
+    },
+    "wordnet": {
+      "path": "wordnet/corpora/wordnet.zip",
+      "sha256": "cbda5ea6eef7f36a97a43d4a75f85e07fccbb4f23657d27b4ccbc93e2646ab59",
+      "url": "https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip",
+      "version": "3.0"
+    }
+  },
+  "symbolic": {
+    "hop_decay": 0.5
+  },
+  "test_eval": {
+    "clip_run": 35,
+    "graph_run": 36,
+    "model_runs": [
+      56,
+      57,
+      63
+    ],
+    "split": "test",
+    "symbolic_run": 41
+  }
+}
