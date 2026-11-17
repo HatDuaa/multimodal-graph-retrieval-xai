@@ -1,0 +1,92 @@
+{
+  "split": "test",
+  "note": "Scene ranker: personal repo test run 0070, 10,690 captions; countonly: this repo, 10,696 captions. Same 2,138-image test gallery and Karpathy split. 'mrr' counts ranks beyond 50 as 0, as this repo does.",
+  "clip_scene_ranker_repo": {
+    "n_queries": 10690,
+    "recall@1": 0.3931711880261927,
+    "recall@5": 0.6637979420018709,
+    "recall@10": 0.7731524789522919,
+    "mrr": 0.5199199184632908,
+    "mrr_full_gallery": 0.5203200431832438
+  },
+  "scene_ranker_per_seed": {
+    "ranker_0056": {
+      "n_queries": 10690,
+      "recall@1": 0.4870907390084191,
+      "recall@5": 0.753133769878391,
+      "recall@10": 0.844621141253508,
+      "mrr": 0.6080894242670313,
+      "mrr_full_gallery": 0.6084895489869844
+    },
+    "ranker_0057": {
+      "n_queries": 10690,
+      "recall@1": 0.48166510757717496,
+      "recall@5": 0.7524789522918616,
+      "recall@10": 0.8448082319925164,
+      "mrr": 0.6052982697691084,
+      "mrr_full_gallery": 0.6056983944890615
+    },
+    "ranker_0063": {
+      "n_queries": 10690,
+      "recall@1": 0.4884939195509822,
+      "recall@5": 0.7528531337698784,
+      "recall@10": 0.8466791393826005,
+      "mrr": 0.6093929404110671,
+      "mrr_full_gallery": 0.6097930651310202
+    }
+  },
+  "comparison": {
+    "recall@1": {
+      "scene_ranker": {
+        "mean": 0.4857499220455255,
+        "std": 0.0036064540534146384
+      },
+      "countonly_factual_r3": {
+        "mean": 0.47946272749937674,
+        "std": 0.0014524034153242406
+      },
+      "difference": 0.006287194546148733,
+      "welch_t": 2.8009108016323205,
+      "welch_p": 0.07876262358388184
+    },
+    "recall@5": {
+      "scene_ranker": {
+        "mean": 0.7528219519800436,
+        "std": 0.00032852054109297956
+      },
+      "countonly_factual_r3": {
+        "mean": 0.7478808277237597,
+        "std": 0.00026989073914997436
+      },
+      "difference": 0.004941124256283902,
+      "welch_t": 20.129228014726667,
+      "welch_p": 4.7639889852522304e-05
+    },
+    "recall@10": {
+      "scene_ranker": {
+        "mean": 0.8453695042095416,
+        "std": 0.0011380285370061836
+      },
+      "countonly_factual_r3": {
+        "mean": 0.8438045375218151,
+        "std": 0.0008431656231905647
+      },
+      "difference": 0.0015649666877265433,
+      "welch_t": 1.913798595832531,
+      "welch_p": 0.13420098583902443
+    },
+    "mrr": {
+      "scene_ranker": {
+        "mean": 0.6075935448157356,
+        "std": 0.0020918901116436686
+      },
+      "countonly_factual_r3": {
+        "mean": 0.6014647319057644,
+        "std": 0.001535521723480742
+      },
+      "difference": 0.0061288129099711375,
+      "welch_t": 4.090777689093804,
+      "welch_p": 0.017798165956131234
+    }
+  }
+}
