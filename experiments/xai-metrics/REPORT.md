@@ -3,6 +3,21 @@
 Việc này thuộc phần của Nhi trong bảng phân công (dòng 27–29); Lộc nhờ làm, KG giao đặc tả ngày 16/11/2026. Chỉ dùng
 val, không train, không chấm test.
 
+> **Đính chính (17/11/2026).** Bản đo lại ở `experiments/xai-metrics-v2/` (PR #38) sửa các điểm sau; số liệu dưới đây giữ nguyên như lúc chạy.
+>
+> - Script của bản này nay là `scripts/xai_metrics_v1.py` và `scripts/summarize_xai_metrics_v1.py`; `run.sh` đã đổi theo.
+> - E của `main_r3` xếp term thô của hai kênh, trong khi fusion z-score cân mỗi kênh theo trọng số / độ phân tán trên 50 ứng viên.
+>   Đưa term về thang điểm cuối thì bộ ba đứng đầu E ở 70% câu (ở đây 1%), và bỏ top-3 làm mất hạng 1 ở 34,9% câu thay vì 65,7%.
+>   Số của countonly (fusion raw) không bị ảnh hưởng bởi điểm này.
+> - Mục 4 (sparsity): "6–8% số phần của đồ thị ảnh" chia số dòng demo cho số phần của ảnh, hai đơn vị khác nhau; không nên dùng con số này.
+>   v2 đo trên chính E: với `main_r3`, 2,65 phần đầu giữ 80% hiệu ứng, đạt ở 56% câu.
+> - Mục 3 (validity): tiêu chí ở đây không khắt khe mà dễ dãi: `dedup.same_type` coi mọi người là cùng loại ("woman" ~ "man") và chấp nhận hypernym hai chiều.
+>   Tiêu chí strict của v2 cho 58,3% với `main_r3`, so với 63,8% ở đây.
+> - Mục 3 và kết luận 3: so sánh khớp nhóm số lượng giữa countonly và `main_r3` không công bằng, vì `main_r3` được chấm trên đồ thị cấp 1 chưa gộp trùng, nơi các hộp trùng làm tăng số đếm.
+> - Mục 5 (đồ thị con): với cạnh có nhãn, bỏ cạnh ở đây là bỏ luôn bộ ba, và lần bốc ngẫu nhiên lấy từ cạnh gộp của 3 node.
+>   Chỉ cắt đường truyền tin GAT (giữ bộ ba) thì mất hạng 1 ở 1,0% câu so với 0,7% khi cắt ngẫu nhiên (`main_r3`); kết luận "alpha GAT không phải lời giải thích" vẫn đúng.
+> - Fidelity ở đây tính cả các câu có E rỗng (như "không đổi" cho cả E và ngẫu nhiên) và lấy mốc là lượt chấm thường; v2 loại các câu đó và lấy mốc là ảnh không sửa chấm lại cùng đường.
+
 - **Mô hình:**
   - `countonly_factual_r3` (mô hình chính, dữ liệu count_v1, fusion raw);
   - `main_r3` (cấp 1, fusion z-score);
