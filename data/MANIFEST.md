@@ -109,6 +109,34 @@ Bản 2026-09-25 (v2 — ảnh lấy từ kho tác giả MMRNS thay vì Wikimedi
 
 Ảnh chuẩn hoá `data/raw/images/<qid>.jpg` (8 961 file, 476 MB, JPEG cạnh dài 640) sinh lại được từ zip + index nên không cần checksum từng file. Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.
 
+### NativE trên máy 4090 (cấp độ 2, 17/11/2026)
+
+Lộc chạy các bước này; lệnh và log ở `experiments/level2/native-train/`.
+- Hai bảng đặc trưng của tác giả lấy từ `MKG.zip` (78 685 701 byte, SHA-256 `6508d4a2fbf263d5bd9ff2eb73f6d5ea90767516e0fa6e6d247feaf68b9812c4`), chỉ giải nén phần MKG-W.
+- Hai bảng `MKG-W-rmask-*.pth` sinh bằng `python scripts/mask_native_modalities.py --name MKG-W-rmask`.
+- Embedding cấu trúc xuất bằng `scripts/export_native_embeddings.py --what ent --suffix _seed<s>` từ checkpoint `rmask_seed<s>_e1000.ckpt`.
+  - Mỗi file gồm 15 000 × 500 số float32, đã chuẩn hoá L2, xếp theo thứ tự `entity2id`.
+  - Ba file `.ids.json` có cùng danh sách QID. Chúng chỉ khác nhau ở trường `encoder`, nơi ghi tên checkpoint.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `~/work/NativE/embeddings/MKG-W-visual.pth` (15 000 × 383) | 22980728 | `9cf9346fb7bcd1d7027a35a8e8bc637ca42f38b72e48f11495ef8c9c9d880afc` |
+| `~/work/NativE/embeddings/MKG-W-textual.pth` (15 000 × 384) | 23040760 | `13b765b5bddceaefeebe1ce5b2e99e4b6e0cffe2539a3d2490adcfefde012a2e` |
+| `~/work/NativE/embeddings/MKG-W-rmask-visual.pth` | 22981622 | `39d7ef7d2b93c486996465f2cfb6f4d353cb097fcd40aa9488c02ee9725f5a45` |
+| `~/work/NativE/embeddings/MKG-W-rmask-textual.pth` | 23041661 | `5d16ccb390db8a6acd0519954345342aaa00e124877ae44127409ff1f9ac8b1a` |
+| `data/features/mkgw_native_ent_seed0.npy` | 30000128 | `2e64d98d442a041f6a7a64dff8b4dbd7d1e40800410bb77026841e0fdd0155b5` |
+| `data/features/mkgw_native_ent_seed0.ids.json` | 173451 | `a882daf25a59de5cef0cb1f4597db152037ac7f64312e50e7ee50a4e8e69b622` |
+| `data/features/mkgw_native_ent_seed1.npy` | 30000128 | `46b22cac34db88173a0ae313b56ba1d5736189a0eb3385a6e3ef091bdb5a093a` |
+| `data/features/mkgw_native_ent_seed1.ids.json` | 173451 | `6266f0815d0b3a9c9e75c3ae1ba5c98d3a328ec83d618871e588a31cb8b01dcf` |
+| `data/features/mkgw_native_ent_seed2.npy` | 30000128 | `5f8730e609c6d64f9bcc0fae4a408da1614692e440c41393e117dcb65013295a` |
+| `data/features/mkgw_native_ent_seed2.ids.json` | 173451 | `0ae64f19e9e18a23c66fba6cafa3dd1c882e212f7ac4f4abc099aac0e6cd1378` |
+| `~/work/NativE/checkpoint/rmask_seed0_e1000.ckpt` | 80745984 | `562be25df84e2986a6007351d781aa09241835a2c47739a75c6cca139d60965b` |
+| `~/work/NativE/checkpoint/rmask_seed1_e1000.ckpt` | 80745984 | `d83f2909b1c79f511020d142812e5da31dfae68600f689f6b439a531fa8db3df` |
+| `~/work/NativE/checkpoint/rmask_seed2_e1000.ckpt` | 80745984 | `07095b5ca98a4b764e83df078e22c6604d8e5efa49e7f826f3d4708b427504bb` |
+| `~/work/NativE/checkpoint/repro_seed42_e1000.ckpt` (MKG-W gốc, bước a) | 80746013 | `43f2aa8da52da18e8a5cdfa16f0793373b42db90a6f7a48008ca64fa074ed62e` |
+
+Checkpoint chỉ nằm trên máy 4090. Embedding của lần chạy `repro` không được xuất, vì bước b chỉ dùng các lần chạy `rmask`.
+
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 
 Bản 2026-10-26, cache thô tải ngày 2026-10-24.
