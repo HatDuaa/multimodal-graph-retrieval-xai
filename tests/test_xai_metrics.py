@@ -1,12 +1,20 @@
 """Level-3 explanation metrics: part-level graph edits and rescoring among the candidates."""
 import numpy as np
 import pytest
-import torch
 
 from src.data.graph_store import EDGE_LABELLED, GraphIndex
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count, message_drop,
                                      real_nodes)
 from tests.test_demo_countonly import count_model_and_batch
+
+
+def wordnet_ready():
+    try:
+        from nltk.corpus import wordnet as wn
+        wn.synset("dog.n.01")
+        return True
+    except (ImportError, LookupError):
+        return False
 
 
 def context():
@@ -108,7 +116,25 @@ def test_dropping_messages_keeps_the_triple_while_dropping_the_edge_removes_it()
 
 def test_fusion_scales_are_one_under_the_raw_fusion():
     _, _, ctx = context()
-    assert ctx.fusion_scales() == {"objects": 1., "triples": 1.}
+    assert ctx.fusion_scales(0) == {"objects": 1., "triples": 1.}
+
+
+def test_fusion_scales_match_a_finite_difference_under_the_z_score_fusion():
+    from src.explain.xai_metrics import fuse
+    store, model, _ = count_model_and_batch()
+    model.options["fusion"] = "zscore"                     # same weights, level-1 fusion
+    ctx = QueryContext(model, store, "q", "cpu")
+    column = ctx.ids.index(1)                              # the only candidate with both channels
+    scales = ctx.fusion_scales(column)
+    weights = ctx.detail["weights"]
+    for key, channel in (("objects", 1), ("triples", 2)):
+        values = {k: ctx.detail[k].clone().double() for k in ("objects", "triples")}
+        step = 1e-6
+        base = fuse(model, ctx.batch["clip"].double(), values["objects"], values["triples"], weights.double())[0, column]
+        values[key][0, column] += step
+        moved = fuse(model, ctx.batch["clip"].double(), values["objects"], values["triples"], weights.double())[0, column]
+        slope = float((moved - base) / step) / float(weights[0, channel])
+        assert scales[key] == pytest.approx(slope, rel=1e-3, abs=1e-6)
 
 
 def test_gradient_terms_give_one_value_per_object_node_and_labelled_triple():
@@ -120,13 +146,23 @@ def test_gradient_terms_give_one_value_per_object_node_and_labelled_triple():
     assert np.all(np.isfinite(nodes)) and np.all(np.isfinite(triples))
 
 
-def test_rescore_full_matches_the_forward_pass_for_an_unedited_graph():
+def test_gradient_terms_on_an_image_without_triples():
+    store, _, ctx = context()
+    column = ctx.ids.index(2)                              # image 2 has object nodes and no labelled triple
+    index = image_index(store, store.graphs[2])
+    assert labelled_count(index) == 0 and real_nodes(index) > 0
+    nodes, triples = ctx.gradient_terms(column, index)
+    assert nodes.shape == (real_nodes(index),) and triples.shape == (0,) and np.all(np.isfinite(nodes))
+
+
+def test_full_rescore_matches_the_forward_pass_for_an_unedited_graph():
     store, _, ctx = context()
     for column, image_id in enumerate(ctx.ids):
-        fused = ctx.rescore_full(column, image_index(store, store.graphs[image_id]))
-        assert fused.cpu().numpy() == pytest.approx(ctx.fused.cpu().numpy(), abs=1e-6)
+        *_, fused = ctx.rescore(column, [edit(image_index(store, store.graphs[image_id]))], full=True)
+        assert fused[0] == pytest.approx(ctx.fused.cpu().numpy(), abs=1e-6)
 
 
+@pytest.mark.skipif(not wordnet_ready(), reason="WordNet data not installed")
 def test_strict_wordnet_accepts_hyponyms_only_and_people_for_generic_words():
     from scripts.xai_metrics import strict_wordnet
     assert strict_wordnet("animal", "animal.n.01", "dog.n.01")

@@ -14,8 +14,9 @@ of the two channels, which the fusion weighs by channel weight / spread over the
 
 Changes from version 1:
 - Base: deltas and ranks are taken against the unedited image rescored the same way (noop), not the forward pass;
-  its rank must be 1 (counted when it is not). Captions whose image has no part (E empty) are reported apart and
-  left out of the fidelity means, where v1 counted them as "no change" for both E and random.
+  its rank must be 1 (captions where it is not are counted and left out). Captions whose image has no part (E
+  empty) are reported apart and left out of the fidelity means, where v1 counted them as "no change" for both E and
+  random.
 - Sparsity is measured on E itself, in image parts: the fewest top parts of E whose scaled terms reach 80% / 90% of
   the positive term mass, and the smallest k in 1..K whose keep-only edit keeps >= 80% / 90% of the graph effect
   (base - empty). v1 counted caption rows of the demo table and divided them by image parts, two different units;
@@ -34,7 +35,8 @@ Changes from version 1:
 - Counterfactual: the smallest k whose removal costs the image rank 1 (k_flip, from the deletion curve), and, for a
   wrong rank-1 image, the gold image's rank after the top-k of E are removed.
 
-Comparison of explainers (fixed sample of --compare captions, rng 2026, inside the val captions): every explainer
+Comparison of explainers (fixed sample of --compare captions, rng 2026, inside the val captions; only images with a
+positive graph effect, base - empty > 1e-4, since the curves are shares of it): every explainer
 orders the same image parts and is measured the same way, by deletion and insertion curves for k = 0..K (K = 10):
 - model: E above;
 - random: a uniform permutation (rng per caption);
@@ -64,7 +66,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphStore  # noqa: E402
 from src.explain.score_breakdown import top50_deltas  # noqa: E402
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count,  # noqa: E402
-                                     message_drop, real_nodes)
+                                     message_drop, rank_of, real_nodes)
 from src.graph.counts import CAPTION_CLASSES, compatible  # noqa: E402
 from src.graph.dedup import PERSON, ancestors, coarse_type, same_type  # noqa: E402
 from src.graph.scene_graph import Vocab  # noqa: E402
@@ -209,46 +211,33 @@ def gnnexplainer_order(ctx, column, index, base, empty, steps=100, size=2., entr
     A part with mask m takes m * its vector + (1 - m) * the mean vector of its kind in this image (a neutral part):
     the model normalizes node vectors, so scaling alone would barely change a score. The loss is
     -(final - empty) / (base - empty) + size * mean(mask) + entropy * mean binary entropy(mask), as GNNExplainer's
-    feature mask, on the scale of the image's graph effect so that one penalty fits both fusions.
+    feature mask, on the scale of the image's graph effect so that one penalty fits both fusions. Called only when
+    base - empty > 1e-4 (measure), so that scale is positive. Gradients are taken for the mask alone.
     """
-    from src.explain.xai_metrics import fuse
-    model, table = ctx.model, ctx.store.part_table(ctx.device)
-    images = index.to_batch(table, ctx.device)
+    images = index.to_batch(ctx.store.part_table(ctx.device), ctx.device)
     n, m = real_nodes(index), labelled_count(index)
     logits = torch.full((n + m,), 3., device=ctx.device, requires_grad=True)
     optimizer = torch.optim.Adam([logits], lr=lr)
     x0, t0, e0 = images.x.detach(), images.triple_f.detach(), images.edge_attr.detach()
     x_mean = x0[:n].mean(0, keepdim=True) if n else x0[:0]
     t_mean, e_mean = (t0[:m].mean(0, keepdim=True), e0[:m].mean(0, keepdim=True)) if m else (t0, e0)
-    effect = max(base - empty, 1e-6)
-    for p in model.parameters():
-        p.requires_grad_(False)
-    try:
-        for _ in range(steps):
-            mask = torch.sigmoid(logits)
-            node_mask = torch.cat((mask[:n], torch.ones(len(x0) - n, device=ctx.device)))[:, None]
-            neutral = torch.cat((x_mean.expand(n, -1), x0[n:]))
-            images.x = node_mask * x0 + (1 - node_mask) * neutral
-            if m:
-                images.triple_f = mask[n:, None] * t0[:m] + (1 - mask[n:, None]) * t_mean
-                images.edge_attr = mask[n:, None] * e0[:m] + (1 - mask[n:, None]) * e_mean
-            batch = {'queries': ctx.batch['queries'], 'images': images,
-                     'candidate_index': torch.zeros((1, 1), dtype=torch.long, device=ctx.device),
-                     'clip': torch.zeros((1, 1), device=ctx.device), 'sentence': ctx.batch['sentence']}
-            with torch.enable_grad():
-                _, detail = model(batch)
-                objects, triples = ctx.detail['objects'].clone(), ctx.detail['triples'].clone()
-                objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
-                fused = fuse(model, ctx.batch['clip'], objects, triples, ctx.detail['weights'])
-                bits = mask.clamp(1e-6, 1 - 1e-6)
-                loss = (-(fused[0, column] - empty) / effect + size * mask.mean()
-                        - entropy * (bits * bits.log() + (1 - bits) * (1 - bits).log()).mean())
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-    finally:
-        for p in model.parameters():
-            p.requires_grad_(True)
+    effect = base - empty
+    assert effect > 1e-4, effect
+    for _ in range(steps):
+        mask = torch.sigmoid(logits)
+        node_mask = torch.cat((mask[:n], torch.ones(len(x0) - n, device=ctx.device)))[:, None]
+        neutral = torch.cat((x_mean.expand(n, -1), x0[n:]))
+        images.x = node_mask * x0 + (1 - node_mask) * neutral
+        if m:
+            images.triple_f = mask[n:, None] * t0[:m] + (1 - mask[n:, None]) * t_mean
+            images.edge_attr = mask[n:, None] * e0[:m] + (1 - mask[n:, None]) * e_mean
+        with torch.enable_grad():
+            fused, _ = ctx.score_images(column, images, 1)
+            bits = mask.clamp(1e-6, 1 - 1e-6)
+            loss = (-(fused[0, column] - empty) / effect + size * mask.mean()
+                    - entropy * (bits * bits.log() + (1 - bits) * (1 - bits).log()).mean())
+            logits.grad, = torch.autograd.grad(loss, [logits])
+        optimizer.step()
     weights = torch.sigmoid(logits).detach().cpu().numpy()
     parts = [("node", j, float(weights[j])) for j in range(n)] + [("triple", j, float(weights[n + j])) for j in range(m)]
     return sorted(parts, key=lambda p: -p[2])
@@ -282,7 +271,7 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
     parts_info = store.graph_parts(graph)
     index = image_index(store, graph)
     pairs = ctx.explanation(column)
-    ranked, node_terms, triple_terms = ranked_parts(pairs, index, ctx.fusion_scales())
+    ranked, node_terms, triple_terms = ranked_parts(pairs, index, ctx.fusion_scales(column))
     n_parts = len(ranked)
     composition = {k: sum(kind == "triple" for kind, _, _ in ranked[:k]) for k in KS}
     concentration = {}
@@ -322,7 +311,7 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
                 edits.append(edit(index, drop_edges=dropped))
                 masks.append(None)
             labels.append(f"{form}_{name}")
-    scores, ranks = ctx.rescore(column, edits, message_masks=masks)
+    scores, ranks, full = ctx.rescore(column, edits, message_masks=masks, full=True)
     by = collections.defaultdict(list)
     for label, s, r in zip(labels, scores, ranks):
         by[label].append((float(s), int(r)))
@@ -372,13 +361,11 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
         out["sparsity"]["fidelity"] = {f"k{int(100 * t)}": next((n for n, v in zip(model_curve["sizes"], kept) if v >= t), None)
                                        for t in THRESHOLDS}
     if not out["correct"] and gold_column is not None and n_parts:
-        gold_ranks = {}
-        for k in KS:
-            nodes, triples = split(ranked[:k])
-            fused = ctx.rescore_full(column, edit(index, drop_nodes=nodes, drop_edges=triples))
-            gold_ranks[k] = int(1 + (fused > fused[gold_column]).sum())
-        out["gold_rank_after"] = gold_ranks
-        out["gold_rank_before"] = int(1 + (ctx.fused > ctx.fused[gold_column]).sum())
+        # before and after from the same rescoring (the noop and plus_top_k rows), with rank_of's tie rule
+        row = {label: i for i, label in reversed(list(enumerate(labels)))}
+        gold = lambda i: int(rank_of(torch.from_numpy(full[i:i + 1]), gold_column)[0])  # noqa: E731
+        out["gold_rank_after"] = {k: gold(row[f"plus_top_{k}"]) for k in KS}
+        out["gold_rank_before"] = gold(row["noop"])
     # semantic validity of the object rows and of the triple rows
     query = store.queries[ctx.caption_id]
     validity = []
@@ -404,7 +391,7 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
         triple_validity.append({"subject": ends["subject"], "object": ends["object"], "predicate": predicate,
                                 "all": ends["subject"] and ends["object"] and predicate})
     out["triple_validity"] = triple_validity
-    if compare and n_parts:
+    if compare and n_parts and effect > 1e-4:
         orders = explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty)
         out["explainers"] = {name: (model_curve if name == "model" else curves(ctx, column, order, index, base, empty))
                              for name, order in orders.items()}
@@ -452,7 +439,8 @@ def wilcoxon(a, b):
 def aggregate(records):
     if not records:
         return {"captions": 0}
-    usable = [r for r in records if not r["empty_explanation"]]
+    # the explained image must be rank 1 when rescored unedited, or every edit would read as a lost rank 1
+    usable = [r for r in records if not r["empty_explanation"] and r["noop_rank"] == 1]
     out = {"captions": len(records), "empty_explanations": len(records) - len(usable),
            "noop_not_rank1": sum(r["noop_rank"] != 1 for r in records),
            "noop_error_max": max(r["noop_error"] for r in records), "parts_mean": mean([r["parts"] for r in usable]),

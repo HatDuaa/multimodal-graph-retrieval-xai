@@ -18,8 +18,8 @@ scores and the fusion is redone over the 50, so for them only fuse_raw's filled 
 move.
 
 Terms are put on the final score's scale by fusion_scales before parts of the two channels are compared: 1 under the
-raw fusion (exact), and the local slope of the z-score fusion otherwise (level 1), where a channel's raw term counts
-in proportion to channel weight / its standard deviation over the 50 candidates.
+raw fusion (exact), and the exact slope of the z-score fusion otherwise (level 1), where a channel's raw term counts
+roughly in proportion to channel weight / its spread over the 50 candidates.
 """
 import numpy as np
 import torch
@@ -87,17 +87,6 @@ def message_drop(index, edges):
     return mask
 
 
-def _spread(values, floor=0., eps=1e-6):
-    """std + eps of the known values as zscore_tensor divides by it, and whether zscore_tensor treats them as active."""
-    values = values[np.isfinite(values)]
-    if len(values) < 2:
-        return None
-    var = float(np.mean((values - values.mean()) ** 2))
-    if var < eps ** 2:
-        return None
-    return max(np.sqrt(max(var, eps ** 2)), floor) + eps
-
-
 def fuse(model, clip, objects, triples, weights):
     if model.options['fusion'] == 'raw':
         return fuse_raw(clip, objects, triples, weights)[0]
@@ -136,90 +125,84 @@ class QueryContext:
         with torch.no_grad():
             return matched_pairs(self.model, self.detail, query_parts, image_parts, row)
 
-    def fusion_scales(self):
-        """{channel: factor} that puts an image part's raw term on the scale of the final score.
+    def score_images(self, column, images, count, message_mask=None):
+        """Final scores (count, 50) when the candidate at column takes each of count packed image graphs in turn.
 
-        Raw fusion: 1, the terms already add up to the final score. z-score fusion: the local slope of fuse_tensor,
-        d final / d term = (1 - a) / ((b + c) * s_channel * s_mix) when both channels are active, (1 - a) /
-        (channel weight * s_channel) when only this one is, 0 when it is inactive; s is the spread zscore_tensor divides
-        by over the 50 candidates (a candidate's own effect on the mean is ignored). The common factor does not change
-        any order inside one caption; the channel ratio does.
+        The caption's encoding and the other 49 candidates' channel scores come from the forward pass; only the image
+        side is encoded again, and the fusion is redone over the 50. Gradients flow when called under enable_grad.
+        """
+        model = self.model
+        if message_mask is not None:
+            images.message_mask = message_mask
+        concepts = model.concept_vectors() if model.options['concept_gat'] else None
+        encoded = model.encode(images, concepts=concepts)
+        batch = {'queries': self.batch['queries'], 'images': images,
+                 'candidate_index': torch.arange(count, device=self.device)[None],
+                 'clip': torch.zeros((1, count), device=self.device), 'sentence': self.batch['sentence']}
+        _, detail = model.match_encoded(batch, self.detail['encoded_query'], encoded)
+        objects = self.detail['objects'].repeat(count, 1)
+        triples = self.detail['triples'].repeat(count, 1)
+        objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
+        fused = fuse(model, self.batch['clip'].repeat(count, 1), objects, triples, self.detail['weights'].repeat(count, 1))
+        return fused, detail
+
+    def fusion_scales(self, column):
+        """{channel: d final / d term} for the image parts of the candidate at column.
+
+        A part's term is channel weight * its share of the channel score S, so the factor is (d final / d S) / channel
+        weight. Raw fusion: exactly 1, the terms add up to the final score. z-score fusion: the exact slope of
+        fuse_tensor by autograd (both z-scores, floors included); 0 for a channel the candidate has no score in.
         """
         if self.model.options['fusion'] == 'raw':
             return {'objects': 1., 'triples': 1.}
-        detail = self.detail
-        a, b, c = detail['weights'][0].tolist()
-        floors = self.model.options['zscore_floor'] or (0., 0., 0.)
-        spread = {'objects': _spread(detail['objects'][0].cpu().numpy(), floors[1]),
-                  'triples': _spread(detail['triples'][0].cpu().numpy(), floors[2])}
-        weight = {'objects': b, 'triples': c}
-        if spread['objects'] and spread['triples']:
-            mix = (b * detail['z_objects'][0] + c * detail['z_triples'][0]) / (b + c)
-            s_mix = _spread(mix.cpu().numpy())
-            return {k: (1 - a) / ((b + c) * spread[k] * s_mix) if s_mix else 0. for k in spread}
-        return {k: (1 - a) / (weight[k] * spread[k]) if spread[k] and weight[k] else 0. for k in spread}
+        weights = self.detail['weights']
+        objects = self.detail['objects'].clone().requires_grad_(True)
+        triples = self.detail['triples'].clone().requires_grad_(True)
+        with torch.enable_grad():
+            fused = fuse(self.model, self.batch['clip'], objects, triples, weights)
+            slopes = torch.autograd.grad(fused[0, column], (objects, triples), allow_unused=True)
+        out = {}
+        for key, slope, values, weight in (('objects', slopes[0], objects, weights[0, 1]),
+                                           ('triples', slopes[1], triples, weights[0, 2])):
+            known = bool(torch.isfinite(values[0, column])) and slope is not None and float(weight) > 0
+            out[key] = float(slope[0, column] / weight) if known else 0.
+        return out
 
     def gradient_terms(self, column, index):
         """Gradient x input of the final score of the candidate at column, per object node and labelled triple.
 
         The inputs are the frozen CLIP vectors of the one-graph index: a node's label vector, and a triple's phrase and
-        predicate vectors. The other 49 candidates are fixed as in rescore.
+        predicate vectors (0 for an input the score does not reach, e.g. triples of an image whose triples cannot be
+        scored). The other 49 candidates are fixed as in rescore.
         """
-        model, table = self.model, self.store.part_table(self.device)
-        images = index.to_batch(table, self.device)
-        images.x = images.x.detach().clone().requires_grad_(True)
-        images.triple_f = images.triple_f.detach().clone().requires_grad_(True)
-        images.edge_attr = images.edge_attr.detach().clone().requires_grad_(True)
-        batch = {'queries': self.batch['queries'], 'images': images,
-                 'candidate_index': torch.zeros((1, 1), dtype=torch.long, device=self.device),
-                 'clip': torch.zeros((1, 1), device=self.device), 'sentence': self.batch['sentence']}
+        images = index.to_batch(self.store.part_table(self.device), self.device)
+        inputs = [images.x.detach().clone().requires_grad_(True), images.triple_f.detach().clone().requires_grad_(True),
+                  images.edge_attr.detach().clone().requires_grad_(True)]
+        images.x, images.triple_f, images.edge_attr = inputs
         with torch.enable_grad():
-            _, detail = model(batch)
-            objects, triples = self.detail['objects'].clone(), self.detail['triples'].clone()
-            objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
-            fused = fuse(model, self.batch['clip'], objects, triples, self.detail['weights'])
-            fused[0, column].backward()
-        node = (images.x.grad * images.x).sum(-1).detach().cpu().numpy()[:real_nodes(index)]
-        triple = ((images.triple_f.grad * images.triple_f).sum(-1)
-                  + (images.edge_attr.grad * images.edge_attr).sum(-1)).detach().cpu().numpy()[:labelled_count(index)]
-        return node, triple
+            fused, _ = self.score_images(column, images, 1)
+            grads = torch.autograd.grad(fused[0, column], inputs, allow_unused=True)
+        x, t, e = [((g if g is not None else torch.zeros_like(v)) * v).sum(-1).detach().cpu().numpy()
+                   for g, v in zip(grads, inputs)]
+        return x[:real_nodes(index)], (t + e)[:labelled_count(index)]
 
     @torch.no_grad()
-    def rescore(self, column, indexes, channels=False, message_masks=None):
+    def rescore(self, column, indexes, channels=False, message_masks=None, full=False):
         """Final score and rank of the candidate at column for each edited graph in indexes (with channels, also its
-        raw object and triple channel scores, NaN for an emptied channel). message_masks: one message_drop mask (or
-        None) per index."""
-        model, table = self.model, self.store.part_table(self.device)
-        images = GraphIndex.concat(indexes).to_batch(table, self.device)
+        raw object and triple channel scores, NaN for an emptied channel; with full, also the (n, 50) final scores of
+        every candidate). message_masks: one message_drop mask (or None) per index."""
+        images = GraphIndex.concat(indexes).to_batch(self.store.part_table(self.device), self.device)
+        mask = None
         if message_masks is not None and any(m is not None for m in message_masks):
             masks = [np.ones(int(i.edge_counts[0]), dtype=bool) if m is None else m for i, m in zip(indexes, message_masks)]
-            images.message_mask = torch.from_numpy(np.concatenate(masks)).to(self.device)
-        count = len(indexes)
-        batch = {'queries': self.batch['queries'], 'images': images,
-                 'candidate_index': torch.arange(count, device=self.device)[None],
-                 'clip': torch.zeros((1, count), device=self.device), 'sentence': self.batch['sentence']}
-        _, detail = model(batch)
-        objects = self.detail['objects'].repeat(count, 1)
-        triples = self.detail['triples'].repeat(count, 1)
-        objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
-        fused = fuse(model, self.batch['clip'].repeat(count, 1), objects, triples, self.detail['weights'].repeat(count, 1))
+            mask = torch.from_numpy(np.concatenate(masks)).to(self.device)
+        fused, detail = self.score_images(column, images, len(indexes), mask)
         out = fused[:, column].cpu().numpy(), rank_of(fused, column).cpu().numpy()
         if channels:
             out += (detail['objects'][0].cpu().numpy(), detail['triples'][0].cpu().numpy())
+        if full:
+            out += (fused.cpu().numpy(),)
         return out
-
-    @torch.no_grad()
-    def rescore_full(self, column, index):
-        """Final scores of all 50 candidates when the candidate at column takes one edited graph."""
-        model, table = self.model, self.store.part_table(self.device)
-        images = index.to_batch(table, self.device)
-        batch = {'queries': self.batch['queries'], 'images': images,
-                 'candidate_index': torch.zeros((1, 1), dtype=torch.long, device=self.device),
-                 'clip': torch.zeros((1, 1), device=self.device), 'sentence': self.batch['sentence']}
-        _, detail = model(batch)
-        objects, triples = self.detail['objects'].clone(), self.detail['triples'].clone()
-        objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
-        return fuse(model, self.batch['clip'], objects, triples, self.detail['weights'])[0]
 
     @torch.no_grad()
     def row_terms(self):
