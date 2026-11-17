@@ -49,12 +49,19 @@ orders the same image parts and is measured the same way, by deletion and insert
 - gradient: gradient x input of the final score with respect to each part's input vectors;
 - integrated_gradients: post hoc decomposition (Sundararajan et al., ICML 2017) from a neutral image (every part at its
   kind's mean vector), 20 path steps; its attributions add up to f(image) - f(neutral), checked as ig_completeness;
+- occlusion: leave-one-out, the score lost when one part alone is removed;
+- shapley (on the first --gnn captions): permutation-sampled Shapley values (16 orders, antithetic) with the rank-1
+  margin as value function (keep only a set of parts), the listwise idea of RankingSHAP / RankSHAP; also the
+  reference the other explainers are checked against (Spearman of their order with the Shapley values, top-5 overlap);
 - gnnexplainer (on the first --gnn captions of the sample): a soft mask over the parts' input vectors, learned to keep
   the final score with a size and an entropy penalty (Ying et al., NeurIPS 2019, on features), parts ordered by mask.
 Per explainer: Fid+@k / Fid-@k, rank, lost rank 1, k_flip, and the normalized areas under the curves
 (deletion: mean over k = 1..K of the share of the graph effect still there, lower is better; insertion: mean share
 kept when only the first k parts stay, higher is better), with a paired Wilcoxon test against "model", and, for the
-three decompositions (model, gradient, integrated_gradients), the additivity above on the same captions.
+decompositions (model, gradient, integrated_gradients, occlusion), the additivity above on the same captions.
+Each explainer also gets Fid_alpha (Zheng et al., ICLR 2024): with E its first k = 5 or 10 parts, remove each part of
+E (plus) or each part outside E (minus) with probability alpha = 0.1 or 0.5, 10 draws shared by all explainers, so the
+edited graph stays near the original; a faithful E loses more score under plus than under minus.
 
 Writes experiments/xai-metrics-v2/{metrics.json, cases.json}.
 """
@@ -84,7 +91,9 @@ OUT = REPO_ROOT / "experiments" / "xai-metrics-v2"
 MODELS = {"countonly_factual_r3": (REPO_ROOT / "experiments" / "improve" / "count-only", "configs/count_v1.yaml"),
           "main_r3": (REPO_ROOT / "experiments" / "level1" / "gat", None)}
 KS, RANDOM, THRESHOLDS, SUB_NODES, SUB_EDGES, COSINE, CURVE = (1, 3, 5), 10, (0.8, 0.9), 3, 3, .955, 10
-EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "gnnexplainer")
+EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
+              "shapley")
+ALPHAS, ALPHA_KS, ALPHA_DRAWS, PERMUTATIONS = (0.1, 0.5), (5, 10), 10, 16
 GENERIC_PEOPLE = {"person", "people", "persons", "someone", "somebody", "human", "humans", "individual", "crowd"}
 KIND_NAMES = {EDGE_LABELLED: "labelled", EDGE_COMPLETION: "completion", EDGE_GLOBAL: "global"}
 CASES = REPO_ROOT / "experiments" / "improve" / "explanations" / "cases.json"
@@ -306,6 +315,85 @@ def integrated_gradients(ctx, column, index, steps=20):
     return attribution, completeness
 
 
+def drop(index, parts):
+    nodes, triples = split(parts)
+    return edit(index, drop_nodes=nodes, drop_edges=triples)
+
+
+def occlusion(ctx, column, index, every, base):
+    """Leave-one-out: the score each part loses the image when it alone is removed."""
+    scores, _ = ctx.rescore(column, [drop(index, [part]) for part in every])
+    return [(kind, j, float(base - s)) for (kind, j), s in zip(every, scores)]
+
+
+def margin_values(ctx, column, edits, chunk=256):
+    """Target final score minus the best other candidate's, for each edited graph (the rank-1 margin)."""
+    values = []
+    for start in range(0, len(edits), chunk):
+        *_, full = ctx.rescore(column, edits[start:start + chunk], full=True)
+        values.extend(full[:, column] - np.delete(full, column, axis=1).max(1))
+    return np.array(values)
+
+
+def shapley(ctx, column, index, every, rng, permutations=PERMUTATIONS):
+    """Shapley values of the parts by permutation sampling, with a ranking value function.
+
+    v(S) = the rank-1 margin (target minus the best other candidate) when only the parts S are kept (keep_only), the
+    listwise value of RankingSHAP / RankSHAP reduced to the top of the list. permutations / 2 random orders and their
+    reverses (antithetic pairs). The values add up to v(all) - v(none) exactly (each order telescopes).
+    """
+    n = len(every)
+    orders = [rng.permutation(n) for _ in range(permutations // 2)]
+    orders += [o[::-1] for o in orders]
+    edits = [keep_only(index, *split([every[t] for t in o[:i]])) for o in orders for i in range(n + 1)]
+    values = margin_values(ctx, column, edits).reshape(len(orders), n + 1)
+    phi = np.zeros(n)
+    for o, v in zip(orders, values):
+        phi[o] += np.diff(v)
+    phi /= len(orders)
+    return ([(kind, j, float(x)) for (kind, j), x in zip(every, phi)],
+            {"sum": float(phi.sum()), "difference": float(values[0, -1] - values[0, 0])})
+
+
+def fid_alpha(ctx, column, index, order, every, seed, base, empty):
+    """Fid_alpha (Zheng et al., ICLR 2024): removal of a random fraction alpha of E's parts (plus), or of the parts
+    outside E (minus), so the edited graph stays close to the original; E = the first k parts of the order.
+
+    The draws come from one rng per caption, so every explainer gets the same random numbers. Reported per (k,
+    alpha): the score lost as a share of the graph effect and the share of draws that cost rank 1.
+    """
+    rng = np.random.default_rng(seed)
+    edits, labels = [], []
+    for k in ALPHA_KS:
+        chosen = order[:k]
+        rest = [part for part in every if part not in set(chosen)]
+        for alpha in ALPHAS:
+            for _ in range(ALPHA_DRAWS):
+                edits.append(drop(index, [part for part in chosen if rng.random() < alpha]))
+                labels.append(("plus", k, alpha))
+                edits.append(drop(index, [part for part in rest if rng.random() < alpha]))
+                labels.append(("minus", k, alpha))
+    scores, ranks = ctx.rescore(column, edits)
+    by = collections.defaultdict(list)
+    for label, sc, r in zip(labels, scores, ranks):
+        by[label].append((float(sc), int(r)))
+    effect = base - empty
+    return {f"{sign}_{k}_{alpha}": {"share": float(np.mean([(base - sc) / effect for sc, _ in by[(sign, k, alpha)]])),
+                                    "lost_rank1": float(np.mean([r > 1 for _, r in by[(sign, k, alpha)]]))}
+            for sign in ("plus", "minus") for k in ALPHA_KS for alpha in ALPHAS}
+
+
+def agreement(order, reference):
+    """Spearman between an order's positions and reference values, and the top-5 overlap with the reference."""
+    from scipy import stats
+    position = {part: -i for i, part in enumerate(order)}
+    parts = list(reference)
+    rho = stats.spearmanr([position[p] for p in parts], [reference[p] for p in parts]).statistic if len(parts) > 2 else None
+    top = set(sorted(parts, key=lambda p: -reference[p])[:5])
+    return {"spearman": None if rho is None or not np.isfinite(rho) else float(rho),
+            "top5_overlap": len(set(order[:5]) & top) / min(5, len(parts))}
+
+
 def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty):
     """Every explainer's order of the same image parts, and the attributions of the decompositions among them."""
     store = ctx.store
@@ -463,8 +551,24 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
     out["triple_validity"] = triple_validity
     if compare and n_parts and effect > 1e-4:
         orders, attributions, completeness = explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty)
-        out["explainers"] = {name: curves(ctx, column, order, index, base, empty, attributions.get(name))
-                             for name, order in orders.items()}
+        every = [p[:2] for p in ranked]
+        occluded = occlusion(ctx, column, index, every, base)
+        orders["occlusion"] = [p[:2] for p in sorted(occluded, key=lambda p: -p[2])]
+        attributions["occlusion"] = {p[:2]: p[2] for p in occluded}
+        reference = None
+        if gnn:
+            values, efficiency = shapley(ctx, column, index, every, rng)
+            orders["shapley"] = [p[:2] for p in sorted(values, key=lambda p: -p[2])]
+            reference = {p[:2]: p[2] for p in values}
+            out["shapley_efficiency"] = efficiency
+        seed = [2026, int(ctx.caption_id.split("_")[0]), int(ctx.caption_id.split("_")[1])]
+        out["explainers"] = {}
+        for name, order in orders.items():
+            entry = curves(ctx, column, order, index, base, empty, attributions.get(name))
+            entry["fid_alpha"] = fid_alpha(ctx, column, index, order, every, seed, base, empty)
+            if reference is not None and name != "shapley":
+                entry["agreement"] = agreement(order, reference)
+            out["explainers"][name] = entry
         out["ig_completeness"] = completeness
     if detail:
         out["explanation"] = [{"kind": kind, "part": part_name(graph, parts_info, kind, j), "term": t}
@@ -612,6 +716,10 @@ def aggregate(records):
                        "triple_rows": len(triples),
                        **{f"triple_{k}": mean([v[k] for v in triples]) for k in ("subject", "object", "predicate", "all")}}
     out["additivity"] = additivity_summary([r["additivity"] for r in usable])
+    shap = [r["shapley_efficiency"] for r in usable if "shapley_efficiency" in r]
+    if shap:
+        out["shapley_efficiency"] = {"captions": len(shap),
+                                     "max_abs_gap": max(abs(c["sum"] - c["difference"]) for c in shap)}
     ig = [r["ig_completeness"] for r in usable if "ig_completeness" in r]
     if ig:
         out["ig_completeness"] = {"captions": len(ig), "mean_abs_gap_share": mean(
@@ -631,11 +739,20 @@ def aggregate(records):
                 entry[f"minus_{k}_rank"] = mean([c["insertion_rank"][k] for c in rows if len(c["sizes"]) > k])
             if any("additivity" in c for c in rows):
                 entry["additivity"] = additivity_summary([c["additivity"] for c in rows if "additivity" in c])
+            entry["fid_alpha"] = {key: {m: mean([c["fid_alpha"][key][m] for c in rows]) for m in ("share", "lost_rank1")}
+                                  for key in rows[0]["fid_alpha"]}
+            agreed = [c["agreement"] for c in rows if "agreement" in c]
+            if agreed:
+                entry["agreement_with_shapley"] = {"captions": len(agreed),
+                                                   **{m: mean([a[m] for a in agreed]) for m in ("spearman", "top5_overlap")}}
             if name != "model":
                 both = [r for r in compared if name in r["explainers"]]
                 entry["vs_model"] = {m: wilcoxon([r["explainers"][name].get(m) for r in both],
                                                  [r["explainers"]["model"].get(m) for r in both])
                                      for m in ("deletion_auc", "insertion_auc")}
+                gap = lambda c: c["fid_alpha"]["plus_5_0.1"]["share"] - c["fid_alpha"]["minus_5_0.1"]["share"]  # noqa: E731
+                entry["vs_model"]["fid_alpha_gap_5_0.1"] = wilcoxon([gap(r["explainers"][name]) for r in both],
+                                                                    [gap(r["explainers"]["model"]) for r in both])
             out["explainers"][name] = entry
     return out
 
@@ -646,7 +763,8 @@ def main() -> None:
     parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
     parser.add_argument("--sample", type=int, help="fixed random sample of val captions (rng 2026); default all")
     parser.add_argument("--compare", type=int, default=1000, help="captions of the explainer comparison (rng 2026)")
-    parser.add_argument("--gnn", type=int, default=200, help="first captions of the comparison that also run GNNExplainer")
+    parser.add_argument("--gnn", type=int, default=200,
+                        help="first captions of the comparison that also run GNNExplainer and Shapley sampling")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--merge", action="store_true", help="add these runs to an existing metrics.json / cases.json")
