@@ -101,6 +101,30 @@ def rank_of(fused, column):
     return 1 + ahead.sum(1)
 
 
+def score_edited(model, batch, detail, column, images, count, message_mask=None):
+    """Final scores (count, 50) when the candidate at column of a one-query batch takes each of count packed image
+    graphs in turn.
+
+    batch and detail are the one-query batch and model(batch, return_encoded=True) of its forward pass: the query's
+    encoding and the other candidates' channel scores come from there; only the image side is encoded again, and the
+    fusion is redone over the candidates.
+    """
+    device = batch['clip'].device
+    if message_mask is not None:
+        images.message_mask = message_mask
+    concepts = model.concept_vectors() if model.options['concept_gat'] else None
+    encoded = model.encode(images, concepts=concepts)
+    edited = {'queries': batch['queries'], 'images': images,
+              'candidate_index': torch.arange(count, device=device)[None],
+              'clip': torch.zeros((1, count), device=device), 'sentence': batch['sentence']}
+    _, scored = model.match_encoded(edited, detail['encoded_query'], encoded)
+    objects = detail['objects'].repeat(count, 1)
+    triples = detail['triples'].repeat(count, 1)
+    objects[:, column], triples[:, column] = scored['objects'][0], scored['triples'][0]
+    fused = fuse(model, batch['clip'].repeat(count, 1), objects, triples, detail['weights'].repeat(count, 1))
+    return fused, scored
+
+
 class QueryContext:
     """One val caption scored over its 50 candidates, ready to rescore edits of one candidate's graph."""
 
@@ -131,20 +155,7 @@ class QueryContext:
         The caption's encoding and the other 49 candidates' channel scores come from the forward pass; only the image
         side is encoded again, and the fusion is redone over the 50. Gradients flow when called under enable_grad.
         """
-        model = self.model
-        if message_mask is not None:
-            images.message_mask = message_mask
-        concepts = model.concept_vectors() if model.options['concept_gat'] else None
-        encoded = model.encode(images, concepts=concepts)
-        batch = {'queries': self.batch['queries'], 'images': images,
-                 'candidate_index': torch.arange(count, device=self.device)[None],
-                 'clip': torch.zeros((1, count), device=self.device), 'sentence': self.batch['sentence']}
-        _, detail = model.match_encoded(batch, self.detail['encoded_query'], encoded)
-        objects = self.detail['objects'].repeat(count, 1)
-        triples = self.detail['triples'].repeat(count, 1)
-        objects[:, column], triples[:, column] = detail['objects'][0], detail['triples'][0]
-        fused = fuse(model, self.batch['clip'].repeat(count, 1), objects, triples, self.detail['weights'].repeat(count, 1))
-        return fused, detail
+        return score_edited(self.model, self.batch, self.detail, column, images, count, message_mask)
 
     def fusion_scales(self, column):
         """{channel: d final / d term} for the image parts of the candidate at column.

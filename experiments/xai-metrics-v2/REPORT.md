@@ -236,7 +236,8 @@ Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khá
    - Thứ tự của E khớp Shapley gần bằng occlusion (Spearman 0,46 so với 0,48).
    - Nhưng điểm mất khi bỏ top-3 chỉ bằng 6% tổng term của chúng và không tương quan với tổng đó.
 2. **Đưa term về thang điểm cuối làm E kém trung thực hơn khi đo bằng can thiệp** (Fid+ k = 3: 65,7% ở v1 xuống 34,9% ở v2), vì bộ ba chiếm đầu E ở 70% câu mà bỏ một bộ ba gần như không đổi điểm.
-   Với demo của `main_r3`, nên xếp dòng node trước, hoặc dùng occlusion để xếp.
+   Demo vốn đã nhóm dòng vật thể trước dòng bộ ba, nên không cần đổi thứ tự.
+   Demo nay thêm cột "Bỏ phần này": với mỗi dòng, chấm lại ảnh bằng chính mô hình sau khi bỏ phần khớp (occlusion của phần đó) và ghi Δ điểm cùng hạng mới, kèm ghi chú rằng % điểm cuối chỉ là cách chia điểm.
 3. **Nếu cần giải thích trung thực nhất, dùng occlusion hoặc Integrated Gradients.**
    - Occlusion: khớp Shapley tốt nhất (0,48), cộng tính tốt (0,89), chi phí khoảng 46 lượt chấm mỗi câu.
    - IG: deletion AUC tốt thứ hai sau Shapley, thoả completeness (sai số 1,1%), chi phí 20 lượt lan truyền ngược.
