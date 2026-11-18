@@ -214,13 +214,12 @@ Hai câu sai cũng đọc được nguyên nhân ngay từ danh sách cạnh:
 
 ## 9. Đóng góp
 
-Âu Dương Khang làm dòng 9, 30, 31, 32 cùng Claude (Claude Code):
+Âu Dương Khang làm chính dòng 30, 31, 32 và hỗ trợ dòng 9, cùng Claude (Claude Code):
 - **Khang** chốt miền và nguồn dữ liệu, duyệt toàn bộ ảnh và mọi triple infobox/suy diễn, duyệt và khoá bộ truy
   vấn soạn tay, chạy phép thử encoder trên molab và duyệt kết quả.
 - **Claude** viết code, chạy pipeline và soạn nháp tài liệu.
 
-Dòng 9 ban đầu do Nhi nhận; Khang làm thay theo thoả thuận nhóm ngày 16/11. EntityLinker và hàm điểm đồ thị là
-của Đạt. Khai báo đầy đủ ở `report/declaration-ai-oss.md`.
+EntityLinker và hàm điểm đồ thị là của Đạt. Khai báo đầy đủ ở `report/declaration-ai-oss.md`.
 
 ## 10. Nguồn số liệu
 

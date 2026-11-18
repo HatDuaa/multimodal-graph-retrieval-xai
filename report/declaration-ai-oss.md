@@ -120,7 +120,7 @@ Nguyên tắc áp dụng cho mọi phần do AI làm:
   - soạn nháp bộ truy vấn soạn tay và data card.
 - **Khang** chốt miền và nguồn dữ liệu; duyệt toàn bộ ảnh và mọi triple infobox/suy diễn; duyệt và khoá bộ truy vấn soạn tay. Khang chịu trách nhiệm mọi quyết định và tự giải thích được phần mình commit.
 
-### CLIP đa ngữ, bộ truy vấn soạn tay MKG-W và chuyển giao sang MMKG tiếng Việt (dòng 9, 24, 32, Âu Dương Khang)
+### CLIP đa ngữ, bộ truy vấn soạn tay MKG-W và chuyển giao sang MMKG tiếng Việt (dòng 24, 32 và hỗ trợ dòng 9, Âu Dương Khang)
 
 - **Anthropic Claude** (Claude Code), làm cùng Khang:
   - viết lại `scripts/checks/multilingual_clip_probe.py` (so 4 encoder trên 84 câu MKG-W val có mô tả tiếng Việt, che tên);

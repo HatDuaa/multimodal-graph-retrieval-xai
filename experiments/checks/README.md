@@ -207,7 +207,7 @@ Khoảng 15 phút trên máy GPU (phần lớn là xếp hạng lại cả pool)
 
 ## 7. CLIP đa ngữ cho truy vấn tiếng Việt (dòng 9 bảng phân công)
 
-Người làm: Khang làm thay phần Nhi đã nhận, theo thoả thuận nhóm ngày 2026-11-16. Chạy trên molab (`notebooks/mkgw_molab.py`, bước 3b) ngày 2026-11-17.
+Người làm: Khang (hỗ trợ). Chạy trên molab (`notebooks/mkgw_molab.py`, bước 3b) ngày 2026-11-17.
 
 **Câu hỏi.** Encoder CLIP của project (OpenAI ViT-B/32) chỉ được huấn luyện với văn bản tiếng Anh. MMKG tiếng Việt cần một encoder hiểu được truy vấn tiếng Việt. Câu hỏi là chọn encoder nào.
 
