@@ -1,0 +1,164 @@
+% =====================================================================
+\section{Kết quả cấp độ 2: MKG-W và NativE}
+\label{sec:l2}
+
+\subsection{Bước a: tái lập link prediction của NativE}
+
+\begin{table}[t]
+\centering
+\caption{Link prediction trên tập test KGC của MKG-W (filtered). Bài báo chỉ công bố MRR và Hits@1 cho MKG-W. Dòng rmask:
+3 seed.}
+\label{tab:l2-repro}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & MRR & Hits@1 & Hits@3 & Hits@10 \\
+\midrule
+Bài báo NativE & 36,58 & 29,56 & --- & --- \\
+Tái lập, MKG-W gốc (seed 42) & 36,99 & 30,17 & 39,95 & 49,32 \\
+MKG-W-rmask (seed 0, 1, 2) & \pmstd{36,99}{0,24} & \pmstd{29,98}{0,11} & \pmstd{40,30}{0,33} & \pmstd{49,73}{0,54} \\
+\bottomrule
+\end{tabular}}
+\tabsrc{\file{experiments/level2/native-repro/metrics.json}, \file{experiments/level2/native-train/}}
+\end{table}
+
+Nhóm chạy lại NativE trên MKG-W gốc với đúng mã nguồn và siêu tham số của tác giả. Tiêu chí đặt trước khi chạy: chênh không
+quá khoảng 1 điểm thì coi là tái lập được. Kết quả lệch +0,41 MRR và +0,61 Hits@1 (Bảng~\ref{tab:l2-repro}), nên bước a đạt.
+Bản \texttt{rmask}, đã che đặc trưng ảnh và chữ của 1\,784 thực thể val/test retrieval, cho cùng mức MRR. Vậy việc che này
+không làm hỏng mô hình. Mỗi lần huấn luyện mất khoảng 1,1 giờ trên một GPU RTX 4090.
+
+Một chi tiết ảnh hưởng tới cách đọc độ lệch chuẩn: tham số \texttt{-seed} của mã nguồn chỉ đặt seed cho PyTorch. Bộ lấy mẫu
+âm viết bằng C không được seed, nên chuỗi mẫu âm giống hệt ở mọi seed. Độ lệch chuẩn qua 3 seed vì vậy chỉ đo ảnh hưởng của
+khởi tạo và nhiễu của phần đối kháng; độ lệch thật có thể lớn hơn.
+
+\subsection{Bước b: kết quả truy vấn}
+
+\begin{table}[t]
+\centering
+\caption{Kết quả truy vấn trên MKG-W (892 truy vấn mỗi split, pool 892 ảnh). $\alpha,\beta$ chọn trên val; test chấm một lần.
+Ba dòng \texttt{kg\_triple}, \texttt{native}, \texttt{native\_kgc} trùng nhau vì val chọn $\beta = 0$.}
+\label{tab:l2-results}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+ & Dòng & R@1 & R@5 & R@10 & MRR \\
+\midrule
+\multirow{5}{*}{\rotatebox{90}{Val}} & CLIP thuần & 24,33 & 44,39 & 53,81 & 34,22 \\
+ & + đếm cạnh (dòng chính) & \textbf{32,40} & \textbf{50,78} & \textbf{57,62} & \textbf{41,18} \\
+ & + điểm NativE, bỏ cạnh & \pmstd{28,25}{0,11} & \pmstd{45,85}{0,51} & \pmstd{54,37}{0,70} & \pmstd{36,97}{0,08} \\
+ & + cosine NativE, bỏ cạnh & \pmstd{26,64}{0,26} & \pmstd{45,96}{0,39} & \pmstd{54,30}{0,62} & \pmstd{35,98}{0,15} \\
+ & Cạnh xáo trộn & \pmstd{21,82}{0,39} & \pmstd{42,56}{0,06} & \pmstd{51,72}{0,26} & \pmstd{32,03}{0,23} \\
+\midrule
+\multirow{5}{*}{\rotatebox{90}{Test}} & CLIP thuần & 24,89 & 44,73 & 54,48 & 34,61 \\
+ & + đếm cạnh (dòng chính) & \textbf{29,82} & \textbf{51,46} & \textbf{59,42} & \textbf{39,89} \\
+ & + điểm NativE, bỏ cạnh & \pmstd{27,24}{0,19} & \pmstd{46,52}{0,11} & \pmstd{56,28}{0,11} & \pmstd{36,67}{0,14} \\
+ & + cosine NativE, bỏ cạnh & \pmstd{26,08}{0,45} & \pmstd{44,92}{0,53} & \pmstd{54,22}{0,95} & \pmstd{35,46}{0,58} \\
+ & Cạnh xáo trộn & \pmstd{21,45}{0,06} & \pmstd{43,31}{0,51} & \pmstd{53,29}{0,13} & \pmstd{32,02}{0,16} \\
+\bottomrule
+\end{tabular}}
+\tabsrc{\file{experiments/level2/val/summary.json} và \file{experiments/level2/test/summary.json}}
+\end{table}
+
+Bảng~\ref{tab:l2-results} gom các dòng theo vai trò. ``Đếm cạnh'' là kênh \texttt{triple}; ``điểm NativE'' là kênh
+\texttt{kgc} (dòng \texttt{kgc\_only}, $\beta = 1$); ``cosine NativE'' là kênh \texttt{emb} (dòng \texttt{native\_emb},
+$\beta = 1$). Dòng ``cạnh xáo trộn'' đổi chỗ đuôi của các triple trong cùng một quan hệ, giữ nguyên bậc của đầu, rồi dùng
+lại $\alpha,\beta$ của dòng chính. Dòng chính hơn CLIP 4,93 điểm R@1 và 5,28 điểm MRR trên test.
+
+\textbf{Thứ tự kênh kgc được thêm.} Lần chạy val đầu tiên chỉ có kênh cosine, và val chọn $\beta = 0$ cho kênh này. Nhóm
+nhận thấy kênh cosine không dùng tới quan hệ, nên thêm kênh \texttt{kgc} dùng hàm chấm có quan hệ của chính NativE. Định
+nghĩa kênh và dòng chính mới được chốt trước khi chạy lại val và trước lần chấm test ngày 17/11. Lần chạy lại val giữ
+nguyên từng byte các file kết quả cũ (\file{experiments/level2/val/README.md}).
+
+\textbf{Các lần đọc test khác và một lần chạy lại độc lập.} Nhóm ghi lại đầy đủ hai việc. (1) Khi kiểm tra code đánh giá,
+một lần chạy thử \texttt{--split test --hand} với embedding giả đã in ra số test của dòng đếm cạnh, kể cả trên bộ câu tự
+viết. Dòng này không có tham số nào ngoài $\alpha$, và $\alpha$ đã chốt trên val; không có gì được chỉnh sau đó.
+(2) Ngày 18/11, Khang chạy lại độc lập toàn bộ cấp~2 trên molab: tự huấn luyện NativE 3 seed (MRR rmask \pmstd{36,89}{0,27},
+bản gốc 37,06), dùng đặc trưng CLIP gốc thay cho bản nhóm trích lại, tự chọn $\alpha,\beta$ trên val rồi chấm test một lần.
+Val lại chọn $\alpha = 0$, $\beta = 0$ ở cả 3 seed; dòng chính trên test cho đúng R@1 29,82, cosine NativE
+\pmstd{26,05}{0,51} và cạnh xáo trộn \pmstd{21,41}{0,11}, gần với Bảng~\ref{tab:l2-results}. CLIP thuần trên test là 25,00
+thay vì 24,89 vì khác bản đặc trưng. \todo{Merge kết quả này vào một thư mục riêng, ví dụ
+experiments/level2/molab-rerun/, rồi dẫn nguồn ở đây; hiện chỉ nằm trên nhánh khang/mkgw-level2.}
+
+\subsection{Đọc kết quả: cái gì giúp và vì sao}
+
+\begin{itemize}
+\item \textbf{Đếm cạnh tri thức là nguồn lợi chính.} Kênh này không cần huấn luyện, và nâng R@1 val từ 24,33 lên 32,40.
+\item \textbf{Cạnh phải đúng.} Xáo đuôi cạnh làm R@1 xuống dưới cả CLIP (val 21,82, test 21,45). Phần lợi vì vậy đến từ
+đúng các cạnh thật, không phải từ việc một số thực thể có bậc cao.
+\item \textbf{NativE đứng riêng có ích, nhưng yếu hơn đếm cạnh.} Điểm bộ ba của NativE nâng R@1 val 3,92 điểm so với CLIP,
+cosine embedding chỉ nâng 2,32 điểm. Thứ tự này giống nhau trên test và ổn định qua 3 seed. Dùng đúng hàm chấm có quan hệ của
+mô hình KGC có ích hơn chỉ so vector thực thể.
+\item \textbf{Khi đã có đếm cạnh, NativE không thêm được gì.} Ở cả 3 seed, val chọn $\beta = 0$ cho cả kênh cosine lẫn kênh
+\texttt{kgc}. Mọi $\beta > 0$ đều cho R@1 val thấp hơn (tốt nhất 31,61 với cosine và 30,38 với \texttt{kgc}, so với 32,40).
+Cách hiểu của nhóm: với 45,6\% truy vấn val, đáp án có cạnh train trực tiếp tới thực thể trong câu, và đếm cạnh đã chứa
+đúng thông tin đó. Với phần còn lại, điểm NativE yếu hơn CLIP. Vì kênh NativE có trọng số 0, thay embedding của nó bằng
+nhiễu Gauss cũng cho đúng con số của dòng chính. Đây là một kết quả âm có bằng chứng; giá trị của NativE trong báo cáo nằm ở
+bước tái lập và ở phép so đứng riêng.
+\end{itemize}
+
+\textbf{Độ nhạy theo $\alpha$} (Hình~\ref{fig:alpha}). Trên MKG-W, R@1 val đứng yên ở 32,40 trong cả đoạn
+$\alpha \in [0; 0{,}35]$ rồi giảm dần về 24,33 ở $\alpha = 1$. Đây là một vùng phẳng, nên chọn $\alpha = 0$ không phải
+chọn một điểm nhọn. Ngược với VG (đỉnh ở $\alpha = 0{,}6$), ở đây đồ thị tốt hơn CLIP trong việc xếp 50 ứng viên. Lý do là
+truy vấn MKG-W là mô tả đã che tên, nên CLIP yếu, còn số cạnh train là tín hiệu rất mạnh cho những câu nhắc tới thực thể
+láng giềng. Với $\alpha = 0$, điểm cuối chỉ còn số cạnh; các ứng viên cùng số cạnh giữ thứ tự của CLIP vì phép sắp xếp ổn
+định.
+
+\textbf{Theo nhóm truy vấn.} Truy vấn không khớp được thực thể nào (189 câu val, 170 câu test) giữ nguyên kết quả của CLIP,
+đúng theo thiết kế. Toàn bộ phần tăng nằm ở nhóm khớp được: R@1 val 20,91 $\to$ 31,15, test 22,71 $\to$ 28,81.
+
+\subsection{Bộ 25 truy vấn tự viết: trực tiếp và gián tiếp}
+\label{sec:l2-hand}
+
+\textbf{Cách xây và kiểm tra.} Bộ câu nằm ở \file{data/queries/mkgw_queries_hand.json}. Quy tắc được kiểm tra tự động bởi
+\file{scripts/build_mkgw_hand_queries.py}; script từ chối ghi file nếu có câu vi phạm.
+\begin{itemize}
+\item \textbf{Trực tiếp} (10 câu): tả thực thể đáp án là gì, trông ra sao, không nêu tên nó và không dựa vào thực thể có tên
+khác. Mỗi câu có đúng một đáp án trong kho ảnh test. Script kiểm tra mọi thực thể khớp được trong câu đều không có cạnh tới
+đáp án, nên câu trực tiếp không có đường tắt qua đồ thị.
+\item \textbf{Gián tiếp} (15 câu): nêu tên một thực thể khác và cần một quan hệ để tới đáp án, ví dụ ``a rock guitarist who
+was a member of Pink Floyd''. Đáp án không gõ tay mà được tính từ mẫu (quan hệ, thực thể) của câu: mọi thực thể trong kho
+ảnh test có đủ các cạnh đó, từ 1 tới 5 đáp án.
+\item Tên đáp án không được xuất hiện trong câu. Đáp án tính trên toàn bộ triple MKG-W, vì đó là đáp án thật chứ không phải
+đầu vào của mô hình. Kênh đồ thị lúc chấm vẫn chỉ thấy cạnh KGC-train. Bộ câu được commit một lần (16/11) và không sửa sau đó.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Bộ 25 truy vấn tự viết, ảnh của tập test làm ứng viên, dùng lại $\alpha,\beta$ của val.}
+\label{tab:l2-hand}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llcccc}
+\toprule
+Nhóm & Dòng & R@1 & R@5 & R@10 & MRR \\
+\midrule
+Trực tiếp (10) & CLIP & 80,00 & 90,00 & 90,00 & 85,00 \\
+ & + đếm cạnh & 80,00 & 90,00 & 90,00 & 85,00 \\
+Gián tiếp (15) & CLIP & 40,00 & 60,00 & 60,00 & 49,28 \\
+ & + đếm cạnh & \textbf{80,00} & \textbf{86,67} & \textbf{86,67} & \textbf{83,33} \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/level2/test/summary.json} (khoá \texttt{hand\_*})}
+\end{table}
+
+\textbf{Kết quả} (Bảng~\ref{tab:l2-hand}). Với câu gián tiếp, kênh đếm cạnh nâng R@1 từ 40 lên 80 (6/15 $\to$ 12/15). Câu
+trực tiếp không đổi: CLIP đã đúng 8/10, và theo cách xây, kênh đồ thị không cộng điểm cho ảnh đúng của các câu này. Nhóm tra
+xem cạnh vàng của 15 câu gián tiếp nằm ở phần nào của KGC. 12/15 câu có ít nhất một đáp án nối với thực thể trong câu bằng
+cạnh KGC-train, nên kênh đếm cạnh thấy được. 3/15 câu chỉ có cạnh vàng trong KGC-test, nên kênh này không thể giúp; ví dụ
+``the rock band whose lead singer is Hayley Williams'' (đáp án Paramore). Bộ câu nhỏ, nên các con số này chỉ minh hoạ đúng
+chỗ đồ thị có ích mà đề nhấn mạnh, không thay cho kết quả trên 892 truy vấn.
+
+\textbf{Ví dụ lời giải thích.} Với câu ``the main railway station of Bordeaux'', \texttt{EntityLinker} khớp
+\emph{Bordeaux}. Ảnh đúng là ga Bordeaux-Saint-Jean, có cạnh KGC-train P131 (\emph{located in the administrative territorial
+entity}) tới Bordeaux. Lời giải thích của ứng viên này chính là cạnh đó, vì nó là thứ được đếm vào điểm. Với câu về Pink
+Floyd, có hai cạnh KGC-train được đếm: P463 (\emph{member of}, David Gilmour $\to$ Pink Floyd) và P527 (\emph{has part},
+Pink Floyd $\to$ David Gilmour), nên điểm đồ thị của ảnh đúng là 2. \todo{Hạng của ảnh đúng theo CLIP và theo
+dòng chính cho từng câu: chờ bảng theo câu (việc 8, Khoa); lần chạy 17/11 chỉ lưu số tổng theo nhóm.}
+
+\textbf{Về GAT trên MKG-W.} MKG-W không có scene graph cho từng ảnh, nên bộ xếp lại GATv2 của cấp~1 không áp dụng được. Ở
+bước b, tín hiệu từ đồ thị tri thức (đếm cạnh và NativE) thay vai trò của GNN. Trên MKG-W, phép so ``CLIP với CLIP + đồ thị''
+của đề là hai dòng đầu của Bảng~\ref{tab:l2-results}.

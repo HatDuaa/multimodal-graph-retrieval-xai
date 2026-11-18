@@ -1,0 +1,144 @@
+% =====================================================================
+\section{Phương pháp}
+\label{sec:method}
+
+\subsection{Pipeline chung}
+
+Cả ba cấp độ dùng chung một pipeline, đúng quy trình gợi ý trong đề (Hình~\ref{fig:pipeline}).
+\begin{enumerate}
+\item CLIP ViT-B/32 (trọng số OpenAI, đóng băng) mã hoá câu truy vấn và lấy 50 ảnh có cosine lớn nhất (FAISS~\cite{johnson2019faiss}
+ở VG và demo; phép nhân ma trận trực tiếp ở MKG-W vì pool chỉ có 892 ảnh).
+\item Với từng ứng viên, một mô-đun đồ thị tính điểm đồ thị. Ở VG, đó là điểm khớp giữa đồ thị câu và scene graph của ảnh.
+Ở MKG-W, đó là quan hệ giữa thực thể ứng viên và các thực thể được nhắc trong câu.
+\item Điểm cuối kết hợp hai điểm theo dạng $\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$ của đề. Mô hình cấp~1
+và MKG-W chuẩn hoá từng điểm bằng z-score trong 50 ứng viên của truy vấn; mô hình chính của VG cộng điểm thô
+(Mục~\ref{sec:method-main}). Ứng viên được sắp lại theo điểm cuối.
+\item Lời giải thích của mỗi ứng viên là chính các đại lượng đã cộng vào điểm đồ thị. Không có bước tìm đường đi nào chạy
+sau khi đã có thứ hạng (Mục~\ref{sec:method-expl}).
+\end{enumerate}
+Vì chỉ xếp lại 50 ứng viên, giới hạn trên của mọi mô hình là recall@50 của CLIP. Trên test VG, chỉ số này là 96,66\%.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\scriptsize, node distance=3mm and 4mm,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=7mm, inner sep=2pt},
+  arr/.style={-{Stealth[length=1.6mm]}, thick, cGray}]
+\node[box, fill=cClip!12] (q) {Truy vấn\\(câu)};
+\node[box, fill=cClip!12, right=of q] (clip) {CLIP\\đóng băng};
+\node[box, fill=cClip!12, right=of clip] (top) {Top-50\\ứng viên};
+\node[box, fill=cObj!15, below=6mm of q] (qg) {Đồ thị câu /\\thực thể nhắc tới};
+\node[box, fill=cObj!15, right=of qg] (gs) {Điểm đồ thị\\(GATv2 / KG)};
+\node[box, fill=cTri!12, right=of gs] (ig) {Scene graph ảnh /\\đồ thị tri thức};
+\node[box, fill=yellow!20, below=6mm of gs] (fuse) {$\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$};
+\node[box, right=of fuse] (out) {Thứ hạng\\+ giải thích};
+\draw[arr] (q) -- (clip); \draw[arr] (clip) -- (top);
+\draw[arr] (q) -- (qg); \draw[arr] (qg) -- (gs); \draw[arr] (ig) -- (gs);
+\draw[arr] (top) -- (ig);
+\draw[arr] (gs) -- (fuse); \draw[arr] (top.south) |- ($(fuse.north east)+(0,0.5mm)$);
+\draw[arr] (fuse) -- (out);
+\end{tikzpicture}
+\caption{Pipeline chung. Phần màu xanh là CLIP đóng băng. Phần đồ thị chỉ chấm lại 50 ứng viên của CLIP. Lời giải thích
+là các đại lượng của chính điểm đồ thị.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Cấp độ 1: bộ xếp lại GATv2 trên scene graph}
+\label{sec:method-l1}
+
+\textbf{Mã hoá đồ thị.} Đồ thị câu và đồ thị ảnh dùng chung một bộ mã hoá. Vector khởi đầu của mỗi node là vector CLIP
+text của nhãn (câu mẫu ``a photo of a \{nhãn\}''), chiếu từ 512 xuống 256 chiều. Mỗi cạnh mang vector của nhãn quan hệ.
+Hai lớp GATv2~\cite{brody2022gatv2} (4 head) cho mỗi node gom thông tin từ hàng xóm theo trọng số attention học được. Mỗi
+bộ ba (chủ thể, quan hệ, đối tượng) đi qua một MLP. Vector cuối của mỗi phần là $\mathrm{L2}(f + U g)$, với $f$ là vector
+ban đầu, $g$ là đầu ra GAT và $U$ khởi tạo bằng 0.
+
+\textbf{Hai kênh khớp.} Kênh vật thể chỉ so vật thể với vật thể; kênh bộ ba chỉ so bộ ba với bộ ba. Với phần $i$ của câu
+và phần $j$ cùng loại của ảnh, $\mathit{sim}_{ij}$ là cosine giữa hai vector. Mỗi phần của câu ``hỏi'' các phần của ảnh:
+\begin{equation}
+a_{ij} = \operatorname{softmax}_j\!\left(\mathit{sim}_{ij}/\tau\right),\qquad s_i = \textstyle\sum_j a_{ij}\,\mathit{sim}_{ij}.
+\end{equation}
+Phần nào của câu quan trọng hơn thì được trọng số lớn hơn:
+$w_i = \operatorname{softmax}_i(u^\top p_i)$, với $p_i$ là vector của phần $i$. Điểm của kênh là
+$S = \sum_i w_i s_i$.
+
+\textbf{Trộn điểm.} Ba trọng số kênh tính riêng cho từng câu từ vector CLIP của câu:
+$[a, b, c] = \operatorname{softmax}(W q + \mathit{bias})$. Điểm đồ thị là
+$G = z\big((b\,z(S_\text{obj}) + c\,z(S_\text{tri}))/(b+c)\big)$, và điểm cuối là $a\,z(\text{CLIP}) + (1-a)\,G$. Đây
+đúng là công thức của đề với $\alpha = a$, chỉ khác ở chỗ $\alpha$ thay đổi theo câu. Mọi tham số mới khởi tạo sao cho mô
+hình chưa huấn luyện cho đúng phép thử không huấn luyện đã đo trước ($U=0$, $u=0$, $W=0$,
+$\mathit{bias} = \log(0{,}60;\,0{,}28;\,0{,}12)$, $\tau = 0{,}05$). Mô hình có 1\,054\,214 tham số huấn luyện được; CLIP
+không nằm trong số này (chi tiết: \file{docs/level1-model.md}).
+
+\textbf{Huấn luyện.} Loss là cross-entropy trên 50 ứng viên của điểm cuối, chia cho nhiệt độ học được. AdamW, lr
+$10^{-3}$, weight decay $10^{-4}$, batch 256, dropout 0,1. Epoch đầu khoá $W$ và $\mathit{bias}$ để phần đồ thị học trước.
+Dừng sớm khi R@1 val không tăng sau 2 epoch, tối đa 10 epoch, giữ checkpoint tốt nhất theo val. Mỗi cấu hình chạy 3 seed
+(0, 1, 2).
+
+\subsection{Mô hình chính của VG}
+\label{sec:method-main}
+
+Mô hình chính (\texttt{countonly\_factual\_r3}) giữ nguyên khung trên và thay bốn chỗ. Mỗi thay đổi được giữ lại vì làm R@1
+val tăng qua 3 seed (Bảng~\ref{tab:l1-chain}).
+\begin{enumerate}
+\item \textbf{Đồ thị câu từ FACTUAL-T5} thay cho \texttt{sng\_parser}.
+\item \textbf{Trộn điểm thô:} điểm cuối $= a\cdot\cos + b\cdot S_\text{obj} + c\cdot S_\text{tri}$, bỏ z-score. Ứng viên
+không có phần nào để so ở một kênh nhận điểm trung bình của các ứng viên có phần đó. Hệ quả quan trọng: điểm cuối tách
+\emph{chính xác} thành tổng các phần, nên lời giải thích không cần xấp xỉ.
+\item \textbf{Đồ thị ảnh sạch và liền.} Hai node cùng loại (cùng synset hoặc hypernym trong WordNet) có IoU $\ge 0{,}7$ được
+gộp làm một. Mỗi cạnh có hộp ở hai đầu được gán 6 số hình học (độ lệch tâm, tỉ lệ kích thước, IoU, tỉ lệ diện tích). Mỗi
+node nhận thêm cạnh từ 5 node gần nhất, và một node tổng nối tới mọi node. Cạnh thêm này chỉ truyền tin trong GAT, không
+được tính là bộ ba. Sau bước này 100\% đồ thị ảnh val liền một khối (cấp độ~1: 4,7\%).
+\item \textbf{Số lượng.} Mỗi node ảnh biết có bao nhiêu vật cùng loại trong ảnh (nhóm 1 / 2 / 3--4 / $\ge5$). Luật viết tay
+trên câu gán mỗi vật thể một lớp số lượng (số nêu rõ, ``a pair of'', danh từ số nhiều, \dots; còn lại là ``không rõ''). Một
+bảng học được $g$ ($7\times4$, khởi tạo 0, hàng ``không rõ'' cố định bằng 0) được cộng vào $\mathit{sim}_{ij}$ của kênh vật
+thể.
+\end{enumerate}
+
+\subsection{Cấp độ 2: NativE và điểm đồ thị tri thức}
+\label{sec:method-l2}
+
+\textbf{NativE.} NativE~\cite{zhang2024native} là một mô hình hoàn thiện đồ thị tri thức đa phương thức (MMKGC: dự đoán
+cạnh còn thiếu bằng cả cấu trúc lẫn ảnh và chữ của thực thể). Lõi cấu trúc là AdvRelRotatE, một biến thể của
+RotatE~\cite{sun2019rotate}: mỗi quan hệ là một phép quay trong không gian phức, và mẫu âm khó được sinh bằng huấn luyện đối
+kháng. Đặc trưng ảnh và chữ được trộn vào embedding thực thể với trọng số phụ thuộc quan hệ, nên mô hình chịu được thực
+thể thiếu ảnh hoặc thiếu chữ. Nhóm dùng NativE theo hai bước.
+\begin{itemize}
+\item \textbf{Bước a: tái lập.} Huấn luyện trên MKG-W gốc với đúng mã nguồn (commit \texttt{c72291c}) và siêu tham số của
+tác giả (1\,000 epoch, dim 250, margin 4, 128 mẫu âm, lr $10^{-4}$, batch 1\,024). So MRR và Hits@1 với bài báo.
+\item \textbf{Bước b: đưa vào truy vấn.} Huấn luyện trên bản \texttt{MKG-W-rmask} (Mục~\ref{sec:leakage}) với 3 seed, rồi dùng
+mô hình đã học làm tín hiệu đồ thị.
+\end{itemize}
+
+\textbf{Liên kết truy vấn với đồ thị.} Câu truy vấn đã che tên đáp án nhưng vẫn hay nhắc tên thực thể khác (``a rock
+guitarist who was a member of \emph{Pink Floyd}''). \texttt{EntityLinker} tìm trong câu mọi nhãn và alias của thực thể
+trong đồ thị, ưu tiên cụm khớp dài nhất (tối đa 5 token). Gọi $L$ là tập thực thể khớp được, $c$ là thực thể ứng viên.
+
+\textbf{Ba kênh điểm đồ thị.}
+\begin{itemize}
+\item \texttt{triple}: số cạnh KGC-train trực tiếp giữa $c$ và các thực thể trong $L$. Kênh này không cần huấn luyện.
+\item \texttt{emb}: cosine lớn nhất giữa embedding cấu trúc NativE của $c$ và của các thực thể trong $L$.
+\item \texttt{kgc}: điểm bộ ba của chính NativE, lấy giá trị lớn nhất qua mọi $l \in L\setminus\{c\}$, mọi quan hệ (169)
+và cả hai chiều $(c, r, l)$, $(l, r, c)$. Khác \texttt{emb} ở chỗ có dùng quan hệ. Code tính lại đúng hàm
+\texttt{forward()} của NativE và có test đối chiếu với checkpoint thật.
+\end{itemize}
+Câu không khớp thực thể nào nhận điểm đồ thị 0, nên thứ hạng của nó giữ nguyên như CLIP. Điểm cuối là
+\begin{equation}
+\alpha\,z(\text{CLIP}) + (1-\alpha)\,z\big(\beta\,z(N) + (1-\beta)\,z(\texttt{triple})\big),
+\end{equation}
+với $N$ là \texttt{emb} hoặc \texttt{kgc}. Lưới tìm $\alpha \in \{0; 0{,}05; \dots; 1\}$,
+$\beta \in \{0; 0{,}25; 0{,}5; 0{,}75; 1\}$, chọn trên val riêng cho từng seed theo R@1 (hoà thì xét MRR).
+
+\subsection{Lời giải thích sinh từ cơ chế xếp hạng}
+\label{sec:method-expl}
+
+Đề yêu cầu lời giải thích phải đến từ chính cơ chế xếp hạng. Nhóm không chạy bước tìm đường đi nào sau khi đã có kết quả;
+mọi số trong lời giải thích được ghi lại trong cùng lần tính điểm.
+\begin{itemize}
+\item \textbf{VG, mô hình chính.} Vì trộn điểm thô, điểm cuối tách chính xác thành
+$a\cdot\cos + \sum_i b\,w_i \sum_j a_{ij}\mathit{sim}_{ij} + \sum_i c\,w_i \sum_j a_{ij}\mathit{sim}_{ij}$. Bảng giải thích
+ghi với mỗi phần $i$ của câu: $w_i$, phần $j$ của ảnh có attention lớn nhất, độ khớp, phần trăm của điểm cuối và, với vật
+thể có số lượng, giá trị $g$ đã cộng. Một cột nữa ghi giá trị của dòng đó trừ trung bình của chính dòng đó trên 50 ứng
+viên. Tổng cột này đúng bằng điểm cuối trừ điểm trung bình, nên nó cho biết dòng nào thật sự đẩy ảnh lên so với các ảnh
+khác.
+\item \textbf{MKG-W.} Lời giải thích là danh sách thực thể khớp được trong câu và các cạnh KGC-train giữa chúng với ứng viên.
+Đây chính là các cạnh đã được đếm vào kênh \texttt{triple}.
+\end{itemize}

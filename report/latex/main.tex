@@ -1,0 +1,78 @@
+% Báo cáo kỹ thuật đồ án Project 3 — Truy vấn đa phương thức có giải thích bằng đồ thị (nhóm 7).
+% Biên dịch: bash build.sh (XeLaTeX + BibTeX, chạy 3 lượt). Mỗi mục nằm trong sections/; mỗi con số trong báo cáo
+% lấy từ một file kết quả trong experiments/ (đường dẫn ghi ngay tại chỗ hoặc ở cuối mục).
+\documentclass[conference,a4paper]{IEEEtran}
+
+\usepackage{amsmath,amssymb}
+\usepackage{newtxmath} % công thức kiểu Times cho khớp chữ
+\usepackage[no-math]{fontspec}
+% TeX Gyre Termes (bản sao của Times, có chữ in hoa nhỏ đủ dấu tiếng Việt) để mọi máy build ra giống nhau.
+\IfFontExistsTF{texgyretermes-regular.otf}{\setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular,
+   BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic]}{\setmainfont{Times New Roman}}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, /pgf/number format/use comma, /pgf/number format/1000 sep={}}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks, urlcolor=blue, linkcolor=black, citecolor=black]{hyperref}
+\usepackage{etoolbox}
+\gappto\captionsvietnamese{\renewcommand{\refname}{Tài liệu tham khảo}}
+\renewcommand{\IEEEkeywordsname}{Từ khoá}
+\emergencystretch=2em
+
+\graphicspath{{figures/}}
+
+% Màu dùng chung cho hình tự vẽ
+\definecolor{cClip}{HTML}{2A6F97}   % kênh CLIP
+\definecolor{cObj}{HTML}{2A9D8F}    % kênh vật thể / thực thể
+\definecolor{cTri}{HTML}{C8553D}    % kênh bộ ba / cạnh
+\definecolor{cGray}{HTML}{5C6570}
+
+% Chỗ còn thiếu số hoặc cần nhóm xác nhận: in đỏ để không lọt vào bản nộp.
+\newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+% Số thập phân trong chế độ toán viết 0{,}6 để không có khoảng trắng sau dấu phẩy.
+\newcommand{\pmstd}[2]{#1\,$\pm$\,#2}  % mean ± std trong bảng (chế độ văn bản)
+\newcommand{\file}[1]{{\small\nolinkurl{#1}}} % đường dẫn file trong repo; gõ nguyên dấu _, không escape
+% Nguồn số liệu của một bảng, in ngay dưới bảng (caption của IEEEtran in hoa nên không đặt đường dẫn ở đó).
+\newcommand{\tabsrc}[1]{\par\smallskip{\scriptsize\raggedright Nguồn: #1\par}}
+\newcommand{\repo}{\url{https://github.com/HatDuaa/multimodal-graph-retrieval-xai}}
+
+\begin{document}
+
+\title{Truy vấn văn bản--ảnh có giải thích bằng đồ thị:\\
+scene graph, đồ thị tri thức đa phương thức và đánh giá lời giải thích}
+
+\author{
+\IEEEauthorblockN{Nhóm 7: Nguyễn Đình Lộc (25C11050), Ngô Trương Minh Đạt (25C15003), Trần Đắc Khoa (25C15015),\\
+Nguyễn Bùi Mẫn Nhi (25C15055), Âu Dương Khang (25C15045)}
+\IEEEauthorblockA{Khoa Công nghệ Thông tin, Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM\\
+Học phần: Học máy với dữ liệu đồ thị \quad Giảng viên: TS. Lê Ngọc Thành\\
+Mã nguồn: \repo}
+}
+
+\maketitle
+
+\input{sections/00-abstract}
+\input{sections/01-introduction}
+\input{sections/02-data-leakage}
+\input{sections/03-method}
+\input{sections/04-level1-results}
+\input{sections/05-level2-results}
+\InputIfFileExists{sections/06-explanation-eval}{}{\section{Đánh giá lời giải thích}\label{sec:xai}\todo{chưa có mục}}
+\InputIfFileExists{sections/07-vietnamese-mmkg}{}{\section{MMKG tiếng Việt}\label{sec:vnmmkg}\todo{chưa có mục}}
+\input{sections/08-limitations-conclusion}
+\input{sections/09-contributions}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references,refs-xai,refs-vnmmkg}
+
+\end{document}

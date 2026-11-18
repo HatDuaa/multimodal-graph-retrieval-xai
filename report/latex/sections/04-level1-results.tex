@@ -1,0 +1,242 @@
+% =====================================================================
+\section{Kết quả cấp độ 1: Visual Genome $\cap$ COCO}
+\label{sec:l1}
+
+R@$k$ là tỉ lệ truy vấn có ảnh đúng trong $k$ kết quả đầu; MRR là trung bình nghịch đảo hạng của ảnh đúng, tính trong
+top-50. Mọi số của mô hình huấn luyện là trung bình $\pm$ độ lệch chuẩn qua 3 seed, lấy ở checkpoint tốt nhất theo val.
+Khi so hai mô hình, nhóm dùng kiểm định Welch trên 3 seed mỗi bên.
+
+\subsection{So sánh CLIP với CLIP + đồ thị trên test}
+
+\begin{table}[t]
+\centering
+\caption{Kết quả trên test VG $\cap$ COCO (10\,696 truy vấn, pool 2\,138 ảnh). Test chấm một lần cho mỗi mô hình đã chốt.}
+\label{tab:l1-test}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Phương pháp & R@1 & R@5 & R@10 & MRR \\
+\midrule
+CLIP thuần & 39,32 & 66,39 & 77,32 & 52,00 \\
+Ba kênh, không huấn luyện & 42,54 & 70,04 & 80,35 & 55,05 \\
+Mô hình cấp 1 (\texttt{main\_r3}) & \pmstd{45,77}{0,23} & \pmstd{72,87}{0,31} & \pmstd{82,69}{0,31} & \pmstd{58,14}{0,18} \\
+\textbf{Mô hình chính} & \textbf{\pmstd{47,95}{0,15}} & \textbf{\pmstd{74,79}{0,03}} & \textbf{\pmstd{84,38}{0,08}} & \textbf{\pmstd{60,15}{0,15}} \\
+\bottomrule
+\end{tabular}}
+\tabsrc{\file{experiments/level1/test/}, \file{experiments/improve/test/}}
+\end{table}
+
+Bảng~\ref{tab:l1-test} là phép so bắt buộc của đề: CLIP thuần và CLIP + đồ thị trên cùng cách chia. Dòng ``ba kênh, không
+huấn luyện'' dùng cùng công thức trộn nhưng vector của phần đồ thị là vector CLIP text gốc, không qua GAT. Mô hình chính hơn
+CLIP 8,63 điểm R@1. So với mô hình cấp~1, mô hình chính hơn 2,18 điểm R@1 ($p = 0{,}0005$) và 2,00 điểm MRR
+($p = 0{,}0002$). Ba seed của mô hình chính cho R@1 48,06 / 47,78 / 47,99. Từ val sang test, R@1 giảm 0,96 điểm (48,91
+$\to$ 47,95), so với 0,71 điểm của mô hình cấp~1. Mô hình chính được chọn sau nhiều thí nghiệm trên val, nên khoảng chênh
+lớn hơn một chút là hợp lý.
+
+\subsection{Mô hình chính được xây thế nào}
+
+\begin{table}[t]
+\centering
+\caption{Từng bước từ mô hình cấp~1 tới mô hình chính, R@1 và MRR trên val. $p$: Welch so với bước trước.}
+\label{tab:l1-chain}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{3.4cm}ccc}
+\toprule
+Bước (đổi một thứ so với bước trước) & R@1 & MRR & Chênh R@1 ($p$) \\
+\midrule
+Mô hình cấp 1 & \pmstd{46,48}{0,24} & 58,85 & \\
++ Đồ thị câu FACTUAL-T5 & \pmstd{47,23}{0,36} & 59,49 & +0,76 ($\approx$0,05) \\
++ Trộn điểm thô & \pmstd{47,48}{0,10} & 59,72 & +0,25 (n.s.) \\
++ Đồ thị ảnh sạch và liền\textsuperscript{*} & \pmstd{48,38}{0,17} & 60,51 & +0,90 (0,003) \\
++ Số lượng và bảng $g$ & \textbf{\pmstd{48,91}{0,21}} & \textbf{60,86} & +0,53 (0,032) \\
+\bottomrule
+\multicolumn{4}{p{0.95\columnwidth}}{\scriptsize \textsuperscript{*}Gộp bốn thay đổi (gộp trùng, hình học cạnh, cạnh
+kNN, node tổng) theo quyết định của nhóm; ablation bỏ cạnh ở Bảng~\ref{tab:l1-ablation-main} đo phần đóng góp của cạnh.}
+\end{tabular}
+\tabsrc{\file{experiments/improve/README.md}}
+\end{table}
+
+Mô hình chính không được chọn một lần. Nó là kết quả của bốn bước, mỗi bước đổi một thứ và được giữ lại vì làm R@1 val tăng
+qua 3 seed (Bảng~\ref{tab:l1-chain}). Bước trộn điểm thô không có ý nghĩa thống kê. Nhóm vẫn giữ nó vì nó làm điểm cuối tách
+chính xác thành từng phần (Mục~\ref{sec:method-expl}), và độ lệch giữa các seed nhỏ nhất. Các hướng thử trên val nhưng không
+giữ (so khớp bộ ba tách thành phần, kênh mức cả đồ thị, gom vật cùng loại thành một node nhóm, \dots) ghi ở
+\file{experiments/improve/README.md}. Ví dụ, gom vật cùng loại làm R@1 giảm 0,63 điểm ($p = 0{,}019$), nên mô hình chính chỉ
+thêm số lượng vào từng node.
+
+\subsection{Ablation: cải thiện có đến từ cấu trúc quan hệ không}
+
+Đề yêu cầu bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên để kiểm tra phần cải thiện có thật sự đến từ cấu trúc quan hệ. Nhóm làm
+hai loại ablation. Loại thứ nhất huấn luyện lại từ đầu, cùng công thức, cùng 3 seed. Loại thứ hai giữ nguyên checkpoint và
+chỉ phá đồ thị lúc chấm.
+
+\begin{table}[t]
+\centering
+\caption{Ablation của mô hình cấp~1, mỗi dòng huấn luyện lại từ đầu. R@1.}
+\label{tab:l1-ablation}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{4.3cm}cc}
+\toprule
+Cấu hình & Val & Test \\
+\midrule
+Mô hình cấp 1 & \pmstd{46,48}{0,24} & \pmstd{45,77}{0,23} \\
+$a,b,c$ cố định cho mọi câu & \pmstd{46,13}{0,15} & \pmstd{45,13}{0,05} \\
+Bỏ GAT (không lan truyền) & \pmstd{46,71}{0,07} & \pmstd{45,95}{0,20} \\
+Tắt kênh bộ ba (GAT vẫn dùng cạnh) & \pmstd{45,99}{0,05} & \pmstd{45,07}{0,22} \\
+Bỏ hẳn quan hệ & \pmstd{45,98}{0,10} & \pmstd{45,26}{0,14} \\
+Câu không qua bộ mã hoá đồ thị & \pmstd{46,92}{0,07} & \pmstd{45,61}{0,29} \\
+Nối lại cạnh ngẫu nhiên (giữ bậc) & \pmstd{46,24}{0,24} & \pmstd{45,50}{0,40} \\
+Loss LambdaRank thay cross-entropy & \pmstd{45,18}{0,34} & \pmstd{44,28}{0,30} \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/level1/README.md}}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Ablation và đối chứng của mô hình chính, chỉ trên val. R@1 (chênh so với mô hình đủ).}
+\label{tab:l1-ablation-main}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}cc}
+\toprule
+ & Mô hình chính & Mô hình cấp 1 \\
+\midrule
+Đủ đồ thị & \pmstd{48,91}{0,21} & \pmstd{46,48}{0,24} \\
+\multicolumn{3}{l}{\emph{Huấn luyện lại}} \\
+Bỏ mọi cạnh & $-$2,39 ($p$ = 0,0024) & $-$0,50 ($p$ = 0,055) \\
+\multicolumn{3}{l}{\emph{Chỉ phá lúc chấm}} \\
+Đồ thị của một ảnh khác & 21,91 ($-$27,00) & 26,33 ($-$20,15) \\
+Nối lại quan hệ có nhãn ngẫu nhiên & 48,32 ($-$0,59) & 46,29 ($-$0,19) \\
+Bỏ bảng $g$ & $-$0,35 & --- \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/improve/no-edges/REPORT.md}, \file{experiments/improve/controls/README.md}}
+\end{table}
+
+Bảng~\ref{tab:l1-ablation} và~\ref{tab:l1-ablation-main} cho ba kết luận.
+\begin{itemize}
+\item \textbf{Mô hình dựa vào đồ thị của đúng ảnh.} Cho mỗi ảnh mang scene graph của một ảnh khác thì R@1 của mô hình chính
+rơi từ 48,91 xuống 21,91, thấp hơn cả CLIP thuần (39,13 trên val). Nếu điểm đồ thị chỉ là nhiễu có ích, phép thay này đã
+không gây hại nhiều như vậy.
+\item \textbf{Ở cấp~1, cạnh đóng góp ít.} Bỏ hẳn quan hệ chỉ làm giảm khoảng 0,5 điểm, và bỏ GAT không thua mô hình có GAT.
+Đây là một kết quả âm nhóm giữ nguyên trong báo cáo.
+\item \textbf{Ở mô hình chính, cạnh đóng góp rõ.} Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 giảm 2,39 điểm ($p = 0{,}0024$).
+Phần này chiếm 24\% mức mô hình chính hơn CLIP trên val (2,39 / 9,78); ở cấp~1 tỉ lệ này là 7\%. Bỏ cạnh, mô hình chính chỉ
+còn 46,52, ngang mô hình cấp~1. Xáo các quan hệ có nhãn chỉ làm giảm 0,59 điểm, nên phần lớn đóng góp của cạnh nhiều khả năng
+nằm ở cạnh kNN và node tổng. Muốn tách chính xác cần thêm một ablation chỉ bỏ cạnh kNN; nhóm chưa chạy.
+\end{itemize}
+
+\subsection{Độ nhạy theo $\alpha$ và đồ thị giúp ở đâu}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=\columnwidth, height=4.6cm, xlabel={$\alpha$ (trọng số CLIP)}, ylabel={R@1 val (\%)},
+  xmin=0, xmax=1, ymin=20, ymax=52, grid=major, grid style={gray!25},
+  legend style={font=\scriptsize, at={(0.02,0.03)}, anchor=south west}, tick label style={font=\scriptsize},
+  label style={font=\small}]
+\addplot[cObj, thick, mark=*, mark size=1.2pt] coordinates {(0,32.81) (0.1,36.77) (0.2,40.73) (0.3,44.12) (0.4,46.52)
+  (0.5,47.82) (0.6,48.14) (0.7,47.37) (0.8,45.49) (0.9,42.84) (1,39.13)};
+\addlegendentry{VG $\cap$ COCO, mô hình chính}
+\addplot[cTri, thick, mark=square*, mark size=1.1pt] coordinates {(0,32.40) (0.05,32.40) (0.1,32.40) (0.15,32.40)
+  (0.2,32.40) (0.25,32.40) (0.3,32.40) (0.35,32.40) (0.4,32.06) (0.45,31.84) (0.5,31.61) (0.55,31.50) (0.6,30.61)
+  (0.65,29.93) (0.7,29.71) (0.75,29.26) (0.8,28.36) (0.85,27.91) (0.9,26.57) (0.95,25.67) (1,24.33)};
+\addlegendentry{MKG-W, CLIP + đếm cạnh ($\beta=0$)}
+\end{axis}
+\end{tikzpicture}
+\caption{R@1 val khi ép một $\alpha$ cố định cho mọi truy vấn ($\alpha=1$ là CLIP thuần). Với VG, $b$ và $c$ giữ tỉ lệ đã
+học của từng câu, trung bình 3 seed. Với MKG-W, seed 0 (đường cong giống hệt ở cả 3 seed vì $\beta=0$ không dùng NativE).
+Nguồn: \file{experiments/improve/alpha-groups/alpha_sweep.json}, \file{experiments/level2/val/alpha_beta_sweep.json}.}
+\label{fig:alpha}
+\end{figure}
+
+\textbf{Độ nhạy theo $\alpha$} (Hình~\ref{fig:alpha}). Trên VG, đường cong có đỉnh ở $\alpha = 0{,}6$ (R@1
+\pmstd{48,14}{0,30}). Trọng số học theo từng câu cho 48,91, hơn $\alpha$ cố định tốt nhất 0,77 điểm, dù $\alpha$ tốt nhất
+đã được chọn trên chính val nên còn lạc quan. Trung bình $a$ học được là \pmstd{0,57}{0,06}, gần 0,6. Vậy phần lời thêm đến
+từ việc trọng số thay đổi theo câu, không phải từ một mức trung bình khác. Hai đầu đường cong cho thấy cả hai nguồn tín hiệu
+đều cần: chỉ dùng đồ thị ($\alpha = 0$) được 32,81, chỉ dùng CLIP được 39,13. Đường cong của MKG-W bàn ở Mục~\ref{sec:l2}.
+
+\begin{table}[t]
+\centering
+\caption{R@1 val theo nhóm câu. Nhóm định nghĩa một lần từ đồ thị FACTUAL của câu, dùng chung cho mọi mô hình. KTC 95\%:
+bootstrap ghép cặp theo câu.}
+\label{tab:l1-groups}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{lrcccc}
+\toprule
+Nhóm & Số câu & CLIP & Cấp 1 & Chính & Chính $-$ cấp 1 [KTC] \\
+\midrule
+Tất cả & 10\,633 & 39,13 & 46,48 & 48,91 & +2,43 [1,92; 2,93] \\
+Có số lượng nêu rõ & 1\,235 & 44,21 & 50,69 & 54,06 & +3,37 [1,75; 4,91] \\
+Có $\ge$1 quan hệ & 10\,342 & 39,31 & 46,83 & 49,38 & +2,55 \\
+Chỉ vật thể & 291 & 32,99 & 33,91 & 32,19 & $-$1,72 [$-$4,7; 1,4] \\
+2 vật thể & 3\,757 & 35,67 & 40,87 & 42,41 & +1,54 [0,72; 2,40] \\
+$\ge$3 vật thể & 6\,607 & 41,40 & 50,20 & 53,32 & +3,11 [2,45; 3,77] \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/improve/alpha-groups/REPORT.md}}
+\end{table}
+
+\textbf{Đồ thị giúp ở đâu} (Bảng~\ref{tab:l1-groups}). Đây là câu hỏi của nhiệm vụ~2 trong đề.
+\begin{itemize}
+\item Phần lời của đồ thị so với CLIP tăng theo số vật thể trong câu: +6,74 điểm ở câu có 2 vật thể, +11,92 điểm ở câu từ 3
+vật thể trở lên.
+\item Câu chỉ nêu vật thể, không có quan hệ (2,7\% số câu), không được lợi gì; CLIP đã đủ cho các câu này.
+\item Câu nêu số lượng được lợi thêm so với mô hình cấp~1 (+3,37 so với +2,31 ở các câu không nêu số).
+\item Phần mất khi bỏ cạnh cũng tập trung ở câu có quan hệ và câu nhiều vật thể; câu chỉ có vật thể gần như không đổi
+(\file{experiments/improve/no-edges/REPORT.md}).
+\end{itemize}
+
+\subsection{Giải thích và phân tích 10 truy vấn}
+\label{sec:l1-cases}
+
+\textbf{Cách chọn.} Chỉ xét câu val có ít nhất một quan hệ. Nhóm bốc ngẫu nhiên với seed cố định (2026), theo quy tắc đặt
+trước: 5 câu thành công (CLIP xếp ảnh đúng dưới hạng 1, mô hình xếp hạng 1), 3 câu mô hình làm tệ đi (CLIP hạng 1, mô hình
+dưới hạng 1), 2 câu cả hai đều sai. Trên toàn val, mô hình chính (seed 0) có 1\,528 câu thành công, 463 câu làm tệ đi,
+4\,944 câu cả hai đều sai và 3\,698 câu cả hai đều đúng. Bảng~\ref{tab:l1-cases} tóm tắt 10 câu. Ảnh, bảng giải thích đầy
+đủ và lời phân tích từng câu (viết sau khi xem ảnh thật) ở \file{experiments/improve/explanations/README.md}.
+
+\begin{table*}[t]
+\centering
+\caption{Mười truy vấn của mô hình chính (seed 0, val). Hạng ảnh đúng theo CLIP $\to$ theo mô hình.}
+\label{tab:l1-cases}
+\footnotesize
+\begin{tabular}{cp{7.6cm}cp{6.0cm}}
+\toprule
+Ca & Truy vấn & Hạng & Nhận xét \\
+\midrule
+1 & Dining table for six in a wood paneled room with a fireplace. & 2 $\to$ 1 & Thành công \\
+2 & A cow standing along side of a large river. & 8 $\to$ 1 & Thành công \\
+3 & A man sitting in front of the pen with a dog herding sheep in the background. & 3 $\to$ 1 & Thành công \\
+4 & Someone holding a doughnut that has a bite taken out of it. & 4 $\to$ 1 & Thành công \\
+5 & People huddle under several umbrellas on a sidewalk area and a white dog \dots & 2 $\to$ 1 & Thành công; $g$ dùng số lượng của \emph{umbrella} và \emph{people} \\
+6 & A bunch of bananas are sitting on a wooden plate. & 1 $\to$ 2 & VG gọi đĩa gỗ là \emph{tray}; thuộc tính ``wooden'' chưa được dùng \\
+7 & A train riding along the tracks along a bank of dirt. & 1 $\to$ 5 & Đồ thị VG của ảnh đúng rỗng (0 node) \\
+8 & A bus that is reading ``89 Portola Plaza'' is traveling on. & 1 $\to$ 3 & Chi tiết quyết định là chữ trên biển; scene graph không biểu diễn được \\
+9 & Two men standing in a living room playing video game with remotes. & 13 $\to$ 17 & Số lượng khớp đúng ($g$ +0,071 cho ``two men'') nhưng ảnh đúng thiếu nhãn tay cầm \\
+10 & A batter is preparing to hit the ball at a game. & 17 $\to$ 28 & Ảnh đúng thiếu nhãn \emph{batter}, \emph{ball} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{Phép thử xoá.} Đây là mức fidelity cơ bản của cấp~1. Trên ảnh mô hình xếp hạng 1 của mỗi ca, nhóm xoá phần ảnh có
+đóng góp lớn nhất vào điểm, rồi so với trung bình 10 lần xoá ngẫu nhiên một phần cùng loại.
+\begin{itemize}
+\item Ở 10/10 ca, xoá phần lớn nhất làm điểm giảm nhiều hơn xoá ngẫu nhiên.
+\item Ở 7/10 ca, riêng việc xoá phần đó đã làm ảnh rơi khỏi hạng 1 (mô hình cấp~1: 5/10). Khi phần bị xoá là vật thể, 6/6 ca
+rơi hạng; khi là bộ ba, chỉ 1/4.
+\item Attention trung bình của cặp khớp nhất là 0,51 ở kênh vật thể và 0,17 ở kênh bộ ba. Kênh bộ ba có trọng số lớn nhưng
+khớp trải đều, nên thứ hạng chủ yếu do CLIP và kênh vật thể quyết định.
+\end{itemize}
+Mục~\ref{sec:xai} đo fidelity, validity và sparsity trên toàn bộ val.
+
+\textbf{Nguyên nhân thất bại} quan sát được khi xem ảnh thật, ở cả hai mô hình: chú thích VG thiếu nhãn hoặc đồ thị rỗng;
+khác biệt từ vựng giữa caption COCO và nhãn VG (\emph{plate}/\emph{tray}, \emph{child}/\emph{boy}); thuộc tính (màu, chất
+liệu) chưa được dùng; chi tiết mà scene graph không biểu diễn được (chữ trên biển hiệu); ảnh đúng nằm ngoài top-50 của CLIP.
+Về thuộc tính, một phép thử không huấn luyện chỉ tăng R@1 val 0,36 điểm, dưới ngưỡng 0,5 điểm nhóm đặt trước, nên nhóm
+không thêm thuộc tính vào mô hình (\file{experiments/checks/attribute-probe.REPORT.md}).

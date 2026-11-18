@@ -1,0 +1,34 @@
+% =====================================================================
+\section{Giới thiệu}
+\label{sec:intro}
+
+CLIP~\cite{radford2021clip} đưa ảnh và câu vào cùng một không gian vector, nên truy vấn văn bản--ảnh chỉ còn là tìm ảnh
+có cosine lớn nhất với câu. Cách so khớp này có hai giới hạn. Thứ nhất, nó không dùng quan hệ có cấu trúc giữa các vật
+thể trong ảnh, hay giữa các thực thể trong một đồ thị tri thức. Thứ hai, nó không cho biết vì sao một ảnh được xếp lên
+đầu. Đề bài yêu cầu một hệ thống trả lời ba câu hỏi nối tiếp nhau:
+(1) ảnh nào phù hợp nhất với truy vấn;
+(2) tri thức quan hệ giúp truy vấn tốt hơn ở đâu, nhất là với truy vấn gián tiếp;
+(3) vì sao mô hình trả về kết quả này.
+Nhóm làm nhánh A của đề (văn bản tìm ảnh) và thực hiện đủ ba cấp độ.
+
+\textbf{Cấp độ~1} (Visual Genome $\cap$ COCO). CLIP đóng băng chọn 50 ứng viên. Một bộ mã hoá GATv2~\cite{brody2022gatv2}
+chạy trong scene graph của từng ảnh và trong đồ thị tách từ câu, rồi chấm điểm khớp ở hai mức: vật thể và bộ ba (chủ thể,
+quan hệ, đối tượng). Điểm cuối kết hợp cosine CLIP với điểm đồ thị theo dạng
+$\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$ của đề. Nhóm so với CLIP thuần trên cùng cách chia. Các ablation
+gồm bỏ cạnh, nối lại cạnh ngẫu nhiên và thay đồ thị của ảnh khác. Phần cuối phân tích 5 truy vấn thành công và 5 truy vấn
+thất bại.
+
+\textbf{Cấp độ~2} (thêm MKG-W). Nhóm tái lập NativE~\cite{zhang2024native}, một mô hình hoàn thiện đồ thị tri thức đa
+phương thức năm 2024, và kiểm tra lại con số link prediction của bài báo. Sau đó nhóm đưa ba loại tín hiệu đồ thị vào cùng
+pipeline xếp hạng lại: số cạnh tri thức, embedding của NativE, và điểm bộ ba của chính NativE. Nhóm xây thêm bộ 25 truy vấn
+tự viết, tách nhóm trực tiếp và gián tiếp.
+
+\textbf{Cấp độ~3}. Nhóm đo fidelity, validity và sparsity của lời giải thích trên toàn bộ tập validation, kèm bằng chứng
+trên từng truy vấn. Nhóm cũng xây một đồ thị tri thức đa phương thức (MMKG) tiếng Việt nhỏ, chạy phương pháp của cấp độ~2
+trên đó và phân tích khả năng chuyển giao.
+
+Báo cáo tập trung vào hai điều: các bước có đúng quy trình không, và kết quả cho biết điều gì. Mục~\ref{sec:data} mô tả dữ
+liệu và các quy tắc chống rò rỉ. Mục~\ref{sec:method} mô tả mô hình và cách lời giải thích được sinh ra. Các
+mục~\ref{sec:l1}--\ref{sec:vnmmkg} trình bày kết quả theo từng cấp độ. Mục~\ref{sec:conclusion} nêu hạn chế. Mục~\ref{sec:contrib}
+ghi phân công và phần đã dùng công cụ AI. Mọi con số đều lấy từ một file kết quả trong thư mục \file{experiments/} của
+repo; đường dẫn ghi ngay cạnh bảng.
