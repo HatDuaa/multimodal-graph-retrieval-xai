@@ -68,6 +68,8 @@ python -m src.data.build_mkgw_split
 - Trường `url` trong file split chỉ là **fallback Wikimedia Commons (P18)** cho demo, có thể `null`; nguồn chính là file local `data/raw/images/<qid>.jpg` từ kho tác giả (chia sẻ qua Drive nhóm, không tải lại từng người).
 - Embedding thực thể từ checkpoint NativE đã train: `python scripts/export_native_embeddings.py --checkpoint <path> --what ent img_proj text_proj` → `data/features/mkgw_native_*.npy` theo format chung.
 - Đặc trưng CLIP: `python scripts/extract_features.py --dataset mkgw`.
+- NativE an toàn rò rỉ cho retrieval (Khang): `python scripts/mask_native_modalities.py --name MKG-W-rmask` tạo bản MKG-W đặt vector ảnh và văn bản của thực thể val/test về 0, rồi train 3 seed trên bản đó. Cả quy trình (tải dữ liệu, train nền, tự đẩy checkpoint, đánh giá cấp độ 2) chạy trong `notebooks/mkgw_molab.py` trên molab.
+- Mọi file lớn của MKG-W (dữ liệu thô, đặc trưng, checkpoint, embedding) có bản trên repo Hugging Face riêng tư `duongkhang2100/graphml-mkgw-retrieval` (riêng tư vì chứa ảnh của nhóm tác giả MMRNS; xin quyền đọc từ Khang). Kéo về: `python scripts/pull_mkgw_from_hf.py` (thêm `--images` nếu cần ảnh). Checksum: `data/MANIFEST.md`.
 
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 

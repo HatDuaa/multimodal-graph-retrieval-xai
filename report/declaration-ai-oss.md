@@ -24,6 +24,11 @@ Dùng qua API, không chép hay sửa mã nguồn của thư viện. Phiên bả
 | NLTK 3.10 + WordNet | Xác định "cùng loại" theo synset / hypernym khi gộp khung trùng và đếm số lượng | Apache-2.0 (NLTK); giấy phép WordNet của Princeton |
 | matplotlib 3.11 | Vẽ hình trong báo cáo thí nghiệm | Giấy phép matplotlib (dựa trên PSF) |
 | mwparserfromhell 0.7.2 | Đọc infobox từ wikitext (MMKG tiếng Việt) | MIT |
+| NativE (`zjukg/NativE`, commit `c72291c`) | Train AdvRelRotatE trên MKG-W (dòng 22, 23). Chạy nguyên code, chỉ biên dịch lại `Base.so`; nhóm chỉ thêm bản dữ liệu `MKG-W-rmask` bên ngoài code của họ | Theo repo gốc (chưa ghi giấy phép trong bản khai báo này, cần kiểm) |
+| open_clip với trọng số LAION `xlm-roberta-large-ViT-H-14` (`frozen_laion5b_s13b_b90k`), `xlm-roberta-base-ViT-B-32` | Encoder cho truy vấn tiếng Việt (dòng 9, 32), đóng băng | MIT (mã); trọng số theo thẻ model trên Hugging Face |
+| sentence-transformers, `clip-ViT-B-32-multilingual-v1` | Một ứng viên so sánh ở dòng 9 | Apache-2.0 (thư viện); trọng số theo thẻ model |
+| huggingface_hub, hf_xet | Lưu dữ liệu và checkpoint MKG-W trên repo HF riêng tư | Apache-2.0 |
+| marimo, gdown | Notebook chạy trên molab, tải file từ Drive | Apache-2.0 / MIT |
 
 Nhóm không dùng mã nguồn của bài báo nào ở cấp độ 1. Mô hình xếp lại (`src/models/graph_reranker.py`) do nhóm viết theo
 thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
@@ -45,6 +50,7 @@ thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
 | Split Karpathy (`dataset_coco.json`) | Chia train / val / test | Công bố cùng bài báo của Karpathy & Fei-Fei |
 | Wikidata (SPARQL, wbgetentities) | Thực thể và triple của MMKG tiếng Việt | CC0 |
 | Wikipedia tiếng Việt | Phần mở đầu (truy vấn tự động), infobox | CC BY-SA 4.0 |
+| MKG-W (bản phát hành của NativE và MMRNS: triple, embedding trích sẵn, ảnh `MKG-W_img.zip`) | Dữ liệu cấp độ 2 | Theo bản phát hành của nhóm tác giả; ảnh để trong repo HF riêng tư, không phát hành lại |
 | Wikimedia Commons | Ảnh của MMKG tiếng Việt | Theo từng file (CC0, PD, CC BY, CC BY-SA); ghi trong vietnamese-mmkg/images.jsonl |
 
 Link tải và checksum: `data/README.md`, `data/MANIFEST.md`.
@@ -117,3 +123,14 @@ Nguyên tắc áp dụng cho mọi phần do AI làm:
   - chạy pipeline và đề xuất các quyết định ở cổng G1/G2 (QID thời kỳ và lớp tỉnh, ánh xạ infobox, thêm quan hệ P276/P527);
   - soạn nháp bộ truy vấn soạn tay và data card.
 - **Khang** chốt miền và nguồn dữ liệu; duyệt toàn bộ ảnh và mọi triple infobox/suy diễn; duyệt và khoá bộ truy vấn soạn tay. Khang chịu trách nhiệm mọi quyết định và tự giải thích được phần mình commit.
+
+### Cấp độ 2 trên MKG-W, dòng 9 và dòng 32 (Âu Dương Khang, 2026-11-16 đến 2026-11-18)
+
+Khang làm tiếp nhánh MKG-W của Đạt để kịp hạn nộp. Dữ liệu, split, linker và bộ chấm điểm đồ thị là của Đạt; phần dưới là phần Khang làm thêm.
+- **Anthropic Claude** (Claude Code), làm cùng Khang:
+  - viết `scripts/mask_native_modalities.py`, `scripts/eval_mkgw_level2.py`, `scripts/build_mkgw_hand_queries.py`, `scripts/eval_vnmmkg_transfer.py`, `scripts/push_to_hf.py`, `scripts/pull_mkgw_from_hf.py`, bản viết lại `scripts/checks/multilingual_clip_probe.py`, notebook `notebooks/mkgw_molab.py` và kiểm thử;
+  - sửa nhỏ code của Đạt: `--suffix` cho `export_native_embeddings.py`, tham số `max_ngram` cho `EntityLinker`, User-Agent cho hai script lấy Wikidata;
+  - soạn nháp bộ 25 truy vấn soạn tay MKG-W (script kiểm tra tự động: đúng số đáp án, không lộ tên, không có đường tắt qua hàng xóm KG);
+  - viết các README kết quả (`experiments/level2/README.md`, `experiments/level2/native-train/README.md`, `experiments/level3/vnmmkg/README.md`, mục 7 của `experiments/checks/README.md`).
+- **Khang** chốt cách làm (theo cách dựng dữ liệu của Đạt, train trên molab, lưu trên Hugging Face), chạy train và đánh giá trên molab, duyệt kết quả và chịu trách nhiệm mọi quyết định. Bộ truy vấn soạn tay MKG-W do Claude soạn và khoá trước lần chạy test; Khang cần đọc lại trước khi nộp.
+- Mọi lựa chọn (encoder ở dòng 9, α và β ở cấp độ 2, α ở A1 của dòng 32) được chọn trên val. Có một lần chạy thử code trên test với embedding giả, ghi rõ trong `experiments/level2/README.md`; không lựa chọn nào bị đổi sau đó.

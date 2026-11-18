@@ -109,6 +109,20 @@ Bản 2026-09-25 (v2 — ảnh lấy từ kho tác giả MMRNS thay vì Wikimedi
 
 Ảnh chuẩn hoá `data/raw/images/<qid>.jpg` (8 961 file, 476 MB, JPEG cạnh dài 640) sinh lại được từ zip + index nên không cần checksum từng file. Embeddings gốc của NativE (tải từ Drive tác giả, đặt trong clone NativE): `MKG-W-visual.pth` sha256 đầu `9cf9346fb7bcd1d7`, `MKG-W-textual.pth` sha256 đầu `13b765b5bddceaef`.
 
+### NativE đã train và embedding thực thể (cấp độ 2, Khang)
+
+Bản 2026-11-18. Checkpoint train trên molab bằng `notebooks/mkgw_molab.py` (bước 4), siêu tham số của tác giả, 1000 epoch: `repro_seed42` trên MKG-W gốc (tái lập, dòng 22) và `rmask_seed{0,1,2}` trên `MKG-W-rmask` (`scripts/mask_native_modalities.py`, vector ảnh và văn bản của 1 784 thực thể val/test đặt về 0). Embedding xuất bằng `scripts/export_native_embeddings.py --what ent --suffix _seed<s>` (15 000 × 500, chuẩn hoá L2). Lưu ở repo Hugging Face riêng tư `duongkhang2100/graphml-mkgw-retrieval` (cùng đường dẫn như bảng), kéo về bằng `scripts/pull_mkgw_from_hf.py`. Hai file embedding gốc trên repo đó trùng checksum với bản của tác giả ở trên.
+
+| File (đường dẫn trên HF) | Bytes | SHA-256 |
+|---|---:|---|
+| `native/checkpoint/repro_seed42_e1000.ckpt` | 80746013 | `2330646c877af710d1bb1893172ddfc0d85c1153eed4c4b202e5fbf3b6a32340` |
+| `native/checkpoint/rmask_seed0_e1000.ckpt` | 80745984 | `bc824a431c014d64bbfa684cbef0726aad92251c8a2af1e07d31acb8573517d7` |
+| `native/checkpoint/rmask_seed1_e1000.ckpt` | 80745984 | `85ec5ea02ec79a3d67e36a0e44eb2853e96f7ad208edf7b9c1bdc8aee8ca2c88` |
+| `native/checkpoint/rmask_seed2_e1000.ckpt` | 80745984 | `1b32cfedf412d5b1f330aa19a02881733fb4b908a7051510be181e8bc4a57458` |
+| `data/features/mkgw_native_ent_seed0.npy` | 30000128 | `9a5e90d30b217a426598fe00e7fd6e8cdd504612b450c9ef41d04d40bc48bff0` |
+| `data/features/mkgw_native_ent_seed1.npy` | 30000128 | `4df13fcf156e34007eb15d6ec933c8af3a2cc69328e78a5eb4f76341102c3abe` |
+| `data/features/mkgw_native_ent_seed2.npy` | 30000128 | `7a81dcac0d10c5ddf6159c4603f33398328e09a095fa1239481e46b1aad3925f` |
+
 ## MMKG tiếng Việt (cấp độ 3, Khang)
 
 Bản 2026-10-26, cache thô tải ngày 2026-10-24.
