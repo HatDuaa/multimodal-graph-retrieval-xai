@@ -28,7 +28,7 @@ Kết quả chính (val, mean ± std qua 3 seed):
 | Điểm mất khi bỏ top-3 / tổng term của top-3 | 0,19 | 0,06 | |
 | Node ảnh được chú ý nhất cùng loại với node câu (strict / lenient) | 63,8% / 70,0% | 58,3% / 63,8% | |
 
-Ba kết luận:
+Bốn kết luận:
 
 1. **E trung thực theo thứ tự**: bỏ hay giữ các phần đầu của E làm thứ hạng đổi xa hơn hẳn ngẫu nhiên.
    Với mô hình chính countonly, thứ tự của E khớp Shapley tốt hơn mọi cách được so, trừ GraphSVX (vốn là một phép ước lượng Shapley); E cũng khớp Shapley tốt hơn nhiều so với PGExplainer, GNN-LRP và SubgraphX.
