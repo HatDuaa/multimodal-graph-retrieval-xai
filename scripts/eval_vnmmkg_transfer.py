@@ -85,7 +85,7 @@ def run(pool: list[dict], queries: list[dict], img_feats: dict, q_feats: np.ndar
             s = scorer.score(linked, qid_of[img])
             tri[qi, ci] = s["triple"]
             row.append(s["matches"])
-        explanations.append({"linked": linked, "top1_matches": row[0]})
+        explanations.append({"linked": linked, "matches": dict(zip(ranked[qi], row))})
     return clip, tri, ranked, golds, explanations
 
 
@@ -143,9 +143,13 @@ def main() -> None:
           "clip+kg_triple": by_group(fused(clip, tri, ranked, args.alpha_a0), golds, queries_all)}
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "a0_metrics.json").write_text(json.dumps(a0, indent=1), encoding="utf-8")
+    # explanation of the image the fused ranking returns first: the KG edges that were counted for it
+    a0_ranked = fused(clip, tri, ranked, args.alpha_a0)
     (out_dir / "a0_explanations.json").write_text(json.dumps(
-        [{"query_id": q["query_id"], "group": q["group"], "text": q["text"], **e}
-         for q, e in zip(queries_all, expl)], ensure_ascii=False, indent=1), encoding="utf-8")
+        [{"query_id": q["query_id"], "group": q["group"], "text": q["text"], "linked": e["linked"],
+          "top1_image": a0_ranked[i][0], "top1_is_gold": a0_ranked[i][0] in golds[i],
+          "top1_matches": e["matches"][a0_ranked[i][0]]}
+         for i, (q, e) in enumerate(zip(queries_all, expl))], ensure_ascii=False, indent=1), encoding="utf-8")
     print("A0", {m: {g: round(100 * r["recall@1"], 2) for g, r in v.items()}
                  for m, v in a0.items() if isinstance(v, dict)})
 
