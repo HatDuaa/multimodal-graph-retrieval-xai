@@ -17,7 +17,7 @@ MODELS = ("countonly_factual_r3", "main_r3")
 GROUPS = ("all", "correct", "wrong")
 KS = ("1", "3", "5")
 EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "shapley")
+              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley")
 DECOMPOSITIONS = ("model", "gradient", "integrated_gradients", "occlusion")
 
 
@@ -211,8 +211,10 @@ def model_tables(name, summary):
                                  pct(g, f"{p}.{form}_random_lost_rank1")))
     lines.append("")
 
-    lines += ["**So sánh các cách giải thích** (mẫu cố định trong val; GNNExplainer và Shapley trên tập con).", ""]
-    lines += header("Nhóm", "Cách", "Câu", "Deletion AUC (thấp tốt)", "Insertion AUC (cao tốt)", "k_flip đạt (%)",
+    lines += ["**So sánh các cách giải thích** (mẫu cố định trong val; GNNExplainer, GraphSVX, SubgraphX và Shapley "
+              "trên tập con).", ""]
+    lines += header("Nhóm", "Cách", "Câu", "Giây / câu (CPU)", "Deletion AUC (thấp tốt)", "Insertion AUC (cao tốt)",
+                    "k_flip đạt (%)",
                     "Bỏ top-1 / 3 / 5: mất hạng 1 (%)", "Chỉ giữ top-1 / 3 / 5: hạng",
                     "Fid_α+ / Fid_α− (k = 5, α = 0,1)", "Fid_α+ / Fid_α− (k = 5, α = 0,5)", "Khớp Shapley: Spearman",
                     "Top-5 trùng Shapley (%)", "p Wilcoxon deletion so với model (lớn nhất qua seed)")
@@ -222,6 +224,8 @@ def model_tables(name, summary):
             if f"{p}.captions" not in g:
                 continue
             lines.append(row(group, name, cell(g, f"{p}.captions", digits=0, std=False),
+                             cell(g, f"{p}.seconds", digits=3, std=False) if f"{p}.seconds" in g
+                             else "0" if name in ("model", "random", "lowest") else "n/a",
                              cell(g, f"{p}.deletion_auc", digits=3), cell(g, f"{p}.insertion_auc", digits=3),
                              pct(g, f"{p}.k_flip_reached"),
                              " / ".join(pct(g, f"{p}.plus_{k}_lost_rank1", False) for k in KS),
@@ -248,7 +252,15 @@ def model_tables(name, summary):
 
     lines += ["**Kiểm tra:** IG completeness, |Σ attribution − (f(ảnh) − f(trung tính))| / hiệu ứng: "
               f"{pct(a, 'ig_completeness.mean_abs_gap_share')}%. Shapley efficiency, sai lệch tối đa: "
-              f"{worst_p(a, 'shapley_efficiency.max_abs_gap')}.", ""]
+              f"{worst_p(a, 'shapley_efficiency.max_abs_gap')}."
+              + (f" GraphSVX efficiency, sai lệch tối đa: {worst_p(a, 'graphsvx_efficiency.max_abs_gap')}; "
+                 f"TB {cell(a, 'graphsvx_efficiency.evaluations_mean', digits=0, std=False)} lượt chấm mỗi câu."
+                 if "graphsvx_efficiency.max_abs_gap" in a else "")
+              + (f" GNN-LRP: dựng lại đầu ra hai lớp GAT sai tối đa {worst_p(a, 'gnn_lrp_check.max_layer_gap')}, "
+                 f"tổng relevance các walk lệch relevance đầu ra tối đa {worst_p(a, 'gnn_lrp_check.max_conservation_gap')}."
+                 if "gnn_lrp_check.max_layer_gap" in a else "")
+              + (f" SubgraphX: TB {cell(a, 'subgraphx_evaluations_mean', digits=0, std=False)} lượt chấm mỗi câu."
+                 if "subgraphx_evaluations_mean" in a else ""), ""]
     return lines
 
 
