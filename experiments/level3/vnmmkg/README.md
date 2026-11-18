@@ -56,7 +56,7 @@ Trên val, R@1 gần như không đổi trong khoảng α từ 0,4 đến 0,75 (
 ## Chạy lại
 
 ```bash
-python scripts/eval_vnmmkg_transfer.py --encoder xlmr_h14 --alpha-a0 0.0
+python scripts/eval_vnmmkg_transfer.py --encoder xlmr_h14
 ```
 
-`--alpha-a0 0.0` là α của hàng `kg_triple` chọn trên MKG-W val, được chép tay vì lúc chạy chưa có `experiments/level2/val/choice.json`. Khi file đó có rồi thì có thể bỏ tham số này.
+Script đọc α của A0 từ `experiments/level2/val/choice.json` (hàng `kg_triple`, seed 0). Hiện giá trị này bằng 0,0. Lần chạy ghi ở trên diễn ra trước khi có file này, nên đã truyền tay `--alpha-a0 0.0`. Giá trị chọn trên val sau đó (PR #42) cũng bằng 0,0, nên kết quả không đổi.
