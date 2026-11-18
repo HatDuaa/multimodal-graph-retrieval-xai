@@ -33,7 +33,7 @@ v1 và kết quả của nó giữ nguyên; các điểm cần đính chính ở
 | Mốc so sánh | Lượt chấm thường | Ảnh không sửa, chấm lại bằng đúng đường chấm sau khi sửa (noop); câu có noop khác hạng 1 bị loại (0 câu) |
 | E rỗng | Tính như "không đổi" cho cả E và ngẫu nhiên | Báo riêng, không tính vào trung bình fidelity |
 | Sparsity | Đếm dòng demo rồi chia cho số phần của đồ thị ảnh (hai đơn vị khác nhau) | Đo trên chính E, theo phần của ảnh: số phần cho 80% / 90% khối term, và k nhỏ nhất mà chỉ giữ top-k còn ≥ 80% / 90% hiệu ứng; số dòng demo vẫn báo nhưng không chia |
-| Validity ngữ nghĩa | `dedup.same_type`: mọi người coi như cùng loại, chấp nhận hypernym hai chiều ("woman" ~ "man", "object" ~ "table") | strict: synset ảnh bằng hoặc là hyponym của sense danh từ đầu của từ trong câu, người chỉ khớp với từ chung (person, people...); tiêu chí v1 giữ làm "lenient"; thêm kiểm dòng bộ ba |
+| Validity ngữ nghĩa | `dedup.same_type`: mọi người coi như cùng loại, chấp nhận hypernym hai chiều ("woman" ~ "man", "object" ~ "table") | strict: cùng nhãn sau alias VG, hoặc synset ảnh bằng hay là hyponym của sense danh từ đầu của từ trong câu, người chỉ khớp với từ chung (person, people...); tiêu chí v1 (alias, `same_type` hoặc cosine CLIP ≥ 0,955) giữ làm "lenient"; thêm kiểm dòng bộ ba |
 | Khớp nhóm số lượng | Chấm cả `main_r3` trên đồ thị cấp 1 chưa gộp trùng | Chỉ chấm mô hình có bảng số lượng (countonly) |
 | Đồ thị con | Bỏ cạnh có nhãn là bỏ luôn bộ ba; ngẫu nhiên bốc từ cạnh gộp của 3 node | Dạng chính "messages": chỉ cắt đường truyền tin GAT, giữ bộ ba; dạng v1 giữ là "edges"; ngẫu nhiên bốc theo từng node, cùng số cạnh |
 | Mới | | k_flip, hạng ảnh vàng sau khi bỏ top-k, tính cộng của E, so sánh 9 cách giải thích, Fid_α |
@@ -156,7 +156,7 @@ Bảng dưới lấy nhóm "tất cả câu"; bảng đầy đủ theo nhóm đ�
 | Bộ ba, cả ba khớp | 5,4 ± 0,2 |
 
 - Node ảnh được chú ý nhất mang đúng loại của node câu ở 58% dòng vật thể theo tiêu chí strict.
-  Tiêu chí lenient của v1 cho 64%, trùng với số v1 báo; khoảng 5,5 điểm chênh lệch là các cặp như "woman" ~ "man" mà lenient chấp nhận.
+  Tiêu chí lenient của v1 cho 64%, trùng với số v1 báo; khoảng 5,5 điểm chênh lệch đến từ hai điều kiện strict không có: cùng loại theo `same_type` (như "woman" ~ "man") và cosine CLIP ≥ 0,955; bảng chưa tách riêng từng phần.
 - Dòng bộ ba hầu như không khớp nghĩa: chỉ 5,4% dòng khớp đủ chủ thể, đối tượng và vị từ.
   Vì bộ ba đứng đầu E ở 70% câu (mục 2), phần lớn dòng đầu tiên mà người dùng thấy là một bộ ba không khớp nghĩa với câu.
 - Khớp nhóm số lượng không chấm cho `main_r3` (xem bảng v2 khác v1).
@@ -205,7 +205,8 @@ Tập "có lựa chọn" (2 803 câu/seed, số cạnh vào lớn hơn số cạ
 Số câu là trung bình mỗi seed.
 Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 1e−11 ở cả 3 seed, trừ clip (p lớn nhất 0,96).
 
-- **Ba cách can thiệp hoặc phân rã có mốc (Shapley, occlusion, IG) trung thực nhất trên mọi trục.**
+- **Ba cách can thiệp hoặc phân rã có mốc (Shapley, occlusion, IG) dẫn đầu ở deletion AUC và Fid_α.**
+  IG không dẫn đầu mọi trục: insertion AUC (0,65) và độ khớp với Shapley (0,29) của IG thấp hơn E (0,76 và 0,46).
   Bỏ dần theo thứ tự của chúng làm điểm giảm xuống dưới mức rỗng (deletion AUC âm), và đều có Fid_α+ > Fid_α−.
 - **E đứng giữa:** tốt hơn hẳn ngẫu nhiên và gradient × input, ngang CLIP trên deletion, tốt hơn CLIP trên insertion (0,76 so với 0,23).
 - **Về thứ tự, E gần như khớp Shapley bằng occlusion** (Spearman 0,46 so với 0,48), mà không tốn lượt chấm nào.

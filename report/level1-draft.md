@@ -349,7 +349,7 @@ rồi so với trung bình 10 lần xoá ngẫu nhiên một phần cùng loại
 - Attention trung bình của cặp khớp nhất: kênh vật thể 0,51, kênh bộ ba 0,17. Kênh bộ ba có trọng số lớn nhưng khớp trải
   đều, nên thứ hạng chủ yếu do CLIP và kênh vật thể quyết định.
 
-Đây là mức fidelity cơ bản; đo fidelity / validity / sparsity đầy đủ thuộc cấp độ 3.
+Đây là mức fidelity cơ bản; đo fidelity / validity / sparsity đầy đủ thuộc cấp độ 3 (`report/level3-draft.md`).
 
 **Nguyên nhân thất bại** quan sát được khi xem ảnh thật, ở cả hai mô hình:
 - Chú thích VG thiếu nhãn, có ảnh có đồ thị rỗng.
