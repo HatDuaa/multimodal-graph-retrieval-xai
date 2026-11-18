@@ -1,0 +1,63 @@
+% =====================================================================
+\section{Phân công và khai báo}
+\label{sec:contrib}
+
+\subsection{Bảng phân công}
+
+Bảng~\ref{tab:contrib} tóm tắt phần việc của từng thành viên, lấy từ bảng nhận việc \file{task-assignment.xlsx} và lịch sử
+commit. Minh chứng chi tiết theo từng dòng việc nằm trong file bảng nhận việc và lịch sử git của repo.
+\todo{Cả nhóm xác nhận bảng này trước khi nộp; bảng nhận việc cần cập nhật cột Trạng thái.}
+
+\begin{table*}[t]
+\centering
+\caption{Phân công đóng góp.}
+\label{tab:contrib}
+\footnotesize
+\begin{tabular}{p{3.6cm}p{13.2cm}}
+\toprule
+Thành viên & Phần việc \\
+\midrule
+Nguyễn Đình Lộc (25C11050) &
+Khung repo, trích đặc trưng CLIP, module đánh giá, chia tập VG $\cap$ COCO, baseline CLIP, kiểm tra pipeline; toàn bộ cấp
+độ~1 (dựng đồ thị, mô hình GATv2, huấn luyện, ablation, giải thích, 10 truy vấn) và các bước xây mô hình chính; demo. Cấp
+độ~2: huấn luyện NativE trên GPU 4090, xuất embedding, kênh \texttt{kgc}, dựng lại đặc trưng MKG-W, chạy đánh giá val/test.
+Bản đo giải thích v1. Điều phối, review và merge; ráp báo cáo. \\
+Ngô Trương Minh Đạt (25C15003) &
+Dữ liệu MKG-W: lấy Wikidata, chia tập retrieval, sinh truy vấn che tên; \texttt{EntityLinker} và hàm điểm đồ thị của bước b;
+hỗ trợ tái lập NativE. \\
+Trần Đắc Khoa (25C15015) &
+Phân tích kết quả và bản nháp báo cáo cấp độ~2 (tái lập, bảng val/test, ablation, độ nhạy $\alpha$, trực tiếp/gián tiếp);
+ví dụ giải thích trên MKG-W. \\
+Nguyễn Bùi Mẫn Nhi (25C15055) &
+Cấp độ~3: định nghĩa và cài đặt fidelity, validity, sparsity (bản v2, sửa các lỗi của v1), so sánh các cách giải thích,
+bằng chứng trên từng truy vấn, cột ``bỏ phần này'' của demo; mô hình scene ranker song song (Sinkhorn trên concept graph)
+và báo cáo của nó. \\
+Âu Dương Khang (25C15045) &
+Cấp độ~3: MMKG tiếng Việt (chọn miền, thu thập, liên kết ảnh--thực thể, duyệt triple, truy vấn tiếng Việt, data card),
+chọn encoder đa ngữ, chạy chuyển giao. Cấp độ~2: bộ 25 truy vấn tự viết, script đánh giá MKG-W, notebook molab; huấn luyện
+NativE 3 seed và chạy lại độc lập toàn bộ cấp~2 trên molab. \todo{Dòng 9 (chọn encoder): bảng nhận việc ghi Nhi
+``Chính'', git cho thấy Khang làm; nhóm thống nhất.} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Khai báo mã nguồn mở, dữ liệu và công cụ AI}
+
+\textbf{Mã nguồn mở.} Nhóm dùng các thư viện qua API, không sửa mã nguồn của thư viện: PyTorch, PyTorch Geometric
+(\texttt{GATv2Conv})~\cite{fey2019pyg}, open\_clip, FAISS, spaCy, SceneGraphParser, FactualSceneGraph, transformers, NLTK
+(WordNet~\cite{miller1995wordnet}), Gradio. Mô hình xếp lại của cấp độ~1 do nhóm viết theo thiết kế riêng, không dùng mã
+nguồn của bài báo nào. Ở cấp độ~2, nhóm chạy mã nguồn công khai của NativE (\texttt{zjukg/NativE}, commit \texttt{c72291c})
+và chỉ sửa cách build: thư viện \texttt{Base.so} kèm sẵn bị lỗi segfault nên được build lại từ mã nguồn. Kênh \texttt{kgc}
+tính lại hàm điểm của NativE trong code của nhóm và có test đối chiếu với bản gốc. Một lỗi của FactualSceneGraph được vá
+trong code của nhóm, không sửa thư viện.
+
+\textbf{Dữ liệu.} Visual Genome 1.4 (CC BY 4.0), caption MS-COCO 2014 (CC BY 4.0), split Karpathy, MKG-W và bộ ảnh của nhóm
+tác giả MMRNS, Wikidata (CC0). Nguồn và giấy phép của MMKG tiếng Việt ghi ở Mục~\ref{sec:vnmmkg}. Link tải và checksum:
+\file{data/README.md}, \file{data/MANIFEST.md}.
+
+\textbf{Công cụ AI.} Nhóm dùng Anthropic Claude (Claude Code) và OpenAI Codex để lên phương án cùng người làm, viết spec,
+viết phần lớn code theo spec đã duyệt, review code, chạy thực nghiệm và soạn nháp tài liệu. Người làm của từng phần chốt
+thiết kế và mọi lựa chọn (trong đó có chọn mô hình chính trước khi chấm test), duyệt code và kết quả, và chịu trách nhiệm
+giải thích phần của mình. Mọi thay đổi nằm trong lịch sử git, phần lớn qua pull request có người duyệt; số liệu chỉ lấy từ
+file kết quả có log và seed. Bảng chi tiết phần nào do công cụ nào làm, theo từng phần việc: \file{report/declaration-ai-oss.md}.
+\todo{Đạt, Khoa, Nhi bổ sung phần khai báo của mình vào file này (cấp độ~2, đo giải thích v2, scene ranker).}
