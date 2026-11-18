@@ -1,0 +1,4 @@
+seed 0 (NativE-AdvRelRotatE[rmask_seed0_e1000.ckpt]/ent): {'clip': 24.33, 'kg_triple': 32.4, 'native': 32.4, 'native_emb': 26.12, 'shuffled_edges': 21.86, 'random_emb': 32.4} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.75, 1.0]}
+seed 1 (NativE-AdvRelRotatE[rmask_seed1_e1000.ckpt]/ent): {'clip': 24.33, 'kg_triple': 32.4, 'native': 32.4, 'native_emb': 26.79, 'shuffled_edges': 21.41, 'random_emb': 32.4} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.6, 1.0]}
+seed 2 (NativE-AdvRelRotatE[rmask_seed2_e1000.ckpt]/ent): {'clip': 24.33, 'kg_triple': 32.4, 'native': 32.4, 'native_emb': 26.68, 'shuffled_edges': 22.2, 'random_emb': 32.4} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.7, 1.0]}
+-> /home/marimo/work/multimodal-graph-retrieval-xai/experiments/level2/val
