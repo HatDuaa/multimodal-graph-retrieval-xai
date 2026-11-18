@@ -27,6 +27,7 @@ from pathlib import Path
 from src.utils.config import REPO_ROOT, load_config, resolve
 
 DATASET = "mkgw"
+STATS_BEGIN, STATS_END = "<!-- mkgw:begin -->", "<!-- mkgw:end -->"
 KGC_FILES = {"train": "train2id.txt", "val": "valid2id.txt", "test": "test2id.txt"}
 
 
@@ -127,15 +128,27 @@ def main() -> None:
                                  resolve(cfg, "processed") / "mkgw_triples.jsonl")
 
     stats = [
-        f"\n## MKG-W retrieval split (built {json.dumps(dict(seed=cfg['seed'], lang=lang))})\n",
+        STATS_BEGIN,
+        f"## MKG-W retrieval split (built {json.dumps(dict(seed=cfg['seed'], lang=lang))})\n",
         f"- Cache: {len(cache)} entities; usable (description + author image + non-empty masked query): {len(usable)}",
         f"- Dropped: {dropped}",
         f"- Split sizes: " + ", ".join(f"{s} {len(r)}" for s, r in splits.items()),
         f"- KGC triples copied with their NativE split: {n_triples}",
+        STATS_END,
     ]
-    with (resolve(cfg, "experiments") / "data_stats.md").open("a", encoding="utf-8") as f:
-        f.write("\n".join(stats) + "\n")
+    replace_stats_block(resolve(cfg, "experiments") / "data_stats.md", "\n".join(stats))
     print("\n".join(stats))
+
+
+def replace_stats_block(md_path: Path, block: str) -> None:
+    """Write this builder's block between its markers, so a rebuild replaces it instead of appending."""
+    text = md_path.read_text(encoding="utf-8") if md_path.exists() else ""
+    if STATS_BEGIN in text:
+        start, end = text.index(STATS_BEGIN), text.index(STATS_END) + len(STATS_END)
+        text = text[:start] + block + text[end:]
+    else:
+        text = text.rstrip("\n") + "\n\n" + block + "\n"
+    md_path.write_text(text, encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
