@@ -6,7 +6,7 @@ thuật ngữ tiếng Anh giữ nguyên, kèm giải thích lần đầu; mọi 
 cấp 2 trong `docs/level2-plan.md` §5.
 
 Bản đầu 2026-11-17 (để chỗ trống chờ chạy). **Bản này cập nhật 2026-11-18: đã điền số thật** từ các lần chạy
-ngày 17/11 (train NativE trên máy 4090 của Lộc, đánh giá retrieval trên máy Lộc), đã đóng băng theo mốc 19/11.
+ngày 17/11 (train NativE trên máy chủ RTX 4090 dùng chung, đánh giá retrieval trên máy Lộc), đã đóng băng theo mốc 19/11.
 Mỗi số đều có log/json kèm seed trong `experiments/level2/`; không có số bịa (CLAUDE.md, đề mục 6).
 
 ## Tóm tắt
@@ -97,7 +97,9 @@ Nguồn: `docs/level2-plan.md` §3, `experiments/level2/native-repro/README.md`,
   link prediction — mục 4 — cho thấy việc che modality của ~12 % thực thể không phá mô hình.)*
 - **α và β chọn trên val, riêng từng seed**, theo R@1 (hoà thì xét MRR); test đọc lại `choice.json`, không chỉnh
   (`experiments/level2/val/choice.json`).
-- **Kênh `kgc` (mục 3.3) được chốt TRƯỚC khi chạy val** (Lộc duyệt), không phải thêm sau khi thấy kết quả.
+- **Kênh `kgc` (mục 3.3) được thêm sau lần chạy val đầu tiên**, khi val chọn β = 0 cho kênh cosine. Định nghĩa
+  kênh và dòng chính `native_kgc` được chốt (Lộc duyệt) trước khi chạy lại val, và trước khi chấm test. Cả hai lần
+  chạy val chỉ dùng val; lần chạy lại val giữ nguyên từng byte 6 file kết quả cũ (`experiments/level2/val/README.md`).
 - **Bộ 25 truy vấn tự viết** (mục 7.3) chỉ để **đo**; tái dùng α/β của val, không tinh chỉnh gì.
 - **Test chấm đúng một lần** cho mỗi dòng đã chốt.
 
@@ -142,7 +144,7 @@ Truy vấn là mô tả đã che tên nhưng vẫn thường nhắc tên thực 
 2. Với mỗi ảnh ứng viên (= một thực thể), tính các **kênh điểm** với thực thể được link:
    - **`triple`**: **số cạnh KGC-train trực tiếp** giữa ứng viên và thực thể được nhắc (không huấn luyện).
    - **`emb`** (cosine): cosine lớn nhất giữa embedding cấu trúc NativE của ứng viên và của thực thể được nhắc.
-   - **`kgc`** (điểm bộ ba của chính NativE, thêm 17/11, Lộc duyệt, chốt trước khi chạy val): giá trị lớn nhất
+   - **`kgc`** (điểm bộ ba của chính NativE, thêm 17/11 sau lần chạy val đầu, chốt trước khi chạy lại val; mục 2): giá trị lớn nhất
      của `AdvRelRotatE.forward` (checkpoint rmask cùng seed) qua mọi thực thể được link, 169 quan hệ, cả hai
      chiều `(c,r,e)` và `(e,r,c)`. Khác `emb` ở chỗ **có dùng quan hệ**. Code: `src/retrieval/native_kgc.py`,
      tính lại đúng `forward()` của NativE c72291c, có test đối chiếu (`tests/test_native_kgc.py`).
@@ -162,7 +164,7 @@ Nguồn code: `src/retrieval/mkgw_graph_score.py`, `src/retrieval/native_kgc.py`
 
 ## 4. Huấn luyện NativE
 
-Chạy ngày 17/11 trên **RTX 4090 24 GB** của Lộc (phương án dự phòng trong `docs/level2-plan.md` §5 khi molab
+Chạy ngày 17/11 trên máy chủ **RTX 4090 24 GB** dùng chung, tài khoản của Lộc (phương án dự phòng trong `docs/level2-plan.md` §5 khi molab
 chưa sẵn lúc 12:00). Siêu tham số giữ **đúng `scripts/run_mkgw.sh` của tác giả**, giữa các lần chỉ đổi dữ liệu
 và seed: **1.000 epoch**, dim 250, margin 4, 128 mẫu âm, lr 1e-4, batch 1024; mã commit `c72291c`.
 
@@ -289,7 +291,22 @@ Nhóm `linked` (liên kết được ≥ 1 thực thể) và `no_link`, định 
 ### 7.3. Bộ 25 truy vấn tự viết — trực tiếp so với gián tiếp
 
 Bộ **25 câu** (`data/queries/mkgw_queries_hand.json`, Khang chốt 16/11): **10 trực tiếp** + **15 gián tiếp**.
-Ứng viên là ảnh tập test; chạy `--split test --hand`, **chỉ để đo**, tái dùng α/β của val. R@1 / R@5 / R@10 / MRR:
+Ứng viên là ảnh tập test; chạy `--split test --hand`, **chỉ để đo**, tái dùng α/β của val.
+
+**Cách xây và kiểm tra** (đề mục 8 yêu cầu mô tả). Quy tắc nằm ở đầu `scripts/build_mkgw_hand_queries.py`, script
+từ chối ghi file nếu một câu vi phạm:
+- **Trực tiếp:** tả thực thể đáp án là gì, trông ra sao, không nêu tên nó và không dựa vào quan hệ với thực thể có tên
+  khác. Đúng một đáp án trong kho ảnh test. Script kiểm tra mọi thực thể `EntityLinker` khớp được trong câu đều
+  **không** có cạnh tới đáp án, nên câu trực tiếp không có đường tắt qua đồ thị.
+- **Gián tiếp:** nêu tên một thực thể khác và cần một quan hệ để tới đáp án ("a rock guitarist who was a member of
+  Pink Floyd"). Đáp án không gõ tay mà **tính từ `pattern`** (danh sách cặp quan hệ, thực thể): mọi thực thể trong kho
+  ảnh test có đủ các cạnh đó, từ 1 tới 5 đáp án.
+- Script kiểm tra tên đáp án không xuất hiện trong câu, không trùng `query_id`. Đáp án tính trên toàn bộ triple MKG-W
+  (cả ba phần KGC) vì đó là đáp án thật, không phải đầu vào của mô hình; kênh đồ thị lúc chấm vẫn chỉ thấy cạnh
+  KGC-train.
+- Bộ câu được khoá trước lần chấm đầu và không sửa sau đó.
+
+Kết quả R@1 / R@5 / R@10 / MRR:
 
 | Nhóm | Dòng | R@1 | R@5 | R@10 | MRR |
 |---|---|---|---|---|---|
@@ -301,8 +318,12 @@ Bộ **25 câu** (`data/queries/mkgw_queries_hand.json`, Khang chốt 16/11): **
 - **Đây là bằng chứng rõ nhất cho giá trị của kênh đồ thị:** với câu **gián tiếp** (phải đi qua một quan hệ),
   đếm cạnh nâng R@1 **40,00 → 80,00** (6/15 → 12/15) và MRR **49,28 → 83,33**.
 - Câu **trực tiếp** không đổi (CLIP đã đạt 8/10; mô tả trực tiếp đủ cho CLIP).
-- Lưu ý: 5/15 câu gián tiếp có cạnh vàng **chỉ nằm trong KGC-test** (ghi chú trong file truy vấn), nên kênh đếm
-  cạnh **không thấy được**; dù vậy nhóm gián tiếp vẫn đạt 12/15 — phần còn lại nhờ các cạnh train khác và CLIP.
+- Cạnh vàng nằm ở phần nào của KGC (tra trong `data/processed/mkgw_triples.jsonl`):
+  - 12/15 câu gián tiếp có ít nhất một đáp án nối với thực thể trong câu bằng cạnh KGC-train, nên kênh đếm cạnh
+    thấy được;
+  - 3/15 câu (`indirect_03`, `_09`, `_11`) chỉ có cạnh vàng trong KGC-test, nên kênh đếm cạnh không thấy;
+  - 2 câu khác (`indirect_05`, `_13`) có hai đáp án, một đáp án nối bằng cạnh train, đáp án kia chỉ có cạnh KGC-test.
+- Câu nào đứng hạng mấy thì chưa có số: lần chạy `--hand` ngày 17/11 chỉ lưu số tổng theo nhóm (mục 8).
 
 *(nguồn: `experiments/level2/test/summary.json`, khoá `groups` `hand_*`)*
 
@@ -310,25 +331,30 @@ Bộ **25 câu** (`data/queries/mkgw_queries_hand.json`, Khang chốt 16/11): **
 
 Giải thích lấy thẳng từ `matches` mà hàm điểm trả về (thực thể được link + cạnh KGC-train đã cộng điểm), **không
 hậu kiểm**. Vì dòng chính chọn α = 0, β = 0, điểm xếp hạng **chính là số cạnh train** giữa ứng viên và thực thể
-được nhắc — nên giải thích rất trực tiếp. Dưới đây là các ví dụ (hạng cụ thể của từng câu sinh lại được từ
-`eval_mkgw_level2.py --split test --hand`, seed 0; số theo nhóm ở mục 7.3).
+được nhắc — nên giải thích rất trực tiếp.
+
+Bốn câu dưới đây lấy từ bộ 25 câu. Thực thể và quan hệ ghi ở đây là `pattern` của câu và cạnh vàng tra trong
+`data/processed/mkgw_triples.jsonl`. Hạng ảnh đúng (CLIP → dòng chính) và danh sách `matches` thật của từng câu
+**chưa có file kết quả**: `eval_mkgw_level2.py --hand` chỉ ghi số tổng theo nhóm. Bảng theo từng câu là việc 8 trong
+`docs/level2-plan.md` (hạn 20/11); khi có file thì điền hạng vào đây, trước đó không ghi hạng.
 
 **Ví dụ 1 — gián tiếp, cạnh "located in".** *"the main railway station of Bordeaux"*. `EntityLinker` khớp
 **Bordeaux** (Q1479); ảnh đúng **Gare de Bordeaux-Saint-Jean** (Q800564) có cạnh KGC-train **P131** ("located
 in the administrative territorial entity") tới Bordeaux. Giải thích: *được cộng điểm vì ga nằm trong Bordeaux*.
 
 **Ví dụ 2 — gián tiếp, cạnh "member of".** *"a rock guitarist who was a member of Pink Floyd"*. Khớp **Pink
-Floyd** (Q2306); ảnh đúng **David Gilmour** (Q178517) có cạnh **P463** ("member of"). Hai ví dụ này thuộc nhóm
-gián tiếp mà CLIP xếp sai còn kênh cạnh kéo lên hạng 1 (mục 7.3: nhóm gián tiếp 40 → 80).
+Floyd** (Q2306); ảnh đúng **David Gilmour** (Q178517) có cạnh KGC-train **P463** ("member of"). Hai câu này thuộc
+nhóm gián tiếp, nơi kênh đếm cạnh nâng R@1 từ 40 lên 80 (mục 7.3).
 
 **Ví dụ 3 — trực tiếp.** *"the largest island in the Mediterranean, a region with a volcano and a long
-coastline"* → **Sicily** (Q1460). CLIP đã đủ (nhóm trực tiếp 8/10), kênh cạnh không làm hỏng (giữ 80).
+coastline"* → **Sicily** (Q1460). Câu trực tiếp không có thực thể nào khớp được mà nối tới đáp án (script xây bộ câu
+kiểm tra điều này), nên kênh đếm cạnh không cộng điểm cho ảnh đúng; ở nhóm trực tiếp R@1 giữ nguyên 80.
 
 **Ví dụ 4 (đối chứng âm) — cạnh chỉ ở KGC-test.** *"the rock band whose lead singer is Hayley Williams"* →
 **Paramore** (Q473466), cạnh vàng **chỉ nằm trong KGC-test** nên kênh đếm cạnh **không thấy** (giải thích trung
-thực, không "mượn" cạnh test). Đây là một trong vài câu gián tiếp mà kênh cạnh không giúp được.
+thực, không "mượn" cạnh test). Đây là một trong 3 câu gián tiếp mà kênh cạnh không thể giúp.
 
-*(Nhãn quan hệ theo Wikidata. `matches`/hạng đầy đủ sinh lại từ eval script.)*
+*(Nhãn quan hệ theo Wikidata.)*
 
 ## 9. Hạn chế
 
@@ -347,9 +373,9 @@ thực, không "mượn" cạnh test). Đây là một trong vài câu gián ti�
 
 ## 10. Đóng góp
 
-Phần cấp 2: dữ liệu MKG-W và hàm điểm đồ thị (**Đạt**); bộ 25 câu, script đánh giá, notebook molab và kênh
-`kgc` (**Khang**); huấn luyện NativE 4 lần trên 4090, export embedding, chạy đánh giá val/test và tái lập bước a
-(**Lộc**, với công cụ AI — khai báo trong `report/declaration-ai-oss.md`); **nháp báo cáo cấp 2 và phân tích kết
+Phần cấp 2: dữ liệu MKG-W và hàm điểm đồ thị (**Đạt**); bộ 25 câu, script đánh giá và notebook molab
+(**Khang**); kênh `kgc`, huấn luyện NativE 4 lần trên 4090, export embedding, dựng lại đặc trưng, chạy đánh giá
+val/test và tái lập bước a (**Lộc**, với công cụ AI — khai báo trong `report/declaration-ai-oss.md`); **nháp báo cáo cấp 2 và phân tích kết
 quả (Trần Đắc Khoa**, với công cụ AI). Lộc review, merge và điều phối GPU.
 
 ## 11. Nguồn số liệu
