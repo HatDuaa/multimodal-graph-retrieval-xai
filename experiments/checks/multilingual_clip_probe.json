@@ -1,0 +1,111 @@
+{
+ "split": "mkgw val",
+ "pool": 892,
+ "queries_per_language": 84,
+ "examples": [
+  {
+   "image_id": 2025,
+   "qid": "Q8298",
+   "vi": "DJ, nhà viết nhạc, nhà sản xuất thu âm và remixer người Pháp",
+   "en": "French DJ and electronic music producer (born 1967)"
+  },
+  {
+   "image_id": 5008,
+   "qid": "Q83824",
+   "vi": "công ty đường sắt Đan Mạch",
+   "en": "Danish railway company"
+  },
+  {
+   "image_id": 3255,
+   "qid": "Q34692",
+   "vi": "thủ đô và là thành phố lớn nhất của Jamaica",
+   "en": "capital of Jamaica"
+  },
+  {
+   "image_id": 8560,
+   "qid": "Q587071",
+   "vi": "cầu thủ bóng rổ Mỹ",
+   "en": "American basketball player (born 1966)"
+  },
+  {
+   "image_id": 7525,
+   "qid": "Q8026049",
+   "vi": "chủ tịch Đại học Đông Ngô, Đài Loan",
+   "en": "Taiwanese legal academic"
+  }
+ ],
+ "results": {
+  "openai_b32": {
+   "encoder": "ViT-B-32-quickgelu/openai",
+   "vi": {
+    "n_queries": 84,
+    "recall@1": 0.10714285714285714,
+    "recall@5": 0.16666666666666666,
+    "recall@10": 0.17857142857142858,
+    "mrr": 0.14102451607278046
+   },
+   "en": {
+    "n_queries": 84,
+    "recall@1": 0.35714285714285715,
+    "recall@5": 0.5952380952380952,
+    "recall@10": 0.7023809523809523,
+    "mrr": 0.46029482280904044
+   },
+   "seconds": 10.5
+  },
+  "xlmr_b32": {
+   "encoder": "xlm-roberta-base-ViT-B-32/laion5b_s13b_b90k",
+   "vi": {
+    "n_queries": 84,
+    "recall@1": 0.25,
+    "recall@5": 0.5,
+    "recall@10": 0.6190476190476191,
+    "mrr": 0.37834250674081343
+   },
+   "en": {
+    "n_queries": 84,
+    "recall@1": 0.2857142857142857,
+    "recall@5": 0.5238095238095238,
+    "recall@10": 0.6666666666666666,
+    "mrr": 0.405045761371372
+   },
+   "seconds": 14.2
+  },
+  "mclip_b32": {
+   "encoder": "sentence-transformers/clip-ViT-B-32-multilingual-v1 + ViT-B-32-quickgelu/openai image",
+   "vi": {
+    "n_queries": 84,
+    "recall@1": 0.2857142857142857,
+    "recall@5": 0.5119047619047619,
+    "recall@10": 0.5595238095238095,
+    "mrr": 0.40053171269578336
+   },
+   "en": {
+    "n_queries": 84,
+    "recall@1": 0.3333333333333333,
+    "recall@5": 0.5476190476190477,
+    "recall@10": 0.6785714285714286,
+    "mrr": 0.44622683231459154
+   },
+   "seconds": 4.9
+  },
+  "xlmr_h14": {
+   "encoder": "xlm-roberta-large-ViT-H-14/frozen_laion5b_s13b_b90k",
+   "vi": {
+    "n_queries": 84,
+    "recall@1": 0.40476190476190477,
+    "recall@5": 0.6428571428571429,
+    "recall@10": 0.7857142857142857,
+    "mrr": 0.5180384461063947
+   },
+   "en": {
+    "n_queries": 84,
+    "recall@1": 0.40476190476190477,
+    "recall@5": 0.6309523809523809,
+    "recall@10": 0.7142857142857143,
+    "mrr": 0.513088866146056
+   },
+   "seconds": 29.3
+  }
+ }
+}
