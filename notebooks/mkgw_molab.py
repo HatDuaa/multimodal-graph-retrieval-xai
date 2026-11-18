@@ -132,9 +132,12 @@ def _(mo):
     b_probe = mo.ui.run_button(label="3b · Multilingual CLIP probe (row 9)")
     b_train = mo.ui.run_button(label="4 · Start training (background)")
     b_status = mo.ui.run_button(label="4b · Status + push finished runs")
+    b_eval_val = mo.ui.run_button(label="5 · Level-2 eval on val")
+    b_eval_test = mo.ui.run_button(label="6 · Level-2 test (once, after val)")
     auto = mo.ui.refresh(options=["10m"], default_interval="10m", label="auto status")
-    mo.hstack([b_setup, b_restore, b_data, b_clip, b_probe, b_train, b_status, auto], wrap=True)
-    return auto, b_clip, b_data, b_probe, b_restore, b_setup, b_status, b_train
+    mo.hstack([b_setup, b_restore, b_data, b_clip, b_probe, b_train, b_status, b_eval_val, b_eval_test, auto],
+              wrap=True)
+    return auto, b_clip, b_data, b_eval_test, b_eval_val, b_probe, b_restore, b_setup, b_status, b_train
 
 
 @app.cell
@@ -333,6 +336,47 @@ def _(LOG_DIR, NATIVE, auto, b_status, epochs, mo, push, remote_files, run_name,
         _state = "finished, on HF" if _finished else ("running" if _alive else "not running")
         _rows.append(f"| `{_name}` | {_state} | `{_progress}` |")
     mo.md("| Run | State | Last log line |\n|---|---|---|\n" + "\n".join(_rows))
+    return
+
+
+@app.cell
+def _(NATIVE, PY, REPO, b_eval_val, branch, hf_repo, hf_token, mo, push, sh):
+    # Level 2 on val: export the NativE entity vectors of the 3 rmask seeds, then alpha/beta on val.
+    # Runs here because the checkpoints are on this machine (or one fast HF download away);
+    # only the small JSON results go back to HF.
+    mo.stop(not b_eval_val.value, mo.md("Level-2 val not run yet."))
+    sh(f"git fetch origin && git checkout {branch.value} && git pull --ff-only", cwd=REPO)
+    from huggingface_hub import hf_hub_download as _hf_hub_download
+    for _s in (0, 1, 2):
+        _ckpt = NATIVE / "checkpoint" / f"rmask_seed{_s}_e1000.ckpt"
+        if not _ckpt.exists():
+            _hf_hub_download(hf_repo.value, f"native/checkpoint/{_ckpt.name}", repo_type="dataset",
+                             token=hf_token.value or None, local_dir=str(NATIVE.parent / "hf_mkgw"))
+            _ckpt.parent.mkdir(parents=True, exist_ok=True)
+            (NATIVE.parent / "hf_mkgw" / "native" / "checkpoint" / _ckpt.name).replace(_ckpt)
+        sh(f"{PY} scripts/export_native_embeddings.py --checkpoint {_ckpt} --what ent --suffix _seed{_s}", cwd=REPO)
+    _out = sh(f"{PY} scripts/eval_mkgw_level2.py --split val", cwd=REPO)
+    (REPO / "experiments" / "level2" / "val_run.log").write_text(_out, encoding="utf-8")
+    push(REPO / "experiments" / "level2" / "val", "experiments/level2/val")
+    push(REPO / "experiments" / "level2" / "val_run.log", "experiments/level2/val_run.log")
+    for _s in (0, 1, 2):
+        for _ext in (".npy", ".ids.json"):
+            push(REPO / "data" / "features" / f"mkgw_native_ent_seed{_s}{_ext}",
+                 f"data/features/mkgw_native_ent_seed{_s}{_ext}")
+    mo.md("Level-2 val done; results in `experiments/level2/val` (also on HF).")
+    return
+
+
+@app.cell
+def _(PY, REPO, b_eval_test, mo, push, sh):
+    # Test, once: alpha/beta are read from experiments/level2/val/choice.json, nothing is tuned.
+    mo.stop(not b_eval_test.value, mo.md("Level-2 test not run yet."))
+    mo.stop(not (REPO / "experiments" / "level2" / "val" / "choice.json").exists(), mo.md("Run step 5 first."))
+    _out = sh(f"{PY} scripts/eval_mkgw_level2.py --split test --hand", cwd=REPO)
+    (REPO / "experiments" / "level2" / "test_run.log").write_text(_out, encoding="utf-8")
+    push(REPO / "experiments" / "level2" / "test", "experiments/level2/test")
+    push(REPO / "experiments" / "level2" / "test_run.log", "experiments/level2/test_run.log")
+    mo.md("Level-2 test done; results in `experiments/level2/test` (also on HF).")
     return
 
 
