@@ -35,6 +35,3 @@ data/splits/*_limit*.json
 experiments/level1/gat/smoke-*/
 experiments/level1/data_packaging/*_limit*.json
 experiments/level1/data_packaging/archive-smoke/
-
-
-.env
