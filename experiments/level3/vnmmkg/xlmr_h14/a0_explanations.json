@@ -1,0 +1,5009 @@
+[
+ {
+  "query_id": "Q23513_auto_0",
+  "group": "auto",
+  "text": "là một vườn quốc gia của Việt Nam, nằm tại xã Bố Trạch và Minh Hóa, tỉnh Quảng Trị, cách phường Đồng Hới khoảng 50 km về phía Tây Bắc, cách thủ đô Hà Nội khoảng 500 km về phía nam.",
+  "linked": {
+   "Q46169": "vườn quốc gia",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 128,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q23513_auto_1",
+  "group": "auto",
+  "text": "Vườn quốc gia này giáp khu bảo tồn thiên nhiên Hin Namno ở tỉnh Khammouan, Lào về phía tây; cách Biển Đông 42 km về phía đông kể từ đường biên giới của vườn quốc gia này.",
+  "linked": {
+   "Q46169": "vườn quốc gia"
+  },
+  "top1_image": 36,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q23513_auto_2",
+  "group": "auto",
+  "text": "nằm ở một khu vực núi đá vôi rộng khoảng 201.000 ha thuộc lãnh thổ Việt Nam, khu vực lãnh thổ Lào tiếp giáp vườn quốc gia này cũng có diện tích núi đá vôi khoảng 200.001 ha.",
+  "linked": {
+   "Q46169": "vườn quốc gia"
+  },
+  "top1_image": 50,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q41179_auto_0",
+  "group": "auto",
+  "text": "là một trong những con sông lớn nhất trên thế giới, bắt nguồn từ cao nguyên Thanh Tạng nơi sông bắt nguồn thuộc tỉnh Thanh Hải, chảy qua Vân Nam Trung Quốc, qua các nước Lào, Myanmar, Thái Lan, Campuchia và đổ ra Biển Đông ở Việt Nam.",
+  "linked": {
+   "Q4022": "sông"
+  },
+  "top1_image": 7,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q4022",
+    "surface": "sông",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q41179_auto_1",
+  "group": "auto",
+  "text": "Tính theo độ dài đứng thứ 12, còn tính theo lưu lượng nước đứng thứ 10 trên thế giới.",
+  "linked": {},
+  "top1_image": 85,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q41179_auto_2",
+  "group": "auto",
+  "text": "Lưu lượng trung bình 13.200 m³/s, vào mùa nước lũ có thể lên tới 30.000 m³/s.",
+  "linked": {},
+  "top1_image": 85,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q190060_auto_0",
+  "group": "auto",
+  "text": "là kinh đô nước Đại Ngu, nằm trên địa phận tỉnh Thanh Hóa.",
+  "linked": {},
+  "top1_image": 186,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q190060_auto_1",
+  "group": "auto",
+  "text": "Đây là tòa thành kiên cố với kiến trúc độc đáo bằng đá có quy mô lớn hiếm hoi ở Việt Nam, có giá trị và độc đáo nhất, duy nhất còn lại ở tại Đông Nam Á và là một trong rất ít những thành lũy bằng đá còn lại trên thế giới.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 17,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q190060_auto_2",
+  "group": "auto",
+  "text": "Thành được xây dựng trong thời gian ngắn, chỉ khoảng 3 tháng và cho đến nay, dù đã tồn tại hơn 6 thế kỷ nhưng một số đoạn của tòa thành này còn lại tương đối nguyên vẹn.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 17,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q874234_auto_0",
+  "group": "auto",
+  "text": "còn gọi là, là nơi gìn giữ thi hài.",
+  "linked": {},
+  "top1_image": 232,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q874234_auto_1",
+  "group": "auto",
+  "text": "Lăng được chính thức khởi công ngày 2 tháng 9 năm 1973, tại vị trí lễ đài cũ giữa Quảng trường Ba Đình, nơi từng chủ trì các cuộc gặp mặt quan trọng.",
+  "linked": {
+   "Q162875": "lăng"
+  },
+  "top1_image": 27,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q874234_auto_2",
+  "group": "auto",
+  "text": "Lăng được khánh thành vào ngày 29 tháng 8 năm 1975, gồm 3 lớp với chiều cao 21,6 m, chiều rộng 41,2 m; lớp dưới tạo dáng bậc thềm tam cấp, lớp giữa là kết cấu trung tâm của lăng gồm phòng thi hài và những hành lang, những cầu thang.",
+  "linked": {
+   "Q162875": "lăng",
+   "Q88291": "thành"
+  },
+  "top1_image": 27,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q993402_auto_0",
+  "group": "auto",
+  "text": "là hòn đảo lớn nhất thuộc nhóm quần trong vịnh Bắc Bộ, về mặt hành chính thuộc đặc khu Cát Hải, thành phố Hải Phòng, Việt Nam.",
+  "linked": {
+   "Q23442": "hòn đảo",
+   "Q88291": "thành"
+  },
+  "top1_image": 32,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q23442",
+    "surface": "hòn đảo",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2344822_auto_0",
+  "group": "auto",
+  "text": "là một di chỉ khảo cổ tại khu vực núi Ba Thê, thuộc xã, tỉnh An Giang, Việt Nam.",
+  "linked": {},
+  "top1_image": 48,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q2344822_auto_1",
+  "group": "auto",
+  "text": "Di chỉ này do nhà khảo cổ học người Pháp Louis Malleret ở trường Viễn Đông Bác Cổ chủ trì khai quật lần đầu tiên vào năm 1944.",
+  "linked": {},
+  "top1_image": 48,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q1968747_auto_0",
+  "group": "auto",
+  "text": "là một vườn quốc gia, rừng đặc dụng, khu du lịch sinh thái của Việt Nam, nằm trên địa phận tỉnh Thái Nguyên, với trung tâm là hồ Ba Bể.",
+  "linked": {
+   "Q46169": "vườn quốc gia",
+   "Q1328473": "hồ ba bể"
+  },
+  "top1_image": 50,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1968747_auto_1",
+  "group": "auto",
+  "text": "được thành lập theo Quyết định số 83/TTg ngày 10 tháng 11 năm năm 1992 của Thủ tướng Chính phủ.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 236,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q864770_auto_0",
+  "group": "auto",
+  "text": "nằm trên một hòn đảo phía Đông Hồ Tây.",
+  "linked": {
+   "Q23442": "hòn đảo"
+  },
+  "top1_image": 32,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q23442",
+    "surface": "hòn đảo",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q864770_auto_1",
+  "group": "auto",
+  "text": "Chùa có lịch sử gần 1500 năm và được coi là lâu đời nhất ở Thăng Long - Hà Nội.",
+  "linked": {
+   "Q1858": "thăng long",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 81,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thăng long",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q864770_auto_2",
+  "group": "auto",
+  "text": "Dưới thời nhà Lý và nhà Trần, là trung tâm Phật giáo của kinh thành Thăng Long.",
+  "linked": {
+   "Q878309": "nhà lý",
+   "Q748": "phật giáo",
+   "Q1858": "thăng long",
+   "Q88291": "thành"
+  },
+  "top1_image": 67,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q878309",
+    "surface": "nhà lý",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   },
+   {
+    "qid": "Q748",
+    "surface": "phật giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "thăng long",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q782099_auto_0",
+  "group": "auto",
+  "text": "là một quần thể nhà thờ Công giáo rộng khoảng 22 ha, nằm tại xã, tỉnh Ninh Bình, cách Hà Nội khoảng 120 km về hướng Nam.",
+  "linked": {
+   "Q36900": "tỉnh ninh bình",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 136,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q782099_auto_1",
+  "group": "auto",
+  "text": "Quần thể các công trình nơi đây được xây dựng từ năm 1875, đến năm 1899 thì hoàn thành.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 201,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q782099_auto_2",
+  "group": "auto",
+  "text": "Nhà thờ lớn tại vị trí trung tâm, hiện là nhà thờ chính tòa của Giáo phận ở miền Bắc Việt Nam, được hoàn thành năm 1891.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 245,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2942901_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo ở số 1 đường Thái Nguyên, phường, tỉnh Khánh Hòa.",
+  "linked": {
+   "Q33369": "tỉnh khánh hòa",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2942901_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ này còn có nhiều tên gọi bình dân như: Nhà thờ; Nhà thờ Đá; Nhà thờ Ngã Sáu; nhưng phổ biến hơn cả là tên gọi.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 207,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2942901_auto_2",
+  "group": "auto",
+  "text": "Đây là nhà thờ chính tòa của Giáo phận.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa"
+  },
+  "top1_image": 263,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chính tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5370414_auto_0",
+  "group": "auto",
+  "text": "cùng với Bảo tàng Cách mạng Việt Nam là hai bảo tàng đã được sáp nhập thành, tọa lạc ở thành phố Hà Nội.",
+  "linked": {
+   "Q1858": "thành phố hà nội",
+   "Q33506": "bảo tàng",
+   "Q88291": "thành"
+  },
+  "top1_image": 92,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thành phố hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5370414_auto_1",
+  "group": "auto",
+  "text": "là nơi lưu giữ những hiện vật, phản ánh các nền văn hóa, lịch sử dựng nước và giữ nước của người Việt Nam từ thuở ban đầu khai sáng đến ngày ra đời nước Việt Nam Dân chủ Cộng hòa.",
+  "linked": {},
+  "top1_image": 186,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q5370414_auto_2",
+  "group": "auto",
+  "text": "Viện bảo tàng có phong cách kiến trúc Đông Dương, nằm ở số 1 phố Tràng Tiền, Hoàn Kiếm, Hà Nội.",
+  "linked": {
+   "Q33506": "viện bảo tàng",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 111,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "viện bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1005868_auto_0",
+  "group": "auto",
+  "text": "là một ngôi chùa lớn và là một di tích cấp thành phố của Thành phố Hồ Chí Minh, tọa lạc tại góc đường Bà Huyện Thanh Quan và Sư Thiện Chiếu, phường Xuân Hòa, trong một khuôn viên rộng 2.500 m².",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q5393308": "chùa",
+   "Q88291": "thành"
+  },
+  "top1_image": 119,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7818621_auto_0",
+  "group": "auto",
+  "text": "còn gọi là là lăng tẩm của Hoàng đế, vị Hoàng đế thứ 12 Triều Nguyễn.",
+  "linked": {
+   "Q162875": "lăng tẩm"
+  },
+  "top1_image": 197,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng tẩm",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7818621_auto_1",
+  "group": "auto",
+  "text": "Lăng tọa lạc tại núi Châu Chữ, phường Thủy Xuân, thành phố Huế.",
+  "linked": {
+   "Q162875": "lăng",
+   "Q88291": "thành",
+   "Q36399": "huế"
+  },
+  "top1_image": 197,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7818621_auto_2",
+  "group": "auto",
+  "text": "Công trình kiến trúc này nằm trong quần thể di tích cố đô Huế, di sản thế giới đã được UNESCO công nhận từ năm 1993.",
+  "linked": {
+   "Q10810560": "quần thể di tích cố đô huế",
+   "Q9259": "di sản thế giới"
+  },
+  "top1_image": 70,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q9259",
+    "surface": "di sản thế giới",
+    "via": "triple",
+    "pid": "P1435",
+    "label": "P1435",
+    "direction": "->"
+   },
+   {
+    "qid": "Q9259",
+    "surface": "di sản thế giới",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1932222_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ của Giáo hội Công giáo Rôma, thuộc Tổng giáo phận Hà Nội, Việt Nam.",
+  "linked": {
+   "Q9592": "giáo hội công giáo rôma",
+   "Q16970": "nhà thờ",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 139,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q9592",
+    "surface": "giáo hội công giáo rôma",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1932222_auto_1",
+  "group": "auto",
+  "text": "Đây là một trong những nhà thờ lớn ở Hà Nội.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 136,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1932222_auto_2",
+  "group": "auto",
+  "text": "Linh mục Al-phong-sô Phạm Hùng hiện đang là Linh mục chính xứ cùng với Linh mục phó xứ Giuse Trần Đình Ngọc Nhà thờ tọa lạc ở số 21 phố, phường Cửa Nam, công trình do kiến trúc sư người Việt Phêrô Lý Đức Thân, tục gọi cụ Đốc Thân, du học ở Pháp thiết kế.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q128267": "giuse"
+  },
+  "top1_image": 256,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q128267",
+    "surface": "giuse",
+    "via": "triple",
+    "pid": "P138",
+    "label": "P138",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3360468_auto_0",
+  "group": "auto",
+  "text": "là một quần thể chùa lớn với nhiều kỷ lục châu Á và Việt Nam được xác lập như chùa có tượng Phật bằng đồng dát vàng lớn nhất châu Á, chùa có hành lang La Hán dài nhất châu Á, có tượng Di lặc bằng đồng lớn nhất Đông Nam Á... Đây là ngôi chùa lớn nhất và sở hữu nhiều kỷ lục nhất ở Việt Nam.",
+  "linked": {
+   "Q5393308": "chùa",
+   "Q7055": "phật"
+  },
+  "top1_image": 121,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q7055",
+    "surface": "phật",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3360468_auto_1",
+  "group": "auto",
+  "text": "Các hạng mục xây dựng, mở rộng khu chùa mới được các đại biểu tham dự đại lễ Phật đản thế giới 2008 làm lễ khánh thành giai đoạn 1, năm 2010 là nơi tổ chức Đại lễ cung nghinh xá lợi Phật đầu tiên từ Ấn Độ về Việt Nam.",
+  "linked": {
+   "Q5393308": "chùa",
+   "Q7055": "phật",
+   "Q88291": "thành"
+  },
+  "top1_image": 120,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q7055",
+    "surface": "phật",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3360468_auto_2",
+  "group": "auto",
+  "text": "Đại lễ Phật đản Liên hiệp quốc – Vesak 2014 do Việt Nam đăng cai đã diễn ra tại trong tháng 3 năm 2014.",
+  "linked": {
+   "Q7055": "phật"
+  },
+  "top1_image": 117,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q7055",
+    "surface": "phật",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10834009_auto_0",
+  "group": "auto",
+  "text": "Vương cung thánh đường Đức Mẹ Vô nhiễm Nguyên tội, là một nhà thờ Công giáo Rôma thuộc Giáo phận Bùi Chu, Việt Nam.",
+  "linked": {
+   "Q345": "đức mẹ vô nhiễm nguyên tội",
+   "Q185606": "đức mẹ vô nhiễm nguyên tội",
+   "Q16970": "thánh đường",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 160,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q185606",
+    "surface": "đức mẹ vô nhiễm nguyên tội",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "thánh đường",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10834009_auto_1",
+  "group": "auto",
+  "text": "nằm ở xã Xuân Hưng, tỉnh Ninh Bình.",
+  "linked": {
+   "Q36900": "tỉnh ninh bình"
+  },
+  "top1_image": 96,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q36900",
+    "surface": "tỉnh ninh bình",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q180566_auto_0",
+  "group": "auto",
+  "text": "tên chữ là Cổ Pháp điện, còn được gọi là, là một quần thể kiến trúc tín ngưỡng thờ tám vị vua đầu tiên của nhà Lý.",
+  "linked": {
+   "Q878309": "nhà lý"
+  },
+  "top1_image": 187,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q878309",
+    "surface": "nhà lý",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q180566_auto_1",
+  "group": "auto",
+  "text": "đã được Nhà nước Việt Nam công nhận là di tích lịch sử - văn hóa theo Quyết định số 154 của Bộ Văn hóa – Thông tin ngày 25 tháng 1 năm 1991.",
+  "linked": {},
+  "top1_image": 278,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q180566_auto_2",
+  "group": "auto",
+  "text": "Năm 2014, nơi đây cùng với khu lăng mộ các Vua nhà Lý đã được xếp hạng di tích quốc gia đặc biệt.",
+  "linked": {
+   "Q381885": "lăng mộ",
+   "Q162875": "lăng mộ",
+   "Q878309": "nhà lý"
+  },
+  "top1_image": 198,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q381885",
+    "surface": "lăng mộ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q162875",
+    "surface": "lăng mộ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2277986_auto_0",
+  "group": "auto",
+  "text": "trước có tên là Đằng Long Tự, tọa lạc dưới chân đồi Trại Thủy, tại số 22 đường 23 tháng 10, phường Tây Nha Trang, tỉnh Khánh Hòa.",
+  "linked": {
+   "Q33369": "tỉnh khánh hòa"
+  },
+  "top1_image": 105,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33369",
+    "surface": "tỉnh khánh hòa",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2277986_auto_1",
+  "group": "auto",
+  "text": "Chùa khởi công xây dựng vào thế kỷ 19, đến năm 1940 trùng tu lại và trở thành ngôi chùa nổi tiếng nhất tỉnh với tượng phật Thích Ca ngoài trời lớn nhất Việt Nam.",
+  "linked": {
+   "Q5393308": "chùa",
+   "Q88291": "thành",
+   "Q7055": "phật"
+  },
+  "top1_image": 121,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q7055",
+    "surface": "phật",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3360457_auto_0",
+  "group": "auto",
+  "text": "còn có các tên khác: Cẩm Sơn, Sơn Can hay Cẩm Đệm; là một trong những ngôi chùa cổ nhất của Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 119,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3360457_auto_1",
+  "group": "auto",
+  "text": "Đây chính là tổ đình của phái Thiền Lâm Tế tông ở Nam Bộ.",
+  "linked": {},
+  "top1_image": 46,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q3360457_auto_2",
+  "group": "auto",
+  "text": "Chùa tọa lạc tại số 565 đường Lạc Long Quân, thuộc Phường Bảy Hiền, Thành phố Hồ Chí Minh, và đã được Bộ Văn hóa công nhận là di tích lịch sử - văn hóa quốc gia của Việt Nam theo quyết định số 1288-VH/QĐ ngày 16 tháng 11 năm 1988.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 119,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7481070_auto_0",
+  "group": "auto",
+  "text": "có tên chữ là Hiếu lăng, do hoàng đế Thiệu Trị thời nhà Nguyễn cho xây dựng, nằm trên núi Cẩm Kê, ấp An Bằng, phường Long Hồ, quận Phú Xuân, thành phố Huế, gần ngã ba Bằng Lãng là nơi hội lưu của hai dòng Hữu Trạch và Tả Trạch hợp thành sông Hương, cách trung tâm thành phố Huế 12 km.",
+  "linked": {
+   "Q6500483": "nhà nguyễn",
+   "Q162875": "lăng",
+   "Q88291": "thành",
+   "Q36399": "huế",
+   "Q4022": "sông"
+  },
+  "top1_image": 175,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q6500483",
+    "surface": "nhà nguyễn",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   },
+   {
+    "qid": "Q162875",
+    "surface": "lăng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7481070_auto_1",
+  "group": "auto",
+  "text": "được xây dựng từ năm 1840 đến năm 1843 thì hoàn thành, huy động tới mười nghìn thợ và lính.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q6837230_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ cổ, hiện tọa lạc tại số 25 đường Học Lạc, phường Chợ Lớn, Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 218,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q6941034_auto_0",
+  "group": "auto",
+  "text": "là bảo tàng trưng bày gốm sứ liên quan đến lịch sử giao thương quốc tế với các nước như Trung Quốc, Ấn Độ, Nhật Bản, Philippines và Thái Lan tọa lạc ở Hội An, Quảng Nam, Việt Nam.",
+  "linked": {
+   "Q33506": "bảo tàng",
+   "Q33356": "quảng nam"
+  },
+  "top1_image": 222,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q33356",
+    "surface": "quảng nam",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q6941034_auto_1",
+  "group": "auto",
+  "text": "Bảo tàng được khai trương năm 1995, được hình thành với sự giúp đỡ của các chuyên gia Nhật Bản.",
+  "linked": {
+   "Q33506": "bảo tàng",
+   "Q88291": "thành"
+  },
+  "top1_image": 239,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q6941034_auto_2",
+  "group": "auto",
+  "text": "Bảo tàng hiện có khoảng 368 hiện vật gốm sứ có niên đại từ thế kỷ IX -X đến thế kỷ XIX được tìm thấy ở các điểm khảo cổ tại Hội An.",
+  "linked": {
+   "Q33506": "bảo tàng"
+  },
+  "top1_image": 235,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7680488_auto_0",
+  "group": "auto",
+  "text": "là một di tích nhà thờ Công giáo tọa lạc đường Nguyễn Du, phường Đồng Hới, tỉnh Quảng Trị.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 229,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7680488_auto_1",
+  "group": "auto",
+  "text": "Nơi đây từng là nhà thờ của giáo xứ, được coi là một trong những nhà thờ đẹp nhất ở Việt Nam.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 207,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7680488_auto_2",
+  "group": "auto",
+  "text": "Trong Chiến tranh Việt Nam, nhà thờ bị bom đạn Mỹ đánh sập, chỉ còn lại phế tích và được bảo tồn về sau như một chứng tích chiến tranh.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 229,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743440_auto_0",
+  "group": "auto",
+  "text": "tên chính thức là Bảo tàng Hồ Chí Minh - Chi nhánh Thành phố Hồ Chí Minh, là cụm di tích kiến trúc - bảo tàng nằm bên sông Sài Gòn, thuộc phường Xóm Chiếu, Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q33506": "bảo tàng",
+   "Q4022": "sông"
+  },
+  "top1_image": 239,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743440_auto_1",
+  "group": "auto",
+  "text": "Nơi đây từng là trụ sở của hãng vận tải Messageries maritimes tại Sài Gòn từ năm 1864 đến năm 1955.",
+  "linked": {
+   "Q1854": "sài gòn"
+  },
+  "top1_image": 239,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "sài gòn",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743440_auto_2",
+  "group": "auto",
+  "text": "Ngày nay, địa danh này được biết đến nhiều do tại đây có cụm di tích kiến trúc đánh dấu sự kiện ngày 5 tháng 6 năm 1911, người thanh niên Nguyễn Tất Thành đã xuống con tàu Amiral Latouche-Tréville làm phụ bếp để có điều kiện sang châu Âu, mở đầu hành trình cách mạng của mình.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 15,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800884_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo tại Thành phố Hồ Chí Minh, thuộc giáo xứ, tọa lạc tại số 120 đường Trần Bình Trọng, phường, thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800884_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ có kiến trúc Romanesque, đã nhiều lần bị phá hủy rồi lại được xây lại vào các năm 1727, 1733, 1793, 1862, 1882 và ngôi nhà thờ hiện nay được khánh thành vào năm 1896.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 226,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800884_auto_2",
+  "group": "auto",
+  "text": "là nhà thờ cổ nhất Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 248,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800886_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo cổ hơn 100 tuổi, tọa lạc tại số 1 đường Tôn Thất Tùng, phường Bến Thành, Thành phố Hồ Chí Minh, Việt Nam.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q88291": "thành"
+  },
+  "top1_image": 245,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800886_auto_1",
+  "group": "auto",
+  "text": "Đây là nhà thờ của giáo xứ Chợ Đũi thuộc Tổng giáo phận Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800888_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo ở Thành phố Hồ Chí Minh, Việt Nam.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800888_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ tọa lạc tại số 688 đường Quang Trung, phường Thông Tây Hội, Thành phố Hồ Chí Minh, Việt Nam.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800896_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo tại Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800896_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ này tọa lạc tại số 169A đường Hùng Vương, phường An Đông, Thành phố Hồ Chí Minh xây từ năm 1922 và hoàn thành vào tháng 5 năm 1928, mang tên, cũng là thánh bổn mạng nhà thờ.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 245,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800896_auto_2",
+  "group": "auto",
+  "text": "Nhà thờ có phong cách Kiến trúc Romanesque, được xây trên khu nghĩa trang Hoa kiều.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 159,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q482355_auto_0",
+  "group": "auto",
+  "text": "hay Tổ đình là một ngôi chùa ở phường Vườn Lài, Thành phố Hồ Chí Minh, Việt Nam và đây cũng là một trường Phật học của Giáo hội Phật giáo Việt Nam ở miền Nam.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q748": "phật giáo",
+   "Q5393308": "chùa",
+   "Q7055": "phật"
+  },
+  "top1_image": 118,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q7055",
+    "surface": "phật",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q482355_auto_1",
+  "group": "auto",
+  "text": "tọa lạc tại 243 đường Sư Vạn Hạnh, phường Vườn Lài, thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh"
+  },
+  "top1_image": 324,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q482355_auto_2",
+  "group": "auto",
+  "text": "Chùa được tạo lập năm 1948 và đã được mở rộng nâng cấp.",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 195,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2857598_auto_0",
+  "group": "auto",
+  "text": "là một ngôi chùa nằm ở phường Trí Quả, thành phố Bắc Ninh, cách Hà Nội khoảng 30 km.",
+  "linked": {
+   "Q33408": "thành phố bắc ninh",
+   "Q1858": "hà nội",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 152,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33408",
+    "surface": "thành phố bắc ninh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2857598_auto_1",
+  "group": "auto",
+  "text": "Đây là trung tâm Phật giáo cổ xưa nhất của Việt Nam.",
+  "linked": {
+   "Q748": "phật giáo"
+  },
+  "top1_image": 81,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q748",
+    "surface": "phật giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2857598_auto_2",
+  "group": "auto",
+  "text": "Chùa còn được người dân gọi với những tên gọi khác nhau như chùa Cả, Cổ Châu tự, tự, Thiền Định tự.",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 152,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5964889_auto_0",
+  "group": "auto",
+  "text": "là tên gọi khái quát của - quần thể đền chùa thờ phụng các Vua và tôn thất của nhà vua trên núi Nghĩa Lĩnh, xã Hy Cương, tỉnh Phú Thọ, xưa thuộc xã Hy Cương, huyện Sơn Vi, gắn với - được tổ chức tại địa điểm đó hàng năm vào ngày 10 tháng 3 âm lịch.",
+  "linked": {
+   "Q44539": "đền",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 61,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5964889_auto_1",
+  "group": "auto",
+  "text": "Hiện nay, theo các tài liệu khoa học đã công bố đa số đều thống nhất nền móng kiến trúc bắt đầu được xây dựng từ thời vua Đinh Tiên Hoàng trị vì.",
+  "linked": {},
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q5964889_auto_2",
+  "group": "auto",
+  "text": "Đến thời Hậu Lê được xây dựng hoàn chỉnh theo quy mô như hiện tại.",
+  "linked": {},
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10801136_auto_0",
+  "group": "auto",
+  "text": "là tập thơ chữ Hán gồm 134 bài theo thể Đường luật do Hồ Chí Minh sáng tác trong thời gian bị chính quyền Tưởng Giới Thạch bắt giam ở Quảng Tây, Trung Quốc, từ ngày 29 tháng 8 năm 1942 đến ngày 10 tháng 9 năm 1943.",
+  "linked": {
+   "Q1854": "hồ chí minh",
+   "Q15176": "quảng tây"
+  },
+  "top1_image": 291,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q15176",
+    "surface": "quảng tây",
+    "via": "triple",
+    "pid": "P276",
+    "label": "P276",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10801136_auto_1",
+  "group": "auto",
+  "text": "Ngoài ra, phần cuối văn bản là bút ký đọc sách và bút ký đọc báo ghi chép tóm tắt những thông tin quan trọng về chính trị, quân sự, văn hóa quốc tế và Việt Nam đương thời.",
+  "linked": {},
+  "top1_image": 291,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10801136_auto_2",
+  "group": "auto",
+  "text": "không chỉ ghi những cảnh sinh hoạt trong tù, mà còn có ý nghĩa tố cáo chế độ nhà tù khắc nghiệt của chính quyền Tưởng Giới Thạch.",
+  "linked": {},
+  "top1_image": 232,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10841729_auto_0",
+  "group": "auto",
+  "text": "là một trong những nơi Vương lâu đời tại Thành phố Hồ Chí Minh; hiện tọa lạc tại số 2, đường Nguyễn Bỉnh Khiêm, phường Sài Gòn, Thành phố Hồ Chí Minh, Việt Nam.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh"
+  },
+  "top1_image": 323,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q16480514_auto_0",
+  "group": "auto",
+  "text": "với tước hiệu là nhà thờ chính tòa của Giáo phận tọa lạc tại số 14 đường Nguyễn Thị Minh Khai, phường Ninh Kiều, thành phố.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q88291": "thành"
+  },
+  "top1_image": 267,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chính tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q16480514_auto_1",
+  "group": "auto",
+  "text": "cách Thành phố Hồ Chí Minh 167 km.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q16480514_auto_2",
+  "group": "auto",
+  "text": "Năm 1850, Toà Thánh Vatican chia giáo phận Tông tòa Tây Đàng Trong thành giáo phận Tông tòa Nam Vang và Giáo phận Tông tòa Tây.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 277,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q16511573_auto_0",
+  "group": "auto",
+  "text": "có tên chữ là là nơi chôn cất hoàng đế.",
+  "linked": {},
+  "top1_image": 232,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q16511573_auto_1",
+  "group": "auto",
+  "text": "Đây là một di tích trong Quần thể di tích cố đô Huế được UNESCO công nhận là di sản văn hóa thế giới ngày 11 tháng 12 năm 1993.",
+  "linked": {
+   "Q10810560": "quần thể di tích cố đô huế"
+  },
+  "top1_image": 308,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q10810560",
+    "surface": "quần thể di tích cố đô huế",
+    "via": "triple",
+    "pid": "P527",
+    "label": "P527",
+    "direction": "<-"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10794266_auto_0",
+  "group": "auto",
+  "text": "còn được gọi là hay, là một cơ sở tín ngưỡng tại địa chỉ số 264 đường Hải Thượng Lãn Ông, Phường Chợ Lớn, Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh"
+  },
+  "top1_image": 324,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10794266_auto_1",
+  "group": "auto",
+  "text": "Đây là hội quán do người Hoa gốc Phúc Kiến lập ra trên đất Đề Ngạn xưa vào khoảng đầu thế kỷ 18.",
+  "linked": {},
+  "top1_image": 170,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10800885_auto_0",
+  "group": "auto",
+  "text": "Nhà thờ Dòng Chúa Cứu Thế là một công trình kiến trúc của Công giáo Rôma tại Huế.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q36399": "huế"
+  },
+  "top1_image": 256,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10825819_auto_0",
+  "group": "auto",
+  "text": "hay là một Thánh thất Cao Đài thuộc Tòa Thánh Tây Ninh nằm ở phường Xuân Trường - Đà Lạt, tỉnh Lâm Đồng.",
+  "linked": {
+   "Q10831162": "tòa thánh tây ninh",
+   "Q36721": "tỉnh lâm đồng"
+  },
+  "top1_image": 327,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q36721",
+    "surface": "tỉnh lâm đồng",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10825819_auto_1",
+  "group": "auto",
+  "text": "Thánh thất này trước đây thuộc Tộc đạo Đà Lạt, Châu đạo Lâm Đồng, Trấn đạo Tuyên Đức, nay là Họ Đạo Đà Lạt, tỉnh Lâm Đồng.",
+  "linked": {
+   "Q36721": "tỉnh lâm đồng"
+  },
+  "top1_image": 327,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q36721",
+    "surface": "tỉnh lâm đồng",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q190128_auto_0",
+  "group": "auto",
+  "text": "là một vịnh nhỏ thuộc phần bờ tây vịnh Bắc Bộ tại khu vực biển Đông Bắc Việt Nam, bao gồm vùng biển đảo của khu vực đô thị thuộc thành phố Quảng Ninh.",
+  "linked": {
+   "Q23442": "đảo",
+   "Q88291": "thành"
+  },
+  "top1_image": 32,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q23442",
+    "surface": "đảo",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q190128_auto_1",
+  "group": "auto",
+  "text": "Là trung tâm của một khu vực rộng lớn có những yếu tố ít nhiều tương đồng về địa chất, địa mạo, cảnh quan, khí hậu và văn hóa, với vịnh Bái Tử Long phía Đông Bắc và quần đảo Cát Bà phía Tây Nam, giới hạn trong diện tích khoảng 1.553 km² bao gồm 1.969 hòn đảo lớn nhỏ, phần lớn là đảo đá vôi, trong đó vùng lõi của vịnh có diện tích 335 km² quần tụ dày đặc 775 hòn đảo.",
+  "linked": {
+   "Q993402": "đảo cát bà",
+   "Q23442": "hòn đảo"
+  },
+  "top1_image": 32,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q23442",
+    "surface": "hòn đảo",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q190128_auto_2",
+  "group": "auto",
+  "text": "Lịch sử kiến tạo địa chất đá vôi của vịnh đã trải qua khoảng 500 triệu năm với những hoàn cảnh cổ địa lý rất khác nhau; và quá trình tiến hóa karst đầy đủ trải qua trên 20 triệu năm với sự kết hợp các yếu tố như tầng đá vôi dày, khí hậu nóng ẩm và tiến trình nâng kiến tạo chậm chạp trên tổng thể.",
+  "linked": {},
+  "top1_image": 32,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q206219_auto_0",
+  "group": "auto",
+  "text": "là quần thể di tích gắn với lịch sử kinh thành Thăng Long - Đông Kinh và tỉnh thành Hà Nội bắt đầu từ thời kì tiền Thăng Long qua thời Đinh - Tiền Lê, phát triển mạnh dưới thời Lý, Trần, Lê và thành Hà Nội dưới triều Nguyễn.",
+  "linked": {
+   "Q1858": "thăng long",
+   "Q878309": "thời lý",
+   "Q88291": "thành"
+  },
+  "top1_image": 23,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thăng long",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q206219_auto_1",
+  "group": "auto",
+  "text": "Đây là công trình kiến trúc các triều vua xây dựng trong nhiều giai đoạn lịch sử và trở thành một trong những di tích quan trọng bậc nhất trong hệ thống các di tích Việt Nam.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q206219_auto_2",
+  "group": "auto",
+  "text": "Hầu hết các kiến trúc tồn tại đến ngày hôm nay được xây dựng sau khi Gia Long phá dỡ và xây dựng lại vào năm 1802, cũng như bị quân Pháp phá đi để xây dựng doanh trại.",
+  "linked": {},
+  "top1_image": 229,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q1421202_auto_0",
+  "group": "auto",
+  "text": "là một khu bảo tồn thiên nhiên, vườn quốc gia tại Việt Nam.",
+  "linked": {
+   "Q46169": "vườn quốc gia"
+  },
+  "top1_image": 128,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1421202_auto_1",
+  "group": "auto",
+  "text": "Nó nằm trên địa bàn thành phố Đồng Nai, cách Thành phố Hồ Chí Minh 150 km về phía bắc.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q88291": "thành"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1421202_auto_2",
+  "group": "auto",
+  "text": "Điểm đặc trưng của vườn quốc gia này là rừng đất thấp ẩm ướt nhiệt đới. được thành lập theo quyết định số 08/CT ngày 13 tháng 1 năm 1992 của Thủ tướng chính phủ Việt Nam trên cơ sở kết nối khu rừng cấm Nam Cát Tiên và khu bảo tồn thiên nhiên Tây Cát Tiên.",
+  "linked": {
+   "Q46169": "vườn quốc gia",
+   "Q88291": "thành"
+  },
+  "top1_image": 51,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q428129_auto_0",
+  "group": "auto",
+  "text": "Nhà thờ Chánh tòa, thường được gọi tắt là Nhà thờ Đức Bà, là nhà thờ chính tòa của Tổng giáo phận Sài Gòn.",
+  "linked": {
+   "Q2977": "nhà thờ chánh tòa",
+   "Q16970": "nhà thờ",
+   "Q345": "đức bà",
+   "Q1854": "sài gòn"
+  },
+  "top1_image": 40,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chánh tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q345",
+    "surface": "đức bà",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1854",
+    "surface": "sài gòn",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q428129_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ không chỉ là biểu tượng của Công giáo ở Việt Nam, mà còn là một trong những công trình kiến trúc độc đáo của Thành phố Hồ Chí Minh và điểm đến nổi tiếng với du khách.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q428129_auto_2",
+  "group": "auto",
+  "text": "Tên gọi ban đầu của nhà thờ là Nhà thờ Sài Gòn, tên gọi Nhà thờ Đức Bà bắt đầu được sử dụng từ năm 1959 bằng việc đặt Tượng Đức Bà Hòa Bình trước khuôn viên.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1854": "sài gòn",
+   "Q345": "đức bà"
+  },
+  "top1_image": 245,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1854",
+    "surface": "sài gòn",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q600269_auto_0",
+  "group": "auto",
+  "text": "Yang Po Inư Nagar hay Yang Pô Ana Gar là ngôi đền Chăm Pa nằm trên đỉnh một ngọn đồi nhỏ cao khoảng 10-12 mét so với mực nước biển, ở cửa sông Cái tại phường Bắc Nha Trang, tỉnh Khánh Hòa cách trung tâm phường Nha Trang khoảng 2 km về phía bắc.",
+  "linked": {
+   "Q33369": "tỉnh khánh hòa",
+   "Q44539": "đền",
+   "Q4022": "sông"
+  },
+  "top1_image": 55,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q33369",
+    "surface": "tỉnh khánh hòa",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q44539",
+    "surface": "đền",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q600269_auto_1",
+  "group": "auto",
+  "text": "Tên gọi \"\" được dùng để chỉ chung cả công trình kiến trúc này, nhưng thực ra nó là tên của ngọn tháp lớn nhất cao khoảng 23 mét.",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 60,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q600269_auto_2",
+  "group": "auto",
+  "text": "Ngôi đền này được xây dựng trong thời kỳ đạo Hindu đang cường thịnh khi Chăm Pa trong giai đoạn có tên gọi là Hoàn Vương quốc, vì thế tượng nữ thần có hình dạng của Uma, vợ của Shiva.",
+  "linked": {
+   "Q44539": "đền"
+  },
+  "top1_image": 55,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q44539",
+    "surface": "đền",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q975568_auto_0",
+  "group": "auto",
+  "text": "hay còn gọi là là một ngôi chùa cổ nằm trên đồi Hà Khê, tả ngạn sông Hương, cách trung tâm thành phố Huế khoảng 5 km về phía tây.",
+  "linked": {
+   "Q5393308": "chùa",
+   "Q4022": "sông",
+   "Q88291": "thành",
+   "Q36399": "huế"
+  },
+  "top1_image": 61,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q36399",
+    "surface": "huế",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q975568_auto_1",
+  "group": "auto",
+  "text": "chính thức khởi lập năm Tân Sửu, đời chúa Tiên Nguyễn Hoàng - vị chúa Nguyễn đầu tiên ở Đàng Trong.",
+  "linked": {},
+  "top1_image": 197,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q1186292_auto_0",
+  "group": "auto",
+  "text": "có tên ban đầu là tức là Đài với lối kiến trúc độc đáo: một điện thờ đặt trên trụ duy nhất.",
+  "linked": {},
+  "top1_image": 68,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q1186292_auto_1",
+  "group": "auto",
+  "text": "là công trình nổi tiếng nhất nằm trong quần thể kiến trúc, có nghĩa là ngôi chùa \"Phúc lành dài lâu\".",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 195,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1186292_auto_2",
+  "group": "auto",
+  "text": "Công trình nguyên bản được xây vào thời vua Lý Thái Tông mùa đông năm 1049 và hoàn thiện vào năm 1105 thời vua Lý Nhân Tông nay đã không còn.",
+  "linked": {
+   "Q711472": "lý thái tông"
+  },
+  "top1_image": 186,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q711472",
+    "surface": "lý thái tông",
+    "via": "triple",
+    "pid": "P112",
+    "label": "P112",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10810560_auto_0",
+  "group": "auto",
+  "text": "hay Quần thể kiến trúc cố đô Huế là những di tích lịch sử - văn hóa do triều Nguyễn chủ trương xây dựng trong khoảng thời gian từ đầu thế kỷ 19 đến nửa đầu thế kỷ 20 trên địa bàn kinh đô Huế xưa; nay thuộc phạm vi thành phố Huế, Việt Nam.",
+  "linked": {
+   "Q36399": "huế",
+   "Q88291": "thành"
+  },
+  "top1_image": 70,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q36399",
+    "surface": "huế",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10810560_auto_1",
+  "group": "auto",
+  "text": "Phần lớn các di tích này nay thuộc sự quản lý của Trung tâm Bảo tồn và được UNESCO công nhận là Di sản Văn hoá Thế giới vào ngày 11 tháng 12 năm 1993.",
+  "linked": {},
+  "top1_image": 55,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10810560_auto_2",
+  "group": "auto",
+  "text": "Hiện tại, cố đô Huế đã được thủ tướng chính phủ Việt Nam đưa vào danh sách xếp hạng 130 di tích quốc gia đặc biệt quan trọng.",
+  "linked": {
+   "Q36399": "huế"
+  },
+  "top1_image": 70,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q36399",
+    "surface": "huế",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1923783_auto_0",
+  "group": "auto",
+  "text": "là nhà thờ chính tòa của Tổng giáo phận, nơi có ngai tòa của Tổng giám mục.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa"
+  },
+  "top1_image": 263,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chính tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1923783_auto_1",
+  "group": "auto",
+  "text": "Đây là một nhà thờ cổ kính tại thành phố này, thường xuyên diễn ra các sinh hoạt tín ngưỡng của các giáo dân Công giáo thuộc giáo xứ chính tòa cũng như của toàn tổng giáo phận.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q88291": "thành"
+  },
+  "top1_image": 137,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1923783_auto_2",
+  "group": "auto",
+  "text": "Linh mục chính xứ hiện nay là linh mục Giuse Tạ Minh Quý.",
+  "linked": {
+   "Q128267": "giuse"
+  },
+  "top1_image": 254,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q128267",
+    "surface": "giuse",
+    "via": "triple",
+    "pid": "P138",
+    "label": "P138",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1328473_auto_0",
+  "group": "auto",
+  "text": "là một hồ nước ngọt ở Thái Nguyên, Việt Nam.",
+  "linked": {
+   "Q23397": "hồ nước"
+  },
+  "top1_image": 85,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q23397",
+    "surface": "hồ nước",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1328473_auto_1",
+  "group": "auto",
+  "text": "Đây là hồ nước ngọt tự nhiên lớn nhất Việt Nam và là một trong một trăm hồ nước ngọt lớn nhất thế giới.",
+  "linked": {
+   "Q23397": "hồ nước"
+  },
+  "top1_image": 85,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q23397",
+    "surface": "hồ nước",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1328473_auto_2",
+  "group": "auto",
+  "text": "Hồ nằm trong Vườn quốc gia, nơi đây được công nhận là khu du lịch quốc gia Việt Nam.",
+  "linked": {
+   "Q46169": "vườn quốc gia"
+  },
+  "top1_image": 50,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743287_auto_0",
+  "group": "auto",
+  "text": "nằm ở số 36 phố Lý Thường Kiệt, phường Hàng Bài, quận Hoàn Kiếm, thành phố Hà Nội, gần trung tâm hồ Hoàn Kiếm và khu phố cổ.",
+  "linked": {
+   "Q1858": "thành phố hà nội"
+  },
+  "top1_image": 68,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thành phố hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743287_auto_1",
+  "group": "auto",
+  "text": "Bảo tàng này được dành riêng cho.",
+  "linked": {
+   "Q33506": "bảo tàng"
+  },
+  "top1_image": 109,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10743287_auto_2",
+  "group": "auto",
+  "text": "Bảo tàng mở cửa phục vụ công chúng từ năm 1995 và chỉnh sửa lại hệ thống trưng bày thường xuyên từ 2006 - 2010 nhằm tôn vinh.",
+  "linked": {
+   "Q33506": "bảo tàng"
+  },
+  "top1_image": 239,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q33506",
+    "surface": "bảo tàng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1583627_auto_0",
+  "group": "auto",
+  "text": "là một vùng bãi bồi rộng lớn nằm ở phía Nam cửa sông Hồng, thuộc tỉnh Ninh Bình, cách Hà Nội khoảng 150 km về hướng Đông Nam, có tổng diện tích tự nhiên là 7.100 ha.",
+  "linked": {
+   "Q36900": "tỉnh ninh bình",
+   "Q1858": "hà nội",
+   "Q4022": "sông"
+  },
+  "top1_image": 154,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q36900",
+    "surface": "tỉnh ninh bình",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1583627_auto_1",
+  "group": "auto",
+  "text": "Từ phường Hoa Lư, trung tâm tỉnh Ninh Bình tới vườn khoảng 75 km.",
+  "linked": {
+   "Q36900": "tỉnh ninh bình"
+  },
+  "top1_image": 157,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q36900",
+    "surface": "tỉnh ninh bình",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1583627_auto_2",
+  "group": "auto",
+  "text": "Phù sa màu mỡ của sông Hồng và biển đã tạo dựng nên khu đất ngập nước với nhiều loài động thực vật hoang dã và các loài chim di cư quý hiếm.",
+  "linked": {
+   "Q4022": "sông"
+  },
+  "top1_image": 6,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q4022",
+    "surface": "sông",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800904_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo ở Việt Nam.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 322,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800904_auto_1",
+  "group": "auto",
+  "text": "Đây là nhà thờ chính tòa của vị giám mục Giáo phận, cũng là nhà thờ lớn nhất, một trong những công trình kiến trúc tiêu biểu và cổ xưa nhất của thành phố này do người Pháp để lại.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 107,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chính tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800904_auto_2",
+  "group": "auto",
+  "text": "Nhà thờ nằm tại số 13 đường Trần Phú, phường Xuân Hương –, tỉnh Lâm Đồng, Việt Nam.",
+  "linked": {
+   "Q36721": "tỉnh lâm đồng",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 249,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q586985_auto_0",
+  "group": "auto",
+  "text": "thuộc tỉnh Đồng Tháp là một khu đất ngập nước, được xếp trong hệ thống rừng đặc dụng của Việt Nam.",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 117,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q199451",
+    "surface": "tháp",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q586985_auto_1",
+  "group": "auto",
+  "text": "Nơi đây có nhiều loài chim quý, đặc biệt là sếu đầu đỏ, một loài chim cực kỳ quý hiếm, có tên trong sách đỏ.",
+  "linked": {},
+  "top1_image": 128,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q1088224_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo ở Hà Nội, công trình kiến trúc này có nhiều nét độc đáo, tạo thêm điểm chấm phá trong không gian đô thị Hà Nội.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 136,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1088224_auto_1",
+  "group": "auto",
+  "text": "Nằm ở số 56 phố Phan Đình Phùng, phường Ba Đình, thành phố Hà Nội, vì nhà thờ được xây dựng ở thành Thăng Long nên được gọi tên là.",
+  "linked": {
+   "Q1858": "thành phố hà nội",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 139,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thành phố hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1088224_auto_2",
+  "group": "auto",
+  "text": "Được khởi công xây dựng vào năm 1925 bởi cha xứ người Pháp tên là Antoine Depaulis theo bản vẽ của kiến trúc sư người Pháp Ernest Hébrard với mặt bằng kiến trúc nhà thờ kiểu Roman đồng thời kết hợp phong cách Á - Âu về tổng thể tạo nên đặc trưng của phong cách kiến trúc Đông Dương nổi tiếng.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 246,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5965459_auto_0",
+  "group": "auto",
+  "text": "là một đô thị cổ nằm ở hạ lưu sông Thu Bồn, thuộc vùng đồng bằng ven biển thành phố Đà Nẵng, Việt Nam, cách trung tâm thành phố khoảng 30 km về phía Nam.",
+  "linked": {
+   "Q25282": "thành phố đà nẵng",
+   "Q4022": "sông",
+   "Q88291": "thành"
+  },
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5965459_auto_1",
+  "group": "auto",
+  "text": "Nhờ những yếu tố địa lý và khí hậu thuận lợi, Hội An từng là một thương cảng quốc tế sầm uất, nơi gặp gỡ của những thuyền buôn Nhật Bản, Trung Quốc và phương Tây trong suốt thế kỷ XVII và XVIII.",
+  "linked": {},
+  "top1_image": 144,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q5965459_auto_2",
+  "group": "auto",
+  "text": "Trước thời kỳ này, nơi đây cũng từng có những dấu tích của thương cảng Chăm Pa hay được nhắc đến cùng con đường tơ lụa trên biển.",
+  "linked": {},
+  "top1_image": 55,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q7682043_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo tại Thành phố Hồ Chí Minh, thuộc giáo xứ.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 147,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7682043_auto_1",
+  "group": "auto",
+  "text": "cùng với Nhà thờ Đức Bà Sài Gòn là hai nhà thờ được xây dựng từ rất sớm và có quy mô lớn nhất tại thành phố này.",
+  "linked": {
+   "Q428129": "nhà thờ đức bà sài gòn",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 245,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7682043_auto_2",
+  "group": "auto",
+  "text": "Nhà thờ tọa lạc tại số 289 đường Hai Bà Trưng, phường Xuân Hòa, Thành phố Hồ Chí Minh, được khởi công vào năm 1870 và khánh thành vào ngày 16 tháng 12 năm 1876.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1091048_auto_0",
+  "group": "auto",
+  "text": "nằm ở bên đê hữu ngạn sông Đuống, khu, phường Trí Quả, thành phố Bắc Ninh.",
+  "linked": {
+   "Q33408": "thành phố bắc ninh",
+   "Q4022": "sông"
+  },
+  "top1_image": 152,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q33408",
+    "surface": "thành phố bắc ninh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1091048_auto_1",
+  "group": "auto",
+  "text": "Ngoài ra, nhân dân trong vùng còn gọi là, chùa Thấp.",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 194,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q1091048_auto_2",
+  "group": "auto",
+  "text": "Tên cũ của chùa trước đây gồm có: Thiếu Lâm Tự, Hoàng Cung Tự.",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 63,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q20026052_auto_0",
+  "group": "auto",
+  "text": "Nhà thờ Thánh Tâm là nhà thờ chính tòa của giáo phận.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 160,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q20026052_auto_1",
+  "group": "auto",
+  "text": "Vùng đất xây dựng nhà thờ hiện nay vốn là Giáo họ, một cơ sở truyền giáo đầu tiên của vùng đất Cao nguyên Trung phần.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 249,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q20026052_auto_2",
+  "group": "auto",
+  "text": "cách Hà Nội 1.298 km và cách Thành phố Hồ Chí Minh 345 km.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 283,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3096348_auto_0",
+  "group": "auto",
+  "text": "là nhà ga tàu hỏa của phường Xuân Hương - Đà Lạt.",
+  "linked": {},
+  "top1_image": 165,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q3096348_auto_1",
+  "group": "auto",
+  "text": "Nhà ga được người Pháp xây dựng từ năm 1932 đến 1938 thì hoàn thành, là nhà ga đầu mối trên tuyến đường sắt Tháp Chàm – Đà Lạt dài 84 km.",
+  "linked": {
+   "Q88291": "thành",
+   "Q199451": "tháp"
+  },
+  "top1_image": 19,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q3096348_auto_2",
+  "group": "auto",
+  "text": "Nhà ga có phong cách kiến trúc độc đáo, có ba mái hình chóp, là cách điệu ba đỉnh núi Langbiang hoặc nhà rông Tây Nguyên.",
+  "linked": {},
+  "top1_image": 168,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q5370148_auto_0",
+  "group": "auto",
+  "text": "tên chữ là, có từ đời Lý Thái Tổ, thờ Huyền Thiên Trấn Vũ, là một trong bốn vị thần được lập đền thờ để trấn giữ bốn cửa ngõ thành Thăng Long khi xưa.",
+  "linked": {
+   "Q878309": "đời lý",
+   "Q44539": "đền thờ",
+   "Q1858": "thăng long",
+   "Q88291": "thành"
+  },
+  "top1_image": 170,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q44539",
+    "surface": "đền thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "thăng long",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5370148_auto_1",
+  "group": "auto",
+  "text": "Nơi đây cũng từng là một trong bốn Đạo quán lớn của Đạo giáo ở Thăng Long.",
+  "linked": {
+   "Q9598": "đạo giáo",
+   "Q1858": "thăng long"
+  },
+  "top1_image": 170,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q9598",
+    "surface": "đạo giáo",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "thăng long",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q5370148_auto_2",
+  "group": "auto",
+  "text": "nằm bên cạnh Hồ Tây, cùng với chùa Kim Liên và chùa Trấn Quốc tạo nên sự hài hòa trong kiến trúc cảnh quan và trong văn hóa tín ngưỡng đối với cả khu vực phía Tây Bắc của Hà Nội.",
+  "linked": {
+   "Q864770": "chùa trấn quốc",
+   "Q1858": "hà nội",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 81,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7481171_auto_0",
+  "group": "auto",
+  "text": "là một quần thể Di tích công trình kiến trúc, trong đó có nơi chôn cất, tọa lạc trong một thung lũng hẹp thuộc làng Dương Xuân Thượng, tổng Cư Chánh, nay là tổ dân phố Thượng Ba, phường Thủy Xuân, thành phố Huế.",
+  "linked": {
+   "Q88291": "thành",
+   "Q36399": "huế"
+  },
+  "top1_image": 17,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q88291",
+    "surface": "thành",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7481171_auto_1",
+  "group": "auto",
+  "text": "Lúc mới xây dựng, đặt tên là Khiêm Cung.",
+  "linked": {},
+  "top1_image": 231,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q7481171_auto_2",
+  "group": "auto",
+  "text": "Sau khi băng hà, lăng được đổi tên thành Khiêm Lăng.",
+  "linked": {
+   "Q162875": "lăng",
+   "Q88291": "thành"
+  },
+  "top1_image": 198,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800882_auto_0",
+  "group": "auto",
+  "text": "còn được gọi là Nhà thờ Vinh Sơn,.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 160,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800882_auto_1",
+  "group": "auto",
+  "text": "Đây là một cụm kiến trúc bao gồm nhà nguyện và hai dãy nhà tu viện nữ tử Bác Ái Thánh Vinh Sơn với tổng diện tích 12 ha nằm tại số 1 đường Ngô Quyền, phường Cam Ly – Đà Lạt cách trung tâm tỉnh vào khoảng 1 km về hướng tây nam.",
+  "linked": {},
+  "top1_image": 116,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q7932540_auto_0",
+  "group": "auto",
+  "text": "tọa lạc trên đường Nguyễn Trung Trực, khu phố Mỹ An, phường Mỹ Phong, tỉnh Đồng Tháp, Việt Nam.",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 117,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q199451",
+    "surface": "tháp",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800893_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo nằm trên địa phận xã Tuy An Đông, tỉnh Đắk Lắk.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 207,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800893_auto_1",
+  "group": "auto",
+  "text": "Đây là nhà thờ thuộc Giáo xứ, là nơi sinh của Chân phước Anrê Phú Yên, một trong những vị tử đạo bổn mạng của giáo lý viên và những người trẻ Công giáo.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 322,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800893_auto_2",
+  "group": "auto",
+  "text": "Nhà thờ hiện nay cũng là nơi hành hương vào dịp lễ kỷ niệm Chân phước Anrê Phú Yên và thánh lễ cầu cho giới trẻ Công giáo Việt Nam.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo"
+  },
+  "top1_image": 322,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10834010_auto_0",
+  "group": "auto",
+  "text": "là một nhà thờ Công giáo Rôma tọa lạc ở phường Châu Sơn, tỉnh Ninh Bình, thuộc Tổng Giáo phận Hà Nội, Việt Nam.",
+  "linked": {
+   "Q36900": "tỉnh ninh bình",
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 136,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10834010_auto_1",
+  "group": "auto",
+  "text": "Đây là một trong những nhà thờ cổ kính và to lớn nhất của tổng giáo phận này, từng đóng vai trò như một nhà thờ chính tòa giáo phận từ năm 1882 đến 1936.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10834010_auto_2",
+  "group": "auto",
+  "text": "Cho đến nay, là công trình duy nhất ở Việt Nam có khuôn viên được quy hoạch và xây dựng theo kiểu quần thể nhà thờ duomo của Ý. Ngày 24 tháng 6 năm 2010, Bộ Phụng Tự của Tòa Thánh có sắc phong nâng thành tiểu vương cung thánh đường mang tước hiệu Đức Mẹ vô nhiễm nguyên tội.",
+  "linked": {
+   "Q345": "đức mẹ vô nhiễm nguyên tội",
+   "Q185606": "đức mẹ vô nhiễm nguyên tội",
+   "Q120560": "tiểu vương cung thánh đường",
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 159,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q185606",
+    "surface": "đức mẹ vô nhiễm nguyên tội",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   },
+   {
+    "qid": "Q120560",
+    "surface": "tiểu vương cung thánh đường",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q6673286_auto_0",
+  "group": "auto",
+  "text": "là một cây thập tự mà binh lính Quân đội Úc dựng lên làm bia tưởng niệm những đồng đội của họ tử trận trong Trận Long Tân thuộc Chiến tranh Việt Nam.",
+  "linked": {},
+  "top1_image": 215,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q6673286_auto_1",
+  "group": "auto",
+  "text": "Trên tấm bia có gắn biển đồng được làm từ chính quốc Úc đưa sang Việt Nam viết rằng: “Kỷ niệm những người lính thuộc Đại đội D, Tiểu đoàn 3, Trung đoàn 1 lực lượng đặc nhiệm Hoàng gia Australia đã bỏ mình tại nơi đây trong trận đánh Long Tân, ngày 18 tháng 8 năm 1966”.",
+  "linked": {},
+  "top1_image": 214,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q6673286_auto_2",
+  "group": "auto",
+  "text": "Sau khi chiến tranh Việt Nam kết thúc, cây thập tự Long Tân và địa điểm dựng cây thập tự đã được nước này xếp hạng là di tích lịch sử - văn hóa cấp quốc gia với tên gọi “Bia hình thánh giá” vào năm 1988.",
+  "linked": {},
+  "top1_image": 303,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q7818615_auto_0",
+  "group": "auto",
+  "text": "hay, là lăng tẩm của hoàng đế, vị vua sáng lập triều Nguyễn.",
+  "linked": {
+   "Q162875": "lăng tẩm"
+  },
+  "top1_image": 198,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q162875",
+    "surface": "lăng tẩm",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q7818615_auto_1",
+  "group": "auto",
+  "text": "thực ra là một quần thể nhiều lăng tẩm trong hoàng quyến, nay thuộc địa phận phường Kim Long, thành phố Huế.",
+  "linked": {
+   "Q162875": "lăng tẩm",
+   "Q88291": "thành",
+   "Q36399": "huế"
+  },
+  "top1_image": 61,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q36399",
+    "surface": "huế",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10748461_auto_0",
+  "group": "auto",
+  "text": "tọa lạc tại số 120 Tự Phước, phường Xuân Trường – Đà Lạt thuộc địa bàn Trại Mát, cách trung tâm 8 km, trên quốc lộ 20.",
+  "linked": {},
+  "top1_image": 167,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10748461_auto_1",
+  "group": "auto",
+  "text": "Chùa còn được gọi là vì trong sân chùa có con rồng dài 49 m được làm bằng 12.000 vỏ chai lọ.",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 242,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10748461_auto_2",
+  "group": "auto",
+  "text": "là một công trình kiến trúc khảm sành đặc sắc của thành phố Đà Lạt.",
+  "linked": {
+   "Q88291": "thành"
+  },
+  "top1_image": 201,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10800905_auto_0",
+  "group": "auto",
+  "text": "tiếng Anh: tiếng Pháp: Cathédrale de), thường được gọi tắt là, Nhà Thờ Lớn, hoặc Nhà Thờ Tourane, là nhà thờ chính tòa củagiáo phận toạ lạc tại số 156 Trần Phú, P. Hải Châu, Thành Phố, Việt Nam.",
+  "linked": {
+   "Q2977": "nhà thờ chính tòa",
+   "Q16970": "nhà thờ",
+   "Q25282": "tourane",
+   "Q88291": "thành"
+  },
+  "top1_image": 263,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q2977",
+    "surface": "nhà thờ chính tòa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q25282",
+    "surface": "tourane",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800905_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ không chỉ là biểu tượng của Công giáo ở, mà còn là một trong những công trình kiến trúc độc đáo của Thành phố và điểm đến nổi tiếng với du khách.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q88291": "thành"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800905_auto_2",
+  "group": "auto",
+  "text": "Tên gọi ban đầu của nhà thờ là Nhà thờ Tourane, tên gọi Nhà thờ Con Gà do người dân địa phương hay gọi vì trên đỉnh tháp chuông cột thu lôi của nhà thờ có biểu tượng con gà.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q25282": "tourane",
+   "Q199451": "tháp"
+  },
+  "top1_image": 206,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2817231_auto_0",
+  "group": "auto",
+  "text": "còn gọi là, là một ngôi đền thờ tọa lạc tại 12, phường, thành phố Hà Nội.",
+  "linked": {
+   "Q1858": "thành phố hà nội",
+   "Q44539": "đền thờ"
+  },
+  "top1_image": 170,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "thành phố hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q44539",
+    "surface": "đền thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q2817231_auto_1",
+  "group": "auto",
+  "text": "Hiện nay, nằm trên cùng một khuôn viên với hai di tích khác là chùa Viên Minh và đình, tạo thành Cụm di tích Đền – Chùa – Đình được Thủ tướng Chính phủ công nhận là di tích quốc gia đặc biệt vào ngày 31 tháng 12 năm 2019.",
+  "linked": {
+   "Q5393308": "chùa",
+   "Q88291": "thành",
+   "Q44539": "đền"
+  },
+  "top1_image": 121,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q4361432_auto_0",
+  "group": "auto",
+  "text": "là khu di tích các khối đá có khắc hoa văn và ký tự cổ, tại vùng đất thung lũng Mường Hoa thuộc xã Tả Van, tỉnh Lào Cai.",
+  "linked": {},
+  "top1_image": 281,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q4361432_auto_1",
+  "group": "auto",
+  "text": "Bãi đá cổ có diện tích khoảng 8 km², nằm cách thị xã Sa Pa chừng 8 km.",
+  "linked": {},
+  "top1_image": 281,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q4361432_auto_2",
+  "group": "auto",
+  "text": "Tháng 10/1994 Bộ Văn hóa Thông tin công nhận là di tích lịch sử cấp quốc gia Việt Nam.",
+  "linked": {},
+  "top1_image": 96,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q4885571_auto_0",
+  "group": "auto",
+  "text": "hay còn gọi ngắn gọn là là khu vực tưởng niệm những người của Việt Minh và Mặt trận Dân tộc Giải phóng miền Nam Việt Nam trong Chiến tranh Đông Dương và Chiến tranh Việt Nam tọa lạc tại xã An Nhơn Tây, Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh"
+  },
+  "top1_image": 193,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q4885571_auto_1",
+  "group": "auto",
+  "text": "Ngôi đền nằm trong không gian của địa đạo Củ Chi.",
+  "linked": {
+   "Q44539": "đền"
+  },
+  "top1_image": 283,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q44539",
+    "surface": "đền",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10831162_auto_0",
+  "group": "auto",
+  "text": "là một công trình kiến trúc tôn giáo của Đạo Cao Đài, tọa lạc tại Đại lộ Phạm Hộ Pháp, thuộc địa phận phường Long Hoa, tỉnh Tây Ninh; cách phường Tân Ninh khoảng 5km về phía Tây và cách trung tâm hành chính tỉnh - phường Long An và phường Sài Gòn của Thành phố Hồ Chí Minh khoảng 100 km về hướng Đông Nam, thuộc Đông Nam Bộ miền Nam Việt Nam Đây là Tổ Đình, tức cơ sở thờ tự cấp Trung ương của Đạo Cao Đài.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q470364": "đạo cao đài",
+   "Q2523849": "pháp thuộc"
+  },
+  "top1_image": 324,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q470364",
+    "surface": "đạo cao đài",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10831162_auto_1",
+  "group": "auto",
+  "text": "Gọi là Tổ Đình, vì đây là nơi đặt các Cơ Quan, Văn Phòng Trung ương của Đạo Cao Đài, tức Hội Thánh Cao Đài Toà Thánh Tây Ninh, để điều hành toàn bộ các hoạt động truyền đạo và cứu độ nhơn sanh.",
+  "linked": {
+   "Q470364": "đạo cao đài"
+  },
+  "top1_image": 294,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q470364",
+    "surface": "đạo cao đài",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10831162_auto_2",
+  "group": "auto",
+  "text": "Đền Thánh là một ngôi đền đồ sộ, nguy nga, đặc sắc, để phụng thờ Đức Chí Tôn, Tam Giáo Đạo Tổ, Tam Trấn Oai Nghiêm và Ngũ Chi Đại Đạo, và hết thảy các Chư Thần, Chư Thánh, Chư Tiên, Chư Phật.",
+  "linked": {
+   "Q44539": "đền",
+   "Q7055": "phật"
+  },
+  "top1_image": 289,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q44539",
+    "surface": "đền",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10833485_auto_0",
+  "group": "auto",
+  "text": "Xem các công trình có tên tại bài Dưới triều nhà Nguyễn, của cả triều đại và cũng là của toàn quốc được chính thức xây dựng vào năm 1808 dưới triều vua Gia Long.",
+  "linked": {
+   "Q6500483": "nhà nguyễn"
+  },
+  "top1_image": 308,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q6500483",
+    "surface": "nhà nguyễn",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10833485_auto_1",
+  "group": "auto",
+  "text": "Miếu được xây dựng uy nghi đồ sộ, nằm bên bờ sông Hương, thuộc địa phận thôn An Bình, làng An Ninh, phía Tây Kinh thành.",
+  "linked": {
+   "Q4022": "sông",
+   "Q88291": "thành"
+  },
+  "top1_image": 63,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "Q10833485_auto_2",
+  "group": "auto",
+  "text": "hay là cách gọi tắt của Văn Thánh Miếu được xây dựng tại",
+  "linked": {
+   "Q618618": "văn thánh miếu"
+  },
+  "top1_image": 298,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q618618",
+    "surface": "văn thánh miếu",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800887_auto_0",
+  "group": "auto",
+  "text": "tọa lạc trên Núi Đạo, phố Nhà thờ, phường Hồng Gai, thành phố Quảng Ninh.",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q88291": "thành"
+  },
+  "top1_image": 262,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800887_auto_1",
+  "group": "auto",
+  "text": "Nhà thờ đầu tiên được xây dựng năm 1933, nhìn sang núi Bài Thơ nhưng đã bị trúng bom của máy bay Mỹ, hủy hoại vào năm 1967.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 207,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10800887_auto_2",
+  "group": "auto",
+  "text": "Mãi đến năm 1998, giáo xứ mới có điều kiện xây ngôi nhà thờ mới.",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 218,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10825817_auto_0",
+  "group": "auto",
+  "text": "là một công trình tôn giáo lớn của đạo Cao Đài tại phường Chợ Quán, Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q470364": "đạo cao đài"
+  },
+  "top1_image": 324,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q470364",
+    "surface": "đạo cao đài",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10825817_auto_1",
+  "group": "auto",
+  "text": "Được khởi công xây dựng vào năm 1999 và hoàn thành vào năm 2001, Thánh thất này trở thành một trong những Thánh thất Cao Đài lớn nhất Sài Gòn ở thời điểm hoàn thành, với kiến trúc 3 tầng đặc biệt.",
+  "linked": {
+   "Q1854": "sài gòn",
+   "Q88291": "thành"
+  },
+  "top1_image": 324,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "sài gòn",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "Q10825817_auto_2",
+  "group": "auto",
+  "text": "Hiện tại, Thánh thất này là cơ sở thờ tự của Họ Đạo Sài Gòn, đồng thời là văn phòng của Ban Đại diện Hội Thánh Tòa Thánh Tây Ninh tại Thành phố Hồ Chí Minh.",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q10831162": "tòa thánh tây ninh"
+  },
+  "top1_image": 324,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_01",
+  "group": "hand_direct",
+  "text": "Ngôi điện gỗ nhỏ mái ngói cong đặt trên một trụ đá duy nhất giữa hồ nước vuông, có cầu thang dẫn lên",
+  "linked": {
+   "Q23397": "hồ nước"
+  },
+  "top1_image": 67,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "hand_direct_02",
+  "group": "hand_direct",
+  "text": "Nhà thờ gạch đỏ có hai tháp chuông nhọn cân xứng hai bên mặt tiền, ở giữa có cửa sổ hoa hồng tròn",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q199451": "tháp"
+  },
+  "top1_image": 147,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_03",
+  "group": "hand_direct",
+  "text": "Cụm tháp gạch nung màu cam cổ kính dưới trời xanh, phía trên khung cửa đá có phù điêu chạm hình người",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 58,
+  "top1_is_gold": true,
+  "top1_matches": []
+ },
+ {
+  "query_id": "hand_direct_04",
+  "group": "hand_direct",
+  "text": "Khối công trình đá xám vuông vức với hàng cột vuông phía trên, đặt trên nền nhiều bậc, trước mặt là quảng trường rộng",
+  "linked": {},
+  "top1_image": 124,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "hand_direct_05",
+  "group": "hand_direct",
+  "text": "Tòa nhà tường vàng có ba mái nhọn hình tam giác lợp ngói đỏ nối nhau ở mặt tiền, phía trước là sân rộng",
+  "linked": {},
+  "top1_image": 109,
+  "top1_is_gold": false,
+  "top1_matches": []
+ },
+ {
+  "query_id": "hand_direct_06",
+  "group": "hand_direct",
+  "text": "Công trình bằng đá xám có nhiều tầng mái cong như đình chùa, trên đỉnh có cây thánh giá",
+  "linked": {
+   "Q5393308": "chùa"
+  },
+  "top1_image": 152,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_07",
+  "group": "hand_direct",
+  "text": "Ngọn tháp bát giác bảy tầng thon dần lên cao, đứng giữa hàng cây xanh",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 120,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q199451",
+    "surface": "tháp",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_08",
+  "group": "hand_direct",
+  "text": "Lăng mộ bằng đá đen sẫm với nhiều bậc thang rộng dẫn lên, hai bên có trụ biểu nhọn cao và hàng tượng người bằng đá",
+  "linked": {
+   "Q381885": "lăng mộ",
+   "Q162875": "lăng mộ"
+  },
+  "top1_image": 197,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q381885",
+    "surface": "lăng mộ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q162875",
+    "surface": "lăng mộ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_09",
+  "group": "hand_direct",
+  "text": "Nhà thờ sơn màu hồng toàn bộ, tháp chuông nhọn ở giữa mặt tiền có mặt đồng hồ tròn",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q199451": "tháp"
+  },
+  "top1_image": 148,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_10",
+  "group": "hand_direct",
+  "text": "Nhà thờ tường hồng mái ngói nâu dốc với hàng cửa mái hình tam giác, cầu thang màu đỏ hai bên dẫn lên lối vào, xung quanh có cây thông",
+  "linked": {
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 181,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_11",
+  "group": "hand_direct",
+  "text": "Ngọn tháp gạch đỏ nhiều tầng cao vút bên mặt hồ rộng, xung quanh có hàng cau",
+  "linked": {
+   "Q199451": "tháp"
+  },
+  "top1_image": 120,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q199451",
+    "surface": "tháp",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_direct_12",
+  "group": "hand_direct",
+  "text": "Nhà thờ đá xám xây kiểu Gothic với tháp chuông vuông có đồng hồ và dãy vòm cửa nhọn chạy dọc thân",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q199451": "tháp"
+  },
+  "top1_image": 160,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_01",
+  "group": "hand_indirect",
+  "text": "Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý",
+  "linked": {
+   "Q1858": "hà nội",
+   "Q878309": "nhà lý",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 69,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q878309",
+    "surface": "nhà lý",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_02",
+  "group": "hand_indirect",
+  "text": "Công trình do vua Lý Thái Tông sáng lập",
+  "linked": {
+   "Q711472": "lý thái tông"
+  },
+  "top1_image": 187,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q711472",
+    "surface": "lý thái tông",
+    "via": "triple",
+    "pid": "P112",
+    "label": "P112",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_03",
+  "group": "hand_indirect",
+  "text": "Di sản thế giới nằm ở Hà Nội",
+  "linked": {
+   "Q9259": "di sản thế giới",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 22,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q9259",
+    "surface": "di sản thế giới",
+    "via": "triple",
+    "pid": "P1435",
+    "label": "P1435",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_04",
+  "group": "hand_indirect",
+  "text": "Di sản thế giới nằm ở tỉnh Quảng Bình",
+  "linked": {
+   "Q9259": "di sản thế giới",
+   "Q23533": "tỉnh quảng bình"
+  },
+  "top1_image": 3,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q9259",
+    "surface": "di sản thế giới",
+    "via": "triple",
+    "pid": "P1435",
+    "label": "P1435",
+    "direction": "->"
+   },
+   {
+    "qid": "Q23533",
+    "surface": "tỉnh quảng bình",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q23533",
+    "surface": "tỉnh quảng bình",
+    "via": "triple",
+    "pid": "P276",
+    "label": "P276",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_05",
+  "group": "hand_indirect",
+  "text": "Nơi thờ tự của đạo Cao Đài",
+  "linked": {
+   "Q470364": "đạo cao đài"
+  },
+  "top1_image": 294,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q470364",
+    "surface": "đạo cao đài",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_06",
+  "group": "hand_indirect",
+  "text": "Nhà thờ Công giáo ở Ninh Bình",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q36900": "ninh bình"
+  },
+  "top1_image": 161,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_07",
+  "group": "hand_indirect",
+  "text": "Nhà thờ Công giáo ở Khánh Hòa",
+  "linked": {
+   "Q16970": "nhà thờ",
+   "Q1841": "công giáo",
+   "Q33369": "khánh hòa"
+  },
+  "top1_image": 256,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1841",
+    "surface": "công giáo",
+    "via": "triple",
+    "pid": "P140",
+    "label": "P140",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_08",
+  "group": "hand_indirect",
+  "text": "Ngôi đền ở Hà Nội thờ theo Đạo giáo",
+  "linked": {
+   "Q1858": "hà nội",
+   "Q9598": "đạo giáo",
+   "Q44539": "đền"
+  },
+  "top1_image": 172,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q9598",
+    "surface": "đạo giáo",
+    "via": "triple",
+    "pid": "P825",
+    "label": "P825",
+    "direction": "->"
+   },
+   {
+    "qid": "Q44539",
+    "surface": "đền",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_09",
+  "group": "hand_indirect",
+  "text": "Ngôi chùa do Lý Quốc Sư sáng lập",
+  "linked": {
+   "Q10788110": "lý quốc sư",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 156,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q10788110",
+    "surface": "lý quốc sư",
+    "via": "triple",
+    "pid": "P112",
+    "label": "P112",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_10",
+  "group": "hand_indirect",
+  "text": "Ngôi chùa do Thích Nhất Hạnh sáng lập",
+  "linked": {
+   "Q310913": "thích nhất hạnh",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 269,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q310913",
+    "surface": "thích nhất hạnh",
+    "via": "triple",
+    "pid": "P112",
+    "label": "P112",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_11",
+  "group": "hand_indirect",
+  "text": "Nhà thờ được đặt theo tên thánh Phanxicô Xaviê",
+  "linked": {
+   "Q163900": "thánh phanxicô xaviê",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 218,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q163900",
+    "surface": "thánh phanxicô xaviê",
+    "via": "triple",
+    "pid": "P138",
+    "label": "P138",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_12",
+  "group": "hand_indirect",
+  "text": "Nhà thờ ở Hà Nội được đặt theo tên thánh Antôn thành Padova",
+  "linked": {
+   "Q167477": "thánh antôn thành padova",
+   "Q16970": "nhà thờ",
+   "Q1858": "hà nội"
+  },
+  "top1_image": 139,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q167477",
+    "surface": "thánh antôn thành padova",
+    "via": "triple",
+    "pid": "P138",
+    "label": "P138",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q1858",
+    "surface": "hà nội",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_13",
+  "group": "hand_indirect",
+  "text": "Vườn quốc gia được công nhận là khu Ramsar",
+  "linked": {
+   "Q46169": "vườn quốc gia"
+  },
+  "top1_image": 128,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q46169",
+    "surface": "vườn quốc gia",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_14",
+  "group": "hand_indirect",
+  "text": "Hồ nước được công nhận là khu Ramsar",
+  "linked": {
+   "Q23397": "hồ nước"
+  },
+  "top1_image": 85,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q23397",
+    "surface": "hồ nước",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_15",
+  "group": "hand_indirect",
+  "text": "Ngôi chùa ở Thành phố Hồ Chí Minh được xây dựng dưới thời Lê trung hưng",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q10800791": "lê trung hưng",
+   "Q5393308": "chùa"
+  },
+  "top1_image": 194,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q10800791",
+    "surface": "lê trung hưng",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_16",
+  "group": "hand_indirect",
+  "text": "Ngôi chùa ở Huế được xây dựng dưới thời Lê trung hưng",
+  "linked": {
+   "Q10800791": "lê trung hưng",
+   "Q5393308": "chùa",
+   "Q36399": "huế"
+  },
+  "top1_image": 63,
+  "top1_is_gold": true,
+  "top1_matches": [
+   {
+    "qid": "Q10800791",
+    "surface": "lê trung hưng",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   },
+   {
+    "qid": "Q5393308",
+    "surface": "chùa",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   },
+   {
+    "qid": "Q36399",
+    "surface": "huế",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_17",
+  "group": "hand_indirect",
+  "text": "Công trình thuộc một quần thể di sản thế giới, được xây dựng trong thời Pháp thuộc",
+  "linked": {
+   "Q9259": "di sản thế giới",
+   "Q2523849": "thời pháp thuộc"
+  },
+  "top1_image": 206,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q2523849",
+    "surface": "thời pháp thuộc",
+    "via": "triple",
+    "pid": "P2348",
+    "label": "P2348",
+    "direction": "->"
+   }
+  ]
+ },
+ {
+  "query_id": "hand_indirect_18",
+  "group": "hand_indirect",
+  "text": "Nhà thờ ở Thành phố Hồ Chí Minh thờ Đức Mẹ Maria",
+  "linked": {
+   "Q1854": "thành phố hồ chí minh",
+   "Q345": "đức mẹ maria",
+   "Q16970": "nhà thờ"
+  },
+  "top1_image": 256,
+  "top1_is_gold": false,
+  "top1_matches": [
+   {
+    "qid": "Q1854",
+    "surface": "thành phố hồ chí minh",
+    "via": "triple",
+    "pid": "P131",
+    "label": "P131",
+    "direction": "->"
+   },
+   {
+    "qid": "Q16970",
+    "surface": "nhà thờ",
+    "via": "triple",
+    "pid": "P31",
+    "label": "P31",
+    "direction": "->"
+   }
+  ]
+ }
+]
