@@ -28,8 +28,8 @@ def _():
         | 2 Data | NativE tables, MMRNS image zip (6.4 GB), Wikidata labels, images, KGC triples → HF | 30–60 min |
         | 3 CLIP | frozen CLIP features for 8 920 images + queries → HF | 5 min |
         | 3b Probe | multilingual CLIP on 84 vi/en MKG-W val queries (row 9) → HF | 10 min |
-        | 4 Train | start NativE runs **in the background** (cell returns at once) | hours |
-        | 4b Status | progress of each run; pushes checkpoint + log of finished runs → HF. Auto-refresh every 10 min while the tab is open | — |
+        | 4 Train | start NativE runs **in the background** (cell returns at once); each run pushes its own checkpoint + log to HF when it ends, even with the notebook closed | hours |
+        | 4b Status | progress of each run (optional); also pushes anything a run could not push itself | — |
         | Files | download buttons for every log / JSON produced here | — |
         """
     )
@@ -268,8 +268,9 @@ def _(PY, REPO, b_probe, mo, pip, push, sh):
 
 
 @app.cell
-def _(LOG_DIR, NATIVE, PY, REPO, b_train, epochs, mo, remote_files, run_name, runs, sh):
+def _(LOG_DIR, NATIVE, PY, REPO, b_train, epochs, hf_repo, hf_token, mo, remote_files, run_name, runs, sh, subprocess):
     mo.stop(not b_train.value, mo.md("Stage 4 not run yet."))
+    import os as _os_env
     # leakage-safe copy: modality rows of retrieval val/test entities set to zero
     sh(f"{PY} scripts/mask_native_modalities.py --name MKG-W-rmask", cwd=REPO)
     LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -286,11 +287,21 @@ def _(LOG_DIR, NATIVE, PY, REPO, b_train, epochs, mo, remote_files, run_name, ru
                 f"-dim=250 -save=./checkpoint/{_name}.ckpt -neg_num=128 -mu=0.0001 -learning_rate=1e-4 "
                 f"-lrg=1e-4 -seed={_seed}")
         _log = LOG_DIR / f"{_name}.log"
-        sh(f"echo '$ {_cmd}' > {_log}; setsid nohup {_cmd} >> {_log} 2>&1 < /dev/null & echo $! > {LOG_DIR}/{_name}.pid",
-           cwd=NATIVE)
+        _ckpt = NATIVE / "checkpoint" / f"{_name}.ckpt"
+        # after training, the same detached shell pushes checkpoint + log to HF (no notebook needed)
+        _push = (f"{PY} {REPO}/scripts/push_to_hf.py --repo {hf_repo.value} {_ckpt} native/checkpoint/{_name}.ckpt "
+                 f"{_log} experiments/level2/native-train/{_name}.log")
+        _script = LOG_DIR / f"{_name}.sh"
+        _script.write_text(f"#!/bin/bash\ncd {NATIVE}\n{_cmd}\n{_push}\n")
+        _log.write_text(f"$ {_cmd}\n")
+        # token goes through the environment only: not printed, not written to the script or the log
+        _p = subprocess.Popen(["setsid", "nohup", "bash", str(_script)], cwd=NATIVE, start_new_session=True,
+                              stdin=subprocess.DEVNULL, stdout=open(_log, "a"), stderr=subprocess.STDOUT,
+                              env={**_os_env.environ, "HF_TOKEN": hf_token.value})
+        (LOG_DIR / f"{_name}.pid").write_text(str(_p.pid))
         _started.append(_name)
-    mo.md(f"Started in the background: {_started or 'nothing'}. Use **4b · Status** (or leave the tab open: "
-          "it refreshes every 10 min and pushes finished runs to HF).")
+    mo.md(f"Started in the background: {_started or 'nothing'}. Each run pushes its checkpoint and log to HF "
+          "by itself when it ends; **4b · Status** only shows progress.")
     return
 
 
