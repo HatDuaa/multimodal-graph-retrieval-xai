@@ -63,8 +63,8 @@ nối trực tiếp với một thực thể được nhắc trong câu bằng m
 \subsection{Chống rò rỉ dữ liệu}
 \label{sec:leakage}
 
-Mục~6 của đề là tiêu chí chấm. Bảng~\ref{tab:leakage} liệt kê từng quy tắc và cách nhóm bảo đảm nó trong code hoặc quy
-trình.
+Bảng~\ref{tab:leakage} liệt kê các quy tắc chống rò rỉ theo mục~6 của đề và cách mỗi quy tắc được thực hiện trong code
+hoặc quy trình.
 
 \begin{table*}[t]
 \centering
@@ -108,7 +108,7 @@ của val. \\
 \subsection{Kiểm tra pipeline}
 \label{sec:checks}
 
-Trước khi tin các con số, nhóm kiểm tra pipeline bằng những phép so có đáp án biết trước.
+Pipeline được kiểm tra bằng các phép so với kết quả đã biết trước.
 \begin{itemize}
 \item \textbf{CLIP trên MSCOCO 5K.} Chạy chính code của nhóm (mã hoá, FAISS, module đánh giá) trên pool chuẩn 5\,000 ảnh.
 Kết quả lệch số đã công bố của open\_clip~\cite{cherti2023openclip} không quá 0,03 điểm (text$\to$ảnh R@1 30,45 so với

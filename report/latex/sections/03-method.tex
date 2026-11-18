@@ -52,11 +52,12 @@ bộ ba (chủ thể, quan hệ, đối tượng) đi qua một MLP. Vector cu�
 ban đầu, $g$ là đầu ra GAT và $U$ khởi tạo bằng 0.
 
 \textbf{Hai kênh khớp.} Kênh vật thể chỉ so vật thể với vật thể; kênh bộ ba chỉ so bộ ba với bộ ba. Với phần $i$ của câu
-và phần $j$ cùng loại của ảnh, $\mathit{sim}_{ij}$ là cosine giữa hai vector. Mỗi phần của câu ``hỏi'' các phần của ảnh:
+và phần $j$ cùng loại của ảnh, $\mathit{sim}_{ij}$ là cosine giữa hai vector. Mỗi phần của câu được so với mọi phần cùng
+loại của ảnh qua attention:
 \begin{equation}
 a_{ij} = \operatorname{softmax}_j\!\left(\mathit{sim}_{ij}/\tau\right),\qquad s_i = \textstyle\sum_j a_{ij}\,\mathit{sim}_{ij}.
 \end{equation}
-Phần nào của câu quan trọng hơn thì được trọng số lớn hơn:
+Trọng số của từng phần trong câu là
 $w_i = \operatorname{softmax}_i(u^\top p_i)$, với $p_i$ là vector của phần $i$. Điểm của kênh là
 $S = \sum_i w_i s_i$.
 
@@ -81,7 +82,7 @@ val tăng qua 3 seed (Bảng~\ref{tab:l1-chain}).
 \begin{enumerate}
 \item \textbf{Đồ thị câu từ FACTUAL-T5} thay cho \texttt{sng\_parser}.
 \item \textbf{Trộn điểm thô:} điểm cuối $= a\cdot\cos + b\cdot S_\text{obj} + c\cdot S_\text{tri}$, bỏ z-score. Ứng viên
-không có phần nào để so ở một kênh nhận điểm trung bình của các ứng viên có phần đó. Hệ quả quan trọng: điểm cuối tách
+không có phần nào để so ở một kênh nhận điểm trung bình của các ứng viên có phần đó. Nhờ bỏ chuẩn hoá, điểm cuối tách
 \emph{chính xác} thành tổng các phần, nên lời giải thích không cần xấp xỉ.
 \item \textbf{Đồ thị ảnh sạch và liền.} Hai node cùng loại (cùng synset hoặc hypernym trong WordNet) có IoU $\ge 0{,}7$ được
 gộp làm một. Mỗi cạnh có hộp ở hai đầu được gán 6 số hình học (độ lệch tâm, tỉ lệ kích thước, IoU, tỉ lệ diện tích). Mỗi
@@ -137,7 +138,7 @@ mọi số trong lời giải thích được ghi lại trong cùng lần tính 
 $a\cdot\cos + \sum_i b\,w_i \sum_j a_{ij}\mathit{sim}_{ij} + \sum_i c\,w_i \sum_j a_{ij}\mathit{sim}_{ij}$. Bảng giải thích
 ghi với mỗi phần $i$ của câu: $w_i$, phần $j$ của ảnh có attention lớn nhất, độ khớp, phần trăm của điểm cuối và, với vật
 thể có số lượng, giá trị $g$ đã cộng. Một cột nữa ghi giá trị của dòng đó trừ trung bình của chính dòng đó trên 50 ứng
-viên. Tổng cột này đúng bằng điểm cuối trừ điểm trung bình, nên nó cho biết dòng nào thật sự đẩy ảnh lên so với các ảnh
+viên. Tổng cột này đúng bằng điểm cuối trừ điểm trung bình, nên cột này cho biết phần đóng góp của từng dòng vào chênh lệch giữa ảnh này và các ảnh
 khác.
 \item \textbf{MKG-W.} Lời giải thích là danh sách thực thể khớp được trong câu và các cạnh KGC-train giữa chúng với ứng viên.
 Đây chính là các cạnh đã được đếm vào kênh \texttt{triple}.

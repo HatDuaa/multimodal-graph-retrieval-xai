@@ -32,8 +32,8 @@ Bảng~\ref{tab:l1-test} là phép so bắt buộc của đề: CLIP thuần và
 huấn luyện'' dùng cùng công thức trộn nhưng vector của phần đồ thị là vector CLIP text gốc, không qua GAT. Mô hình chính hơn
 CLIP 8,63 điểm R@1. So với mô hình cấp~1, mô hình chính hơn 2,18 điểm R@1 ($p = 0{,}0005$) và 2,00 điểm MRR
 ($p = 0{,}0002$). Ba seed của mô hình chính cho R@1 48,06 / 47,78 / 47,99. Từ val sang test, R@1 giảm 0,96 điểm (48,91
-$\to$ 47,95), so với 0,71 điểm của mô hình cấp~1. Mô hình chính được chọn sau nhiều thí nghiệm trên val, nên khoảng chênh
-lớn hơn một chút là hợp lý.
+$\to$ 47,95), so với 0,71 điểm của mô hình cấp~1; mô hình chính được xây qua nhiều bước chọn trên val
+(Bảng~\ref{tab:l1-chain}).
 
 \subsection{Mô hình chính được xây thế nào}
 
@@ -59,16 +59,16 @@ kNN, node tổng) theo quyết định của nhóm; ablation bỏ cạnh ở B�
 \tabsrc{\file{experiments/improve/README.md}}
 \end{table}
 
-Mô hình chính không được chọn một lần. Nó là kết quả của bốn bước, mỗi bước đổi một thứ và được giữ lại vì làm R@1 val tăng
-qua 3 seed (Bảng~\ref{tab:l1-chain}). Bước trộn điểm thô không có ý nghĩa thống kê. Nhóm vẫn giữ nó vì nó làm điểm cuối tách
-chính xác thành từng phần (Mục~\ref{sec:method-expl}), và độ lệch giữa các seed nhỏ nhất. Các hướng thử trên val nhưng không
+Mô hình chính được xây qua bốn bước; mỗi bước đổi một thứ và được giữ lại khi R@1 val tăng qua 3 seed
+(Bảng~\ref{tab:l1-chain}). Mức tăng của bước trộn điểm thô không có ý nghĩa thống kê. Bước này vẫn được giữ vì nó cho phép
+tách chính xác điểm cuối thành từng phần (Mục~\ref{sec:method-expl}) và có độ lệch giữa các seed nhỏ nhất. Các hướng thử trên val nhưng không
 giữ (so khớp bộ ba tách thành phần, kênh mức cả đồ thị, gom vật cùng loại thành một node nhóm, \dots) ghi ở
 \file{experiments/improve/README.md}. Ví dụ, gom vật cùng loại làm R@1 giảm 0,63 điểm ($p = 0{,}019$), nên mô hình chính chỉ
 thêm số lượng vào từng node.
 
 \subsection{Ablation: cải thiện có đến từ cấu trúc quan hệ không}
 
-Đề yêu cầu bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên để kiểm tra phần cải thiện có thật sự đến từ cấu trúc quan hệ. Nhóm làm
+Đề yêu cầu bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên để kiểm tra phần cải thiện có đến từ cấu trúc quan hệ. Nhóm làm
 hai loại ablation. Loại thứ nhất huấn luyện lại từ đầu, cùng công thức, cùng 3 seed. Loại thứ hai giữ nguyên checkpoint và
 chỉ phá đồ thị lúc chấm.
 
@@ -119,15 +119,13 @@ Bỏ bảng $g$ & $-$0,35 & --- \\
 
 Bảng~\ref{tab:l1-ablation} và~\ref{tab:l1-ablation-main} cho ba kết luận.
 \begin{itemize}
-\item \textbf{Mô hình dựa vào đồ thị của đúng ảnh.} Cho mỗi ảnh mang scene graph của một ảnh khác thì R@1 của mô hình chính
-rơi từ 48,91 xuống 21,91, thấp hơn cả CLIP thuần (39,13 trên val). Nếu điểm đồ thị chỉ là nhiễu có ích, phép thay này đã
-không gây hại nhiều như vậy.
-\item \textbf{Ở cấp~1, cạnh đóng góp ít.} Bỏ hẳn quan hệ chỉ làm giảm khoảng 0,5 điểm, và bỏ GAT không thua mô hình có GAT.
-Đây là một kết quả âm nhóm giữ nguyên trong báo cáo.
-\item \textbf{Ở mô hình chính, cạnh đóng góp rõ.} Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 giảm 2,39 điểm ($p = 0{,}0024$).
-Phần này chiếm 24\% mức mô hình chính hơn CLIP trên val (2,39 / 9,78); ở cấp~1 tỉ lệ này là 7\%. Bỏ cạnh, mô hình chính chỉ
-còn 46,52, ngang mô hình cấp~1. Xáo các quan hệ có nhãn chỉ làm giảm 0,59 điểm, nên phần lớn đóng góp của cạnh nhiều khả năng
-nằm ở cạnh kNN và node tổng. Muốn tách chính xác cần thêm một ablation chỉ bỏ cạnh kNN; nhóm chưa chạy.
+\item \textbf{Mô hình dựa vào đồ thị của đúng ảnh.} Khi mỗi ảnh mang scene graph của một ảnh khác, R@1 val của mô hình chính
+giảm từ 48,91 xuống 21,91, thấp hơn CLIP thuần (39,13).
+\item \textbf{Ở mô hình cấp~1, cạnh đóng góp ít.} Bỏ hẳn quan hệ làm R@1 giảm khoảng 0,5 điểm; bỏ GAT không làm giảm kết quả.
+\item \textbf{Ở mô hình chính, cạnh đóng góp 2,39 điểm.} Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 val giảm 2,39 điểm
+($p = 0{,}0024$), tương ứng 24\% mức chênh giữa mô hình chính và CLIP trên val (2,39 / 9,78); ở mô hình cấp~1 tỉ lệ này là
+7\%. Khi bỏ cạnh, mô hình chính còn 46,52, ngang mô hình cấp~1 (46,48). Xáo các quan hệ có nhãn lúc chấm làm R@1 giảm 0,59
+điểm. Phần đóng góp riêng của từng loại cạnh (quan hệ có nhãn, kNN, node tổng) chưa được tách.
 \end{itemize}
 
 \subsection{Độ nhạy theo $\alpha$ và đồ thị giúp ở đâu}
@@ -155,10 +153,11 @@ Nguồn: \file{experiments/improve/alpha-groups/alpha_sweep.json}, \file{experim
 \end{figure}
 
 \textbf{Độ nhạy theo $\alpha$} (Hình~\ref{fig:alpha}). Trên VG, đường cong có đỉnh ở $\alpha = 0{,}6$ (R@1
-\pmstd{48,14}{0,30}). Trọng số học theo từng câu cho 48,91, hơn $\alpha$ cố định tốt nhất 0,77 điểm, dù $\alpha$ tốt nhất
-đã được chọn trên chính val nên còn lạc quan. Trung bình $a$ học được là \pmstd{0,57}{0,06}, gần 0,6. Vậy phần lời thêm đến
-từ việc trọng số thay đổi theo câu, không phải từ một mức trung bình khác. Hai đầu đường cong cho thấy cả hai nguồn tín hiệu
-đều cần: chỉ dùng đồ thị ($\alpha = 0$) được 32,81, chỉ dùng CLIP được 39,13. Đường cong của MKG-W bàn ở Mục~\ref{sec:l2}.
+\pmstd{48,14}{0,30}). Trọng số học theo từng câu cho 48,91, cao hơn $\alpha$ cố định tốt nhất 0,77 điểm, dù $\alpha$ cố định
+này được chọn trên chính val. Trung bình $a$ học được là \pmstd{0,57}{0,06}, gần $\alpha$ cố định tốt nhất; mức chênh 0,77
+điểm đến từ việc trọng số thay đổi theo từng câu. Chỉ dùng đồ thị ($\alpha = 0$) đạt 32,81 và chỉ dùng CLIP ($\alpha = 1$) đạt
+39,13, đều thấp hơn mọi giá trị trong khoảng $\alpha \in [0{,}4;\,0{,}8]$. Đường cong của MKG-W được phân tích ở
+Mục~\ref{sec:l2}.
 
 \begin{table}[t]
 \centering
@@ -184,10 +183,10 @@ $\ge$3 vật thể & 6\,607 & 41,40 & 50,20 & 53,32 & +3,11 [2,45; 3,77] \\
 
 \textbf{Đồ thị giúp ở đâu} (Bảng~\ref{tab:l1-groups}). Đây là câu hỏi của nhiệm vụ~2 trong đề.
 \begin{itemize}
-\item Phần lời của đồ thị so với CLIP tăng theo số vật thể trong câu: +6,74 điểm ở câu có 2 vật thể, +11,92 điểm ở câu từ 3
-vật thể trở lên.
-\item Câu chỉ nêu vật thể, không có quan hệ (2,7\% số câu), không được lợi gì; CLIP đã đủ cho các câu này.
-\item Câu nêu số lượng được lợi thêm so với mô hình cấp~1 (+3,37 so với +2,31 ở các câu không nêu số).
+\item Mức tăng so với CLIP tăng theo số vật thể trong câu: +6,74 điểm ở câu có 2 vật thể, +11,92 điểm ở câu từ 3 vật thể
+trở lên.
+\item Với câu chỉ nêu vật thể, không có quan hệ (2,7\% số câu), mô hình chính thấp hơn CLIP 0,80 điểm.
+\item Với câu nêu số lượng, mức tăng so với mô hình cấp~1 là +3,37 điểm; với các câu còn lại là +2,31 điểm.
 \item Phần mất khi bỏ cạnh cũng tập trung ở câu có quan hệ và câu nhiều vật thể; câu chỉ có vật thể gần như không đổi
 (\file{experiments/improve/no-edges/REPORT.md}).
 \end{itemize}
@@ -230,8 +229,8 @@ Ca & Truy vấn & Hạng & Nhận xét \\
 \item Ở 10/10 ca, xoá phần lớn nhất làm điểm giảm nhiều hơn xoá ngẫu nhiên.
 \item Ở 7/10 ca, riêng việc xoá phần đó đã làm ảnh rơi khỏi hạng 1 (mô hình cấp~1: 5/10). Khi phần bị xoá là vật thể, 6/6 ca
 rơi hạng; khi là bộ ba, chỉ 1/4.
-\item Attention trung bình của cặp khớp nhất là 0,51 ở kênh vật thể và 0,17 ở kênh bộ ba. Kênh bộ ba có trọng số lớn nhưng
-khớp trải đều, nên thứ hạng chủ yếu do CLIP và kênh vật thể quyết định.
+\item Attention trung bình của cặp khớp nhất là 0,51 ở kênh vật thể và 0,17 ở kênh bộ ba, tức attention của kênh bộ ba
+phân tán hơn.
 \end{itemize}
 Mục~\ref{sec:xai} đo fidelity, validity và sparsity trên toàn bộ val.
 

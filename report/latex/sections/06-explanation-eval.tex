@@ -98,35 +98,33 @@ Khớp nhóm số lượng chỉ chấm mô hình có bảng $g$.
 
 \subsection{Kết quả trên toàn bộ val}\label{sec:xai-results}
 
-Theo Bảng~\ref{tab:xai-main}, ở cả hai mô hình, E cách xa ngẫu nhiên theo cả hai chiều của fidelity: bỏ top-3 làm mất hạng 1 gấp 5--6 lần bỏ ngẫu nhiên, còn chỉ giữ top-3 cho hạng khoảng 2,2, so với 7--8.
-Std của countonly lớn hơn, đi cùng với việc tỉ lệ câu có bộ ba đứng đầu E đổi theo seed, từ 26\% đến 54\% (v1).
+Theo Bảng~\ref{tab:xai-main}, ở cả hai mô hình, E vượt mốc ngẫu nhiên theo cả hai chiều của fidelity: bỏ top-3 làm ảnh mất hạng 1 ở số câu gấp 5--6 lần bỏ ngẫu nhiên; chỉ giữ top-3 cho hạng trung bình khoảng 2,2, so với 7--8 của mốc ngẫu nhiên.
 
-Ảnh hạng 1 sai mất hạng dễ hơn ảnh đúng ($k_{\text{flip}}\le 10$ ở 74,4\% so với 44,1\% câu), phù hợp với việc cách biệt với hạng 2 nhỏ hơn khoảng 3 lần (0,30 so với 1,00).
-Với 5\,325 câu mỗi seed có ảnh hạng 1 sai, bỏ top-5 của E làm ảnh đúng lên hạng ở 30,7\% câu, nhưng chỉ lên hạng 1 ở 13,1\% câu: bỏ các phần đã đẩy ảnh sai lên thường chưa đủ để ảnh đúng thắng.
-Về ngữ nghĩa, node ảnh được chú ý nhất cùng loại với node câu ở 58,3\% dòng vật thể theo strict, còn dòng bộ ba hầu như không khớp nghĩa (5,4\%).
+Với ảnh hạng 1 sai, $k_{\text{flip}}\le 10$ ở 74,4\% câu; với ảnh hạng 1 đúng, tỉ lệ này là 44,1\%.
+Với 5\,325 câu mỗi seed có ảnh hạng 1 sai, bỏ top-5 của E làm ảnh đúng tăng hạng ở 30,7\% câu và lên hạng 1 ở 13,1\% câu.
+Về ngữ nghĩa, node ảnh có attention lớn nhất cùng loại với node câu ở 58,3\% dòng vật thể theo tiêu chí strict; với dòng bộ ba, tỉ lệ khớp đủ cả ba thành phần là 5,4\%.
 
-Theo hiệu ứng, E gọn ở hơn nửa số câu: ở 55,7\% câu, trung bình 2,65 phần đầu đã giữ 80\% $\Delta$; ở các câu còn lại, 10 phần đầu cũng chưa đủ.
-Theo khối term, E dàn trải: cần 15,4 phần (33,0\% số phần của ảnh), do nhiều bộ ba có term gần bằng nhau.
+Về sparsity theo hiệu ứng, ở 55,7\% câu, trung bình 2,65 phần đầu giữ được 80\% $\Delta$; ở các câu còn lại, 10 phần đầu chưa đạt mức này.
+Theo khối term, cần 15,4 phần (33,0\% số phần của ảnh) để đạt 80\% term dương.
 
-\subsection{E trung thực theo thứ tự, không theo độ lớn}\label{sec:xai-findings}
+\subsection{Thứ tự và độ lớn của term trong E}\label{sec:xai-findings}
 
-\textbf{Kênh bộ ba nặng ký trong E nhưng bỏ đi ít tác dụng.}
+\textbf{Bộ ba đứng đầu E thường không quyết định thứ hạng.}
 Với \texttt{main\_r3}, bộ ba đứng đầu E ở 70,5\% câu.
 Bỏ top-1 làm ảnh mất hạng 1 ở \pmstd{49,3}{0,3}\% câu khi nó là node (ngẫu nhiên: \pmstd{4,4}{0,1}\%), nhưng chỉ ở \pmstd{8,4}{0,4}\% câu khi nó là bộ ba (ngẫu nhiên: \pmstd{2,5}{0,2}\%).
 Countonly (v1) cho cùng xu hướng: bộ ba đứng đầu E ở 44\% câu, và hai con số là \pmstd{46,5}{0,8}\% và \pmstd{19,7}{3,2}\%.
-Một cách giải thích phù hợp với số liệu, chưa được kiểm riêng: điểm kênh là trung bình theo attention softmax, và kênh bộ ba dàn trải (ở \texttt{main\_r3}, top-3 bộ ba chỉ chiếm \pmstd{22,8}{0,2}\% term dương của kênh, top-3 node chiếm \pmstd{63,1}{0,9}\%), nên bỏ một bộ ba thì attention dồn sang các bộ ba tương tự.
+Term của kênh bộ ba phân tán hơn kênh vật thể: ở \texttt{main\_r3}, top-3 bộ ba chiếm \pmstd{22,8}{0,2}\% term dương của kênh, còn top-3 node chiếm \pmstd{63,1}{0,9}\%.
 
 \textbf{Độ lớn của term không dự đoán điểm mất.}
 Với \texttt{main\_r3}, tổng term của top-3 là \pmstd{6,12}{0,96}, nhưng bỏ top-3 chỉ làm điểm giảm \pmstd{0,375}{0,036}: tỉ số tổng là \pmstd{0,063}{0,016}, Spearman là \pmstd{$-0{,}035$}{0,016}.
 Trên các câu của Mục~\ref{sec:xai-compare}, occlusion (tỉ số \pmstd{1,153}{0,017}, Spearman \pmstd{0,888}{0,011}) và IG (\pmstd{1,434}{0,037}; \pmstd{0,815}{0,009}) cộng tính tốt hơn nhiều.
-Giải thích khả dĩ, chưa được kiểm riêng: $t_j$ chứa cả mức khớp tuyệt đối; khi bỏ một phần, softmax chia lại attention cho các phần còn lại, nên phần lớn mức khớp đó được bù lại.
-Countonly (v1) có dấu hiệu cùng loại: chỉ giữ top-5 cho 116,6\% $\Delta$, tức điểm cao hơn ảnh gốc.
-Vì vậy E nên được đọc như một thứ tự; demo kiểm chứng từng dòng bằng cột ``bỏ phần này'' (Mục~\ref{sec:demo}).
+Với countonly (v1), chỉ giữ top-5 cho 116,6\% $\Delta$, tức điểm cao hơn ảnh gốc.
+Vì độ lớn term của E không ước lượng được điểm mất, demo kèm mỗi dòng của E một phép chấm lại khi bỏ phần đó (cột ``bỏ phần này'', Mục~\ref{sec:demo}).
 
 \textbf{Attention của GAT không chỉ ra cạnh quyết định thứ hạng.}
 Đề yêu cầu bỏ hoặc nhiễu cả các cạnh dùng làm lời giải thích; ngoài các bộ ba (cạnh có nhãn) trong E, nhóm thử cả các cạnh mà GAT chú ý nhất: với 3 node đầu của E, cắt đường truyền tin của các cạnh vào có attention lớn nhất (giữ bộ ba), rồi so với cắt cùng số cạnh vào ngẫu nhiên của từng node.
 Trên 2\,803 câu mỗi seed có nhiều cạnh vào hơn số cạnh cắt, tỉ lệ mất hạng 1 là \pmstd{1,0}{0,6}\% so với \pmstd{0,7}{0,4}\%, và điểm đổi \pmstd{$-0{,}0011$}{0,0007} so với \pmstd{$-0{,}0010$}{0,0005} (\texttt{main\_r3}).
-Cạnh có attention cao không mang nhiều điểm hơn cạnh ngẫu nhiên, phù hợp với nhận xét rằng attention không nhất thiết là lời giải thích~\cite{xai-jain2019attention}.
+Cắt cạnh có attention cao không làm thay đổi kết quả nhiều hơn cắt cạnh ngẫu nhiên; trọng số attention của GAT vì vậy không xác định được cạnh quyết định thứ hạng, tương tự nhận xét của~\cite{xai-jain2019attention}.
 Số tương ứng của countonly: \todo{chờ v2 countonly}.
 
 \subsection{Bản đo v1 sai ở đâu}\label{sec:xai-v1v2}
@@ -134,10 +132,10 @@ Số tương ứng của countonly: \todo{chờ v2 countonly}.
 v1 được soát lại trước khi đưa vào báo cáo; nó giữ nguyên, kèm mục đính chính ở đầu \file{experiments/xai-metrics/REPORT.md}.
 v2 sửa sáu điểm.
 (1) Với \texttt{main\_r3}, v1 so term thô của hai kênh, dù fusion z-score cân hai kênh khác nhau; v2 thêm đạo hàm ở~\eqref{eq:xai-term}.
-Bộ ba lên đầu E ở 70,5\% câu thay vì 1\%, và Fid$^{+}$@3 giảm từ \pmstd{65,7}{0,3}\% xuống \pmstd{34,9}{2,8}\%: đưa E về đúng đơn vị không làm E trung thực hơn, khớp với kết quả về tính cộng ở trên.
+Sau khi đưa các term về cùng thang điểm, bộ ba đứng đầu E ở 70,5\% câu thay vì 1\%, và Fid$^{+}$@3 giảm từ \pmstd{65,7}{0,3}\% xuống \pmstd{34,9}{2,8}\%.
 (2) v1 lấy lượt chấm thường làm gốc và tính câu E rỗng là ``không đổi''.
 (3) Sparsity của v1 chia số dòng của bảng demo cho số phần của ảnh, hai đơn vị khác nhau.
-(4) Tiêu chí ngữ nghĩa của v1 dễ dãi; v2 giữ nó dưới tên lenient và thêm strict.
+(4) Tiêu chí ngữ nghĩa của v1 chấp nhận cả cặp khác loại; v2 giữ nó dưới tên lenient và thêm strict.
 (5) v1 so khớp nhóm số lượng với \texttt{main\_r3} chấm trên đồ thị cấp 1 chưa gộp trùng, nơi hộp trùng làm tăng số đếm.
 (6) v1 bỏ cạnh có nhãn là bỏ luôn bộ ba; đo lại dạng này cho 5,7\% câu mất hạng 1 (ngẫu nhiên: 5,1\%), so với 1,0\% khi chỉ cắt truyền tin, nên hiệu ứng mà v1 thấy phần lớn đến từ việc mất bộ ba.
 
@@ -177,11 +175,11 @@ Bộ ba lên đầu E ở 70,5\% câu thay vì 1\%, và Fid$^{+}$@3 giảm từ 
 Nhóm đo thêm 8 cách giải thích trên cùng các phần của ảnh, bằng cùng các độ đo, trên một mẫu cố định 1\,000 câu val (Bảng~\ref{tab:xai-explainers}): ngẫu nhiên, E đảo ngược, cosine CLIP (không dùng mô hình), gradient $\times$ input, Integrated Gradients~\cite{xai-sundararajan2017ig} (IG, 20 bước), occlusion~\cite{xai-zeiler2014occlusion} (bỏ từng phần, trung bình 46 lượt chấm mỗi câu), GNNExplainer~\cite{xai-ying2019gnnexplainer} và giá trị Shapley lấy mẫu 16 hoán vị~\cite{xai-castro2009shapley}.
 Hàm giá trị của Shapley là biên giữa ảnh được giải thích và ứng viên tốt nhất còn lại khi chỉ giữ một tập phần, theo ý tưởng của RankingSHAP~\cite{xai-heuss2025rankingshap}; nó tốn khoảng 740 lượt chấm mỗi câu và được dùng làm chuẩn.
 IG thoả completeness với sai số trung bình \pmstd{1,1}{0,1}\% $\Delta$; Shapley thoả efficiency với sai số tối đa $1{,}3\cdot10^{-7}$.
-Shapley, occlusion và IG có deletion AUC âm và Fid$_{\alpha}^{+}>{}$Fid$_{\alpha}^{-}$.
-E đứng giữa: hơn ngẫu nhiên và gradient $\times$ input; deletion AUC của E không khác CLIP có ý nghĩa (Wilcoxon ghép cặp, $p$ lớn nhất 0,96), trong khi mọi cách khác đều khác E với $p<10^{-11}$ ở cả 3 seed.
-Thứ tự của E khớp Shapley gần bằng occlusion (Spearman \pmstd{0,460}{0,007} so với \pmstd{0,476}{0,007}) mà không tốn lượt chấm nào.
-Nhưng top-5 của E chỉ trùng 31,8\% với Shapley (occlusion: 58,5\%), đúng ở chỗ bộ ba chen vào đầu E.
-E đảo ngược kém nhất ở mọi cột, nên thứ tự của E mang thông tin thật.
+Bốn cách có deletion AUC âm: Shapley, occlusion, IG và GNNExplainer. E có Fid$_{\alpha}^{+}>{}$Fid$_{\alpha}^{-}$ nhưng deletion AUC dương (0,237).
+E tốt hơn ngẫu nhiên và gradient $\times$ input ở mọi cột. Deletion AUC của E không khác CLIP có ý nghĩa thống kê (Wilcoxon ghép cặp, $p$ lớn nhất 0,96); mọi cách còn lại khác E với $p<10^{-11}$ ở cả 3 seed.
+Tương quan thứ tự giữa E và Shapley (Spearman \pmstd{0,460}{0,007}) gần bằng của occlusion (\pmstd{0,476}{0,007}), trong khi E không cần lượt chấm thêm.
+Top-5 của E trùng 31,8\% với Shapley (occlusion: 58,5\%).
+E đảo ngược cho kết quả thấp nhất ở mọi cột, nên thứ tự của E chứa thông tin về thứ hạng.
 
 \subsection{Bằng chứng trên 13 truy vấn}\label{sec:xai-cases}
 
@@ -218,9 +216,8 @@ E đảo ngược kém nhất ở mọi cột, nên thứ tự của E mang thô
 
 Bảng~\ref{tab:xai-cases} dùng lại 10 câu của Mục~\ref{sec:l1-cases} và 3 câu ví dụ trong
 \file{experiments/improve/explanations/}, lần này chấm bằng \texttt{main\_r3} seed 0.
-Ở 3 câu có top-3 của E là node, bỏ top-3 đẩy ảnh xuống hạng 11, 3 và 45 (ngẫu nhiên: 2,4; 1,0; 21,9).
-Câu 526446\_0 là ví dụ rõ nhất: E là catcher, dirt, guard; bỏ ba node này đưa ảnh sai xuống hạng 45, còn chỉ giữ chúng thì ảnh vẫn hạng 1.
+Ở 3 câu có top-3 của E là node, bỏ top-3 đưa ảnh xuống hạng 11, 3 và 45 (ngẫu nhiên: 2,4; 1,0; 21,9).
+Ví dụ, ở câu 526446\_0, top-3 của E là các node catcher, dirt, guard; bỏ ba node này đưa ảnh (sai) xuống hạng 45, còn chỉ giữ chúng thì ảnh vẫn hạng 1.
 Ở 10 câu còn lại, top-3 đều là bộ ba, và bỏ cả ba thì ảnh vẫn hạng 1.
-Câu 574350\_4 có top-3 là ``frame has frame'', ``man has pant'', ``woman wearing pant'', không liên quan tới câu.
 Chỉ giữ top-3 thì hạng của ảnh thấp hơn trung bình ngẫu nhiên ở 12/13 câu (câu còn lại bằng nhau), và $k_{\text{flip}}\le 10$ ở 10/13 câu.
-Các ca này khớp với số trên toàn val: E trung thực khi các phần đầu là node, còn bộ ba đứng đầu E ít khi quyết định thứ hạng.
+Kết quả trên 13 câu cùng chiều với kết quả trên toàn val: khi top-3 của E là node, bỏ chúng làm ảnh mất hạng; khi top-3 là bộ ba, ảnh giữ hạng 1.

@@ -24,11 +24,11 @@ trong 10 lớp công trình, xếp theo số sitelink.
 \textbf{Triple.} Mỗi bộ ba giữ một nguồn, ưu tiên Wikidata, rồi infobox, rồi suy diễn. 257 triple là giá trị
 truthy (hạng tốt nhất) trên Wikidata; 26 triple đọc từ ba trường infobox (người sáng lập, thờ, tôn giáo), chỉ nhận
 giá trị là wikilink để ánh xạ được sang QID; 42 triple sinh từ hai quy tắc cố định: tỉnh (theo chuỗi
-\texttt{P131}, chỉ tạo khi tới đúng một tỉnh) và thời kỳ (năm dựng đối chiếu với bảng 8 mốc triều đại). Khang
-duyệt tay cả 107 triple từ infobox và suy diễn, bỏ 1.
+\texttt{P131}, chỉ tạo khi tới đúng một tỉnh) và thời kỳ (năm dựng đối chiếu với bảng 8 mốc triều đại). Toàn bộ
+107 triple từ infobox và suy diễn được duyệt tay; 1 triple bị loại.
 
 \textbf{Liên kết ảnh -- thực thể.} Ứng viên là ảnh \texttt{P18} cộng các file nằm trực tiếp trong Commons category
-của di tích (JPEG/PNG rộng từ 400\,px, tối đa 12). Khang duyệt từng ảnh, chỉ giữ ảnh cho thấy rõ chính di tích;
+của di tích (JPEG/PNG rộng từ 400\,px, tối đa 12). Từng ảnh được duyệt tay, chỉ giữ ảnh thể hiện chính di tích;
 bản đồ, ảnh gần trùng, ảnh có người là chủ thể chính bị bỏ (541 ảnh). Ảnh dùng chung chỉ giữ ở di tích xếp trên,
 nên mỗi ảnh thuộc đúng một di tích; 35/110 di tích bị loại vì còn dưới 3 ảnh.
 
@@ -154,34 +154,34 @@ câu.
 
 Ở A1 (Bảng~\ref{tab:vn-a1}), R@1 trên val là 36,17 với $\alpha \in [0;\,0{,}35]$, 37,23 với
 $\alpha \in [0{,}4;\,0{,}75]$ và 29,79 ở $\alpha=1$; hai đoạn phẳng chỉ cách nhau 1 câu trên 94, và MRR chọn
-$\alpha=0{,}7$. Trên test, R@1 tăng từ 37,86 lên 47,57 (+9,7 điểm). $\alpha=0$ cho R@1 cao hơn (hơn 3 câu) nhưng
-R@5, R@10 thấp hơn và MRR gần bằng; nhóm báo cáo đúng như vậy, không chọn lại $\alpha$ trên test.
+$\alpha=0{,}7$. Trên test, R@1 tăng từ 37,86 lên 47,57 (+9,7 điểm). Với $\alpha=0$, R@1 cao hơn (thêm 3 câu) nhưng R@5 và
+R@10 thấp hơn, MRR gần bằng; $\alpha$ không được chọn lại theo test.
 
 \subsection{Phân tích chuyển giao}\label{sec:vn-analysis}
 
-\textbf{Kênh đếm cạnh chuyển được} dù khác ngôn ngữ, khác encoder và đồ thị nhỏ hơn nhiều (325 so với 34\,196
-triple KGC-train của MKG-W), vì nó không có tham số học: chỉ cần một linker theo tên, một KG và một $\alpha$.
+\textbf{Kênh đếm cạnh áp dụng được trên dữ liệu mới} dù khác ngôn ngữ, khác encoder và đồ thị nhỏ hơn (325 so với
+34\,196 triple KGC-train của MKG-W). Kênh không có tham số học, nên chỉ cần một linker theo tên, một KG và một $\alpha$; ở
+A0, kênh này nâng R@1 thêm 10,6 điểm.
 
-\textbf{Đồ thị giúp ở truy vấn gián tiếp.} Với câu ``Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý'', Chùa Một
+\textbf{Truy vấn gián tiếp.} Với câu ``Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý'', Chùa Một
 Cột (đúng) lên hạng 1 nhờ ba cạnh \texttt{P131}~$\rightarrow$~Hà Nội, \texttt{P2348} (thời kỳ)~$\rightarrow$~nhà
 Lý, \texttt{P31}~$\rightarrow$~chùa; vị trí hành chính và thời kỳ không thấy được trong ảnh. Bốn câu gián tiếp còn
-sai cho thấy kênh 1-hop không hiểu quan hệ lớp con. Ở ba câu hỏi ``nhà thờ'' (Ninh Bình, Khánh Hòa, Thành phố Hồ
+sai đều liên quan tới quan hệ lớp con, mà kênh đếm cạnh trực tiếp (1-hop) không đi qua. Ở ba câu hỏi ``nhà thờ'' (Ninh Bình, Khánh Hòa, Thành phố Hồ
 Chí Minh), từ ``nhà thờ'' được nối vào lớp Q16970, còn đáp án là nhà thờ chính tòa (lớp con Q2977), nên đáp án
 thiếu cạnh \texttt{P31} này và không được cộng điểm hơn một nhà thờ thường cùng tỉnh. Câu còn lại nhắc
 ``di sản thế giới'' (Q9259), còn danh hiệu của đáp án là một thực thể khác (Q43113623).
 
-\textbf{Đồ thị làm hỏng truy vấn trực tiếp khi $\alpha=0$.} Linker nối từ chỉ loại (``nhà thờ'', ``tháp'',
+\textbf{Truy vấn trực tiếp ở $\alpha=0$.} Linker nối từ chỉ loại (``nhà thờ'', ``tháp'',
 ``chùa'') vào thực thể lớp, nên ảnh có \texttt{P31} tới đúng lớp đó được cộng một cạnh, còn đáp án thường không có
-(nhà thờ chính tòa thuộc lớp con; chùa có tháp không thuộc lớp ``tháp''). Với $\alpha=0$, một cạnh thắng mọi khác
-biệt của CLIP như ``sơn màu hồng'' hay ``hai tháp chuông''. Từ dùng để so sánh cũng bị nối: câu ``Công trình bằng
+(nhà thờ chính tòa thuộc lớp con; chùa có tháp không thuộc lớp ``tháp''). Với $\alpha=0$, chênh lệch một cạnh quyết
+định thứ hạng, bất kể độ tương đồng CLIP với các chi tiết như ``sơn màu hồng'' hay ``hai tháp chuông''. Từ dùng để so sánh cũng bị nối: câu ``Công trình bằng
 đá xám có nhiều tầng mái cong như đình chùa, trên đỉnh có cây thánh giá'' đưa Chùa Bút Tháp lên hạng 1 nhờ cạnh
-\texttt{P31}~$\rightarrow$~chùa, trong khi đáp án là một nhà thờ chính tòa. Như vậy nút thắt khi đổi ngôn ngữ là
-chất lượng linking, không phải tỉ lệ nối (84,14\%, so với 80,94\% trên MKG-W test).
+\texttt{P31}~$\rightarrow$~chùa, trong khi đáp án là một nhà thờ chính tòa. Tỉ lệ câu nối được thực thể (84,14\%)
+tương đương MKG-W test (80,94\%); các lỗi phân tích ở trên đều do liên kết từ chỉ loại vào sai lớp.
 
-\textbf{$\alpha$ tốt phụ thuộc loại câu.} Trên val A1 (chỉ có câu tự động), $\alpha$ từ 0 đến 0{,}75 chỉ chênh 1
-câu, nên chưa đủ để nói bộ tiếng Việt cần $\alpha$ cao hơn MKG-W. Bằng chứng rõ hơn là ở cùng $\alpha=0$, nhóm
-gián tiếp thêm 12 câu đúng còn nhóm trực tiếp mất 5 câu. Vì vậy một $\alpha$ cố định cho mọi câu khó chuyển giao.
-Mô hình chính ở VG đã học trọng số theo từng câu (Mục~\ref{sec:method-l1}); với kênh đếm cạnh, nhóm chưa thử cách này.
+\textbf{$\alpha$ theo loại câu.} Trên val A1 (chỉ có câu tự động), các giá trị $\alpha$ từ 0 đến 0{,}75 chênh nhau 1
+câu. Ở cùng $\alpha=0$, nhóm gián tiếp thêm 12 câu đúng, nhóm trực tiếp mất 5 câu; một $\alpha$ chung cho mọi câu không
+tối ưu cho cả hai nhóm.
 
 \subsection{Hạn chế}\label{sec:vn-limits}
 
