@@ -37,6 +37,9 @@ class PackedBatch:
     count_index: torch.Tensor | None = None
     # Concept of every node (src/graph/concepts.py), NO_CONCEPT when its label links to none or without concepts.
     node_concept: torch.Tensor | None = None
+    # Explanation edits only (src/explain/xai_metrics.py): False on an edge that carries no GAT message; the edge
+    # still builds its triple. None: every edge carries messages.
+    message_mask: torch.Tensor | None = None
 
 
 def _flat_positions(starts, counts):

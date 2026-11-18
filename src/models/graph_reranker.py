@@ -417,6 +417,10 @@ class GraphReranker(nn.Module):
             if self.options['use_gat']:
                 edges = graphs.edge_index if self.options['use_edges'] else graphs.edge_index[:, :0]
                 attrs = edge_attr if self.options['use_edges'] else edge_attr[:0]
+                message_mask = getattr(graphs, 'message_mask', None)
+                if message_mask is not None and self.options['use_edges']:
+                    # Explanation edit: these edges stop carrying GAT messages but still build their triples.
+                    edges, attrs = edges[:, message_mask], attrs[message_mask]
                 h = self.dropout(F.elu(self.gat(self.gat1, h, edges, attrs)))
                 h = self.dropout(F.elu(self.gat(self.gat2, h, edges, attrs)))
             nodes = F.normalize(nodes + self.u(h), dim=-1)

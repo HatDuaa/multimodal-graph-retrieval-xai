@@ -9,6 +9,11 @@ the same frozen CLIP text encoder and the same conventions (nodes through the co
 verbatim). Every explanation row comes from the ranking pass itself (src/explain/graph_explainer.matched_pairs),
 never from a search after the fact; its top image parts also get their labels and pixel boxes from the image graph
 (src/explain/match_view.image_part), which the demo draws over the image.
+
+Each matched row also carries a check by the same model: the image is scored again without the matched image part
+(the node with every edge touching it, or the labelled triple's edge; src/explain/xai_metrics.edit), the other
+candidates unchanged. A row's share of the score says how the score splits, not what the part is worth: on val,
+removing the parts with the largest terms costs far less than their terms add up to (experiments/xai-metrics-v2).
 """
 import json
 from pathlib import Path
@@ -20,6 +25,7 @@ from src.data.graph_store import GraphIndex, GraphStore, attach_count_buckets
 from src.explain.graph_explainer import matched_pairs
 from src.explain.match_view import image_part
 from src.explain.score_breakdown import top50_deltas
+from src.explain.xai_metrics import edit, rank_of, score_edited
 from src.graph.soft_match import PRONOUNS
 from src.models.graph_reranker import fill_known_mean
 from src.train_graph_reranker import load_run_model, structure_options
@@ -153,6 +159,29 @@ class GraphRerankMode:
         out.update(top50_deltas(clip_weight, [h.clip_score for h in hits], terms))
         return out
 
+    def _drop_checks(self, batch, detail, table, local, row, parts, pairs):
+        """Final score and rank of the candidate at row with each matched image part removed, set on its rows.
+
+        Object rows drop the image node (and every edge touching it, so its triples too); triple rows drop exactly the
+        labelled edge (triple j is labelled edge j). Rows sharing an image part share one rescore.
+        """
+        drops = {}
+        for key in ("objects", "triples"):
+            positions = parts["node_indices"] if key == "objects" else parts["relation_indices"]
+            for item in pairs[key]:
+                drops.setdefault((key, positions.index(item["image_index"])), []).append(item)
+        if not drops:
+            return
+        index = GraphIndex.build([parts], local)
+        edits = [edit(index, drop_nodes=[pos]) if key == "objects" else edit(index, drop_edges=[pos])
+                 for key, pos in drops]
+        images = GraphIndex.concat(edits).to_batch(table, self.device)
+        fused, _ = score_edited(self.model, batch, detail, row, images, len(edits))
+        scores, ranks = fused[:, row].cpu().tolist(), rank_of(fused, row).cpu().tolist()
+        for items, score, rank in zip(drops.values(), scores, ranks):
+            for item in items:
+                item["drop"] = {"score": score, "rank": int(rank)}
+
     @torch.no_grad()
     def __call__(self, query, hits):
         query_graph = self.parse(query)
@@ -191,6 +220,7 @@ class GraphRerankMode:
                 for item in pairs[key]:
                     for match in item["top_matches"]:
                         match.update(image_part(image_graph, key, match["image_index"]) or {})
+            self._drop_checks(batch, detail, table, local, row, parts, pairs)
             hit.score = float(fused[0, row])
             hit.graph_score = float(detail["graph"][0, row])
             info = {"weights_abc": weights, **pairs, "fusion": self.fusion, "channel_active": active,

@@ -1,0 +1,6123 @@
+{
+  "302038_1": {
+    "caption": "Dining table for six in a wood paneled room with a fireplace.",
+    "main_r3": {
+      "image_id": 2377477,
+      "correct": true,
+      "parts": 51,
+      "nodes": 30,
+      "triples": 21,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 1.430511474609375e-06,
+      "top1_kind": "triple",
+      "gap": 0.18355989456176758,
+      "base": 1.753997564315796,
+      "empty": 1.181148648262024,
+      "effect": 0.572848916053772,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.5900077360643974,
+        "triples": 0.1641401113095823
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.0218045711517334,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.0380633890379687
+            },
+            "random": {
+              "delta": -0.008777403831481845,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.015322371371403505
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.09808599948883057,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.8287750980406439
+            },
+            "random": {
+              "delta": -0.2916384816169739,
+              "rank": 2.6,
+              "lost_rank1": 1.0,
+              "share": 0.4908980824717167
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.06677699089050293,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.11656998733717554
+            },
+            "random": {
+              "delta": -0.004472422599792525,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.007807333617041721
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.12481379508972168,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.7821174281876345
+            },
+            "random": {
+              "delta": -0.43735257387161264,
+              "rank": 3.2,
+              "lost_rank1": 1.0,
+              "share": 0.23653067743509637
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.11855852603912354,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.20696299271341334
+            },
+            "random": {
+              "delta": -0.012111377716064409,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.021142359488950387
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.13973510265350342,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.7560698838079205
+            },
+            "random": {
+              "delta": -0.42131774425506596,
+              "rank": 2.4,
+              "lost_rank1": 1.0,
+              "share": 0.2645220538123217
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 1.226828150788208,
+          "measured": 0.0218045711517334,
+          "effect": 0.572848916053772
+        },
+        "3": {
+          "predicted": 3.624238406577504,
+          "measured": 0.06677699089050293,
+          "effect": 0.572848916053772
+        },
+        "5": {
+          "predicted": 5.981985028134034,
+          "measured": 0.11855852603912354,
+          "effect": 0.572848916053772
+        }
+      },
+      "subgraph": {
+        "n_edges": 6,
+        "pool": 12,
+        "with_choice": true,
+        "kinds": {
+          "labelled": 6
+        },
+        "messages": {
+          "top": {
+            "delta": -0.027169108390808105,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.013452446460723966,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.00920414924621582,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.01948901414871207,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "fire",
+            "target": "stove",
+            "kind": "labelled",
+            "alpha": 0.020792797207832336
+          },
+          {
+            "source": "wood",
+            "target": "stove",
+            "kind": "labelled",
+            "alpha": 0.018730929121375084
+          },
+          {
+            "source": "stove pipe",
+            "target": "stove",
+            "kind": "labelled",
+            "alpha": 0.01181493978947401
+          },
+          {
+            "source": "glass",
+            "target": "table",
+            "kind": "labelled",
+            "alpha": 0.0038058024365454912
+          },
+          {
+            "source": "glass",
+            "target": "table",
+            "kind": "labelled",
+            "alpha": 0.0038058024365454912
+          },
+          {
+            "source": "glass",
+            "target": "table",
+            "kind": "labelled",
+            "alpha": 0.0038058024365454912
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 51,
+          "n80": 19,
+          "share80": 0.37254901960784315,
+          "n90": 22,
+          "share90": 0.43137254901960786
+        },
+        "caption_rows": {
+          "margin": 0.04254830579216382,
+          "rows": 4,
+          "n80": 2,
+          "share_of_rows80": 0.5,
+          "n90": 3,
+          "share_of_rows90": 0.75
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 1,
+          "k90": null
+        }
+      },
+      "k_flip": 7,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": true,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": true,
+          "object": false,
+          "predicate": true,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "room with stove",
+          "term": 1.226828150788208
+        },
+        {
+          "kind": "triple",
+          "part": "wood under stove",
+          "term": 1.2028478322484801
+        },
+        {
+          "kind": "triple",
+          "part": "stove burning wood",
+          "term": 1.194562423540816
+        },
+        {
+          "kind": "triple",
+          "part": "stove pipe above stove",
+          "term": 1.1896863687364743
+        },
+        {
+          "kind": "triple",
+          "part": "wood under fire",
+          "term": 1.1680602528200552
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "dining table",
+          "image": "table",
+          "a": 0.5432580709457397,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": true,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "room",
+          "image": "room",
+          "a": 0.5691484808921814,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "fireplace",
+          "image": "stove",
+          "a": 0.4064114987850189,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.753997564315796,
+          1.7321929931640625,
+          1.7093994617462158,
+          1.687220573425293,
+          1.6610910892486572,
+          1.6354390382766724,
+          1.5971705913543701,
+          1.5673877000808716,
+          1.5327428579330444,
+          1.4856791496276855,
+          1.441986322402954
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        "insertion": [
+          1.181148648262024,
+          1.6559115648269653,
+          1.634461760520935,
+          1.6291837692260742,
+          1.6251685619354248,
+          1.6142624616622925,
+          1.6087586879730225,
+          1.5974540710449219,
+          1.5894008874893188,
+          1.581629991531372,
+          1.5741239786148071
+        ],
+        "insertion_rank": [
+          4,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2
+        ],
+        "k_flip": 7,
+        "deletion_auc": 0.7399548292160034,
+        "insertion_auc": 0.7504369020462036
+      }
+    }
+  },
+  "422698_1": {
+    "caption": "A cow standing along side of a large river.",
+    "main_r3": {
+      "image_id": 2351201,
+      "correct": true,
+      "parts": 38,
+      "nodes": 25,
+      "triples": 13,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 2.1457672119140625e-06,
+      "top1_kind": "triple",
+      "gap": 0.5566449165344238,
+      "base": 2.160369396209717,
+      "empty": 0.6015198826789856,
+      "effect": 1.5588495135307312,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.6313430817659116,
+        "triples": 0.24954690719714614
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.029972553253173828,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.01922735516995942
+            },
+            "random": {
+              "delta": 0.007267022132873446,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.004661785547479778
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -1.241618573665619,
+              "rank": 11,
+              "lost_rank1": true,
+              "share": 0.20350324846084536
+            },
+            "random": {
+              "delta": -1.6609831988811492,
+              "rank": 14.3,
+              "lost_rank1": 1.0,
+              "share": -0.06551863054381012
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.10355067253112793,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.06642762603594098
+            },
+            "random": {
+              "delta": 0.01052291393280047,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.006750436037258334
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -1.2863385677337646,
+              "rank": 11,
+              "lost_rank1": true,
+              "share": 0.17481542857831112
+            },
+            "random": {
+              "delta": -1.573762345314026,
+              "rank": 12.2,
+              "lost_rank1": 1.0,
+              "share": -0.00956656281049077
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.1839456558227539,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.11800090658278131
+            },
+            "random": {
+              "delta": -0.0007662773132324219,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0004915659315291023
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -1.2775788307189941,
+              "rank": 11,
+              "lost_rank1": true,
+              "share": 0.18043478884287575
+            },
+            "random": {
+              "delta": -1.534829217195511,
+              "rank": 11.8,
+              "lost_rank1": 1.0,
+              "share": 0.015408989852275921
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 2.54081203505865,
+          "measured": 0.029972553253173828,
+          "effect": 1.5588495135307312
+        },
+        "3": {
+          "predicted": 7.544401125987633,
+          "measured": 0.10355067253112793,
+          "effect": 1.5588495135307312
+        },
+        "5": {
+          "predicted": 12.450741898840363,
+          "measured": 0.1839456558227539,
+          "effect": 1.5588495135307312
+        }
+      },
+      "subgraph": {
+        "n_edges": 0,
+        "pool": 0,
+        "with_choice": false,
+        "kinds": {},
+        "messages": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": []
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 38,
+          "n80": 12,
+          "share80": 0.3157894736842105,
+          "n90": 14,
+          "share90": 0.3684210526315789
+        },
+        "caption_rows": {
+          "margin": 0.11549191998292495,
+          "rows": 5,
+          "n80": 2,
+          "share_of_rows80": 0.4,
+          "n90": 2,
+          "share_of_rows90": 0.4
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": null,
+          "k90": null
+        }
+      },
+      "k_flip": null,
+      "validity": [
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "moss on water",
+          "term": 2.54081203505865
+        },
+        {
+          "kind": "triple",
+          "part": "river surrounded by plant",
+          "term": 2.527022032684272
+        },
+        {
+          "kind": "triple",
+          "part": "shade area along edge of water",
+          "term": 2.4765670582447115
+        },
+        {
+          "kind": "triple",
+          "part": "cow standing ear",
+          "term": 2.4650649414758163
+        },
+        {
+          "kind": "triple",
+          "part": "plant along water side",
+          "term": 2.441275831376913
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "cow",
+          "image": "cow",
+          "a": 0.4450821876525879,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "side",
+          "image": "nose",
+          "a": 0.31553179025650024,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "river",
+          "image": "river",
+          "a": 0.4210059642791748,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.160369396209717,
+          2.130396842956543,
+          2.0969769954681396,
+          2.056818723678589,
+          2.022836685180664,
+          1.976423740386963,
+          1.9291937351226807,
+          1.8951480388641357,
+          1.8864107131958008,
+          1.8962318897247314,
+          1.906759262084961
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "insertion": [
+          0.6015198826789856,
+          0.9187508225440979,
+          0.9163240194320679,
+          0.8740308284759521,
+          0.90828937292099,
+          0.8827905654907227,
+          0.8841960430145264,
+          0.8336911201477051,
+          0.787946343421936,
+          0.7437736988067627,
+          0.7056378126144409
+        ],
+        "insertion_rank": [
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11
+        ],
+        "k_flip": null,
+        "deletion_auc": 0.8841134905815125,
+        "insertion_auc": 0.15654055774211884
+      }
+    }
+  },
+  "357943_3": {
+    "caption": "A man sitting in front of the pen with a dog herding sheep in the background.",
+    "main_r3": {
+      "image_id": 2329851,
+      "correct": true,
+      "parts": 32,
+      "nodes": 20,
+      "triples": 12,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 1.430511474609375e-06,
+      "top1_kind": "triple",
+      "gap": 0.3098675012588501,
+      "base": 2.0594029426574707,
+      "empty": 0.8246123790740967,
+      "effect": 1.234790563583374,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.5921070580139576,
+        "triples": 0.3176587504980367
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.05953359603881836,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.048213517170111256
+            },
+            "random": {
+              "delta": 0.018642091751098544,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.015097371409285
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.8303759098052979,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.32751679977571335
+            },
+            "random": {
+              "delta": -1.5667925000190734,
+              "rank": 15.8,
+              "lost_rank1": 1.0,
+              "share": -0.26887307550539313
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.2212541103363037,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.179183512460787
+            },
+            "random": {
+              "delta": 0.004311966896056951,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.0034920633694701894
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.8303759098052979,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.32751679977571335
+            },
+            "random": {
+              "delta": -1.411283254623413,
+              "rank": 11.7,
+              "lost_rank1": 1.0,
+              "share": -0.14293330079220526
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.33721792697906494,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.27309726598529815
+            },
+            "random": {
+              "delta": 0.05346853733062762,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.043301705493651824
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.9595661163330078,
+              "rank": 4,
+              "lost_rank1": true,
+              "share": 0.22289160232295768
+            },
+            "random": {
+              "delta": -1.4693464756011962,
+              "rank": 12.1,
+              "lost_rank1": 1.0,
+              "share": -0.18995602892942323
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 2.336497820896483,
+          "measured": 0.05953359603881836,
+          "effect": 1.234790563583374
+        },
+        "3": {
+          "predicted": 7.0094934626894485,
+          "measured": 0.2212541103363037,
+          "effect": 1.234790563583374
+        },
+        "5": {
+          "predicted": 11.065167624865836,
+          "measured": 0.33721792697906494,
+          "effect": 1.234790563583374
+        }
+      },
+      "subgraph": {
+        "n_edges": 1,
+        "pool": 1,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 1
+        },
+        "messages": {
+          "top": {
+            "delta": 0.0006079673767089844,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0006079673767089844,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": -0.05953359603881836,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.05953359603881836,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "pen",
+            "target": "sheep",
+            "kind": "labelled",
+            "alpha": 0.009985038079321384
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 32,
+          "n80": 11,
+          "share80": 0.34375,
+          "n90": 13,
+          "share90": 0.40625
+        },
+        "caption_rows": {
+          "margin": 0.11933428492086628,
+          "rows": 6,
+          "n80": 2,
+          "share_of_rows80": 0.3333333333333333,
+          "n90": 2,
+          "share_of_rows90": 0.3333333333333333
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": null,
+          "k90": null
+        }
+      },
+      "k_flip": 5,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": true,
+          "cosine": false,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": false,
+          "object": true,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explainers": {
+        "model": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            1.9998693466186523,
+            1.9271647930145264,
+            1.838148832321167,
+            1.786813497543335,
+            1.7221850156784058,
+            1.6398489475250244,
+            1.5395138263702393,
+            0.6554000973701477,
+            0.5693693161010742,
+            0.4582648277282715
+          ],
+          "deletion_rank": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            11,
+            13,
+            13
+          ],
+          "insertion": [
+            0.8246123790740967,
+            1.2290270328521729,
+            1.2290270328521729,
+            1.2290270328521729,
+            1.1516046524047852,
+            1.099836826324463,
+            1.063024640083313,
+            1.0454858541488647,
+            1.3532975912094116,
+            1.3003615140914917,
+            1.254867672920227
+          ],
+          "insertion_rank": [
+            8,
+            2,
+            2,
+            2,
+            2,
+            4,
+            5,
+            5,
+            2,
+            2,
+            2
+          ],
+          "k_flip": 5,
+          "deletion_auc": 0.4770408272743225,
+          "insertion_auc": 0.3004101514816284,
+          "additivity": {
+            "1": {
+              "predicted": 2.336497820896483,
+              "measured": 0.05953359603881836,
+              "effect": 1.234790563583374
+            },
+            "3": {
+              "predicted": 7.0094934626894485,
+              "measured": 0.2212541103363037,
+              "effect": 1.234790563583374
+            },
+            "5": {
+              "predicted": 11.065167624865836,
+              "measured": 0.33721792697906494,
+              "effect": 1.234790563583374
+            }
+          },
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": 0.017343616741715286,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": 0.1148275651673741,
+              "lost_rank1": 0.1
+            },
+            "plus_10_0.1": {
+              "share": 0.0066062802188880014,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.46117586941482164,
+              "lost_rank1": 0.6
+            },
+            "minus_5_0.1": {
+              "share": 0.21680627299753796,
+              "lost_rank1": 0.3
+            },
+            "minus_5_0.5": {
+              "share": 0.3132676570214017,
+              "lost_rank1": 0.5
+            },
+            "minus_10_0.1": {
+              "share": -0.07234192049679798,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.5": {
+              "share": -0.17298937052032531,
+              "lost_rank1": 0.0
+            }
+          }
+        },
+        "lowest": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            2.076627254486084,
+            2.084897994995117,
+            2.159766912460327,
+            2.286323308944702,
+            2.333439350128174,
+            2.350471258163452,
+            2.370469570159912,
+            2.394991636276245,
+            2.4082114696502686,
+            2.4234063625335693
+          ],
+          "deletion_rank": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "insertion": [
+            0.8246123790740967,
+            -1.6942386627197266,
+            -1.1218223571777344,
+            -0.5589421391487122,
+            -0.5370000004768372,
+            -0.4415460228919983,
+            -0.4124670624732971,
+            -0.41434723138809204,
+            -0.4220539927482605,
+            -0.41668421030044556,
+            -0.36800700426101685
+          ],
+          "insertion_rank": [
+            8,
+            50,
+            45,
+            39,
+            39,
+            39,
+            38,
+            38,
+            38,
+            38,
+            37
+          ],
+          "k_flip": null,
+          "deletion_auc": 1.1858270168304443,
+          "insertion_auc": -1.1850780248641968,
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": -0.028354418452518758,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": -0.09287243099024983,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.1": {
+              "share": -0.004473800111873,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": -0.07877091078022054,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.1": {
+              "share": 0.2003746702845502,
+              "lost_rank1": 0.2
+            },
+            "minus_5_0.5": {
+              "share": 0.6283033283665634,
+              "lost_rank1": 0.6
+            },
+            "minus_10_0.1": {
+              "share": -0.04389211843709133,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.5": {
+              "share": 0.8405306475832515,
+              "lost_rank1": 0.7
+            }
+          }
+        },
+        "random": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            2.042745590209961,
+            2.0301737785339355,
+            1.955420732498169,
+            1.856400489807129,
+            1.921682596206665,
+            1.7525136470794678,
+            1.7080817222595215,
+            1.714046835899353,
+            1.5609102249145508,
+            1.4239048957824707
+          ],
+          "deletion_rank": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "insertion": [
+            0.8246123790740967,
+            0.8518673777580261,
+            -0.6837882399559021,
+            0.5933732986450195,
+            0.6288728713989258,
+            1.3001866340637207,
+            1.5066266059875488,
+            1.6313992738723755,
+            1.6113181114196777,
+            1.5998945236206055,
+            1.553009033203125
+          ],
+          "insertion_rank": [
+            8,
+            8,
+            41,
+            11,
+            11,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "k_flip": 6,
+          "deletion_auc": 0.7871583104133606,
+          "insertion_auc": 0.19004322588443756,
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": -0.017146246046841847,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": 0.01783491955242305,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.1": {
+              "share": -0.007370140721714077,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.027726740253639297,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.1": {
+              "share": -0.016910258506953057,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.5": {
+              "share": 0.14632762492694176,
+              "lost_rank1": 0.3
+            },
+            "minus_10_0.1": {
+              "share": 0.05161519781382316,
+              "lost_rank1": 0.1
+            },
+            "minus_10_0.5": {
+              "share": 0.2162965402975467,
+              "lost_rank1": 0.4
+            }
+          }
+        },
+        "clip": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            2.117335557937622,
+            2.1468348503112793,
+            2.1510581970214844,
+            2.1436872482299805,
+            2.0648744106292725,
+            1.937938928604126,
+            1.5867531299591064,
+            1.5867531299591064,
+            1.5867531299591064,
+            1.5867531299591064
+          ],
+          "deletion_rank": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2
+          ],
+          "insertion": [
+            0.8246123790740967,
+            0.029548227787017822,
+            -1.054225206375122,
+            -0.2668355107307434,
+            -0.2136630415916443,
+            -0.19213122129440308,
+            -0.18041378259658813,
+            -0.17303729057312012,
+            0.05730581283569336,
+            0.42638665437698364,
+            0.6164883375167847
+          ],
+          "insertion_rank": [
+            8,
+            24,
+            45,
+            35,
+            34,
+            32,
+            32,
+            32,
+            23,
+            15,
+            11
+          ],
+          "k_flip": 7,
+          "deletion_auc": 0.8635163307189941,
+          "insertion_auc": -0.7447984218597412,
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": 0.010358138413199084,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": -0.01667627904300507,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.1": {
+              "share": 0.02253022588730407,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.08491234072723629,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.1": {
+              "share": 0.16424932618432556,
+              "lost_rank1": 0.2
+            },
+            "minus_5_0.5": {
+              "share": 0.624362093164297,
+              "lost_rank1": 0.7
+            },
+            "minus_10_0.1": {
+              "share": 0.0608254215463073,
+              "lost_rank1": 0.1
+            },
+            "minus_10_0.5": {
+              "share": 0.2532444280237038,
+              "lost_rank1": 0.4
+            }
+          }
+        },
+        "gradient": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            2.127427816390991,
+            2.1313834190368652,
+            2.073716878890991,
+            1.9926676750183105,
+            1.865356206893921,
+            1.857802391052246,
+            1.8063853979110718,
+            1.731323480606079,
+            1.619908332824707,
+            1.6321957111358643
+          ],
+          "deletion_rank": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2
+          ],
+          "insertion": [
+            0.8246123790740967,
+            -0.5059869885444641,
+            0.5147825479507446,
+            0.5702359676361084,
+            0.591864824295044,
+            0.6034300327301025,
+            0.32371199131011963,
+            0.3072267770767212,
+            0.29107242822647095,
+            0.27564340829849243,
+            0.2551565170288086
+          ],
+          "insertion_rank": [
+            8,
+            39,
+            13,
+            11,
+            11,
+            11,
+            17,
+            17,
+            17,
+            18,
+            18
+          ],
+          "k_flip": 8,
+          "deletion_auc": 0.8578007817268372,
+          "insertion_auc": -0.4064645767211914,
+          "additivity": {
+            "1": {
+              "predicted": 0.03765781968832016,
+              "measured": -0.06802487373352051,
+              "effect": 1.234790563583374
+            },
+            "3": {
+              "predicted": 0.06937911733984947,
+              "measured": -0.014313936233520508,
+              "effect": 1.234790563583374
+            },
+            "5": {
+              "predicted": 0.09968699887394905,
+              "measured": 0.1940467357635498,
+              "effect": 1.234790563583374
+            }
+          },
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": 0.03470447590472993,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": 0.02518216048504302,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.1": {
+              "share": -0.001874577507580004,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.04190712571540119,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.1": {
+              "share": 0.1737849547613315,
+              "lost_rank1": 0.2
+            },
+            "minus_5_0.5": {
+              "share": 0.64913643563045,
+              "lost_rank1": 0.6
+            },
+            "minus_10_0.1": {
+              "share": -0.04772530370700472,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.5": {
+              "share": 0.5834648800068428,
+              "lost_rank1": 0.7
+            }
+          }
+        },
+        "integrated_gradients": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            0.9723782539367676,
+            0.4183908998966217,
+            0.46381115913391113,
+            0.5696078538894653,
+            0.46981891989707947,
+            0.43471717834472656,
+            0.37885087728500366,
+            0.2740132212638855,
+            -0.06849813461303711,
+            -0.06849813461303711
+          ],
+          "deletion_rank": [
+            1,
+            6,
+            16,
+            13,
+            11,
+            13,
+            13,
+            16,
+            18,
+            27,
+            27
+          ],
+          "insertion": [
+            0.8246123790740967,
+            1.136202335357666,
+            1.0452282428741455,
+            1.542558193206787,
+            2.4024157524108887,
+            2.376375675201416,
+            2.372364044189453,
+            2.3615474700927734,
+            2.3489468097686768,
+            2.335791826248169,
+            2.080125570297241
+          ],
+          "insertion_rank": [
+            8,
+            3,
+            5,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "k_flip": 1,
+          "deletion_auc": -0.35645976662635803,
+          "insertion_auc": 0.9520183801651001,
+          "additivity": {
+            "1": {
+              "predicted": 1.0680031776428223,
+              "measured": 1.0870246887207031,
+              "effect": 1.234790563583374
+            },
+            "3": {
+              "predicted": 1.2560521513223648,
+              "measured": 1.5955917835235596,
+              "effect": 1.234790563583374
+            },
+            "5": {
+              "predicted": 1.3649812638759613,
+              "measured": 1.5895839929580688,
+              "effect": 1.234790563583374
+            }
+          },
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": -0.009745868335480752,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": 0.8963729635165427,
+              "lost_rank1": 0.9
+            },
+            "plus_10_0.1": {
+              "share": 0.0003076990210822868,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.5135333988403747,
+              "lost_rank1": 0.4
+            },
+            "minus_5_0.1": {
+              "share": -0.003271426025475147,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.5": {
+              "share": 0.048614070395032946,
+              "lost_rank1": 0.2
+            },
+            "minus_10_0.1": {
+              "share": -0.05115158328099142,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.5": {
+              "share": -0.11063253040545562,
+              "lost_rank1": 0.1
+            }
+          }
+        },
+        "occlusion": {
+          "sizes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "deletion": [
+            2.0594029426574707,
+            0.9723782539367676,
+            0.9723782539367676,
+            0.9723782539367676,
+            0.9723782539367676,
+            0.988943338394165,
+            1.0027351379394531,
+            1.008468747138977,
+            0.816103994846344,
+            0.816103994846344,
+            0.816103994846344
+          ],
+          "deletion_rank": [
+            1,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            8,
+            8,
+            8
+          ],
+          "insertion": [
+            0.8246123790740967,
+            1.136202335357666,
+            1.5331454277038574,
+            1.5331454277038574,
+            1.5331454277038574,
+            2.4318065643310547,
+            2.4318175315856934,
+            2.4271416664123535,
+            2.455296277999878,
+            2.386493682861328,
+            2.3402576446533203
+          ],
+          "insertion_rank": [
+            8,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "k_flip": 1,
+          "deletion_auc": 0.08842377364635468,
+          "insertion_auc": 0.9687738418579102,
+          "additivity": {
+            "1": {
+              "predicted": 1.0870246887207031,
+              "measured": 1.0870246887207031,
+              "effect": 1.234790563583374
+            },
+            "3": {
+              "predicted": 1.2060918807983398,
+              "measured": 1.0870246887207031,
+              "effect": 1.234790563583374
+            },
+            "5": {
+              "predicted": 1.3219411373138428,
+              "measured": 1.0704596042633057,
+              "effect": 1.234790563583374
+            }
+          },
+          "fid_alpha": {
+            "plus_5_0.1": {
+              "share": 0.03483478844823422,
+              "lost_rank1": 0.0
+            },
+            "plus_5_0.5": {
+              "share": 0.7960364442613148,
+              "lost_rank1": 0.9
+            },
+            "plus_10_0.1": {
+              "share": 0.021868854491148726,
+              "lost_rank1": 0.0
+            },
+            "plus_10_0.5": {
+              "share": 0.47518466575286344,
+              "lost_rank1": 0.5
+            },
+            "minus_5_0.1": {
+              "share": -0.044515606708286616,
+              "lost_rank1": 0.0
+            },
+            "minus_5_0.5": {
+              "share": -0.2633079150823302,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.1": {
+              "share": -0.054419958575710345,
+              "lost_rank1": 0.0
+            },
+            "minus_10_0.5": {
+              "share": -0.2638701570373311,
+              "lost_rank1": 0.0
+            }
+          }
+        }
+      },
+      "ig_completeness": {
+        "sum": 1.1797560453414917,
+        "difference": 1.201246976852417
+      },
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "pen of sheep",
+          "term": 2.336497820896483
+        },
+        {
+          "kind": "triple",
+          "part": "pen of sheep",
+          "term": 2.336497820896483
+        },
+        {
+          "kind": "triple",
+          "part": "pen of sheep",
+          "term": 2.336497820896483
+        },
+        {
+          "kind": "triple",
+          "part": "grass on ground",
+          "term": 2.027837081088194
+        },
+        {
+          "kind": "triple",
+          "part": "grass on ground",
+          "term": 2.027837081088194
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "man",
+          "image": "trainer",
+          "a": 0.37608835101127625,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": true,
+          "cosine": false,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "pen",
+          "image": "pen",
+          "a": 0.875119149684906,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "sheep",
+          "image": "sheep",
+          "a": 0.18277479708194733,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "background",
+          "image": "sheep",
+          "a": 0.10385014116764069,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.0594029426574707,
+          1.9998693466186523,
+          1.9271647930145264,
+          1.838148832321167,
+          1.786813497543335,
+          1.7221850156784058,
+          1.6398489475250244,
+          1.5395138263702393,
+          0.6554000973701477,
+          0.5693693161010742,
+          0.4582648277282715
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          11,
+          13,
+          13
+        ],
+        "insertion": [
+          0.8246123790740967,
+          1.2290270328521729,
+          1.2290270328521729,
+          1.2290270328521729,
+          1.1516046524047852,
+          1.099836826324463,
+          1.063024640083313,
+          1.0454858541488647,
+          1.3532975912094116,
+          1.3003615140914917,
+          1.254867672920227
+        ],
+        "insertion_rank": [
+          8,
+          2,
+          2,
+          2,
+          2,
+          4,
+          5,
+          5,
+          2,
+          2,
+          2
+        ],
+        "k_flip": 5,
+        "deletion_auc": 0.4770408272743225,
+        "insertion_auc": 0.3004101514816284
+      }
+    }
+  },
+  "445695_1": {
+    "caption": "Someone holding a doughnut that has a bite taken out of it.",
+    "main_r3": {
+      "image_id": 2402283,
+      "correct": true,
+      "parts": 63,
+      "nodes": 20,
+      "triples": 43,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "node",
+      "gap": 0.02985215187072754,
+      "base": 2.1933681964874268,
+      "empty": 0.8607389330863953,
+      "effect": 1.3326292634010315,
+      "composition": {
+        "1": 0,
+        "3": 0,
+        "5": 0
+      },
+      "concentration": {
+        "objects": 0.9467229272657203,
+        "triples": null
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.640455961227417,
+              "rank": 4,
+              "lost_rank1": true,
+              "share": 0.4805957506837991
+            },
+            "random": {
+              "delta": 0.006148004531860263,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.004613439536942037
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.4537363052368164,
+              "rank": 4,
+              "lost_rank1": true,
+              "share": 0.6595179787071265
+            },
+            "random": {
+              "delta": -2.0136028110980986,
+              "rank": 17.3,
+              "lost_rank1": 1.0,
+              "share": -0.5109999955720169
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -1.409550666809082,
+              "rank": 11,
+              "lost_rank1": true,
+              "share": 1.0577215325526754
+            },
+            "random": {
+              "delta": -0.22627540826797476,
+              "rank": 2.4,
+              "lost_rank1": 0.3,
+              "share": 0.16979621750950635
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.14331722259521484,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.107544706191917
+            },
+            "random": {
+              "delta": -1.0954973638057708,
+              "rank": 8.0,
+              "lost_rank1": 0.9,
+              "share": 0.17794288787420992
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -1.4891703128814697,
+              "rank": 12,
+              "lost_rank1": true,
+              "share": 1.1174678162784197
+            },
+            "random": {
+              "delta": -0.20368274450302115,
+              "rank": 2.2,
+              "lost_rank1": 0.4,
+              "share": 0.15284276737492472
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.10625982284545898,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.079736972437684
+            },
+            "random": {
+              "delta": -1.0738519072532653,
+              "rank": 7.2,
+              "lost_rank1": 1.0,
+              "share": 0.19418555726994544
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 1.2406519380070264,
+          "measured": 0.640455961227417,
+          "effect": 1.3326292634010315
+        },
+        "3": {
+          "predicted": 2.259120617119298,
+          "measured": 1.409550666809082,
+          "effect": 1.3326292634010315
+        },
+        "5": {
+          "predicted": 2.3056795368654335,
+          "measured": 1.4891703128814697,
+          "effect": 1.3326292634010315
+        }
+      },
+      "subgraph": {
+        "n_edges": 8,
+        "pool": 21,
+        "with_choice": true,
+        "kinds": {
+          "labelled": 8
+        },
+        "messages": {
+          "top": {
+            "delta": 0.011165380477905273,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.01116158962249747,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.011165380477905273,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.01116158962249747,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "chocolate cream",
+            "target": "donut",
+            "kind": "labelled",
+            "alpha": 0.03348621353507042
+          },
+          {
+            "source": "bite",
+            "target": "donut",
+            "kind": "labelled",
+            "alpha": 0.02652021497488022
+          },
+          {
+            "source": "thumb",
+            "target": "donut",
+            "kind": "labelled",
+            "alpha": 0.019375178962945938
+          },
+          {
+            "source": "donut",
+            "target": "bite",
+            "kind": "labelled",
+            "alpha": 0.002598142484202981
+          },
+          {
+            "source": "donut",
+            "target": "bite",
+            "kind": "labelled",
+            "alpha": 0.0023674839176237583
+          },
+          {
+            "source": "bite",
+            "target": "chocolate cream",
+            "kind": "labelled",
+            "alpha": 0.06740058213472366
+          },
+          {
+            "source": "donut",
+            "target": "chocolate cream",
+            "kind": "labelled",
+            "alpha": 0.0024591288529336452
+          },
+          {
+            "source": "donut",
+            "target": "chocolate cream",
+            "kind": "labelled",
+            "alpha": 0.0021566450595855713
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 63,
+          "n80": 2,
+          "share80": 0.031746031746031744,
+          "n90": 2,
+          "share90": 0.031746031746031744
+        },
+        "caption_rows": {
+          "margin": 0.14406208211556076,
+          "rows": 2,
+          "n80": 2,
+          "share_of_rows80": 1.0,
+          "n90": 2,
+          "share_of_rows90": 1.0
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 2,
+          "k90": 2
+        }
+      },
+      "k_flip": 1,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": true,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [],
+      "explanation": [
+        {
+          "kind": "node",
+          "part": "donut",
+          "term": 1.2406519380070264
+        },
+        {
+          "kind": "node",
+          "part": "bite",
+          "term": 0.9544812072373468
+        },
+        {
+          "kind": "node",
+          "part": "chocolate cream",
+          "term": 0.06398747187492493
+        },
+        {
+          "kind": "node",
+          "part": "finger",
+          "term": 0.024263645223308594
+        },
+        {
+          "kind": "node",
+          "part": "finger",
+          "term": 0.02229527452282698
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "doughnut",
+          "image": "donut",
+          "a": 0.8156471848487854,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": true,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "bite",
+          "image": "bite",
+          "a": 0.8636221289634705,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.1933681964874268,
+          1.5529122352600098,
+          0.8780875205993652,
+          0.7838175296783447,
+          0.7479234933853149,
+          0.704197883605957,
+          0.6320648193359375,
+          0.48652902245521545,
+          0.4331214129924774,
+          0.40304526686668396,
+          0.38687217235565186
+        ],
+        "deletion_rank": [
+          1,
+          4,
+          8,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          14
+        ],
+        "insertion": [
+          0.8607389330863953,
+          1.7396318912506104,
+          2.362964391708374,
+          2.3366854190826416,
+          2.3178060054779053,
+          2.2996280193328857,
+          2.282108783721924,
+          2.2652084827423096,
+          2.257267951965332,
+          2.249349355697632,
+          2.242917537689209
+        ],
+        "insertion_rank": [
+          9,
+          4,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": 1,
+        "deletion_auc": -0.11997469514608383,
+        "insertion_auc": 1.031508207321167
+      }
+    }
+  },
+  "574350_4": {
+    "caption": "People huddle under several umbrellas on a sidewalk area and a white dog follows people with a pink umbrella.",
+    "main_r3": {
+      "image_id": 1159610,
+      "correct": true,
+      "parts": 24,
+      "nodes": 17,
+      "triples": 7,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 4.76837158203125e-07,
+      "top1_kind": "triple",
+      "gap": 0.40471720695495605,
+      "base": 2.5796561241149902,
+      "empty": 1.8917673826217651,
+      "effect": 0.6878887414932251,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.6519171933435676,
+        "triples": 0.4483694734082058
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.009098529815673828,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.013226746226320434
+            },
+            "random": {
+              "delta": 0.001691246032714755,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.002458604030999992
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.5928707122802734,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.13812993799941045
+            },
+            "random": {
+              "delta": -0.6675494194030762,
+              "rank": 2.0,
+              "lost_rank1": 1.0,
+              "share": 0.02956774964218425
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.026057958602905273,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.037881065688530266
+            },
+            "random": {
+              "delta": -0.0014472961425782138,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0021039683531329724
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.612957239151001,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.10892968269776822
+            },
+            "random": {
+              "delta": -0.6483031153678893,
+              "rank": 2.0,
+              "lost_rank1": 1.0,
+              "share": 0.057546553297857184
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.05476784706115723,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.07961730401673775
+            },
+            "random": {
+              "delta": -0.004997444152832209,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.007264901794996783
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.6290750503540039,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.08549884246041325
+            },
+            "random": {
+              "delta": -0.6464010238647462,
+              "rank": 2.0,
+              "lost_rank1": 1.0,
+              "share": 0.0603116683352311
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 0.9422623647221826,
+          "measured": 0.009098529815673828,
+          "effect": 0.6878887414932251
+        },
+        "3": {
+          "predicted": 2.7535761732764854,
+          "measured": 0.026057958602905273,
+          "effect": 0.6878887414932251
+        },
+        "5": {
+          "predicted": 4.50092963095841,
+          "measured": 0.05476784706115723,
+          "effect": 0.6878887414932251
+        }
+      },
+      "subgraph": {
+        "n_edges": 0,
+        "pool": 0,
+        "with_choice": false,
+        "kinds": {},
+        "messages": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": []
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 24,
+          "n80": 9,
+          "share80": 0.375,
+          "n90": 11,
+          "share90": 0.4583333333333333
+        },
+        "caption_rows": {
+          "margin": 0.03971422253670741,
+          "rows": 10,
+          "n80": 2,
+          "share_of_rows80": 0.2,
+          "n90": 2,
+          "share_of_rows90": 0.2
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 9,
+          "k90": null
+        }
+      },
+      "k_flip": 7,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "frame has frame",
+          "term": 0.9422623647221826
+        },
+        {
+          "kind": "triple",
+          "part": "man has pant",
+          "term": 0.9123775373339953
+        },
+        {
+          "kind": "triple",
+          "part": "woman wearing pant",
+          "term": 0.8989362712203075
+        },
+        {
+          "kind": "triple",
+          "part": "woman has pant",
+          "term": 0.8871567326850425
+        },
+        {
+          "kind": "triple",
+          "part": "man has jean",
+          "term": 0.8601967249968823
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "people",
+          "image": "woman",
+          "a": 0.26197636127471924,
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "umbrella",
+          "image": "umbrella",
+          "a": 0.4580398499965668,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "sidewalk area",
+          "image": "woman",
+          "a": 0.18269169330596924,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "dog",
+          "image": "dog",
+          "a": 0.945875346660614,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "people",
+          "image": "woman",
+          "a": 0.26249960064888,
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "umbrella",
+          "image": "umbrella",
+          "a": 0.45917654037475586,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.5796561241149902,
+          2.5705575942993164,
+          2.5627036094665527,
+          2.553598165512085,
+          2.541727304458618,
+          2.524888277053833,
+          2.5086240768432617,
+          1.9626126289367676,
+          2.0012011528015137,
+          1.9571881294250488,
+          1.3793587684631348
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          5
+        ],
+        "insertion": [
+          1.8917673826217651,
+          1.9867854118347168,
+          1.9752330780029297,
+          1.9666988849639893,
+          1.959762454032898,
+          1.9505810737609863,
+          1.943436861038208,
+          1.2196835279464722,
+          1.2096211910247803,
+          2.474052667617798,
+          2.4907212257385254
+        ],
+        "insertion_rank": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          5,
+          5,
+          1,
+          1
+        ],
+        "k_flip": 7,
+        "deletion_auc": 0.5298511385917664,
+        "insertion_auc": 0.03763728216290474
+      }
+    }
+  },
+  "1153_3": {
+    "caption": "A bunch of bananas are sitting on a wooden plate.",
+    "main_r3": {
+      "image_id": 2366682,
+      "correct": false,
+      "parts": 31,
+      "nodes": 24,
+      "triples": 7,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 3.337860107421875e-06,
+      "top1_kind": "triple",
+      "gap": 0.21358323097229004,
+      "base": 2.1269469261169434,
+      "empty": 1.265681505203247,
+      "effect": 0.8612654209136963,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.34640772718589763,
+        "triples": 0.4578329904671671
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.0374751091003418,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.04351168430817219
+            },
+            "random": {
+              "delta": -0.0024704217910764825,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0028683629123942653
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.6009347438812256,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.30226533042078013
+            },
+            "random": {
+              "delta": -0.7914811372756958,
+              "rank": 4.0,
+              "lost_rank1": 1.0,
+              "share": 0.08102529364753548
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.18054747581481934,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.20963047096826523
+            },
+            "random": {
+              "delta": 0.01190176010131827,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.013818922497424746
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.610830545425415,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.29077549081513193
+            },
+            "random": {
+              "delta": -0.7938071727752685,
+              "rank": 2.8,
+              "lost_rank1": 1.0,
+              "share": 0.07832457509656308
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.18054747581481934,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.20963047096826523
+            },
+            "random": {
+              "delta": -0.059752249717712314,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0693772770469788
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.7239202260971069,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.1594690689786234
+            },
+            "random": {
+              "delta": -0.7690856456756592,
+              "rank": 2.2,
+              "lost_rank1": 1.0,
+              "share": 0.10702830161258041
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 4.006855356338519,
+          "measured": 0.0374751091003418,
+          "effect": 0.8612654209136963
+        },
+        "3": {
+          "predicted": 11.97405538833732,
+          "measured": 0.18054747581481934,
+          "effect": 0.8612654209136963
+        },
+        "5": {
+          "predicted": 19.063909043543617,
+          "measured": 0.18054747581481934,
+          "effect": 0.8612654209136963
+        }
+      },
+      "subgraph": {
+        "n_edges": 4,
+        "pool": 4,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 4
+        },
+        "messages": {
+          "top": {
+            "delta": 0.021014928817749023,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.021014928817749023,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": -0.18054580688476562,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.18054580688476562,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "banana",
+            "target": "plate",
+            "kind": "labelled",
+            "alpha": 0.035029809921979904
+          },
+          {
+            "source": "banana",
+            "target": "plate",
+            "kind": "labelled",
+            "alpha": 0.031301870942115784
+          },
+          {
+            "source": "banana",
+            "target": "plate",
+            "kind": "labelled",
+            "alpha": 0.031301870942115784
+          },
+          {
+            "source": "banana",
+            "target": "banana",
+            "kind": "labelled",
+            "alpha": 0.014073357917368412
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 31,
+          "n80": 7,
+          "share80": 0.22580645161290322,
+          "n90": 7,
+          "share90": 0.22580645161290322
+        },
+        "caption_rows": {
+          "margin": 0.08302019819300227,
+          "rows": 5,
+          "n80": 2,
+          "share_of_rows80": 0.4,
+          "n90": 2,
+          "share_of_rows90": 0.4
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 10,
+          "k90": 10
+        }
+      },
+      "k_flip": 9,
+      "gold_rank_after": {
+        "1": 2,
+        "3": 2,
+        "5": 2
+      },
+      "gold_rank_before": 2,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": false,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": false,
+          "object": true,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": true,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "banana in plate",
+          "term": 4.006855356338519
+        },
+        {
+          "kind": "triple",
+          "part": "banana in plate",
+          "term": 3.9836000159994
+        },
+        {
+          "kind": "triple",
+          "part": "banana in plate",
+          "term": 3.9836000159994
+        },
+        {
+          "kind": "triple",
+          "part": "banana in banana",
+          "term": 3.544926827603149
+        },
+        {
+          "kind": "triple",
+          "part": "banana in banana",
+          "term": 3.544926827603149
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "bunch",
+          "image": "banana",
+          "a": 0.0875023901462555,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "banana",
+          "image": "banana",
+          "a": 0.0981927290558815,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "plate",
+          "image": "plate",
+          "a": 0.33731818199157715,
+          "alias": true,
+          "wordnet_strict": false,
+          "strict": true,
+          "wordnet_lenient": false,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.1269469261169434,
+          2.0894718170166016,
+          2.0424811840057373,
+          1.946399450302124,
+          1.9464011192321777,
+          1.946399450302124,
+          1.946399450302124,
+          2.062612771987915,
+          2.022412061691284,
+          1.8928215503692627,
+          1.8959343433380127
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2
+        ],
+        "insertion": [
+          1.265681505203247,
+          1.5260121822357178,
+          1.5260121822357178,
+          1.5161163806915283,
+          1.4502867460250854,
+          1.4030267000198364,
+          1.3679358959197998,
+          1.3410112857818604,
+          1.4419623613357544,
+          1.4780532121658325,
+          2.1750681400299072
+        ],
+        "insertion_rank": [
+          4,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          1
+        ],
+        "k_flip": 9,
+        "deletion_auc": 0.828376293182373,
+        "insertion_auc": 0.2982437014579773
+      }
+    }
+  },
+  "279933_1": {
+    "caption": "A train riding along the tracks along a bank of dirt.",
+    "main_r3": {
+      "image_id": 2378096,
+      "correct": false,
+      "parts": 46,
+      "nodes": 30,
+      "triples": 16,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "triple",
+      "gap": 0.5032484531402588,
+      "base": 1.948287010192871,
+      "empty": 0.6042131185531616,
+      "effect": 1.3440738916397095,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.604848181965579,
+        "triples": 0.21887265517165702
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.054384469985961914,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.04046241082743994
+            },
+            "random": {
+              "delta": -0.0010402441024779385,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0007739485968356156
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.6269917488098145,
+              "rank": 3,
+              "lost_rank1": true,
+              "share": 0.533513929025946
+            },
+            "random": {
+              "delta": -1.3489785969257355,
+              "rank": 12.6,
+              "lost_rank1": 1.0,
+              "share": -0.003649133664848237
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.1646127700805664,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.12247300621228961
+            },
+            "random": {
+              "delta": -0.01416757106780997,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.010540768000876926
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.7156704664230347,
+              "rank": 4,
+              "lost_rank1": true,
+              "share": 0.46753636769928697
+            },
+            "random": {
+              "delta": -1.2529988020658493,
+              "rank": 10.7,
+              "lost_rank1": 1.0,
+              "share": 0.06776047815552211
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.28944873809814453,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.21535180461323458
+            },
+            "random": {
+              "delta": 0.009761261940002486,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.007262444424163457
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.7811458110809326,
+              "rank": 4,
+              "lost_rank1": true,
+              "share": 0.41882227164760266
+            },
+            "random": {
+              "delta": -1.326890581846237,
+              "rank": 10.9,
+              "lost_rank1": 1.0,
+              "share": 0.012784497861579177
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 2.7356938201402556,
+          "measured": 0.054384469985961914,
+          "effect": 1.3440738916397095
+        },
+        "3": {
+          "predicted": 8.022204832988137,
+          "measured": 0.1646127700805664,
+          "effect": 1.3440738916397095
+        },
+        "5": {
+          "predicted": 13.155700555995637,
+          "measured": 0.28944873809814453,
+          "effect": 1.3440738916397095
+        }
+      },
+      "subgraph": {
+        "n_edges": 0,
+        "pool": 0,
+        "with_choice": false,
+        "kinds": {},
+        "messages": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.0,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": []
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 46,
+          "n80": 14,
+          "share80": 0.30434782608695654,
+          "n90": 16,
+          "share90": 0.34782608695652173
+        },
+        "caption_rows": {
+          "margin": 0.09078401769511396,
+          "rows": 4,
+          "n80": 2,
+          "share_of_rows80": 0.5,
+          "n90": 2,
+          "share_of_rows90": 0.5
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": null,
+          "k90": null
+        }
+      },
+      "k_flip": 8,
+      "gold_rank_after": {
+        "1": 5,
+        "3": 5,
+        "5": 5
+      },
+      "gold_rank_before": 5,
+      "validity": [
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "cfv under headlight",
+          "term": 2.7356938201402556
+        },
+        {
+          "kind": "triple",
+          "part": "headlight on train",
+          "term": 2.6573495149284554
+        },
+        {
+          "kind": "triple",
+          "part": "grass on ground",
+          "term": 2.6291614979194264
+        },
+        {
+          "kind": "triple",
+          "part": "grass under brick wall",
+          "term": 2.5995653502599083
+        },
+        {
+          "kind": "triple",
+          "part": "people standing next to coal",
+          "term": 2.533930372747591
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "track",
+          "image": "track",
+          "a": 0.49519217014312744,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "bank",
+          "image": "413",
+          "a": 0.30460038781166077,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "dirt",
+          "image": "dirt",
+          "a": 0.7265061140060425,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.948287010192871,
+          1.8939025402069092,
+          1.8414652347564697,
+          1.7836742401123047,
+          1.7214961051940918,
+          1.6588382720947266,
+          1.5830481052398682,
+          1.5142914056777954,
+          1.4403126239776611,
+          1.3432526588439941,
+          1.2184326648712158
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4
+        ],
+        "insertion": [
+          0.6042131185531616,
+          1.3212952613830566,
+          1.2657456398010254,
+          1.2326165437698364,
+          1.2044901847839355,
+          1.1671411991119385,
+          1.141474962234497,
+          1.0997731685638428,
+          1.0599925518035889,
+          1.0628838539123535,
+          1.0315498113632202
+        ],
+        "insertion_rank": [
+          11,
+          3,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "k_flip": 8,
+        "deletion_auc": 0.7407764196395874,
+        "insertion_auc": 0.41253918409347534
+      }
+    }
+  },
+  "159627_2": {
+    "caption": "A bus that is reading \"89 Portola Plaza\" is traveling on.",
+    "main_r3": {
+      "image_id": 2355061,
+      "correct": true,
+      "parts": 53,
+      "nodes": 33,
+      "triples": 20,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "node",
+      "gap": 0.10947716236114502,
+      "base": 1.7861875295639038,
+      "empty": 1.5616848468780518,
+      "effect": 0.22450268268585205,
+      "composition": {
+        "1": 0,
+        "3": 0,
+        "5": 0
+      },
+      "concentration": {
+        "objects": 0.5908432392099114,
+        "triples": null
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.011911988258361816,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.05305944728968042
+            },
+            "random": {
+              "delta": -0.0003527164459229404,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0015711012523467198
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.3151099681854248,
+              "rank": 3,
+              "lost_rank1": true,
+              "share": -0.4035911037480121
+            },
+            "random": {
+              "delta": -1.1099513530731202,
+              "rank": 11.7,
+              "lost_rank1": 1.0,
+              "share": -3.9440449432236035
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.39930808544158936,
+              "rank": 3,
+              "lost_rank1": true,
+              "share": 1.7786339150358552
+            },
+            "random": {
+              "delta": -0.005068933963775724,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.022578500635864175
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.3151099681854248,
+              "rank": 3,
+              "lost_rank1": true,
+              "share": -0.4035911037480121
+            },
+            "random": {
+              "delta": -0.5724154472351075,
+              "rank": 5.8,
+              "lost_rank1": 1.0,
+              "share": -1.549704263606025
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.45194828510284424,
+              "rank": 3,
+              "lost_rank1": true,
+              "share": 2.0131086172153148
+            },
+            "random": {
+              "delta": -0.01918702125549321,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.08546455225366605
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.12313258647918701,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.5484682187583798
+            },
+            "random": {
+              "delta": -0.44910484552383423,
+              "rank": 4.0,
+              "lost_rank1": 0.8,
+              "share": -1.0004431134226994
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 0.3934040469420381,
+          "measured": 0.011911988258361816,
+          "effect": 0.22450268268585205
+        },
+        "3": {
+          "predicted": 1.1801832660338505,
+          "measured": 0.39930808544158936,
+          "effect": 0.22450268268585205
+        },
+        "5": {
+          "predicted": 1.4748414492303468,
+          "measured": 0.45194828510284424,
+          "effect": 0.22450268268585205
+        }
+      },
+      "subgraph": {
+        "n_edges": 5,
+        "pool": 6,
+        "with_choice": true,
+        "kinds": {
+          "labelled": 5
+        },
+        "messages": {
+          "top": {
+            "delta": 6.210803985595703e-05,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 5.5038928985506885e-05,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 6.210803985595703e-05,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 5.5038928985506885e-05,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "sign",
+            "target": "bus",
+            "kind": "labelled",
+            "alpha": 0.002526545897126198
+          },
+          {
+            "source": "trim",
+            "target": "bus",
+            "kind": "labelled",
+            "alpha": 0.0019505813252180815
+          },
+          {
+            "source": "sign",
+            "target": "bus",
+            "kind": "labelled",
+            "alpha": 0.0003602102806326002
+          },
+          {
+            "source": "sign",
+            "target": "bus",
+            "kind": "labelled",
+            "alpha": 0.0003623050288297236
+          },
+          {
+            "source": "sign",
+            "target": "bus",
+            "kind": "labelled",
+            "alpha": 0.0003623050288297236
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 53,
+          "n80": 6,
+          "share80": 0.11320754716981132,
+          "n90": 8,
+          "share90": 0.1509433962264151
+        },
+        "caption_rows": {
+          "margin": 0.01886256981869132,
+          "rows": 2,
+          "n80": 1,
+          "share_of_rows80": 0.5,
+          "n90": 1,
+          "share_of_rows90": 0.5
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 4,
+          "k90": 4
+        }
+      },
+      "k_flip": 3,
+      "validity": [
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [],
+      "explanation": [
+        {
+          "kind": "node",
+          "part": "bus",
+          "term": 0.3934040469420381
+        },
+        {
+          "kind": "node",
+          "part": "bus",
+          "term": 0.3933896095459062
+        },
+        {
+          "kind": "node",
+          "part": "bus",
+          "term": 0.3933896095459062
+        },
+        {
+          "kind": "node",
+          "part": "sign",
+          "term": 0.14732909159824814
+        },
+        {
+          "kind": "node",
+          "part": "sign",
+          "term": 0.14732909159824814
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "bus",
+          "image": "bus",
+          "a": 0.3062165081501007,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "portola plaza",
+          "image": "sign",
+          "a": 0.16578859090805054,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.7861875295639038,
+          1.774275541305542,
+          1.736595630645752,
+          1.3868794441223145,
+          1.3666867017745972,
+          1.3342392444610596,
+          1.2767802476882935,
+          1.1647725105285645,
+          1.1192554235458374,
+          1.0579071044921875,
+          0.6999058127403259
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          4,
+          4,
+          4,
+          5,
+          12
+        ],
+        "insertion": [
+          1.5616848468780518,
+          1.471077561378479,
+          1.471077561378479,
+          1.471077561378479,
+          1.8789328336715698,
+          1.9093201160430908,
+          1.9201027154922485,
+          1.9254136085510254,
+          1.9134703874588013,
+          1.8966014385223389,
+          1.8805837631225586
+        ],
+        "insertion_rank": [
+          3,
+          3,
+          3,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": 3,
+        "deletion_auc": -1.202458143234253,
+        "insertion_auc": 0.9446698427200317
+      }
+    }
+  },
+  "34471_0": {
+    "caption": "Two men standing in a living room playing video game with remotes.",
+    "main_r3": {
+      "image_id": 2395602,
+      "correct": false,
+      "parts": 35,
+      "nodes": 20,
+      "triples": 15,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "triple",
+      "gap": 0.5465168952941895,
+      "base": 2.086801052093506,
+      "empty": 1.1849725246429443,
+      "effect": 0.9018285274505615,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.7045154318112745,
+        "triples": 0.21282443454368324
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.015496969223022461,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.017183942125707494
+            },
+            "random": {
+              "delta": 0.004765224456787287,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.005283958437485243
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.39769482612609863,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.5590128122799926
+            },
+            "random": {
+              "delta": -0.7233942985534667,
+              "rank": 4.2,
+              "lost_rank1": 0.7,
+              "share": 0.19785826625103808
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.05061054229736328,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.05611991720913682
+            },
+            "random": {
+              "delta": -0.010741949081420898,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.011911298827270437
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.4135739803314209,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.5414050811848008
+            },
+            "random": {
+              "delta": -0.567433512210846,
+              "rank": 2.2,
+              "lost_rank1": 0.6,
+              "share": 0.37079667038814884
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.09570825099945068,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.10612688342207874
+            },
+            "random": {
+              "delta": -0.020013308525085538,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.022191922206832908
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.4269275665283203,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.5265978470039865
+            },
+            "random": {
+              "delta": -0.5748926401138306,
+              "rank": 1.9,
+              "lost_rank1": 0.5,
+              "share": 0.36252555489785576
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 2.0489937858377516,
+          "measured": 0.015496969223022461,
+          "effect": 0.9018285274505615
+        },
+        "3": {
+          "predicted": 6.1165529733521,
+          "measured": 0.05061054229736328,
+          "effect": 0.9018285274505615
+        },
+        "5": {
+          "predicted": 10.154901628750792,
+          "measured": 0.09570825099945068,
+          "effect": 0.9018285274505615
+        }
+      },
+      "subgraph": {
+        "n_edges": 2,
+        "pool": 2,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 2
+        },
+        "messages": {
+          "top": {
+            "delta": 0.0011005401611328125,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0011005401611328125,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": -0.02040553092956543,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.02040553092956543,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "man",
+            "target": "wii controller",
+            "kind": "labelled",
+            "alpha": 0.0013548205606639385
+          },
+          {
+            "source": "glass",
+            "target": "man",
+            "kind": "labelled",
+            "alpha": 0.010049577802419662
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 35,
+          "n80": 13,
+          "share80": 0.37142857142857144,
+          "n90": 15,
+          "share90": 0.42857142857142855
+        },
+        "caption_rows": {
+          "margin": 0.05656158179044724,
+          "rows": 7,
+          "n80": 3,
+          "share_of_rows80": 0.42857142857142855,
+          "n90": 3,
+          "share_of_rows90": 0.42857142857142855
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": null,
+          "k90": null
+        }
+      },
+      "k_flip": null,
+      "gold_rank_after": {
+        "1": 21,
+        "3": 21,
+        "5": 21
+      },
+      "gold_rank_before": 21,
+      "validity": [
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "man wearing shoe",
+          "term": 2.0489937858377516
+        },
+        {
+          "kind": "triple",
+          "part": "man has leg",
+          "term": 2.0397076011976765
+        },
+        {
+          "kind": "triple",
+          "part": "writing on jean",
+          "term": 2.0278515863166717
+        },
+        {
+          "kind": "triple",
+          "part": "man has hair",
+          "term": 2.0202070655641364
+        },
+        {
+          "kind": "triple",
+          "part": "identification card clipped to jean",
+          "term": 2.0181415898345563
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "man",
+          "image": "man",
+          "a": 0.2529042363166809,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "room",
+          "image": "couch",
+          "a": 0.24023091793060303,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "video game",
+          "image": "wii controller",
+          "a": 0.7412452697753906,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "remote",
+          "image": "wii controller",
+          "a": 0.7742361426353455,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          2.086801052093506,
+          2.0713040828704834,
+          2.054372787475586,
+          2.0361905097961426,
+          2.015285015106201,
+          1.9910928010940552,
+          1.9624359607696533,
+          1.932158350944519,
+          1.8862669467926025,
+          1.8318932056427002,
+          1.7542567253112793
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "insertion": [
+          1.1849725246429443,
+          1.6891062259674072,
+          1.6811617612838745,
+          1.673227071762085,
+          1.6656599044799805,
+          1.6598734855651855,
+          1.6528770923614502,
+          1.6429812908172607,
+          1.6384726762771606,
+          1.6308220624923706,
+          1.6240180730819702
+        ],
+        "insertion_rank": [
+          7,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": null,
+        "deletion_auc": 0.8522164225578308,
+        "insertion_auc": 0.5221030712127686
+      }
+    }
+  },
+  "526446_0": {
+    "caption": "A batter is preparing to hit the ball at a game.",
+    "main_r3": {
+      "image_id": 2397612,
+      "correct": false,
+      "parts": 11,
+      "nodes": 9,
+      "triples": 2,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "node",
+      "gap": 0.22279441356658936,
+      "base": 1.1993236541748047,
+      "empty": 0.8612927794456482,
+      "effect": 0.3380308747291565,
+      "composition": {
+        "1": 0,
+        "3": 0,
+        "5": 0
+      },
+      "concentration": {
+        "objects": 0.9747547761735003,
+        "triples": null
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -1.791464626789093,
+              "rank": 43,
+              "lost_rank1": true,
+              "share": 5.2997070999046585
+            },
+            "random": {
+              "delta": -0.3235576987266541,
+              "rank": 9.4,
+              "lost_rank1": 0.2,
+              "share": 0.9571838637103818
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.2958669662475586,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.875266102496166
+            },
+            "random": {
+              "delta": -1.8785495281219482,
+              "rank": 36.1,
+              "lost_rank1": 0.8,
+              "share": -4.557331204219482
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -2.2603437900543213,
+              "rank": 45,
+              "lost_rank1": true,
+              "share": 6.686796855066558
+            },
+            "random": {
+              "delta": -0.8428508698940277,
+              "rank": 21.9,
+              "lost_rank1": 0.5,
+              "share": 2.4934138651368833
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.12740230560302734,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.3768954705841798
+            },
+            "random": {
+              "delta": -0.8224019587039948,
+              "rank": 22.0,
+              "lost_rank1": 0.5,
+              "share": -1.4329196537533302
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -2.8364086151123047,
+              "rank": 47,
+              "lost_rank1": true,
+              "share": 8.390974988260897
+            },
+            "random": {
+              "delta": -1.3818485379219054,
+              "rank": 31.0,
+              "lost_rank1": 0.7,
+              "share": 4.087935869849452
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.05294442176818848,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.1566259940326742
+            },
+            "random": {
+              "delta": -0.4869892656803131,
+              "rank": 13.5,
+              "lost_rank1": 0.3,
+              "share": -0.4406650459680876
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 4.146609951989888,
+          "measured": 1.791464626789093,
+          "effect": 0.3380308747291565
+        },
+        "3": {
+          "predicted": 4.405139029326387,
+          "measured": 2.2603437900543213,
+          "effect": 0.3380308747291565
+        },
+        "5": {
+          "predicted": 4.492924019851216,
+          "measured": 2.8364086151123047,
+          "effect": 0.3380308747291565
+        }
+      },
+      "subgraph": {
+        "n_edges": 1,
+        "pool": 1,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 1
+        },
+        "messages": {
+          "top": {
+            "delta": 0.0013544559478759766,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0013544559478759766,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.0013544559478759766,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.0013544559478759766,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "a",
+            "target": "guard",
+            "kind": "labelled",
+            "alpha": 0.012001547031104565
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 11,
+          "n80": 1,
+          "share80": 0.09090909090909091,
+          "n90": 1,
+          "share90": 0.09090909090909091
+        },
+        "caption_rows": {
+          "margin": 0.028651745319366456,
+          "rows": 3,
+          "n80": 2,
+          "share_of_rows80": 0.6666666666666666,
+          "n90": 3,
+          "share_of_rows90": 1.0
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 1,
+          "k90": 1
+        }
+      },
+      "k_flip": 1,
+      "gold_rank_after": {
+        "1": 34,
+        "3": 33,
+        "5": 33
+      },
+      "gold_rank_before": 35,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [],
+      "explanation": [
+        {
+          "kind": "node",
+          "part": "catcher",
+          "term": 4.146609951989888
+        },
+        {
+          "kind": "node",
+          "part": "dirt",
+          "term": 0.1451582539267271
+        },
+        {
+          "kind": "node",
+          "part": "guard",
+          "term": 0.11337082340977211
+        },
+        {
+          "kind": "node",
+          "part": "chest plate",
+          "term": 0.05701125494944215
+        },
+        {
+          "kind": "node",
+          "part": "field",
+          "term": 0.03077373557538765
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "batter",
+          "image": "catcher",
+          "a": 0.8782657980918884,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "ball",
+          "image": "catcher",
+          "a": 0.8741151094436646,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "game",
+          "image": "catcher",
+          "a": 0.8046396970748901,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.1993236541748047,
+          -0.5921409726142883,
+          -0.8497589230537415,
+          -1.0610201358795166,
+          -1.5766210556030273,
+          -1.6370849609375,
+          -1.7225301265716553,
+          -2.1633503437042236,
+          -2.1633503437042236,
+          0.8612927794456482,
+          0.8612927794456482
+        ],
+        "deletion_rank": [
+          1,
+          43,
+          44,
+          45,
+          47,
+          47,
+          47,
+          50,
+          50,
+          5,
+          5
+        ],
+        "insertion": [
+          0.8612927794456482,
+          1.4951906204223633,
+          1.3965864181518555,
+          1.326725959777832,
+          1.2744991779327393,
+          1.2522680759429932,
+          1.2359777688980103,
+          1.219346284866333,
+          1.212958812713623,
+          1.2066227197647095,
+          1.2052528858184814
+        ],
+        "insertion_rank": [
+          5,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": 1,
+        "deletion_auc": -5.5190815925598145,
+        "insertion_auc": 1.2461881637573242
+      }
+    }
+  },
+  "472772_2": {
+    "caption": "The two people are walking in the snow with their ski equipment.",
+    "main_r3": {
+      "image_id": 2352632,
+      "correct": false,
+      "parts": 37,
+      "nodes": 22,
+      "triples": 15,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 3.5762786865234375e-07,
+      "top1_kind": "triple",
+      "gap": 0.20181047916412354,
+      "base": 1.5657212734222412,
+      "empty": 1.1906237602233887,
+      "effect": 0.37509751319885254,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.6742236988759857,
+        "triples": 0.22189920132462204
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.11457180976867676,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.3054453994951925
+            },
+            "random": {
+              "delta": -0.01855082511901851,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.049456006681612034
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.1264333724975586,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.3370680104470107
+            },
+            "random": {
+              "delta": -0.34121870398521414,
+              "rank": 2.5,
+              "lost_rank1": 0.7,
+              "share": 0.09032000485611866
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.17966175079345703,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.47897345215992393
+            },
+            "random": {
+              "delta": 0.0062573075294494185,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.01668181555267256
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.11571109294891357,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.3084826981712647
+            },
+            "random": {
+              "delta": -0.42040168642997733,
+              "rank": 2.1,
+              "lost_rank1": 0.8,
+              "share": -0.12077972163763036
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.2538965940475464,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.6768815710941458
+            },
+            "random": {
+              "delta": -0.02985692024230957,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.07959775576139679
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.03867185115814209,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.1030981272798808
+            },
+            "random": {
+              "delta": -0.3182888090610505,
+              "rank": 1.9,
+              "lost_rank1": 0.8,
+              "share": 0.15145049524144863
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 3.0507380739574614,
+          "measured": 0.11457180976867676,
+          "effect": 0.37509751319885254
+        },
+        "3": {
+          "predicted": 8.504575079110424,
+          "measured": 0.17966175079345703,
+          "effect": 0.37509751319885254
+        },
+        "5": {
+          "predicted": 13.83100766570729,
+          "measured": 0.2538965940475464,
+          "effect": 0.37509751319885254
+        }
+      },
+      "subgraph": {
+        "n_edges": 2,
+        "pool": 2,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 2
+        },
+        "messages": {
+          "top": {
+            "delta": -0.027185916900634766,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.027185916900634766,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": -0.15330970287322998,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.15330970287322998,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "people",
+            "target": "snow",
+            "kind": "labelled",
+            "alpha": 0.04416881501674652
+          },
+          {
+            "source": "people",
+            "target": "ski",
+            "kind": "labelled",
+            "alpha": 0.0012938417494297028
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 37,
+          "n80": 14,
+          "share80": 0.3783783783783784,
+          "n90": 16,
+          "share90": 0.43243243243243246
+        },
+        "caption_rows": {
+          "margin": 0.015623181433397915,
+          "rows": 5,
+          "n80": 1,
+          "share_of_rows80": 0.2,
+          "n90": 1,
+          "share_of_rows90": 0.2
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 1,
+          "k90": 1
+        }
+      },
+      "k_flip": 4,
+      "gold_rank_after": {
+        "1": 5,
+        "3": 5,
+        "5": 5
+      },
+      "gold_rank_before": 5,
+      "validity": [
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": true,
+          "object": true,
+          "predicate": true,
+          "all": true
+        },
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "people in snow",
+          "term": 3.0507380739574614
+        },
+        {
+          "kind": "triple",
+          "part": "people has ski",
+          "term": 2.782907919596795
+        },
+        {
+          "kind": "triple",
+          "part": "tree near building",
+          "term": 2.6709290855561676
+        },
+        {
+          "kind": "triple",
+          "part": "tree near building",
+          "term": 2.6709290855561676
+        },
+        {
+          "kind": "triple",
+          "part": "flag on building",
+          "term": 2.655503501040698
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "people",
+          "image": "people",
+          "a": 0.625708281993866,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "snow",
+          "image": "snow",
+          "a": 0.7841585278511047,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "ski equipment",
+          "image": "ski",
+          "a": 0.254431813955307,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.5657212734222412,
+          1.4511494636535645,
+          1.4124115705490112,
+          1.3860595226287842,
+          1.354562520980835,
+          1.3118246793746948,
+          1.2701802253723145,
+          1.2144229412078857,
+          1.1926785707473755,
+          1.170303225517273,
+          1.1357706785202026
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "insertion": [
+          1.1906237602233887,
+          1.6921546459197998,
+          1.7626285552978516,
+          1.6814323663711548,
+          1.6226297616958618,
+          1.6043931245803833,
+          1.570380449295044,
+          1.5390948057174683,
+          1.4914206266403198,
+          1.4522922039031982,
+          1.4157387018203735
+        ],
+        "insertion_rank": [
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": 4,
+        "deletion_auc": 0.2647646963596344,
+        "insertion_auc": 1.0466419458389282
+      }
+    }
+  },
+  "237041_4": {
+    "caption": "A snow board sitting upright with a view of a mountain.",
+    "main_r3": {
+      "image_id": 2412723,
+      "correct": false,
+      "parts": 49,
+      "nodes": 22,
+      "triples": 27,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "triple",
+      "gap": 0.6107383966445923,
+      "base": 1.9561147689819336,
+      "empty": 0.979641854763031,
+      "effect": 0.9764729142189026,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.7582294404760586,
+        "triples": 0.12329701044316901
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.04197227954864502,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.042983557390549196
+            },
+            "random": {
+              "delta": -0.012604486942291215,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.012908178771526663
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.07586669921875,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.0776946273818941
+            },
+            "random": {
+              "delta": -0.4495538949966431,
+              "rank": 4.8,
+              "lost_rank1": 0.2,
+              "share": 0.5396145776800692
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.11735808849334717,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.12018570795404387
+            },
+            "random": {
+              "delta": -0.0015755772590637651,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.0016135391326487498
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.1003413200378418,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.1027589383962653
+            },
+            "random": {
+              "delta": -0.6891234457492827,
+              "rank": 5.5,
+              "lost_rank1": 0.4,
+              "share": 0.29427285108002776
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.20907831192016602,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.21411583350206015
+            },
+            "random": {
+              "delta": 0.04376578330993652,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": -0.04482027373482809
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": 0.05699729919433594,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 1.0583705890500086
+            },
+            "random": {
+              "delta": -0.9052280187606812,
+              "rank": 6.4,
+              "lost_rank1": 0.7,
+              "share": 0.07296146613059047
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 2.8109281484642565,
+          "measured": 0.04197227954864502,
+          "effect": 0.9764729142189026
+        },
+        "3": {
+          "predicted": 8.407235192108885,
+          "measured": 0.11735808849334717,
+          "effect": 0.9764729142189026
+        },
+        "5": {
+          "predicted": 13.923229317572776,
+          "measured": 0.20907831192016602,
+          "effect": 0.9764729142189026
+        }
+      },
+      "subgraph": {
+        "n_edges": 6,
+        "pool": 7,
+        "with_choice": true,
+        "kinds": {
+          "labelled": 6
+        },
+        "messages": {
+          "top": {
+            "delta": 0.016487717628479004,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.013056135177612394,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": 0.11215758323669434,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": 0.10004091262817383,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "man",
+            "target": "snowboard",
+            "kind": "labelled",
+            "alpha": 0.0012094920966774225
+          },
+          {
+            "source": "man",
+            "target": "snowboard",
+            "kind": "labelled",
+            "alpha": 0.00059150205925107
+          },
+          {
+            "source": "man",
+            "target": "snowboard",
+            "kind": "labelled",
+            "alpha": 0.00030277014593593776
+          },
+          {
+            "source": "snow",
+            "target": "mountain",
+            "kind": "labelled",
+            "alpha": 0.050366755574941635
+          },
+          {
+            "source": "man",
+            "target": "mountain",
+            "kind": "labelled",
+            "alpha": 0.006721944082528353
+          },
+          {
+            "source": "man",
+            "target": "mountain",
+            "kind": "labelled",
+            "alpha": 0.0030304179526865482
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 49,
+          "n80": 22,
+          "share80": 0.4489795918367347,
+          "n90": 25,
+          "share90": 0.5102040816326531
+        },
+        "caption_rows": {
+          "margin": 0.06760135129056109,
+          "rows": 5,
+          "n80": 2,
+          "share_of_rows80": 0.4,
+          "n90": 2,
+          "share_of_rows90": 0.4
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": 1,
+          "k90": 1
+        }
+      },
+      "k_flip": null,
+      "gold_rank_after": {
+        "1": 4,
+        "3": 5,
+        "5": 5
+      },
+      "gold_rank_before": 4,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "mountain range in distance",
+          "term": 2.8109281484642565
+        },
+        {
+          "kind": "triple",
+          "part": "snowboard has writing",
+          "term": 2.8017252209504875
+        },
+        {
+          "kind": "triple",
+          "part": "mountain on horizon",
+          "term": 2.7945818226941412
+        },
+        {
+          "kind": "triple",
+          "part": "mountain in distance",
+          "term": 2.7675584062812106
+        },
+        {
+          "kind": "triple",
+          "part": "letter on ski",
+          "term": 2.7484357191826803
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "snow board",
+          "image": "snowboard",
+          "a": 0.9211573600769043,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "view",
+          "image": "slope",
+          "a": 0.26624879240989685,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "mountain",
+          "image": "mountain",
+          "a": 0.36588579416275024,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.9561147689819336,
+          1.9141424894332886,
+          1.8769478797912598,
+          1.8387566804885864,
+          1.7937381267547607,
+          1.7470364570617676,
+          1.6879684925079346,
+          1.6549150943756104,
+          1.605802297592163,
+          1.5518596172332764,
+          1.5169758796691895
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "insertion": [
+          0.979641854763031,
+          2.0319814682006836,
+          2.0491127967834473,
+          2.0564560890197754,
+          2.0323052406311035,
+          2.0131120681762695,
+          2.0066275596618652,
+          1.9798922538757324,
+          1.961754322052002,
+          1.9431238174438477,
+          1.909456729888916
+        ],
+        "insertion_rank": [
+          7,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "k_flip": null,
+        "deletion_auc": 0.7569820284843445,
+        "insertion_auc": 1.043285846710205
+      }
+    }
+  },
+  "151938_1": {
+    "caption": "A lone woman huddles under her umbrella at a picnic table in the rain.",
+    "main_r3": {
+      "image_id": 2360307,
+      "correct": false,
+      "parts": 42,
+      "nodes": 28,
+      "triples": 14,
+      "empty_explanation": false,
+      "noop_rank": 1,
+      "noop_error": 0.0,
+      "top1_kind": "triple",
+      "gap": 0.12337720394134521,
+      "base": 1.894576072692871,
+      "empty": 1.653128981590271,
+      "effect": 0.2414470911026001,
+      "composition": {
+        "1": 1,
+        "3": 3,
+        "5": 5
+      },
+      "concentration": {
+        "objects": 0.6655927519117606,
+        "triples": 0.2477794334366708
+      },
+      "fidelity": {
+        "1": {
+          "plus": {
+            "top": {
+              "delta": -0.01535046100616455,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.06357691424678028
+            },
+            "random": {
+              "delta": -0.0031553626060485396,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.013068546784470083
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.10942399501800537,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.5467992821188848
+            },
+            "random": {
+              "delta": -0.2217706918716431,
+              "rank": 2.1,
+              "lost_rank1": 0.8,
+              "share": 0.08149362720048564
+            }
+          }
+        },
+        "3": {
+          "plus": {
+            "top": {
+              "delta": -0.04394185543060303,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.18199372471184774
+            },
+            "random": {
+              "delta": -0.00031931400299067825,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.001322500931912199
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.11018943786621094,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.5436290519673843
+            },
+            "random": {
+              "delta": -0.2456212878227233,
+              "rank": 2.5,
+              "lost_rank1": 1.0,
+              "share": -0.01728824605449244
+            }
+          }
+        },
+        "5": {
+          "plus": {
+            "top": {
+              "delta": -0.07471990585327148,
+              "rank": 1,
+              "lost_rank1": false,
+              "share": 0.30946699548979095
+            },
+            "random": {
+              "delta": -0.008186042308807373,
+              "rank": 1.0,
+              "lost_rank1": 0.0,
+              "share": 0.033904083380854697
+            }
+          },
+          "minus": {
+            "top": {
+              "delta": -0.1299600601196289,
+              "rank": 2,
+              "lost_rank1": true,
+              "share": 0.461745181827832
+            },
+            "random": {
+              "delta": -0.22257809638977055,
+              "rank": 2.0,
+              "lost_rank1": 1.0,
+              "share": 0.07814960464697165
+            }
+          }
+        }
+      },
+      "additivity": {
+        "1": {
+          "predicted": 0.6756333716856133,
+          "measured": 0.01535046100616455,
+          "effect": 0.2414470911026001
+        },
+        "3": {
+          "predicted": 1.970046526725163,
+          "measured": 0.04394185543060303,
+          "effect": 0.2414470911026001
+        },
+        "5": {
+          "predicted": 3.215117607069722,
+          "measured": 0.07471990585327148,
+          "effect": 0.2414470911026001
+        }
+      },
+      "subgraph": {
+        "n_edges": 4,
+        "pool": 4,
+        "with_choice": false,
+        "kinds": {
+          "labelled": 4
+        },
+        "messages": {
+          "top": {
+            "delta": -0.0026955604553222656,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.0026955604553222656,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "edges": {
+          "top": {
+            "delta": -0.0032711029052734375,
+            "rank": 1,
+            "lost_rank1": false
+          },
+          "random": {
+            "delta": -0.0032711029052734375,
+            "rank": 1.0,
+            "lost_rank1": 0.0
+          }
+        },
+        "chosen": [
+          {
+            "source": "trim",
+            "target": "umbrella",
+            "kind": "labelled",
+            "alpha": 0.02815580554306507
+          },
+          {
+            "source": "coat",
+            "target": "umbrella",
+            "kind": "labelled",
+            "alpha": 0.004852871410548687
+          },
+          {
+            "source": "red shoes",
+            "target": "lady",
+            "kind": "labelled",
+            "alpha": 0.007867691107094288
+          },
+          {
+            "source": "red shoes",
+            "target": "lady",
+            "kind": "labelled",
+            "alpha": 0.007867691107094288
+          }
+        ]
+      },
+      "sparsity": {
+        "terms": {
+          "parts": 42,
+          "n80": 13,
+          "share80": 0.30952380952380953,
+          "n90": 16,
+          "share90": 0.38095238095238093
+        },
+        "caption_rows": {
+          "margin": 0.02362958967001462,
+          "rows": 7,
+          "n80": 2,
+          "share_of_rows80": 0.2857142857142857,
+          "n90": 2,
+          "share_of_rows90": 0.2857142857142857
+        },
+        "caption_rows_with_clip": null,
+        "fidelity": {
+          "k80": null,
+          "k90": null
+        }
+      },
+      "k_flip": 7,
+      "gold_rank_after": {
+        "1": 6,
+        "3": 6,
+        "5": 6
+      },
+      "gold_rank_before": 6,
+      "validity": [
+        {
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "triple_validity": [
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": true,
+          "object": false,
+          "predicate": false,
+          "all": false
+        },
+        {
+          "subject": false,
+          "object": false,
+          "predicate": false,
+          "all": false
+        }
+      ],
+      "explanation": [
+        {
+          "kind": "triple",
+          "part": "lady sitting on outside bench",
+          "term": 0.6756333716856133
+        },
+        {
+          "kind": "triple",
+          "part": "lady in coat",
+          "term": 0.6553737527866161
+        },
+        {
+          "kind": "triple",
+          "part": "trim on umbrella",
+          "term": 0.6390394022529335
+        },
+        {
+          "kind": "triple",
+          "part": "lady wearing jacket",
+          "term": 0.6235821012749767
+        },
+        {
+          "kind": "triple",
+          "part": "red shoes on lady",
+          "term": 0.6214889790695821
+        }
+      ],
+      "object_rows": [
+        {
+          "query": "woman",
+          "image": "lady",
+          "a": 0.6104967594146729,
+          "alias": false,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": false,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "umbrella",
+          "image": "umbrella",
+          "a": 0.42788541316986084,
+          "alias": true,
+          "wordnet_strict": true,
+          "strict": true,
+          "wordnet_lenient": true,
+          "cosine": true,
+          "head": true,
+          "lenient": true,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "picnic table",
+          "image": "bench",
+          "a": 0.20677414536476135,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        },
+        {
+          "query": "rain",
+          "image": "umbrella",
+          "a": 0.28904518485069275,
+          "alias": false,
+          "wordnet_strict": false,
+          "strict": false,
+          "wordnet_lenient": false,
+          "cosine": false,
+          "head": false,
+          "lenient": false,
+          "count_class": null,
+          "count_compatible": null
+        }
+      ],
+      "curve": {
+        "sizes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "deletion": [
+          1.894576072692871,
+          1.8792256116867065,
+          1.8652085065841675,
+          1.850634217262268,
+          1.8370583057403564,
+          1.8198561668395996,
+          1.7973504066467285,
+          1.7735093832015991,
+          1.740769624710083,
+          1.6944916248321533,
+          1.647744059562683
+        ],
+        "deletion_rank": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        "insertion": [
+          1.653128981590271,
+          1.7851520776748657,
+          1.784474492073059,
+          1.7843866348266602,
+          1.7724860906600952,
+          1.7646160125732422,
+          1.759591817855835,
+          1.7560954093933105,
+          1.7529391050338745,
+          1.7500548362731934,
+          1.7403898239135742
+        ],
+        "insertion_rank": [
+          2,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "k_flip": 7,
+        "deletion_auc": 0.5692999362945557,
+        "insertion_auc": 0.46341267228126526
+      }
+    }
+  }
+}
