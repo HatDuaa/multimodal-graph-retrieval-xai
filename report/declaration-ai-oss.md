@@ -30,6 +30,13 @@ Dùng qua API, không chép hay sửa mã nguồn của thư viện. Phiên bả
 Nhóm không dùng mã nguồn của bài báo nào ở cấp độ 1. Mô hình xếp lại (`src/models/graph_reranker.py`) do nhóm viết theo
 thiết kế riêng (`local-docs/plans/level1-graph-reranker-plan.md`, bản 7).
 
+**Cấp độ 2** có tái dùng mã nguồn mở của bài báo **NativE** (`zjukg/NativE`, commit `c72291c`, SIGIR 2024, arXiv
+2406.17605) để tái lập link prediction (bước a) và huấn luyện ra embedding/điểm phục vụ điểm đồ thị retrieval
+(bước b). Giấy phép: theo kho `zjukg/NativE` (cần xác nhận trước khi nộp). Nhóm **không sửa logic** của NativE;
+chỉ biên dịch lại `mmkgc/release/Base.so` từ source vì bản nhị phân đi kèm bị segfault (giữ bản gốc ở
+`Base.so.shipped`). Mã kết nối và đánh giá quanh NativE là do nhóm viết (xem mục cấp độ 2 ở cuối). Chi tiết ghi
+ở `report/level2-draft.md` và `experiments/level2/`.
+
 **Model tiền huấn luyện, chỉ chạy suy luận:**
 - CLIP ViT-B/32 của OpenAI (như trên).
 - FACTUAL-T5 large, `lizhuang144/flan-t5-large-VG-factual-sg` trên Hugging Face (Li và cộng sự, "FACTUAL: A Benchmark for
@@ -129,3 +136,28 @@ Nguyên tắc áp dụng cho mọi phần do AI làm:
   - viết `experiments/level3/vnmmkg/README.md` và mục 7 của `experiments/checks/README.md`.
 - **Khang** chốt cách làm và duyệt kết quả, chịu trách nhiệm mọi quyết định.
 - Encoder được chọn trên MKG-W val, không chọn trên MMKG tiếng Việt. α của A0 lấy từ val MKG-W. α của A1 chọn trên val tiếng Việt, test chạy một lần.
+
+### Cấp độ 2 — tái lập NativE và điểm đồ thị MKG-W (dòng 20–26)
+
+Phần này tái lập **NativE (SIGIR 2024)** trên **MKG-W** và dùng tín hiệu của NativE trong điểm đồ thị cho bài
+toán truy vấn → ảnh. Mã nguồn mở tái dùng: `zjukg/NativE` (mục 1). Phân công và công cụ AI:
+
+- **Đạt** — dữ liệu MKG-W (ảnh từ kho MMRNS, chia tập v2, che tên thực thể trong truy vấn), hàm điểm đồ thị hai
+  kênh (`src/retrieval/mkgw_graph_score.py`), baseline CLIP, và nhật ký thiết lập NativE (`experiments/level2/native-repro/README.md`,
+  gồm cách sửa lỗi `Base.so`). Làm cùng công cụ AI; Đạt chốt và chịu trách nhiệm phần mình.
+- **Khang** — bộ 25 truy vấn tự viết (`data/queries/mkgw_queries_hand.json`) và script dựng/kiểm (`scripts/build_mkgw_hand_queries.py`),
+  script đánh giá cấp 2 bản đầu (`scripts/eval_mkgw_level2.py`), mặt nạ chống rò rỉ (`scripts/mask_native_modalities.py`),
+  xuất embedding (`scripts/export_native_embeddings.py`) và notebook molab (`notebooks/mkgw_molab.py`). Làm cùng
+  công cụ AI; Khang chốt và duyệt.
+- **Lộc** (máy RTX 4090, cùng **Anthropic Claude** — Claude Code) — huấn luyện NativE 4 lần (rmask seed 0/1/2,
+  repro seed 42, 1.000 epoch), xuất embedding, và chạy đánh giá retrieval val/test; viết `run.sh`,
+  `scripts/parse_native_log.py` và kênh `kgc` (`src/retrieval/native_kgc.py`, tính lại `forward()` của NativE,
+  có test đối chiếu `tests/test_native_kgc.py`), cùng các log và README trong `experiments/level2/native-train/`
+  và `native-repro/`. Kênh `kgc` được Lộc duyệt và chốt **trước** khi chạy val. Lộc chịu trách nhiệm phần mình.
+- **Khoa** (cùng **Anthropic Claude** — Claude Code) — nháp báo cáo cấp 2 (`report/level2-draft.md`) và phân tích
+  kết quả: tái lập bước a so với bài báo, bảng 9 dòng val/test, ablation, độ nhạy α, tách nhóm và bộ 25 câu
+  trực tiếp/gián tiếp, ví dụ giải thích; và mục khai báo cấp 2 này. Khoa chịu trách nhiệm phần mình.
+
+Nguyên tắc giữ đúng mục 5: mọi số có log/json kèm seed trong `experiments/level2/`; α, β chọn trên val, test
+chấm một lần, bộ 25 câu chỉ để đo; kết quả âm (embedding NativE không giúp thêm khi đã có kênh đếm cạnh, val
+chọn β = 0) được báo cáo đầy đủ, không giấu.
