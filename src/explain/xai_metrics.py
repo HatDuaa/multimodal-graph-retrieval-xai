@@ -80,6 +80,11 @@ def keep_only(index, nodes=(), triples=()):
                 unscored=sorted(carriers))
 
 
+def split(parts):
+    """(node positions, triple positions) of a list of (kind, position, ...) parts."""
+    return [p[1] for p in parts if p[0] == "node"], [p[1] for p in parts if p[0] == "triple"]
+
+
 def message_drop(index, edges):
     """Message mask of a one-graph index: False on the given edge positions, which then carry no GAT message."""
     mask = np.ones(int(index.edge_counts[0]), dtype=bool)
@@ -266,3 +271,12 @@ class QueryContext:
         out = np.full(edges.shape[1], np.nan)
         out[proper.cpu().numpy()] = torch.stack(alphas).mean(0).cpu().numpy() if alphas else 0.
         return out
+
+
+def margin_values(ctx, column, edits, chunk=256):
+    """Target final score minus the best other candidate's, for each edited graph (the rank-1 margin)."""
+    values = []
+    for start in range(0, len(edits), chunk):
+        *_, full = ctx.rescore(column, edits[start:start + chunk], full=True)
+        values.extend(full[:, column] - np.delete(full, column, axis=1).max(1))
+    return np.array(values)
