@@ -6,7 +6,7 @@ Phần này thuộc dòng 27–29 của bảng phân công (đo fidelity, validi
 Người soạn: Nhi cùng công cụ AI (Claude).
 Bản nháp ngày **2026-11-18**.
 
-> **Số liệu.** Cả hai mô hình đều đo bằng bản đo thứ hai (**v2**, `experiments/xai-metrics-v2/`), gồm cả phần so sánh 9 cách giải thích.
+> **Số liệu.** Cả hai mô hình đều đo bằng bản đo thứ hai (**v2**, `experiments/xai-metrics-v2/`), gồm cả phần so sánh 13 cách giải thích.
 > Bản đo thứ nhất (**v1**, `experiments/xai-metrics/`) giữ nguyên làm tham khảo; mục 3.3 ghi v2 sửa gì so với v1.
 
 ## Tóm tắt
@@ -16,7 +16,7 @@ Nhóm đo trên **toàn bộ 10 633 câu val**, mỗi mô hình 3 seed, và gi�
 
 Lời giải thích được đánh giá là **E**: các phần của ảnh hạng 1 (node vật thể và bộ ba có nhãn) xếp theo term của chính phép tính điểm (mục 2).
 E sinh từ cơ chế xếp hạng, không tốn thêm lượt chấm nào.
-Để biết E tốt đến đâu, nhóm so nó với 8 cách giải thích khác trên cùng các câu, trong đó **Shapley** làm chuẩn tham chiếu và **occlusion** (bỏ từng phần rồi chấm lại) là cách can thiệp rẻ nhất.
+Để biết E tốt đến đâu, nhóm so nó với 12 cách giải thích khác trên cùng các câu, gồm các cách giải thích GNN phổ biến (GNNExplainer, PGExplainer, GNN-LRP, SubgraphX, GraphSVX), trong đó **Shapley** làm chuẩn tham chiếu và **occlusion** (bỏ từng phần rồi chấm lại) là cách can thiệp rẻ nhất.
 
 Kết quả chính (val, mean ± std qua 3 seed):
 
@@ -24,16 +24,17 @@ Kết quả chính (val, mean ± std qua 3 seed):
 |---|---|---|---|
 | Bỏ top-3 của E: ảnh mất hạng 1 | 58,1 ± 4,1% | 34,9 ± 2,8% | 9,4% / 6,5% |
 | Chỉ giữ top-3 của E: hạng của ảnh | 2,22 ± 0,74 | 2,16 ± 0,08 | 8,15 / 7,38 |
-| Thứ tự của E khớp Shapley (Spearman) | 0,61 (occlusion: 0,45) | 0,46 (occlusion: 0,48) | 0,00 / −0,01 |
+| Thứ tự của E khớp Shapley (Spearman) | 0,61 (occlusion: 0,45; GraphSVX: 0,75) | 0,46 (occlusion: 0,48; GraphSVX: 0,72) | 0,00 / −0,01 |
 | Điểm mất khi bỏ top-3 / tổng term của top-3 | 0,19 | 0,06 | |
 | Node ảnh được chú ý nhất cùng loại với node câu (strict / lenient) | 63,8% / 70,0% | 58,3% / 63,8% | |
 
 Ba kết luận:
 
 1. **E trung thực theo thứ tự**: bỏ hay giữ các phần đầu của E làm thứ hạng đổi xa hơn hẳn ngẫu nhiên.
-   Với mô hình chính countonly, thứ tự của E khớp Shapley tốt nhất trong mọi cách được so, kể cả occlusion và IG.
+   Với mô hình chính countonly, thứ tự của E khớp Shapley tốt hơn mọi cách được so, trừ GraphSVX (vốn là một phép ước lượng Shapley); E cũng khớp Shapley tốt hơn nhiều so với PGExplainer, GNN-LRP và SubgraphX.
 2. **E không trung thực theo độ lớn**: term của một phần không cho biết bỏ phần đó thì mất bao nhiêu điểm; với bộ ba, gần như không mất gì.
 3. **Attention của GAT không phải lời giải thích tốt**: cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên ở `main_r3`, và chỉ nhỉnh hơn ngẫu nhiên một chút ở countonly.
+4. **Các cách giải thích GNN phổ biến không vượt E trên mô hình này**: PGExplainer, GNN-LRP và SubgraphX khớp Shapley kém hơn E nhiều; GraphSVX tái tạo được Shapley nhưng tốn khoảng 700 lượt chấm mỗi câu.
 
 Từ kết luận 2, demo thêm một cột kiểm chứng bằng chính mô hình cho mỗi dòng giải thích (mục 8).
 
@@ -50,7 +51,7 @@ Phạm vi phần đo giải thích:
 - **Mô hình:** `countonly_factual_r3` (mô hình chính, fusion raw) và `main_r3` (cấp 1, fusion z-score), mỗi mô hình 3 seed, `checkpoint_best.pt`.
 - **Ảnh được giải thích:** ảnh mô hình xếp hạng 1 cho mỗi câu, dù đúng hay sai; kết quả tách riêng hai nhóm ở phụ lục của `experiments/xai-metrics-v2/REPORT.md`.
 - **Câu:** toàn bộ 10 633 câu val cho fidelity, validity, sparsity và đồ thị con.
-  Phần so sánh các cách giải thích dùng một mẫu cố định 1 000 câu (rng 2026), giữ các câu có hiệu ứng đồ thị dương (TB 983 câu mỗi seed với countonly, 977 với `main_r3`); GNNExplainer và Shapley chạy trên 200 câu đầu của mẫu (TB 196 và 195 câu sau khi lọc).
+  Phần so sánh các cách giải thích dùng một mẫu cố định 1 000 câu (rng 2026), giữ các câu có hiệu ứng đồ thị dương (TB 983 câu mỗi seed với countonly, 977 với `main_r3`); GNNExplainer, GraphSVX, SubgraphX và Shapley chạy trên 200 câu đầu của mẫu (TB 196 và 195 câu sau khi lọc); PGExplainer học trên 200 câu val khác, ngoài mẫu so sánh và ngoài 13 câu bằng chứng.
 
 ## 2. Lời giải thích được đánh giá
 
@@ -102,7 +103,7 @@ Bản v1 (PR #36) được soát lại và làm lại thành v2 (PR #38); v1 gi�
 | Validity strict; tiêu chí v1 đổi tên thành lenient | Số lenient của v2 trùng số v1 (70,0% và 63,8%) |
 | Khớp nhóm số lượng chỉ chấm mô hình có bảng số lượng | Chỉ báo cho countonly |
 | Đồ thị con: cắt đường truyền tin, giữ bộ ba; ngẫu nhiên bốc theo từng node | Dạng v1 (bỏ cả bộ ba) giữ làm tham khảo |
-| Mới: k_flip, hạng ảnh đúng, tính cộng, so sánh 9 cách giải thích, Fid_α | |
+| Mới: k_flip, hạng ảnh đúng, tính cộng, so sánh 13 cách giải thích, Fid_α | |
 
 ## 4. Các độ đo
 
@@ -134,9 +135,9 @@ Bản v1 (PR #36) được soát lại và làm lại thành v2 (PR #38); v1 gi�
 
 **Đồ thị con:** với 3 node đầu của E, lấy các cạnh vào có attention GAT lớn nhất, cắt đường truyền tin của chúng, so với cắt cùng số cạnh vào ngẫu nhiên của chính từng node.
 
-## 5. Chín cách giải thích để so sánh
+## 5. Mười ba cách giải thích để so sánh
 
-Một con số fidelity đứng một mình khó đọc; nhóm đo thêm 8 cách giải thích khác, xếp **cùng các phần của ảnh** và đo **cùng một cách**.
+Một con số fidelity đứng một mình khó đọc; nhóm đo thêm 12 cách giải thích khác, xếp **cùng các phần của ảnh** và đo **cùng một cách**.
 Danh sách theo các họ phương pháp chính của giải thích GNN (Yuan và cộng sự, TPAMI 2022) và giải thích cho xếp hạng (RankingSHAP / RankSHAP):
 
 | Cách | Loại | Chi phí mỗi câu |
@@ -149,10 +150,19 @@ Danh sách theo các họ phương pháp chính của giải thích GNN (Yuan v�
 | integrated gradients (IG) | Phân rã hậu nghiệm từ ảnh trung tính (Sundararajan và cộng sự, 2017), 20 bước | 20 lượt lan truyền ngược |
 | occlusion | Bỏ từng phần một, điểm mất là độ quan trọng | 1 lượt chấm mỗi phần (TB 43 với countonly, 46 với `main_r3`) |
 | GNNExplainer | Mặt nạ mềm trên vector đầu vào, học để giữ điểm (Ying và cộng sự, 2019) | 100 bước tối ưu |
+| PGExplainer | Mặt nạ của GNNExplainer do một MLP chung sinh ra từ vector đã mã hoá của từng phần (Luo và cộng sự, 2020), học một lần cho mỗi checkpoint trên 200 câu val khác | 1 lượt mã hoá, sau 42–85 giây học |
+| GNN-LRP | Relevance của các walk qua hai lớp GAT (Schnake và cộng sự, 2022), bằng LRP-ε; điểm của một phần là tổng relevance các walk đi qua nó | 2 lượt lan truyền ngược |
+| GraphSVX | Surrogate tuyến tính theo trọng số Kernel SHAP, ước lượng giá trị Shapley (Duval và Malliaros, 2021), cùng ngân sách với Shapley | khoảng 700 lượt chấm |
+| SubgraphX | Tìm kiếm cây Monte Carlo trên đồ thị con liên thông, thưởng bằng Shapley cục bộ (Yuan và cộng sự, 2021) | TB 5 769 lượt chấm (countonly), 838 (`main_r3`) |
 | **Shapley** | Giá trị Shapley lấy mẫu 16 hoán vị, hàm giá trị là biên giữa hạng 1 và hạng 2 | khoảng 700–740 lượt chấm |
 
 Shapley là chuẩn tham chiếu: với mỗi cách khác, đo tương quan Spearman giữa thứ tự của nó và giá trị Shapley, và tỉ lệ trùng top-5.
-Kiểm tra cài đặt: IG thoả completeness với sai số trung bình 0,7% (countonly) và 1,1% (`main_r3`) hiệu ứng; Shapley thoả efficiency với sai số tối đa 1,3e−7.
+Bốn cách PGExplainer, GNN-LRP, GraphSVX và SubgraphX vốn viết cho bài toán phân loại node hoặc đồ thị; nhóm chỉnh chúng cho các phần ảnh của reranker, và cách chỉnh ghi ở `src/explain/xai_baselines.py`.
+Kiểm tra cài đặt:
+- IG thoả completeness với sai số trung bình 0,7% (countonly) và 1,1% (`main_r3`) hiệu ứng;
+- Shapley và GraphSVX thoả efficiency với sai số tối đa 1,3e−7 và 4,4e−16;
+- GNN-LRP dựng lại đầu ra hai lớp GAT với sai số tối đa 2,1e−6, và tổng relevance của các walk khớp relevance ở đầu ra GAT, chỉ lệch do hằng số ε của quy tắc chia;
+- thêm bốn cách mới không làm đổi số nào của 9 cách có trước (chạy lại cả 6 run, mọi số trùng tuyệt đối).
 
 ## 6. Kết quả (val, mean ± std qua 3 seed)
 
@@ -280,47 +290,61 @@ Các câu mà số cạnh vào lớn hơn số cạnh bỏ: 10 481 câu mỗi se
   Nhưng hiệu ứng nhỏ: Δ điểm trung bình như cắt ngẫu nhiên (cả hai đều làm điểm tăng nhẹ), và nhỏ hơn nhiều so với bỏ phần (mục 6.1).
 - Ablation bỏ cạnh lúc train làm R@1 giảm 2,39 (`experiments/improve/no-edges/`): cạnh có ích ở tổng thể, nhưng tác dụng trải trên nhiều cạnh, không nằm ở vài cạnh có attention cao.
 
-### 6.7. So sánh 9 cách giải thích
+### 6.7. So sánh 13 cách giải thích
 
-**countonly** (983 câu mỗi seed, Shapley và GNNExplainer 196 câu):
+**countonly** (983 câu mỗi seed; Shapley, GraphSVX, SubgraphX và GNNExplainer 196 câu; thời gian trên CPU):
 
-| Cách | Deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | Fid_α+ / Fid_α− (k = 5, α = 0,1) | Khớp Shapley (Spearman) | Top-5 trùng Shapley |
-|---|---|---|---|---|---|
-| Shapley | −0,19 | **1,54** | 0,081 / −0,051 | chuẩn | chuẩn |
-| IG | **−0,22** | 1,24 | 0,087 / −0,045 | 0,34 | **60,4%** |
-| occlusion | −0,01 | 1,45 | **0,102 / −0,065** | 0,45 | 55,3% |
-| **E** | 0,07 | 1,26 | 0,076 / −0,032 | **0,61** | 56,5% |
-| GNNExplainer | 0,11 | 1,06 | 0,070 / −0,043 | 0,37 | 57,1% |
-| clip | 0,39 | 0,90 | 0,049 / −0,006 | 0,42 | 40,3% |
-| gradient | 0,76 | 0,24 | 0,020 / 0,022 | −0,21 | 24,0% |
-| random | 0,89 | 0,21 | 0,011 / 0,028 | 0,00 | 16,9% |
-| lowest (E đảo ngược) | 1,06 | −1,31 | −0,003 / 0,044 | −0,61 | 3,4% |
+| Cách | Giây / câu | Deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | k_flip đạt | Fid_α+ / Fid_α− (k = 5, α = 0,1) | Khớp Shapley (Spearman) | Top-5 trùng Shapley |
+|---|---|---|---|---|---|---|---|
+| Shapley | 0,28 | −0,19 | 1,54 | 88,1% | 0,081 / −0,051 | chuẩn | chuẩn |
+| GraphSVX | 0,28 | **−0,24** | **1,56** | **89,3%** | 0,084 / −0,055 | **0,75** | **73,2%** |
+| IG | 0,03 | −0,22 | 1,24 | 86,2% | 0,087 / −0,045 | 0,34 | 60,4% |
+| occlusion | 0,03 | −0,01 | 1,45 | 78,1% | **0,102 / −0,065** | 0,45 | 55,3% |
+| **E** | 0 | 0,07 | 1,26 | 79,8% | 0,076 / −0,032 | 0,61 | 56,5% |
+| GNNExplainer | 0,37 | 0,11 | 1,06 | 83,5% | 0,070 / −0,043 | 0,37 | 57,1% |
+| GNN-LRP | 0,01 | 0,11 | 0,88 | 76,8% | 0,063 / −0,025 | 0,08 | 47,4% |
+| PGExplainer | 0,002 | 0,21 | 0,64 | 77,2% | 0,051 / −0,009 | −0,03 | 42,8% |
+| clip | 0,000 | 0,39 | 0,90 | 68,6% | 0,049 / −0,006 | 0,42 | 40,3% |
+| SubgraphX | 2,29 | 0,39 | 0,95 | 59,8% | 0,051 / −0,019 | 0,02 | 38,1% |
+| gradient | 0,004 | 0,76 | 0,24 | 39,4% | 0,020 / 0,022 | −0,21 | 24,0% |
+| random | 0 | 0,89 | 0,21 | 28,5% | 0,011 / 0,028 | 0,00 | 16,9% |
+| lowest (E đảo ngược) | 0 | 1,06 | −1,31 | 11,0% | −0,003 / 0,044 | −0,61 | 3,4% |
 
-Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 0,05 ở cả 3 seed (p lớn nhất: occlusion 0,042, GNNExplainer 0,030).
+Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 0,05 ở cả 3 seed (p lớn nhất: occlusion 0,042, GNNExplainer 0,030), trừ PGExplainer (p lớn nhất 0,70).
 
-**`main_r3`** (977 câu mỗi seed, Shapley và GNNExplainer 195 câu):
+**`main_r3`** (977 câu mỗi seed; Shapley, GraphSVX, SubgraphX và GNNExplainer 195 câu):
 
-| Cách | Deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | Fid_α+ / Fid_α− (k = 5, α = 0,1) | Khớp Shapley (Spearman) | Top-5 trùng Shapley |
-|---|---|---|---|---|---|
-| Shapley | **−0,68** | **1,53** | **0,118 / −0,046** | chuẩn | chuẩn |
-| occlusion | −0,24 | 1,23 | 0,106 / −0,046 | **0,48** | 58,5% |
-| IG | −0,45 | 0,65 | 0,090 / −0,024 | 0,29 | **62,9%** |
-| GNNExplainer | −0,17 | −0,34 | 0,091 / 0,000 | 0,26 | 56,7% |
-| **E** | 0,24 | 0,76 | 0,050 / 0,016 | 0,46 | 31,8% |
-| clip | 0,28 | 0,23 | 0,047 / 0,021 | 0,35 | 35,4% |
-| gradient | 0,83 | −1,04 | 0,012 / 0,057 | −0,13 | 17,8% |
-| random | 0,84 | −0,62 | 0,013 / 0,053 | −0,01 | 14,3% |
-| lowest (E đảo ngược) | 1,01 | −2,30 | 0,002 / 0,068 | −0,46 | 2,1% |
+| Cách | Giây / câu | Deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | k_flip đạt | Fid_α+ / Fid_α− (k = 5, α = 0,1) | Khớp Shapley (Spearman) | Top-5 trùng Shapley |
+|---|---|---|---|---|---|---|---|
+| Shapley | 0,14 | −0,68 | **1,53** | 85,3% | **0,118 / −0,046** | chuẩn | chuẩn |
+| GraphSVX | 0,14 | **−0,71** | 1,50 | **86,1%** | 0,114 / −0,047 | **0,72** | **71,9%** |
+| IG | 0,01 | −0,45 | 0,65 | 81,9% | 0,090 / −0,024 | 0,29 | 62,9% |
+| occlusion | 0,02 | −0,24 | 1,23 | 74,8% | 0,106 / −0,046 | 0,48 | 58,5% |
+| GNNExplainer | 0,27 | −0,17 | −0,34 | 81,8% | 0,091 / 0,000 | 0,26 | 56,7% |
+| GNN-LRP | 0,007 | 0,04 | 0,39 | 69,7% | 0,068 / 0,001 | 0,07 | 39,5% |
+| PGExplainer | 0,001 | 0,08 | 0,20 | 70,8% | 0,050 / 0,018 | 0,07 | 43,4% |
+| **E** | 0 | 0,24 | 0,76 | 57,7% | 0,050 / 0,016 | 0,46 | 31,8% |
+| SubgraphX | 0,11 | 0,28 | 0,62 | 49,5% | 0,083 / −0,009 | 0,11 | 33,9% |
+| clip | 0,000 | 0,28 | 0,23 | 61,8% | 0,047 / 0,021 | 0,35 | 35,4% |
+| gradient | 0,003 | 0,83 | −1,04 | 27,9% | 0,012 / 0,057 | −0,13 | 17,8% |
+| random | 0 | 0,84 | −0,62 | 25,5% | 0,013 / 0,053 | −0,01 | 14,3% |
+| lowest (E đảo ngược) | 0 | 1,01 | −2,30 | 10,9% | 0,002 / 0,068 | −0,46 | 2,1% |
 
-Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 1e−11 ở cả 3 seed, trừ clip.
+Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khác đều khác E với p < 1e−7 ở cả 3 seed, trừ clip (p lớn nhất 0,96) và SubgraphX (0,51).
 
-- **Shapley, occlusion và IG dẫn đầu ở deletion AUC và Fid_α, ở cả hai mô hình**: bỏ dần theo thứ tự của chúng làm điểm xuống dưới cả mức ảnh rỗng (deletion AUC âm hoặc gần 0), và Fid_α+ > Fid_α−.
+- **Shapley, GraphSVX, occlusion và IG dẫn đầu ở deletion AUC và Fid_α, ở cả hai mô hình**: bỏ dần theo thứ tự của chúng làm điểm xuống dưới cả mức ảnh rỗng (deletion AUC âm hoặc gần 0), và Fid_α+ > Fid_α−.
   Chúng không dẫn đầu mọi trục: với `main_r3`, insertion AUC của IG (0,65) và độ khớp với Shapley (0,29) đều thấp hơn E (0,76 và 0,46).
+- **GraphSVX tái tạo Shapley với cùng ngân sách** (khoảng 700 lượt chấm mỗi câu): Spearman 0,75 và 0,72, top-5 trùng 72–73%, và các đường cong ngang hoặc nhỉnh hơn chính Shapley lấy mẫu hoán vị.
 - **Với countonly, E gần sát nhóm dẫn đầu.**
-  Thứ tự của E khớp Shapley tốt nhất trong mọi cách (0,61, so với 0,45 của occlusion và 0,34 của IG); insertion AUC ngang IG (1,26 so với 1,24); Fid_α+ > Fid_α− như nhóm dẫn đầu.
+  Thứ tự của E khớp Shapley tốt hơn mọi cách không ước lượng Shapley (0,61, so với 0,45 của occlusion và 0,34 của IG); insertion AUC ngang IG (1,26 so với 1,24); Fid_α+ > Fid_α− như nhóm dẫn đầu.
   E chỉ kém rõ ở deletion AUC (0,07 so với −0,01 của occlusion), mà không tốn lượt chấm nào.
 - **Với `main_r3`, E đứng giữa**: tốt hơn hẳn ngẫu nhiên và gradient, ngang clip trên deletion, tốt hơn clip trên insertion.
   Thứ tự tổng thể của E khớp Shapley gần bằng occlusion (0,46 so với 0,48), nhưng top-5 của E chỉ trùng 32% với Shapley, đúng ở chỗ bộ ba chen vào đầu E (mục 6.2).
+- **PGExplainer, GNN-LRP và SubgraphX khớp Shapley kém** (Spearman ≤ 0,11 ở cả hai mô hình, so với 0,46–0,61 của E).
+  - Với countonly, PGExplainer và GNN-LRP kém E ở deletion, insertion và độ khớp Shapley.
+  - Với `main_r3`, hai cách này hơn E ở deletion AUC (0,04 và 0,08 so với 0,24) và k_flip (70% và 71% so với 58%), nhưng kém E nhiều ở insertion AUC (0,39 và 0,20 so với 0,76).
+  - GNN-LRP vẫn tốt hơn hẳn gradient × input, cách cùng dựa trên phép tuyến tính hoá cục bộ.
+  - SubgraphX có k_flip thấp nhất trong bốn cách mới (60% và 50%) và tốn nhiều lượt chấm nhất với countonly; một lý do có thể, chưa kiểm riêng, là nó chọn cả một đồ thị con liên thông, trong khi các độ đo ở đây bỏ hoặc giữ từng phần một.
 - **lowest** (E đảo ngược) kém nhất trên mọi trục ở cả hai mô hình, đúng như mong đợi của một phép kiểm tra: thứ tự của E mang thông tin thật.
 - **Gradient × input gần như ngẫu nhiên** ở cả hai mô hình: đạo hàm cục bộ không nói gì về việc bỏ hẳn một phần.
 
@@ -397,22 +421,25 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
 
 1. **E trung thực theo thứ tự.**
    Bỏ top-3 của E làm mất hạng 1 ở 58% câu (countonly) và 35% câu (`main_r3`), so với 6–9% khi bỏ ngẫu nhiên.
-   Với countonly, thứ tự của E khớp Shapley tốt nhất trong mọi cách được so (Spearman 0,61), và chỉ giữ top-3 của E đã giữ đủ hiệu ứng đồ thị.
+   Với countonly, thứ tự của E khớp Shapley tốt hơn mọi cách không ước lượng Shapley (Spearman 0,61; chỉ GraphSVX khớp hơn, 0,75), và chỉ giữ top-3 của E đã giữ đủ hiệu ứng đồ thị.
 2. **E không trung thực theo độ lớn**, nhất là ở kênh bộ ba.
    Điểm mất khi bỏ top-3 chỉ bằng 19% (countonly) và 6% (`main_r3`) tổng term của chúng; bộ ba đứng đầu E nhưng bỏ đi ít khi đổi hạng.
    Nên trình bày E như một thứ tự, và kiểm chứng bằng cột "Bỏ phần này" của demo.
 3. **Nếu cần lời giải thích trung thực nhất, dùng occlusion hoặc IG** làm kiểm chứng: occlusion cộng tính tốt nhất và có Fid_α tốt, chỉ tốn khoảng 43–46 lượt chấm mỗi câu; IG có deletion AUC tốt và thoả completeness.
-   Shapley là chuẩn tốt nhất nhưng tốn khoảng 700–740 lượt chấm mỗi câu.
+   Shapley là chuẩn tốt nhất nhưng tốn khoảng 700–740 lượt chấm mỗi câu; GraphSVX với cùng ngân sách cho kết quả ngang Shapley.
    Với countonly, E đã gần bằng các cách này mà không tốn thêm lượt chấm nào.
 4. **Validity ngữ nghĩa vừa phải ở node, kém ở bộ ba:** 64% (countonly) và 58% (`main_r3`) dòng vật thể khớp strict, chỉ 3–5% dòng bộ ba khớp đủ.
    Với countonly, 67% dòng vật thể có số lượng trỏ tới node ảnh cùng nhóm số lượng.
 5. **Sparsity theo hiệu ứng tốt:** với countonly, khoảng 3 phần đầu của E giữ 80% hiệu ứng đồ thị ở 94,5% câu; với `main_r3`, 2–3 phần đầu làm được điều đó ở hơn nửa số câu.
 6. **Attention GAT không phải lời giải thích tốt:** ở `main_r3`, cắt đường truyền tin của các cạnh có attention cao nhất không khác cắt ngẫu nhiên.
    Ở countonly, cách cắt đó làm mất hạng 1 nhiều gấp khoảng 2 lần ngẫu nhiên, nhưng chỉ ở 3,5% câu.
+7. **Các cách giải thích GNN phổ biến không vượt E trên mô hình này**, trừ GraphSVX vốn là một phép ước lượng Shapley.
+   PGExplainer, GNN-LRP và SubgraphX khớp Shapley kém hơn E nhiều (Spearman ≤ 0,11 so với 0,46–0,61); với `main_r3`, PGExplainer và GNN-LRP hơn E ở deletion AUC và k_flip nhưng kém E nhiều ở insertion AUC.
 
 ## 10. Hạn chế
 
-- So sánh các cách giải thích dùng 1 000 câu; GNNExplainer và Shapley chỉ khoảng 195 câu, std qua seed của hai cách này lớn hơn.
+- So sánh các cách giải thích dùng 1 000 câu; GNNExplainer, GraphSVX, SubgraphX và Shapley chỉ khoảng 195 câu, std qua seed của các cách này lớn hơn.
+- PGExplainer, GNN-LRP, GraphSVX và SubgraphX được chỉnh cho reranker; kết quả phụ thuộc cách chỉnh và ngân sách đã chọn (PGExplainer học trên 200 câu và dùng lại hệ số phạt của GNNExplainer; SubgraphX 10 rollout, 10 mẫu), không phải kết quả của bản cài gốc trên tác vụ gốc.
 - Ảnh trung tính của IG và GNNExplainer là vector trung bình của từng loại phần; chọn mốc khác có thể đổi kết quả của hai cách này.
 - Δ điểm và tổng term của hai mô hình khác thang (raw và z-score), nên giữa hai mô hình chỉ so được tỉ lệ, hạng và tương quan.
 - Validity ngữ nghĩa dựa trên WordNet và alias VG; nhãn VG thiếu hoặc khác từ vựng với caption COCO (`report/level1-draft.md` mục 8.4) làm tỉ lệ khớp thấp hơn thực tế.
