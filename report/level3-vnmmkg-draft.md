@@ -106,7 +106,7 @@ Phương pháp giữ nguyên cấp 2 (hàng `kg_triple`), chỉ thay đồ thị
 
 1. Encoder lấy top-50 ảnh theo cosine giữa câu và ảnh.
 2. **Linker** (`EntityLinker` của Đạt) tìm các thực thể được nhắc trong câu. Linker so khớp chuỗi với nhãn và
-   bí danh tiếng Việt, độ dài tối đa 12 âm tiết; cấp 2 dùng 5 vì tên tiếng Việt dài hơn.
+   bí danh tiếng Việt, độ dài tối đa 12 âm tiết (cấp 2 dùng 5 token). Giới hạn được nâng lên vì tên tiếng Việt tính theo âm tiết nên dài hơn.
 3. **Điểm đồ thị** của một ảnh = số cạnh KG trực tiếp giữa di tích trong ảnh và các thực thể được nhắc.
 4. **Điểm cuối** = α·z(CLIP) + (1−α)·z(đồ thị), với z-score tính trong top-50 của từng câu.
 5. **Giải thích** của mỗi ảnh là danh sách chính các cạnh đã được đếm ở bước 3. Danh sách này sinh ra cùng
