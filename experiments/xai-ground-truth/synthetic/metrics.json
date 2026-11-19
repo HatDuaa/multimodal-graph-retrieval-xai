@@ -1,0 +1,428 @@
+{
+  "rule": "Level-3 explanations against known answers: three benchmarks where the parts that should explain the rank-1 image\nare known before any explainer runs, scored for all 16 explainers of scripts/xai_metrics.py (version 3).\n\nThe explained image is always the rank-1 candidate, and only captions whose rank-1 image is the one with the answer\nare kept. Each explainer orders the image's parts (object nodes and labelled triples); with g the size of the answer:\n- GEA, graph explanation accuracy (Agarwal et al., GraphXAI, Scientific Data 2023): Jaccard of the first g parts of\n  the order with the answer;\n- precision@g: share of the answer among the first g parts;\n- AUROC: probability that an answer part comes before a part outside the answer (from the order's positions);\n- first: 1-based position of the first answer part.\n\nBenchmarks (results in experiments/xai-ground-truth/<benchmark>/):\n- planted (C), real models: a val caption's relation (subject, predicate, object) is planted into one of its\n  candidates ranked 2 to 5 (two new object nodes with the caption's names, the caption's predicate between them),\n  with a decoy of the same shape whose names and predicate are not in the caption. The case is kept only when the\n  planted image becomes rank 1, so the model needs the planted parts (removing them gives back the old, lower rank).\n  Answer: the three planted parts; the decoy's three parts are scored apart (their mean position percentile). New\n  nodes take boxes of random nodes of the image and a count bucket from their name's count. Part texts that the\n  tables lack are encoded with the frozen CLIP of the configuration, as the demo does for typed queries.\n- vg-regions (A), real models: Visual Genome region descriptions of val images, with their region graphs\n  (data/raw/visual_genome/region_graphs.json, scripts/download_data.py --regions) as the known answer: the image's\n  nodes that are the region's annotated objects, and its triples between them with the region's predicates. The\n  query graph is the region graph itself (canonical names and predicates; no parser, so a wrong explanation cannot\n  come from parsing), the sentence vector is CLIP of the phrase, and the candidates are the CLIP top-50 of the val\n  images. Two answers: instance (exactly the annotated nodes) and label (every node with the name of an annotated one,\n  since the model matches labels and cannot tell two instances of one name apart). This is plausibility (agreement with\n  people), not faithfulness. `prepare` writes the region queries of val once (data/processed/xai_regions/).\n- synthetic (B), a model of the main architecture trained here: src/explain/synthetic_graphs.py, where every part of\n  the answer is needed to beat some negative. `train` trains three seeds; the explained captions are val captions\n  0..1999, PGExplainer and GraphMask train on val captions 2000..2199.\n\nUsage:\n  python scripts/xai_ground_truth.py planted [--models ...] [--seeds 0 1 2] [--cases 100]\n  python scripts/xai_ground_truth.py vg-regions prepare\n  python scripts/xai_ground_truth.py vg-regions [--models ...]\n  python scripts/xai_ground_truth.py synthetic train\n  python scripts/xai_ground_truth.py synthetic\nWrites <benchmark>/metrics.json (per run: per explainer means over cases) and cases.json (per case and explainer).\n",
+  "runs": {
+    "synthetic_seed0": {
+      "model": "synthetic",
+      "seed": 0,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 41.66117811203003,
+        "final_loss": -0.35574560693698004
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 37.53709316253662,
+        "l0": 5.158781506509058e-07,
+        "divergence": 0.02713493641225796,
+        "lagrange": 0.7441882948018614
+      },
+      "seconds": 439.56056022644043,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.7274761904761905,
+          "main_precision": 0.8193333333333332,
+          "main_auroc": 0.968116946486606,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.13187301587301586,
+          "main_precision": 0.21133333333333332,
+          "main_auroc": 0.48520667612687746,
+          "main_first": 4.36
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.031883053513394065,
+          "main_first": 14.75
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.4716111111111112,
+          "main_precision": 0.6033333333333334,
+          "main_auroc": 0.6520211031515211,
+          "main_first": 1.14
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.7750238095238096,
+          "main_precision": 0.8486666666666666,
+          "main_auroc": 0.9204651987589294,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.7889761904761906,
+          "main_precision": 0.8519999999999999,
+          "main_auroc": 0.8969465620636674,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.6469285714285715,
+          "main_precision": 0.7633333333333333,
+          "main_auroc": 0.9335261151501862,
+          "main_first": 1.02
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.4654285714285715,
+          "main_precision": 0.6066666666666667,
+          "main_auroc": 0.720292258833358,
+          "main_first": 1.12
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.34026190476190477,
+          "main_precision": 0.488,
+          "main_auroc": 0.787436099710403,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.8365555555555556,
+          "main_precision": 0.8799999999999999,
+          "main_auroc": 0.9414203443071091,
+          "main_first": 1.0
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.37583333333333335,
+          "main_precision": 0.5233333333333333,
+          "main_auroc": 0.8499041301090838,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.6463809523809525,
+          "main_precision": 0.7259999999999998,
+          "main_auroc": 0.7612254678328207,
+          "main_first": 2.05
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.184515873015873,
+          "main_precision": 0.2726666666666666,
+          "main_auroc": 0.5471665636880032,
+          "main_first": 4.59
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.2552936507936508,
+          "main_precision": 0.39,
+          "main_auroc": 0.7524717767612504,
+          "main_first": 1.95
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    },
+    "synthetic_seed1": {
+      "model": "synthetic",
+      "seed": 1,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 64.57607293128967,
+        "final_loss": -0.20766137320781128
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 66.10418319702148,
+        "l0": 1.247624882432241e-06,
+        "divergence": 0.048014041994247234,
+        "lagrange": 0.8456129218824217
+      },
+      "seconds": 692.1172769069672,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.510357142857143,
+          "main_precision": 0.6419999999999999,
+          "main_auroc": 0.9261201246179573,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.13823015873015873,
+          "main_precision": 0.21533333333333327,
+          "main_auroc": 0.4943250728459706,
+          "main_first": 4.04
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.07387987538204256,
+          "main_first": 13.7
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.3679523809523809,
+          "main_precision": 0.482,
+          "main_auroc": 0.6065807447082215,
+          "main_first": 2.31
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.8351904761904763,
+          "main_precision": 0.8913333333333334,
+          "main_auroc": 0.9465687512951445,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.8070476190476191,
+          "main_precision": 0.8686666666666666,
+          "main_auroc": 0.9050353305048351,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.5920238095238096,
+          "main_precision": 0.714,
+          "main_auroc": 0.9083012593500983,
+          "main_first": 1.03
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.5943968253968254,
+          "main_precision": 0.7179999999999999,
+          "main_auroc": 0.7446390623738146,
+          "main_first": 1.0
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.3375714285714287,
+          "main_precision": 0.48599999999999993,
+          "main_auroc": 0.7914534159425025,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.850936507936508,
+          "main_precision": 0.8873333333333332,
+          "main_auroc": 0.9380868810927635,
+          "main_first": 1.0
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.5881666666666667,
+          "main_precision": 0.7066666666666667,
+          "main_auroc": 0.9440728085926228,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.7321825396825398,
+          "main_precision": 0.7979999999999999,
+          "main_auroc": 0.8550201667269779,
+          "main_first": 1.6
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.1755873015873016,
+          "main_precision": 0.25799999999999995,
+          "main_auroc": 0.5372071025351212,
+          "main_first": 5.0
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.31546031746031744,
+          "main_precision": 0.458,
+          "main_auroc": 0.8010934577347889,
+          "main_first": 1.69
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    },
+    "synthetic_seed2": {
+      "model": "synthetic",
+      "seed": 2,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 58.89250588417053,
+        "final_loss": -0.30614254575921224
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 59.59739804267883,
+        "l0": 3.074524701562886e-07,
+        "divergence": 0.04839035676071944,
+        "lagrange": 0.9949713292159156
+      },
+      "seconds": 430.74823212623596,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.7580476190476191,
+          "main_precision": 0.8386666666666666,
+          "main_auroc": 0.9728655045533527,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.1588730158730159,
+          "main_precision": 0.254,
+          "main_auroc": 0.5188689013686691,
+          "main_first": 3.48
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.027134495446647148,
+          "main_first": 14.85
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.43067460317460315,
+          "main_precision": 0.5586666666666666,
+          "main_auroc": 0.6146686051077692,
+          "main_first": 1.65
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.7943095238095238,
+          "main_precision": 0.86,
+          "main_auroc": 0.9316172542599014,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.719404761904762,
+          "main_precision": 0.7986666666666666,
+          "main_auroc": 0.8585299433338133,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.2929285714285714,
+          "main_precision": 0.44066666666666654,
+          "main_auroc": 0.7759908481124426,
+          "main_first": 1.0
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.5905238095238096,
+          "main_precision": 0.7166666666666666,
+          "main_auroc": 0.7323216457289986,
+          "main_first": 1.0
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.32197619047619047,
+          "main_precision": 0.4699999999999999,
+          "main_auroc": 0.7853590104826949,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.8294285714285715,
+          "main_precision": 0.8693333333333332,
+          "main_auroc": 0.9366135591532648,
+          "main_first": 1.01
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.577,
+          "main_precision": 0.6926666666666665,
+          "main_auroc": 0.9446560116783802,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.716968253968254,
+          "main_precision": 0.7866666666666667,
+          "main_auroc": 0.8082301287492463,
+          "main_first": 1.72
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.15883333333333333,
+          "main_precision": 0.23399999999999999,
+          "main_auroc": 0.5334163166955738,
+          "main_first": 5.07
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.2791666666666667,
+          "main_precision": 0.4193333333333333,
+          "main_auroc": 0.7840405905583923,
+          "main_first": 1.78
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    }
+  },
+  "benchmark": "synthetic",
+  "cases_per_run": 100,
+  "data": {
+    "seed": 2031,
+    "train": 6000,
+    "val": 2400,
+    "candidates": 20,
+    "explain": 2000,
+    "epochs": 8,
+    "lr": 0.001,
+    "batch": 32
+  }
+}

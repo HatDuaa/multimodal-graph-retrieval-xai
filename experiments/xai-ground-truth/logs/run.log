@@ -1,0 +1,179 @@
+Thu 19 Nov 2026 13:52:56 +07
+step planted
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+countonly_factual_r3_seed0 10 356s
+countonly_factual_r3_seed0 20 464s
+countonly_factual_r3_seed0 30 555s
+countonly_factual_r3_seed0 40 656s
+countonly_factual_r3_seed0 50 754s
+countonly_factual_r3_seed0 60 858s
+countonly_factual_r3_seed0 70 956s
+countonly_factual_r3_seed0 80 1052s
+countonly_factual_r3_seed0 90 1182s
+countonly_factual_r3_seed0 100 1291s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "captions_tried": 245, "pgexplainer": {"captions": 200, "seconds": 127.16833472251892, "final_loss": -0.9801340400706977}, "graphmask": {"captions": 200, "seconds": 120.85690999031067, "l0": 0.8233112880587578, "divergence": 0.2416784517867359, "lagrange": 0.5525360049307563}, "seconds": 1290.821350812912}
+countonly_factual_r3_seed1 10 390s
+countonly_factual_r3_seed1 20 524s
+countonly_factual_r3_seed1 30 629s
+countonly_factual_r3_seed1 40 747s
+countonly_factual_r3_seed1 50 918s
+countonly_factual_r3_seed1 60 1034s
+countonly_factual_r3_seed1 70 1145s
+countonly_factual_r3_seed1 80 1236s
+countonly_factual_r3_seed1 90 1325s
+countonly_factual_r3_seed1 100 1452s
+countonly_factual_r3_seed1 {"model": "countonly_factual_r3", "seed": 1, "captions_tried": 268, "pgexplainer": {"captions": 200, "seconds": 128.33577013015747, "final_loss": -0.922577597014606}, "graphmask": {"captions": 200, "seconds": 126.31081295013428, "l0": 0.99997060328722, "divergence": 3.5646120613819222e-06, "lagrange": 0.04769176548349784}, "seconds": 1452.364743232727}
+countonly_factual_r3_seed2 10 427s
+countonly_factual_r3_seed2 20 544s
+countonly_factual_r3_seed2 30 703s
+countonly_factual_r3_seed2 40 799s
+countonly_factual_r3_seed2 50 907s
+countonly_factual_r3_seed2 60 998s
+countonly_factual_r3_seed2 70 1086s
+countonly_factual_r3_seed2 80 1188s
+countonly_factual_r3_seed2 90 1293s
+countonly_factual_r3_seed2 100 1388s
+countonly_factual_r3_seed2 {"model": "countonly_factual_r3", "seed": 2, "captions_tried": 228, "pgexplainer": {"captions": 200, "seconds": 148.75064897537231, "final_loss": -0.8366752699390054}, "graphmask": {"captions": 200, "seconds": 136.9898648262024, "l0": 0.9999983987212181, "divergence": 6.779854629712644e-08, "lagrange": 0.03705772718417555}, "seconds": 1387.5218279361725}
+main_r3_seed0 10 187s
+main_r3_seed0 20 226s
+main_r3_seed0 30 260s
+main_r3_seed0 40 300s
+main_r3_seed0 50 333s
+main_r3_seed0 60 375s
+main_r3_seed0 70 408s
+main_r3_seed0 80 452s
+main_r3_seed0 90 487s
+main_r3_seed0 100 519s
+main_r3_seed0 {"model": "main_r3", "seed": 0, "captions_tried": 236, "pgexplainer": {"captions": 200, "seconds": 72.75208282470703, "final_loss": -0.4909178398549557}, "graphmask": {"captions": 200, "seconds": 69.82395482063293, "l0": 1.1736290456777766e-06, "divergence": 0.11304422398890893, "lagrange": 1.9685016818344618}, "seconds": 518.8759889602661}
+main_r3_seed1 10 193s
+main_r3_seed1 20 238s
+main_r3_seed1 30 273s
+main_r3_seed1 40 319s
+main_r3_seed1 50 357s
+main_r3_seed1 60 396s
+main_r3_seed1 70 437s
+main_r3_seed1 80 478s
+main_r3_seed1 90 511s
+main_r3_seed1 100 544s
+main_r3_seed1 {"model": "main_r3", "seed": 1, "captions_tried": 240, "pgexplainer": {"captions": 200, "seconds": 74.35179877281189, "final_loss": -0.47255497397854923}, "graphmask": {"captions": 200, "seconds": 72.54223012924194, "l0": 1.8043223602037805e-06, "divergence": 0.07939431598606461, "lagrange": 1.6901914855837779}, "seconds": 544.49156498909}
+main_r3_seed2 10 203s
+main_r3_seed2 20 246s
+main_r3_seed2 30 277s
+main_r3_seed2 40 314s
+main_r3_seed2 50 355s
+main_r3_seed2 60 399s
+main_r3_seed2 70 432s
+main_r3_seed2 80 467s
+main_r3_seed2 90 502s
+main_r3_seed2 100 532s
+main_r3_seed2 {"model": "main_r3", "seed": 2, "captions_tried": 216, "pgexplainer": {"captions": 200, "seconds": 76.63110089302063, "final_loss": -0.4361509462981485}, "graphmask": {"captions": 200, "seconds": 75.54522275924683, "l0": 0.0010865939808837185, "divergence": 0.17670533041658928, "lagrange": 3.212750315554438}, "seconds": 531.5981168746948}
+exit 0
+Thu 19 Nov 2026 15:28:29 +07
+step vg-regions
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+countonly_factual_r3_seed0 10 409s
+countonly_factual_r3_seed0 20 488s
+countonly_factual_r3_seed0 30 570s
+countonly_factual_r3_seed0 40 637s
+countonly_factual_r3_seed0 50 786s
+countonly_factual_r3_seed0 60 893s
+countonly_factual_r3_seed0 70 972s
+countonly_factual_r3_seed0 80 1089s
+countonly_factual_r3_seed0 90 1217s
+countonly_factual_r3_seed0 100 1334s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "queries_tried": 246, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 135.28623795509338, "final_loss": -0.9801340400706977}, "graphmask": {"captions": 200, "seconds": 137.22891807556152, "l0": 0.8379962965846062, "divergence": 0.1630861130024391, "lagrange": 0.3953519113920845}, "seconds": 1334.3816010951996}
+countonly_factual_r3_seed1 10 500s
+countonly_factual_r3_seed1 20 595s
+countonly_factual_r3_seed1 30 707s
+countonly_factual_r3_seed1 40 772s
+countonly_factual_r3_seed1 50 950s
+countonly_factual_r3_seed1 60 1088s
+countonly_factual_r3_seed1 70 1171s
+countonly_factual_r3_seed1 80 1270s
+countonly_factual_r3_seed1 90 1373s
+countonly_factual_r3_seed1 100 1452s
+countonly_factual_r3_seed1 {"model": "countonly_factual_r3", "seed": 1, "queries_tried": 260, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 151.42254114151, "final_loss": -0.922577597014606}, "graphmask": {"captions": 200, "seconds": 169.73900437355042, "l0": 0.9999706020951271, "divergence": 3.5646120613819222e-06, "lagrange": 0.047691896073549116}, "seconds": 1451.9774761199951}
+countonly_factual_r3_seed2 10 873s
+countonly_factual_r3_seed2 20 1124s
+countonly_factual_r3_seed2 30 1226s
+countonly_factual_r3_seed2 40 1346s
+countonly_factual_r3_seed2 50 1530s
+countonly_factual_r3_seed2 60 1627s
+countonly_factual_r3_seed2 70 1711s
+countonly_factual_r3_seed2 80 1839s
+countonly_factual_r3_seed2 90 2030s
+countonly_factual_r3_seed2 100 2130s
+countonly_factual_r3_seed2 {"model": "countonly_factual_r3", "seed": 2, "queries_tried": 254, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 124.64990210533142, "final_loss": -0.8366752699390054}, "graphmask": {"captions": 200, "seconds": 345.24545884132385, "l0": 0.9999983987212181, "divergence": 6.779854629712644e-08, "lagrange": 0.037057853732287566}, "seconds": 2130.003756046295}
+main_r3_seed0 10 264s
+main_r3_seed0 20 354s
+main_r3_seed0 30 466s
+main_r3_seed0 40 571s
+main_r3_seed0 50 610s
+main_r3_seed0 60 641s
+main_r3_seed0 70 680s
+main_r3_seed0 80 715s
+main_r3_seed0 90 745s
+main_r3_seed0 100 777s
+main_r3_seed0 {"model": "main_r3", "seed": 0, "queries_tried": 304, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 93.13354396820068, "final_loss": -0.4909178398549557}, "graphmask": {"captions": 200, "seconds": 80.48953413963318, "l0": 1.1736290456777766e-06, "divergence": 0.11304422398890893, "lagrange": 1.9685016818344618}, "seconds": 777.1151978969574}
+main_r3_seed1 10 188s
+main_r3_seed1 20 216s
+main_r3_seed1 30 246s
+main_r3_seed1 40 271s
+main_r3_seed1 50 305s
+main_r3_seed1 60 334s
+main_r3_seed1 70 369s
+main_r3_seed1 80 405s
+main_r3_seed1 90 429s
+main_r3_seed1 100 464s
+main_r3_seed1 {"model": "main_r3", "seed": 1, "queries_tried": 315, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 71.82859396934509, "final_loss": -0.47255497397854923}, "graphmask": {"captions": 200, "seconds": 65.77275800704956, "l0": 1.8043223602037805e-06, "divergence": 0.07939431598606461, "lagrange": 1.6901914855837779}, "seconds": 463.5248210430145}
+main_r3_seed2 10 187s
+main_r3_seed2 20 219s
+main_r3_seed2 30 249s
+main_r3_seed2 40 282s
+main_r3_seed2 50 318s
+main_r3_seed2 60 348s
+main_r3_seed2 70 384s
+main_r3_seed2 80 420s
+main_r3_seed2 90 446s
+main_r3_seed2 100 488s
+main_r3_seed2 {"model": "main_r3", "seed": 2, "queries_tried": 307, "gold_rank1": 100, "pgexplainer": {"captions": 200, "seconds": 72.75930500030518, "final_loss": -0.4361509462981485}, "graphmask": {"captions": 200, "seconds": 65.03865694999695, "l0": 0.0010865939808837185, "divergence": 0.17670533041658928, "lagrange": 3.212750315554438}, "seconds": 487.6279790401459}
+exit 0
+Thu 19 Nov 2026 17:19:32 +07
+step synthetic
+synthetic_seed0 10 153s
+synthetic_seed0 20 186s
+synthetic_seed0 30 218s
+synthetic_seed0 40 247s
+synthetic_seed0 50 279s
+synthetic_seed0 60 311s
+synthetic_seed0 70 341s
+synthetic_seed0 80 375s
+synthetic_seed0 90 404s
+synthetic_seed0 100 440s
+synthetic_seed0 {"model": "synthetic", "seed": 0, "captions_tried": 100, "val_recall@1": 1.0, "pgexplainer": {"captions": 200, "seconds": 41.66117811203003, "final_loss": -0.35574560693698004}, "graphmask": {"captions": 200, "seconds": 37.53709316253662, "l0": 5.158781506509058e-07, "divergence": 0.02713493641225796, "lagrange": 0.7441882948018614}, "seconds": 439.56056022644043}
+synthetic_seed1 10 196s
+synthetic_seed1 20 299s
+synthetic_seed1 30 400s
+synthetic_seed1 40 491s
+synthetic_seed1 50 532s
+synthetic_seed1 60 565s
+synthetic_seed1 70 593s
+synthetic_seed1 80 626s
+synthetic_seed1 90 655s
+synthetic_seed1 100 692s
+synthetic_seed1 {"model": "synthetic", "seed": 1, "captions_tried": 100, "val_recall@1": 1.0, "pgexplainer": {"captions": 200, "seconds": 64.57607293128967, "final_loss": -0.20766137320781128}, "graphmask": {"captions": 200, "seconds": 66.10418319702148, "l0": 1.247624882432241e-06, "divergence": 0.048014041994247234, "lagrange": 0.8456129218824217}, "seconds": 692.1172769069672}
+synthetic_seed2 10 154s
+synthetic_seed2 20 184s
+synthetic_seed2 30 215s
+synthetic_seed2 40 245s
+synthetic_seed2 50 276s
+synthetic_seed2 60 308s
+synthetic_seed2 70 337s
+synthetic_seed2 80 369s
+synthetic_seed2 90 396s
+synthetic_seed2 100 431s
+synthetic_seed2 {"model": "synthetic", "seed": 2, "captions_tried": 100, "val_recall@1": 1.0, "pgexplainer": {"captions": 200, "seconds": 58.89250588417053, "final_loss": -0.30614254575921224}, "graphmask": {"captions": 200, "seconds": 59.59739804267883, "l0": 3.074524701562886e-07, "divergence": 0.04839035676071944, "lagrange": 0.9949713292159156}, "seconds": 430.74823212623596}
+exit 0
+Thu 19 Nov 2026 17:45:58 +07

@@ -1,0 +1,183 @@
+{
+  "data": {
+    "seed": 2031,
+    "train": 6000,
+    "val": 2400,
+    "candidates": 20,
+    "explain": 2000,
+    "epochs": 8,
+    "lr": 0.001,
+    "batch": 32
+  },
+  "options": {
+    "seed": 0,
+    "run_name": "countonly_factual_r3_seed0",
+    "epochs": 10,
+    "limit_train": null,
+    "batch_size": 256,
+    "micro_batch_size": 32,
+    "eval_batch_size": 256,
+    "lr": 0.001,
+    "adaptive_weights": true,
+    "use_gat": true,
+    "use_triple_channel": true,
+    "use_edges": true,
+    "query_graph_encoder": true,
+    "loss": "cross_entropy",
+    "triple_match": "phrase",
+    "graph_channel": false,
+    "fusion": "raw",
+    "fusion_scale": null,
+    "zscore_floor": null,
+    "edge_geometry": true,
+    "knn_edges": 5,
+    "global_node": true,
+    "count_table": true,
+    "runs_root": "improve/count-only",
+    "rewire_seed": null,
+    "resume": true,
+    "stop_after_epoch": null,
+    "eval_only": null,
+    "config": "configs/count_v1.yaml"
+  },
+  "runs": {
+    "seed0": {
+      "best_epoch": 2,
+      "val_recall@1": 1.0,
+      "history": [
+        {
+          "epoch": 0,
+          "loss": 2.80155403943772,
+          "val_recall@1": 0.9985
+        },
+        {
+          "epoch": 1,
+          "loss": 2.515638307053992,
+          "val_recall@1": 0.9995
+        },
+        {
+          "epoch": 2,
+          "loss": 2.2787442993610463,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 3,
+          "loss": 2.004126269132533,
+          "val_recall@1": 0.9995
+        },
+        {
+          "epoch": 4,
+          "loss": 1.7142613599909113,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 5,
+          "loss": 1.3924370947036337,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 6,
+          "loss": 1.0848755383111062,
+          "val_recall@1": 0.999
+        },
+        {
+          "epoch": 7,
+          "loss": 0.7907101984353776,
+          "val_recall@1": 0.9995
+        }
+      ]
+    },
+    "seed1": {
+      "best_epoch": 3,
+      "val_recall@1": 1.0,
+      "history": [
+        {
+          "epoch": 0,
+          "loss": 2.8001619209634496,
+          "val_recall@1": 0.999
+        },
+        {
+          "epoch": 1,
+          "loss": 2.5102963003706424,
+          "val_recall@1": 0.9985
+        },
+        {
+          "epoch": 2,
+          "loss": 2.268474228838657,
+          "val_recall@1": 0.9995
+        },
+        {
+          "epoch": 3,
+          "loss": 1.997253176379711,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 4,
+          "loss": 1.7074437794533182,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 5,
+          "loss": 1.3959244515033478,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 6,
+          "loss": 1.0859896489914427,
+          "val_recall@1": 0.9995
+        },
+        {
+          "epoch": 7,
+          "loss": 0.798930287361145,
+          "val_recall@1": 1.0
+        }
+      ]
+    },
+    "seed2": {
+      "best_epoch": 2,
+      "val_recall@1": 1.0,
+      "history": [
+        {
+          "epoch": 0,
+          "loss": 2.800228126505588,
+          "val_recall@1": 0.9945
+        },
+        {
+          "epoch": 1,
+          "loss": 2.5156595377211874,
+          "val_recall@1": 0.99
+        },
+        {
+          "epoch": 2,
+          "loss": 2.277209265434996,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 3,
+          "loss": 2.000468985197392,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 4,
+          "loss": 1.7121903953400064,
+          "val_recall@1": 0.9995
+        },
+        {
+          "epoch": 5,
+          "loss": 1.4070256327060944,
+          "val_recall@1": 0.999
+        },
+        {
+          "epoch": 6,
+          "loss": 1.0863358394262639,
+          "val_recall@1": 1.0
+        },
+        {
+          "epoch": 7,
+          "loss": 0.8058756062007965,
+          "val_recall@1": 0.9995
+        }
+      ]
+    }
+  }
+}

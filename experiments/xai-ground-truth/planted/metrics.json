@@ -1,0 +1,919 @@
+{
+  "rule": "Level-3 explanations against known answers: three benchmarks where the parts that should explain the rank-1 image\nare known before any explainer runs, scored for all 16 explainers of scripts/xai_metrics.py (version 3).\n\nThe explained image is always the rank-1 candidate, and only captions whose rank-1 image is the one with the answer\nare kept. Each explainer orders the image's parts (object nodes and labelled triples); with g the size of the answer:\n- GEA, graph explanation accuracy (Agarwal et al., GraphXAI, Scientific Data 2023): Jaccard of the first g parts of\n  the order with the answer;\n- precision@g: share of the answer among the first g parts;\n- AUROC: probability that an answer part comes before a part outside the answer (from the order's positions);\n- first: 1-based position of the first answer part.\n\nBenchmarks (results in experiments/xai-ground-truth/<benchmark>/):\n- planted (C), real models: a val caption's relation (subject, predicate, object) is planted into one of its\n  candidates ranked 2 to 5 (two new object nodes with the caption's names, the caption's predicate between them),\n  with a decoy of the same shape whose names and predicate are not in the caption. The case is kept only when the\n  planted image becomes rank 1, so the model needs the planted parts (removing them gives back the old, lower rank).\n  Answer: the three planted parts; the decoy's three parts are scored apart (their mean position percentile). New\n  nodes take boxes of random nodes of the image and a count bucket from their name's count. Part texts that the\n  tables lack are encoded with the frozen CLIP of the configuration, as the demo does for typed queries.\n- vg-regions (A), real models: Visual Genome region descriptions of val images, with their region graphs\n  (data/raw/visual_genome/region_graphs.json, scripts/download_data.py --regions) as the known answer: the image's\n  nodes that are the region's annotated objects, and its triples between them with the region's predicates. The\n  query graph is the region graph itself (canonical names and predicates; no parser, so a wrong explanation cannot\n  come from parsing), the sentence vector is CLIP of the phrase, and the candidates are the CLIP top-50 of the val\n  images. Two answers: instance (exactly the annotated nodes) and label (every node with the name of an annotated one,\n  since the model matches labels and cannot tell two instances of one name apart). This is plausibility (agreement with\n  people), not faithfulness. `prepare` writes the region queries of val once (data/processed/xai_regions/).\n- synthetic (B), a model of the main architecture trained here: src/explain/synthetic_graphs.py, where every part of\n  the answer is needed to beat some negative. `train` trains three seeds; the explained captions are val captions\n  0..1999, PGExplainer and GraphMask train on val captions 2000..2199.\n\nUsage:\n  python scripts/xai_ground_truth.py planted [--models ...] [--seeds 0 1 2] [--cases 100]\n  python scripts/xai_ground_truth.py vg-regions prepare\n  python scripts/xai_ground_truth.py vg-regions [--models ...]\n  python scripts/xai_ground_truth.py synthetic train\n  python scripts/xai_ground_truth.py synthetic\nWrites <benchmark>/metrics.json (per run: per explainer means over cases) and cases.json (per case and explainer).\n",
+  "runs": {
+    "countonly_factual_r3_seed0": {
+      "model": "countonly_factual_r3",
+      "seed": 0,
+      "captions_tried": 245,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 127.16833472251892,
+        "final_loss": -0.9801340400706977
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 120.85690999031067,
+        "l0": 0.8233112880587578,
+        "divergence": 0.2416784517867359,
+        "lagrange": 0.5525360049307563
+      },
+      "seconds": 1290.821350812912,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.4020000000000001,
+          "main_precision": 0.5233333333333333,
+          "main_auroc": 0.8843637369012565,
+          "main_first": 1.57,
+          "main_decoy_percentile": 0.6857554687606638
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.053000000000000005,
+          "main_precision": 0.08666666666666666,
+          "main_auroc": 0.5057482033809763,
+          "main_first": 11.22,
+          "main_decoy_percentile": 0.5149746225787164
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.11563626309874353,
+          "main_first": 33.48,
+          "main_decoy_percentile": 0.31424453123933627
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.397,
+          "main_precision": 0.5166666666666667,
+          "main_auroc": 0.8968063437836729,
+          "main_first": 2.0,
+          "main_decoy_percentile": 0.8196703706907794
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.038000000000000006,
+          "main_precision": 0.06333333333333332,
+          "main_auroc": 0.26186641388928,
+          "main_first": 20.68,
+          "main_decoy_percentile": 0.3588891399705578
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.3950000000000001,
+          "main_precision": 0.5266666666666666,
+          "main_auroc": 0.859232145689731,
+          "main_first": 1.55,
+          "main_decoy_percentile": 0.5065610528656549
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.6300000000000001,
+          "main_precision": 0.7066666666666667,
+          "main_auroc": 0.9212784576309434,
+          "main_first": 1.48,
+          "main_decoy_percentile": 0.5076371016827949
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.43000000000000016,
+          "main_precision": 0.5566666666666666,
+          "main_auroc": 0.8345171423809076,
+          "main_first": 1.64,
+          "main_decoy_percentile": 0.6172658448897316
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.16299999999999998,
+          "main_precision": 0.2533333333333333,
+          "main_auroc": 0.6726877363020622,
+          "main_first": 3.96,
+          "main_decoy_percentile": 0.535761115747484
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.259,
+          "main_precision": 0.3733333333333334,
+          "main_auroc": 0.6831387161729212,
+          "main_first": 3.28,
+          "main_decoy_percentile": 0.5196112138417596
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.49,
+          "main_precision": 0.62,
+          "main_auroc": 0.9370348936027426,
+          "main_first": 1.42,
+          "main_decoy_percentile": 0.6653930085810404
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.5920000000000001,
+          "main_precision": 0.6366666666666666,
+          "main_auroc": 0.8281354283474853,
+          "main_first": 3.15,
+          "main_decoy_percentile": 0.4445416499068411
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.46300000000000013,
+          "main_precision": 0.5900000000000001,
+          "main_auroc": 0.9338499166653093,
+          "main_first": 1.45,
+          "main_decoy_percentile": 0.6654416190220134
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.366,
+          "main_precision": 0.49999999999999994,
+          "main_auroc": 0.7631171085711854,
+          "main_first": 2.41,
+          "main_decoy_percentile": 0.5763254695035467
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.04300000000000001,
+          "main_precision": 0.07,
+          "main_auroc": 0.5339836128978898,
+          "main_first": 9.9,
+          "main_decoy_percentile": 0.5332943200898967
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.3600000000000001,
+          "main_precision": 0.48666666666666664,
+          "main_auroc": 0.8701160368897318,
+          "main_first": 1.79,
+          "main_decoy_percentile": 0.6580129847659332
+        },
+        "answer_size": 3.0,
+        "parts": 45.02,
+        "k_flip_reached": 1.0
+      }
+    },
+    "countonly_factual_r3_seed1": {
+      "model": "countonly_factual_r3",
+      "seed": 1,
+      "captions_tried": 268,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 128.33577013015747,
+        "final_loss": -0.922577597014606
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 126.31081295013428,
+        "l0": 0.99997060328722,
+        "divergence": 3.5646120613819222e-06,
+        "lagrange": 0.04769176548349784
+      },
+      "seconds": 1452.364743232727,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.3610000000000001,
+          "main_precision": 0.48666666666666664,
+          "main_auroc": 0.8675724178588793,
+          "main_first": 2.12,
+          "main_decoy_percentile": 0.6842826891795375
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.036000000000000004,
+          "main_precision": 0.06,
+          "main_auroc": 0.4891044878212633,
+          "main_first": 12.57,
+          "main_decoy_percentile": 0.47144403421337694
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.002,
+          "main_precision": 0.003333333333333333,
+          "main_auroc": 0.13242758214112071,
+          "main_first": 32.94,
+          "main_decoy_percentile": 0.3157173108204627
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.3450000000000001,
+          "main_precision": 0.46666666666666673,
+          "main_auroc": 0.8950754306911775,
+          "main_first": 1.98,
+          "main_decoy_percentile": 0.8166210975330626
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.03,
+          "main_precision": 0.05,
+          "main_auroc": 0.21840216035185228,
+          "main_first": 23.27,
+          "main_decoy_percentile": 0.3402812420938082
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.34900000000000003,
+          "main_precision": 0.47,
+          "main_auroc": 0.8327593128782097,
+          "main_first": 1.82,
+          "main_decoy_percentile": 0.5227185929548007
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.6010000000000001,
+          "main_precision": 0.6799999999999998,
+          "main_auroc": 0.8740746001903811,
+          "main_first": 1.82,
+          "main_decoy_percentile": 0.5605814582380451
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.40000000000000013,
+          "main_precision": 0.52,
+          "main_auroc": 0.8372588861556003,
+          "main_first": 1.82,
+          "main_decoy_percentile": 0.5966748899303224
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.13799999999999998,
+          "main_precision": 0.21666666666666665,
+          "main_auroc": 0.6627540619045991,
+          "main_first": 4.62,
+          "main_decoy_percentile": 0.547548182189783
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.25999999999999995,
+          "main_precision": 0.37666666666666676,
+          "main_auroc": 0.7158809492401795,
+          "main_first": 2.89,
+          "main_decoy_percentile": 0.5612591840349527
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.43800000000000006,
+          "main_precision": 0.57,
+          "main_auroc": 0.9356827871623833,
+          "main_first": 1.44,
+          "main_decoy_percentile": 0.6726322935800624
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.555,
+          "main_precision": 0.5966666666666667,
+          "main_auroc": 0.810131748310623,
+          "main_first": 5.89,
+          "main_decoy_percentile": 0.413428294867331
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.43500000000000016,
+          "main_precision": 0.5666666666666667,
+          "main_auroc": 0.9309863890220913,
+          "main_first": 1.39,
+          "main_decoy_percentile": 0.6663001150564197
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.33000000000000007,
+          "main_precision": 0.4533333333333334,
+          "main_auroc": 0.7844843107928012,
+          "main_first": 1.74,
+          "main_decoy_percentile": 0.5557970789929981
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.033,
+          "main_precision": 0.05,
+          "main_auroc": 0.4918615411725157,
+          "main_first": 16.29,
+          "main_decoy_percentile": 0.46446289164478655
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.306,
+          "main_precision": 0.4333333333333333,
+          "main_auroc": 0.8774346051493073,
+          "main_first": 2.12,
+          "main_decoy_percentile": 0.6642326705727316
+        },
+        "answer_size": 3.0,
+        "parts": 46.82,
+        "k_flip_reached": 0.99
+      }
+    },
+    "countonly_factual_r3_seed2": {
+      "model": "countonly_factual_r3",
+      "seed": 2,
+      "captions_tried": 228,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 148.75064897537231,
+        "final_loss": -0.8366752699390054
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 136.9898648262024,
+        "l0": 0.9999983987212181,
+        "divergence": 6.779854629712644e-08,
+        "lagrange": 0.03705772718417555
+      },
+      "seconds": 1387.5218279361725,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.4660000000000001,
+          "main_precision": 0.6,
+          "main_auroc": 0.9279111745939859,
+          "main_first": 1.2,
+          "main_decoy_percentile": 0.676555220056411
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.06000000000000001,
+          "main_precision": 0.09666666666666666,
+          "main_auroc": 0.5313833320136563,
+          "main_first": 9.57,
+          "main_decoy_percentile": 0.49222753517520595
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.002,
+          "main_precision": 0.003333333333333333,
+          "main_auroc": 0.07208882540601422,
+          "main_first": 35.81,
+          "main_decoy_percentile": 0.32344477994358894
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.32799999999999996,
+          "main_precision": 0.44666666666666655,
+          "main_auroc": 0.8896504451216662,
+          "main_first": 2.16,
+          "main_decoy_percentile": 0.8099864526404421
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.092,
+          "main_precision": 0.14666666666666667,
+          "main_auroc": 0.41532837598994077,
+          "main_first": 11.25,
+          "main_decoy_percentile": 0.3605655230189189
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.425,
+          "main_precision": 0.5599999999999999,
+          "main_auroc": 0.9012699672848918,
+          "main_first": 1.42,
+          "main_decoy_percentile": 0.5476380447423189
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.7120000000000001,
+          "main_precision": 0.7766666666666666,
+          "main_auroc": 0.9353875210680865,
+          "main_first": 1.23,
+          "main_decoy_percentile": 0.5909790077119111
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.4570000000000001,
+          "main_precision": 0.5800000000000001,
+          "main_auroc": 0.8126626448434259,
+          "main_first": 1.55,
+          "main_decoy_percentile": 0.6167498490256672
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.146,
+          "main_precision": 0.23333333333333328,
+          "main_auroc": 0.6579304986076423,
+          "main_first": 3.76,
+          "main_decoy_percentile": 0.5622750591546639
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.24600000000000002,
+          "main_precision": 0.35666666666666663,
+          "main_auroc": 0.7062049540610947,
+          "main_first": 3.01,
+          "main_decoy_percentile": 0.5478807614983457
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.4800000000000001,
+          "main_precision": 0.61,
+          "main_auroc": 0.9431650520959767,
+          "main_first": 1.29,
+          "main_decoy_percentile": 0.6843170824879111
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.659,
+          "main_precision": 0.7033333333333331,
+          "main_auroc": 0.8558893151064133,
+          "main_first": 2.82,
+          "main_decoy_percentile": 0.43950035049183717
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.49400000000000005,
+          "main_precision": 0.6233333333333334,
+          "main_auroc": 0.9420637022330343,
+          "main_first": 1.27,
+          "main_decoy_percentile": 0.6646150448306202
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.386,
+          "main_precision": 0.5166666666666666,
+          "main_auroc": 0.7827612028460138,
+          "main_first": 2.21,
+          "main_decoy_percentile": 0.5959505204759149
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.01,
+          "main_precision": 0.016666666666666666,
+          "main_auroc": 0.49149918624846906,
+          "main_first": 14.51,
+          "main_decoy_percentile": 0.4545085328603694
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.3780000000000001,
+          "main_precision": 0.5,
+          "main_auroc": 0.8827575439639394,
+          "main_first": 1.69,
+          "main_decoy_percentile": 0.6658465157233554
+        },
+        "answer_size": 3.0,
+        "parts": 44.46,
+        "k_flip_reached": 0.99
+      }
+    },
+    "main_r3_seed0": {
+      "model": "main_r3",
+      "seed": 0,
+      "captions_tried": 236,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 72.75208282470703,
+        "final_loss": -0.4909178398549557
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 69.82395482063293,
+        "l0": 1.1736290456777766e-06,
+        "divergence": 0.11304422398890893,
+        "lagrange": 1.9685016818344618
+      },
+      "seconds": 518.8759889602661,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.235,
+          "main_precision": 0.3600000000000001,
+          "main_auroc": 0.7632646268500384,
+          "main_first": 1.92,
+          "main_decoy_percentile": 0.6289331857051547
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.04300000000000001,
+          "main_precision": 0.06999999999999999,
+          "main_auroc": 0.5078773939594871,
+          "main_first": 10.65,
+          "main_decoy_percentile": 0.48370560008975644
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.01,
+          "main_precision": 0.016666666666666666,
+          "main_auroc": 0.2367353731499618,
+          "main_first": 27.61,
+          "main_decoy_percentile": 0.3710668142948454
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.3400000000000001,
+          "main_precision": 0.46333333333333326,
+          "main_auroc": 0.8787104785914456,
+          "main_first": 2.57,
+          "main_decoy_percentile": 0.815937683311622
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.04699999999999999,
+          "main_precision": 0.07333333333333333,
+          "main_auroc": 0.5268465005243642,
+          "main_first": 12.67,
+          "main_decoy_percentile": 0.5455199840108338
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.37500000000000006,
+          "main_precision": 0.5266666666666666,
+          "main_auroc": 0.850500706742793,
+          "main_first": 1.36,
+          "main_decoy_percentile": 0.5880824726101048
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.5850000000000001,
+          "main_precision": 0.69,
+          "main_auroc": 0.9524661659985196,
+          "main_first": 1.25,
+          "main_decoy_percentile": 0.6612334811228423
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.3880000000000001,
+          "main_precision": 0.5333333333333333,
+          "main_auroc": 0.8202360313930313,
+          "main_first": 1.47,
+          "main_decoy_percentile": 0.5759859036958125
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.14199999999999996,
+          "main_precision": 0.22333333333333333,
+          "main_auroc": 0.6419782077364752,
+          "main_first": 4.99,
+          "main_decoy_percentile": 0.574022652921184
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.13099999999999998,
+          "main_precision": 0.20666666666666664,
+          "main_auroc": 0.6650111430345749,
+          "main_first": 3.99,
+          "main_decoy_percentile": 0.5012298232026273
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.4040000000000001,
+          "main_precision": 0.54,
+          "main_auroc": 0.9282620968953341,
+          "main_first": 1.39,
+          "main_decoy_percentile": 0.6608706053846715
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.03693376454225025,
+          "main_first": 44.14,
+          "main_decoy_percentile": 0.912717214474774
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.39500000000000013,
+          "main_precision": 0.53,
+          "main_auroc": 0.9242885370150112,
+          "main_first": 1.43,
+          "main_decoy_percentile": 0.6593333088970112
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.23200000000000004,
+          "main_precision": 0.34333333333333343,
+          "main_auroc": 0.5818180022402804,
+          "main_first": 5.37,
+          "main_decoy_percentile": 0.4674380904335781
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.085,
+          "main_precision": 0.12333333333333334,
+          "main_auroc": 0.46784526633837487,
+          "main_first": 14.96,
+          "main_decoy_percentile": 0.5288065034812464
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.276,
+          "main_precision": 0.39,
+          "main_auroc": 0.8449254925499846,
+          "main_first": 2.9,
+          "main_decoy_percentile": 0.6131857244346341
+        },
+        "answer_size": 3.0,
+        "parts": 47.55,
+        "k_flip_reached": 0.76
+      }
+    },
+    "main_r3_seed1": {
+      "model": "main_r3",
+      "seed": 1,
+      "captions_tried": 240,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 74.35179877281189,
+        "final_loss": -0.47255497397854923
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 72.54223012924194,
+        "l0": 1.8043223602037805e-06,
+        "divergence": 0.07939431598606461,
+        "lagrange": 1.6901914855837779
+      },
+      "seconds": 544.49156498909,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.26,
+          "main_precision": 0.3833333333333333,
+          "main_auroc": 0.7640614642626987,
+          "main_first": 1.83,
+          "main_decoy_percentile": 0.6351022910915709
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.05,
+          "main_precision": 0.08,
+          "main_auroc": 0.501130400386306,
+          "main_first": 13.12,
+          "main_decoy_percentile": 0.5252555688497942
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.006000000000000001,
+          "main_precision": 0.01,
+          "main_auroc": 0.23593853573730114,
+          "main_first": 29.49,
+          "main_decoy_percentile": 0.3648977089084292
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.32600000000000007,
+          "main_precision": 0.44666666666666666,
+          "main_auroc": 0.8740861892096268,
+          "main_first": 2.77,
+          "main_decoy_percentile": 0.8161121817657007
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.071,
+          "main_precision": 0.10666666666666666,
+          "main_auroc": 0.5665528076338839,
+          "main_first": 11.88,
+          "main_decoy_percentile": 0.5449609564380311
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.4110000000000001,
+          "main_precision": 0.5566666666666666,
+          "main_auroc": 0.8621573664960991,
+          "main_first": 1.42,
+          "main_decoy_percentile": 0.6054707924657603
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.586,
+          "main_precision": 0.6966666666666668,
+          "main_auroc": 0.9586066280870313,
+          "main_first": 1.24,
+          "main_decoy_percentile": 0.6826044480510709
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.37200000000000005,
+          "main_precision": 0.5133333333333332,
+          "main_auroc": 0.8282809864884472,
+          "main_first": 1.57,
+          "main_decoy_percentile": 0.5733387846139568
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.147,
+          "main_precision": 0.22666666666666666,
+          "main_auroc": 0.6604172091965858,
+          "main_first": 5.21,
+          "main_decoy_percentile": 0.5735150057493423
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.11099999999999997,
+          "main_precision": 0.17666666666666664,
+          "main_auroc": 0.6496048930732751,
+          "main_first": 4.61,
+          "main_decoy_percentile": 0.5130044799812947
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.4040000000000001,
+          "main_precision": 0.5299999999999999,
+          "main_auroc": 0.92035765262501,
+          "main_first": 1.53,
+          "main_decoy_percentile": 0.6821294325749924
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.037356334432198296,
+          "main_first": 49.39,
+          "main_decoy_percentile": 0.9341720110734147
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.38900000000000007,
+          "main_precision": 0.5099999999999999,
+          "main_auroc": 0.9265594086177316,
+          "main_first": 1.61,
+          "main_decoy_percentile": 0.6634794164598385
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.24700000000000003,
+          "main_precision": 0.36,
+          "main_auroc": 0.6026914856772144,
+          "main_first": 5.04,
+          "main_decoy_percentile": 0.520557486490374
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.08199999999999999,
+          "main_precision": 0.11333333333333334,
+          "main_auroc": 0.4404020998847426,
+          "main_first": 18.88,
+          "main_decoy_percentile": 0.7357443228661906
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.266,
+          "main_precision": 0.38000000000000006,
+          "main_auroc": 0.8229236773201434,
+          "main_first": 2.93,
+          "main_decoy_percentile": 0.6334947489277085
+        },
+        "answer_size": 3.0,
+        "parts": 52.92,
+        "k_flip_reached": 0.85
+      }
+    },
+    "main_r3_seed2": {
+      "model": "main_r3",
+      "seed": 2,
+      "captions_tried": 216,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 76.63110089302063,
+        "final_loss": -0.4361509462981485
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 75.54522275924683,
+        "l0": 0.0010865939808837185,
+        "divergence": 0.17670533041658928,
+        "lagrange": 3.212750315554438
+      },
+      "seconds": 531.5981168746948,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.249,
+          "main_precision": 0.3766666666666667,
+          "main_auroc": 0.7531783870190187,
+          "main_first": 1.74,
+          "main_decoy_percentile": 0.5997362867711287
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.063,
+          "main_precision": 0.10333333333333333,
+          "main_auroc": 0.5151941291407828,
+          "main_first": 11.22,
+          "main_decoy_percentile": 0.5132235729426772
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.008,
+          "main_precision": 0.013333333333333332,
+          "main_auroc": 0.24682161298098135,
+          "main_first": 27.69,
+          "main_decoy_percentile": 0.4002637132288713
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.34900000000000003,
+          "main_precision": 0.47,
+          "main_auroc": 0.8689772787993025,
+          "main_first": 2.76,
+          "main_decoy_percentile": 0.8024194327385545
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.053000000000000005,
+          "main_precision": 0.08333333333333331,
+          "main_auroc": 0.5468692834507644,
+          "main_first": 12.13,
+          "main_decoy_percentile": 0.528370960345535
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.3770000000000001,
+          "main_precision": 0.5266666666666667,
+          "main_auroc": 0.8400131592965334,
+          "main_first": 1.39,
+          "main_decoy_percentile": 0.5780786853899929
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 0.5940000000000001,
+          "main_precision": 0.7,
+          "main_auroc": 0.9565743011276234,
+          "main_first": 1.27,
+          "main_decoy_percentile": 0.5988121625127217
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.3760000000000001,
+          "main_precision": 0.5233333333333333,
+          "main_auroc": 0.835457566723548,
+          "main_first": 1.62,
+          "main_decoy_percentile": 0.571922869981918
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.14499999999999996,
+          "main_precision": 0.22666666666666666,
+          "main_auroc": 0.6357258182636332,
+          "main_first": 4.75,
+          "main_decoy_percentile": 0.5375392050959682
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.11099999999999997,
+          "main_precision": 0.17666666666666664,
+          "main_auroc": 0.6420626946772637,
+          "main_first": 4.53,
+          "main_decoy_percentile": 0.48079085951103623
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.36500000000000016,
+          "main_precision": 0.5033333333333333,
+          "main_auroc": 0.9084563249531982,
+          "main_first": 1.56,
+          "main_decoy_percentile": 0.6073751470691833
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.01,
+          "main_precision": 0.01,
+          "main_auroc": 0.049992125114856,
+          "main_first": 46.26,
+          "main_decoy_percentile": 0.9332684270077466
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.3560000000000001,
+          "main_precision": 0.4966666666666667,
+          "main_auroc": 0.9133714266331743,
+          "main_first": 1.61,
+          "main_decoy_percentile": 0.6062294012564307
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.271,
+          "main_precision": 0.39333333333333337,
+          "main_auroc": 0.6370603776242467,
+          "main_first": 3.88,
+          "main_decoy_percentile": 0.5198966345015282
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.141,
+          "main_precision": 0.1966666666666666,
+          "main_auroc": 0.549435409397052,
+          "main_first": 9.09,
+          "main_decoy_percentile": 0.6221346542082482
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.28,
+          "main_precision": 0.39666666666666667,
+          "main_auroc": 0.8374178971440116,
+          "main_first": 2.58,
+          "main_decoy_percentile": 0.583964111484807
+        },
+        "answer_size": 3.0,
+        "parts": 49.97,
+        "k_flip_reached": 0.81
+      }
+    }
+  },
+  "benchmark": "planted",
+  "cases_per_run": 100
+}
