@@ -4,7 +4,7 @@ import copy
 import torch
 
 from src.graph.counts import CAPTION_CLASSES, IMAGE_BUCKETS
-from src.models.graph_reranker import masked_softmax, part_similarity, part_summary, slot_similarity
+from src.models.graph_reranker import part_similarity, part_summary, slot_similarity
 
 # Image parts listed per explanation row, ordered by their term a_ij * sim_ij of row_score.
 TOP_MATCHES = 3

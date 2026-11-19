@@ -33,6 +33,7 @@ methods), with the caption and the other 49 candidates fixed (QueryContext.score
   triple comes right after the later of its two end nodes.
 """
 import contextlib
+from itertools import combinations
 import math
 
 import numpy as np
@@ -290,13 +291,13 @@ def gnn_lrp(ctx, column, index):
         node_score = torch.zeros(n, device=device)
         sources = torch.arange(n, device=device)
         for e in range(walks.shape[0]):
-            k, l = int(src2[e]), int(dst2[e])
+            k, target = int(src2[e]), int(dst2[e])
             r = walks[e]
             node_score += r  # the source J of every walk
             if k < n:
                 node_score[k] += (r * (sources != k)).sum()
-            if l < n and l != k:
-                node_score[l] += (r * (sources != l)).sum()
+            if target < n and target != k:
+                node_score[target] += (r * (sources != target)).sum()
 
         triple_walks = torch.zeros(m, device=device)
         if m:
@@ -543,3 +544,247 @@ def subgraphx(ctx, column, index, every, rng, rollouts=10, expand=4, samples=10,
     known = set(every)
     order = [p for p in order if p in known]
     return [(k, j, float(len(order) - i)) for i, (k, j) in enumerate(order)], evaluations[0]
+
+
+# GraphMask (Schlichtkrull et al., ICLR 2021) ------------------------------------------------------------------------
+
+HC_BETA, HC_GAMMA, HC_ZETA = 2 / 3, -0.1, 1.1          # hard concrete (Louizos et al., ICLR 2018), as GraphMask
+
+
+class GraphMask(nn.Module):
+    """One gate per GAT message and layer, predicted by a small MLP per layer from the message's source and target
+    vectors at that layer, its edge vector and the message itself; a closed message is replaced by a learned
+    baseline vector of that layer (the messages' softmax weights stay as they are)."""
+
+    def __init__(self, layers=2, dim=256, heads=4, channels=64, hidden=64):
+        super().__init__()
+        self.gates = nn.ModuleList(nn.Sequential(nn.Linear(4 * dim, hidden), nn.ReLU(), nn.Linear(hidden, 1))
+                                   for _ in range(layers))
+        self.baselines = nn.ParameterList(nn.Parameter(torch.zeros(heads, channels)) for _ in range(layers))
+
+    def log_alpha(self, layer, x, edges, attrs, messages):
+        src, dst = edges
+        return self.gates[layer](torch.cat((x[src], x[dst], attrs, messages.flatten(1)), -1)).squeeze(-1)
+
+    @staticmethod
+    def open_probability(log_alpha):
+        """P(gate != 0) of the hard concrete gate: GraphMask's measure of how much a message is needed."""
+        return torch.sigmoid(log_alpha - HC_BETA * math.log(-HC_GAMMA / HC_ZETA))
+
+    @staticmethod
+    def gate(log_alpha, generator=None):
+        """A sampled hard concrete gate when a generator is given (training), else the deterministic one."""
+        if generator is None:
+            s = torch.sigmoid(log_alpha)
+        else:
+            u = torch.rand(log_alpha.shape, generator=generator).clamp(1e-6, 1 - 1e-6).to(log_alpha.device)
+            s = torch.sigmoid((u.log() - (1 - u).log() + log_alpha) / HC_BETA)
+        return (s * (HC_ZETA - HC_GAMMA) + HC_GAMMA).clamp(0, 1)
+
+
+@contextlib.contextmanager
+def gated_messages(model, explainer, generator=None, record=None):
+    """Run the model's two GAT layers with GraphMask's gates on their messages (PyG message hooks; the model's code is
+    not changed). GATv2Conv drops the graph's self-loop edges and appends one self-loop per node after the other
+    edges; the appended self-loops are not gated. record, a list, receives (layer, proper edge positions of the input
+    edges, log alpha) per layer call."""
+    handles, inputs = [], {}
+    for layer, conv in enumerate((model.gat1, model.gat2)):
+        def pre(module, args, layer=layer):
+            x, edges, attrs = args[0], args[1], args[2]
+            proper = edges[0] != edges[1]
+            inputs[layer] = (x, edges[:, proper], attrs[proper], torch.nonzero(proper).squeeze(-1))
+
+        def message(module, msg_inputs, out, layer=layer):
+            x, edges, attrs, positions = inputs[layer]
+            count = edges.shape[1]
+            log_alpha = explainer.log_alpha(layer, x, edges, attrs, out[:count])
+            if record is not None:
+                record.append((layer, positions, log_alpha))
+            g = explainer.gate(log_alpha, generator)[:, None, None]
+            gated = g * out[:count] + (1 - g) * explainer.baselines[layer]
+            return torch.cat((gated, out[count:]))
+        handles += [conv.register_forward_pre_hook(pre), conv.register_message_forward_hook(message)]
+    try:
+        yield
+    finally:
+        for handle in handles:
+            handle.remove()
+
+
+def graphmask_loss(ctx, column, explainer, index, base, effect, lagrange, generator, tolerance):
+    """L0 penalty (mean P(gate != 0)) + lagrange * (the score change as a share of the graph effect - tolerance)."""
+    images = index.to_batch(ctx.store.part_table(ctx.device), ctx.device)
+    record = []
+    with gated_messages(ctx.model, explainer, generator, record):
+        fused, _ = ctx.score_images(column, images, 1)
+    l0 = torch.cat([explainer.open_probability(a) for _, _, a in record]).mean() if record else fused.new_zeros(())
+    divergence = (fused[0, column] - base).abs() / effect
+    return l0, divergence
+
+
+def train_graphmask(contexts, seed, epochs=10, lr=3e-3, lagrange_lr=1e-2, tolerance=0.05):
+    """Train GraphMask on the same training captions as PGExplainer (contexts: callables returning
+    (ctx, column, index, base, empty)). GraphMask's constrained objective: minimize the L0 penalty subject to a
+    score change of at most tolerance x the graph effect, by gradient descent on the gates and ascent on the Lagrange
+    multiplier. Returns the explainer and the last epoch's mean L0 penalty and mean divergence."""
+    with torch.random.fork_rng():
+        torch.manual_seed(seed)
+        explainer = GraphMask()
+        optimizer = torch.optim.Adam(explainer.parameters(), lr=lr)
+        generator = torch.Generator().manual_seed(seed)
+        order_rng = np.random.default_rng(seed)
+        lagrange, last = 1., []
+        for _ in range(epochs):
+            last = []
+            for i in order_rng.permutation(len(contexts)):
+                ctx, column, index, base, empty = contexts[i]()
+                with torch.enable_grad():
+                    l0, divergence = graphmask_loss(ctx, column, explainer, index, base, base - empty, lagrange,
+                                                    generator, tolerance)
+                    loss = l0 + lagrange * (divergence - tolerance)
+                    optimizer.zero_grad()
+                    grads = torch.autograd.grad(loss, list(explainer.parameters()), allow_unused=True)
+                for p, g in zip(explainer.parameters(), grads):
+                    p.grad = g
+                optimizer.step()
+                lagrange = max(0., lagrange + lagrange_lr * float(divergence.detach() - tolerance))
+                last.append((float(l0.detach()), float(divergence.detach())))
+    explainer.eval()
+    return explainer, {"l0": float(np.mean([a for a, _ in last])) if last else None,
+                       "divergence": float(np.mean([b for _, b in last])) if last else None, "lagrange": lagrange}
+
+
+@torch.no_grad()
+def graphmask(ctx, column, index, explainer):
+    """GraphMask's open probabilities of the image's messages: per input edge, the larger of its two layers (NaN for
+    an edge that carries no message, a self-loop relation), and per part, for the shared comparison: a triple takes
+    its labelled edge's value, an object node the largest value among the messages it sends."""
+    images = index.to_batch(ctx.store.part_table(ctx.device), ctx.device)
+    record = []
+    with gated_messages(ctx.model, explainer, None, record):
+        ctx.score_images(column, images, 1)
+    edges = np.full(int(index.edge_counts[0]), np.nan)
+    for _, positions, log_alpha in record:
+        p = explainer.open_probability(log_alpha).cpu().numpy()
+        pos = positions.cpu().numpy()
+        edges[pos] = np.fmax(edges[pos], p)
+    n, m = real_nodes(index), labelled_count(index)
+    src = index.fields['edge_src']
+    nodes = np.zeros(n)
+    for e, v in enumerate(edges):
+        if np.isfinite(v) and src[e] < n:
+            nodes[src[e]] = max(nodes[src[e]], v)
+    parts = [("node", j, float(nodes[j])) for j in range(n)] + \
+            [("triple", j, float(np.nan_to_num(edges[j]))) for j in range(m)]
+    return parts, edges
+
+
+# GStarX (Zhang et al., NeurIPS 2022) --------------------------------------------------------------------------------
+
+def part_graph(index, every):
+    """Adjacency (list of sets, positions in every) of the parts: two object nodes are adjacent when a labelled or
+    completion edge joins them (the global node is not a part), and a triple is adjacent to its two end nodes."""
+    n = real_nodes(index)
+    src, dst, kinds = index.fields['edge_src'], index.fields['edge_dst'], index.fields['edge_kind']
+    position = {part: i for i, part in enumerate(every)}
+    adjacency = [set() for _ in every]
+    for e, (s, d, k) in enumerate(zip(src, dst, kinds)):
+        if k == EDGE_GLOBAL or s >= n or d >= n:
+            continue
+        ends = [position.get(("node", int(s))), position.get(("node", int(d)))]
+        if s != d and None not in ends:
+            adjacency[ends[0]].add(ends[1])
+            adjacency[ends[1]].add(ends[0])
+        if k == EDGE_LABELLED and ("triple", e) in position:
+            t = position[("triple", e)]
+            for v in ends:
+                if v is not None:
+                    adjacency[t].add(v)
+                    adjacency[v].add(t)
+    return adjacency
+
+
+def _connected(members, adjacency):
+    members = set(members)
+    if not members:
+        return False
+    stack, seen = [min(members)], set()
+    while stack:
+        v = stack.pop()
+        if v in seen:
+            continue
+        seen.add(v)
+        stack.extend(adjacency[v] & members - seen)
+    return seen == members
+
+
+def hamiache_navarro(players, adjacency, value, tau=None, squarings=30, tol=1e-12):
+    """Exact Hamiache-Navarro value of a graph game on a few players.
+
+    value: {frozenset (connected coalition): v(S)} with v(empty) = 0. The associated game
+    v*(S) = v(S) + tau * sum_{j in N(S)} [v(S + j) - v(S) - v(j)] (Hamiache 2001; Navarro 2020 for graph games) only
+    involves connected coalitions, so it is a linear map on them; its iterates converge, for 0 < tau < 2 / n, to an
+    inessential game whose value on {i} is i's HN value (on a complete graph, the Shapley value). The limit is taken
+    by squaring the map until it stops changing (squaring past that point only adds rounding error).
+    """
+    coalitions = [c for c in value if c]
+    where = {c: i for i, c in enumerate(coalitions)}
+    n = len(players)
+    tau = tau if tau is not None else 1. / n
+    M = np.eye(len(coalitions))
+    for c, i in where.items():
+        neighbours = set().union(*(adjacency[p] for p in c)) & set(players) - c
+        for j in neighbours:
+            M[i, where[c | {j}]] += tau
+            M[i, i] -= tau
+            M[i, where[frozenset([j])]] -= tau
+    for _ in range(squarings):
+        squared = M @ M
+        done = np.abs(squared - M).max() < tol
+        M = squared
+        if done:
+            break
+    v = np.array([value[c] for c in coalitions])
+    limit = M @ v
+    return {p: float(limit[where[frozenset([p])]]) for p in players}
+
+
+def _grow(seed, adjacency, size, rng):
+    """A random connected set of at most size parts containing seed, grown one random neighbour at a time."""
+    members = {seed}
+    while len(members) < size:
+        frontier = sorted(set().union(*(adjacency[p] for p in members)) - members)
+        if not frontier:
+            break
+        members.add(int(rng.choice(frontier)))
+    return frozenset(members)
+
+
+def gstarx(ctx, column, index, every, rng, size=5):
+    """GStarX's structure-aware values of the parts.
+
+    The value function is the rank-1 margin when only a coalition of parts is kept, minus its value with no part (the
+    one of the Shapley reference). A graph of 44 parts is too big for the exact HN value, so, like GStarX's sampled
+    version, one connected set of at most size parts is grown from every part, the exact HN value is taken inside
+    each set (the parts outside it removed), and a part's value is its mean over the sets that contain it. Margins
+    are cached across sets. Returns the parts with their value and the number of margin evaluations.
+    """
+    adjacency = part_graph(index, every)
+    samples = [_grow(i, adjacency, size, rng) for i in range(len(every))]
+    needed = {frozenset()}
+    for sample in samples:
+        members = sorted(sample)
+        for r in range(1, len(members) + 1):
+            needed.update(frozenset(c) for c in combinations(members, r) if _connected(c, adjacency))
+    needed = sorted(needed, key=lambda c: (len(c), sorted(c)))
+    margins = margin_values(ctx, column, [keep_only(index, *split([every[i] for i in sorted(c)])) for c in needed])
+    value = {c: float(v - margins[0]) for c, v in zip(needed, margins)}
+    totals, counts = np.zeros(len(every)), np.zeros(len(every))
+    for sample in samples:
+        local = {c: v for c, v in value.items() if c and c <= sample}
+        for p, phi in hamiache_navarro(sorted(sample), adjacency, local).items():
+            totals[p] += phi
+            counts[p] += 1
+    scores = totals / np.maximum(counts, 1)
+    return [(kind, j, float(s)) for (kind, j), s in zip(every, scores)], len(needed)
