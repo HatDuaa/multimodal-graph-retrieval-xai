@@ -69,3 +69,215 @@ main_r3_seed2 10500 861s
 main_r3_seed2 {"model": "main_r3", "seed": 2, "seconds": 870.7401082515717, "recall@1": 0.4620521019467695}
 exit 0
 Tue 17 Nov 2026 18:48:03 +07
+free 96Gi
+Wed 18 Nov 2026 20:12:15 +07
+model countonly_factual_r3
+countonly_factual_r3_seed0 500 75s
+countonly_factual_r3_seed0 1000 139s
+countonly_factual_r3_seed0 1500 209s
+countonly_factual_r3_seed0 2000 273s
+countonly_factual_r3_seed0 2500 339s
+countonly_factual_r3_seed0 3000 402s
+countonly_factual_r3_seed0 3500 477s
+countonly_factual_r3_seed0 4000 552s
+countonly_factual_r3_seed0 4500 618s
+countonly_factual_r3_seed0 5000 699s
+countonly_factual_r3_seed0 5500 769s
+countonly_factual_r3_seed0 6000 845s
+countonly_factual_r3_seed0 6500 911s
+countonly_factual_r3_seed0 7000 975s
+countonly_factual_r3_seed0 7500 1045s
+countonly_factual_r3_seed0 8000 1110s
+countonly_factual_r3_seed0 8500 1169s
+countonly_factual_r3_seed0 9000 1236s
+countonly_factual_r3_seed0 9500 1306s
+countonly_factual_r3_seed0 10000 1373s
+countonly_factual_r3_seed0 10500 1442s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "seconds": 1459.9018821716309, "recall@1": 0.49148876140317876}
+countonly_factual_r3_seed1 500 76s
+countonly_factual_r3_seed1 1000 141s
+countonly_factual_r3_seed1 1500 213s
+countonly_factual_r3_seed1 2000 280s
+countonly_factual_r3_seed1 2500 347s
+countonly_factual_r3_seed1 3000 408s
+countonly_factual_r3_seed1 3500 484s
+countonly_factual_r3_seed1 4000 558s
+countonly_factual_r3_seed1 4500 624s
+countonly_factual_r3_seed1 5000 699s
+countonly_factual_r3_seed1 5500 767s
+countonly_factual_r3_seed1 6000 841s
+countonly_factual_r3_seed1 6500 906s
+countonly_factual_r3_seed1 7000 969s
+countonly_factual_r3_seed1 7500 1039s
+countonly_factual_r3_seed1 8000 1103s
+countonly_factual_r3_seed1 8500 1162s
+countonly_factual_r3_seed1 9000 1230s
+countonly_factual_r3_seed1 9500 1298s
+countonly_factual_r3_seed1 10000 1367s
+countonly_factual_r3_seed1 10500 1435s
+countonly_factual_r3_seed1 {"model": "countonly_factual_r3", "seed": 1, "seconds": 1453.0244071483612, "recall@1": 0.48847926267281105}
+countonly_factual_r3_seed2 500 78s
+countonly_factual_r3_seed2 1000 144s
+countonly_factual_r3_seed2 1500 216s
+countonly_factual_r3_seed2 2000 282s
+countonly_factual_r3_seed2 2500 349s
+countonly_factual_r3_seed2 3000 412s
+countonly_factual_r3_seed2 3500 489s
+countonly_factual_r3_seed2 4000 564s
+countonly_factual_r3_seed2 4500 632s
+countonly_factual_r3_seed2 5000 711s
+countonly_factual_r3_seed2 5500 782s
+countonly_factual_r3_seed2 6000 858s
+countonly_factual_r3_seed2 6500 924s
+countonly_factual_r3_seed2 7000 988s
+countonly_factual_r3_seed2 7500 1057s
+countonly_factual_r3_seed2 8000 1121s
+countonly_factual_r3_seed2 8500 1180s
+countonly_factual_r3_seed2 9000 1249s
+countonly_factual_r3_seed2 9500 1320s
+countonly_factual_r3_seed2 10000 1388s
+countonly_factual_r3_seed2 10500 1457s
+countonly_factual_r3_seed2 {"model": "countonly_factual_r3", "seed": 2, "seconds": 1475.4756231307983, "recall@1": 0.48735070064892316}
+exit 0
+Wed 18 Nov 2026 21:25:31 +07
+free 92Gi
+Wed 18 Nov 2026 22:10:22 +07
+model countonly_factual_r3
+countonly_factual_r3_seed0 500 199s
+countonly_factual_r3_seed0 1000 275s
+countonly_factual_r3_seed0 1500 379s
+countonly_factual_r3_seed0 2000 470s
+countonly_factual_r3_seed0 2500 555s
+countonly_factual_r3_seed0 3000 629s
+countonly_factual_r3_seed0 3500 741s
+countonly_factual_r3_seed0 4000 864s
+countonly_factual_r3_seed0 4500 956s
+countonly_factual_r3_seed0 5000 1077s
+countonly_factual_r3_seed0 5500 1178s
+countonly_factual_r3_seed0 6000 1288s
+countonly_factual_r3_seed0 6500 1377s
+countonly_factual_r3_seed0 7000 1460s
+countonly_factual_r3_seed0 7500 1555s
+countonly_factual_r3_seed0 8000 1654s
+countonly_factual_r3_seed0 8500 1730s
+countonly_factual_r3_seed0 9000 1823s
+countonly_factual_r3_seed0 9500 1919s
+countonly_factual_r3_seed0 10000 2009s
+countonly_factual_r3_seed0 10500 2104s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "seconds": 2129.107533931732, "recall@1": 0.49148876140317876, "pgexplainer": {"captions": 200, "seconds": 82.73676609992981, "final_loss": -0.9801340400706977}}
+countonly_factual_r3_seed1 500 195s
+countonly_factual_r3_seed1 1000 272s
+countonly_factual_r3_seed1 1500 374s
+countonly_factual_r3_seed1 2000 467s
+countonly_factual_r3_seed1 2500 553s
+countonly_factual_r3_seed1 3000 628s
+countonly_factual_r3_seed1 3500 745s
+countonly_factual_r3_seed1 4000 864s
+countonly_factual_r3_seed1 4500 955s
+countonly_factual_r3_seed1 5000 1065s
+countonly_factual_r3_seed1 5500 1165s
+countonly_factual_r3_seed1 6000 1272s
+countonly_factual_r3_seed1 6500 1361s
+countonly_factual_r3_seed1 7000 1442s
+countonly_factual_r3_seed1 7500 1538s
+countonly_factual_r3_seed1 8000 1638s
+countonly_factual_r3_seed1 8500 1718s
+countonly_factual_r3_seed1 9000 1811s
+countonly_factual_r3_seed1 9500 1908s
+countonly_factual_r3_seed1 10000 2003s
+countonly_factual_r3_seed1 10500 2104s
+countonly_factual_r3_seed1 {"model": "countonly_factual_r3", "seed": 1, "seconds": 2128.8965759277344, "recall@1": 0.48847926267281105, "pgexplainer": {"captions": 200, "seconds": 84.44714307785034, "final_loss": -0.922577597014606}}
+countonly_factual_r3_seed2 500 210s
+countonly_factual_r3_seed2 1000 291s
+countonly_factual_r3_seed2 1500 395s
+countonly_factual_r3_seed2 2000 489s
+countonly_factual_r3_seed2 2500 574s
+countonly_factual_r3_seed2 3000 658s
+countonly_factual_r3_seed2 3500 775s
+countonly_factual_r3_seed2 4000 903s
+countonly_factual_r3_seed2 4500 1000s
+countonly_factual_r3_seed2 5000 1124s
+countonly_factual_r3_seed2 5500 1228s
+countonly_factual_r3_seed2 6000 1338s
+countonly_factual_r3_seed2 6500 1425s
+countonly_factual_r3_seed2 7000 1509s
+countonly_factual_r3_seed2 7500 1606s
+countonly_factual_r3_seed2 8000 1709s
+countonly_factual_r3_seed2 8500 1786s
+countonly_factual_r3_seed2 9000 1883s
+countonly_factual_r3_seed2 9500 1990s
+countonly_factual_r3_seed2 10000 2081s
+countonly_factual_r3_seed2 10500 2173s
+countonly_factual_r3_seed2 {"model": "countonly_factual_r3", "seed": 2, "seconds": 2199.5103640556335, "recall@1": 0.48735070064892316, "pgexplainer": {"captions": 200, "seconds": 84.46608304977417, "final_loss": -0.8366752699390054}}
+exit 0
+free 92Gi
+Wed 18 Nov 2026 23:58:07 +07
+model main_r3
+main_r3_seed0 500 84s
+main_r3_seed0 1000 118s
+main_r3_seed0 1500 157s
+main_r3_seed0 2000 197s
+main_r3_seed0 2500 234s
+main_r3_seed0 3000 267s
+main_r3_seed0 3500 312s
+main_r3_seed0 4000 354s
+main_r3_seed0 4500 395s
+main_r3_seed0 5000 440s
+main_r3_seed0 5500 479s
+main_r3_seed0 6000 520s
+main_r3_seed0 6500 555s
+main_r3_seed0 7000 592s
+main_r3_seed0 7500 632s
+main_r3_seed0 8000 668s
+main_r3_seed0 8500 702s
+main_r3_seed0 9000 739s
+main_r3_seed0 9500 779s
+main_r3_seed0 10000 818s
+main_r3_seed0 10500 855s
+main_r3_seed0 {"model": "main_r3", "seed": 0, "seconds": 865.6479432582855, "recall@1": 0.46666039687764505, "pgexplainer": {"captions": 200, "seconds": 41.69218301773071, "final_loss": -0.4909178398549557}}
+main_r3_seed1 500 88s
+main_r3_seed1 1000 122s
+main_r3_seed1 1500 161s
+main_r3_seed1 2000 199s
+main_r3_seed1 2500 239s
+main_r3_seed1 3000 273s
+main_r3_seed1 3500 318s
+main_r3_seed1 4000 360s
+main_r3_seed1 4500 402s
+main_r3_seed1 5000 447s
+main_r3_seed1 5500 486s
+main_r3_seed1 6000 527s
+main_r3_seed1 6500 560s
+main_r3_seed1 7000 597s
+main_r3_seed1 7500 636s
+main_r3_seed1 8000 672s
+main_r3_seed1 8500 708s
+main_r3_seed1 9000 745s
+main_r3_seed1 9500 785s
+main_r3_seed1 10000 824s
+main_r3_seed1 10500 862s
+main_r3_seed1 {"model": "main_r3", "seed": 1, "seconds": 872.1525650024414, "recall@1": 0.46562588168908114, "pgexplainer": {"captions": 200, "seconds": 45.20145606994629, "final_loss": -0.47255497397854923}}
+main_r3_seed2 500 90s
+main_r3_seed2 1000 125s
+main_r3_seed2 1500 167s
+main_r3_seed2 2000 207s
+main_r3_seed2 2500 247s
+main_r3_seed2 3000 282s
+main_r3_seed2 3500 327s
+main_r3_seed2 4000 370s
+main_r3_seed2 4500 410s
+main_r3_seed2 5000 458s
+main_r3_seed2 5500 498s
+main_r3_seed2 6000 539s
+main_r3_seed2 6500 573s
+main_r3_seed2 7000 611s
+main_r3_seed2 7500 651s
+main_r3_seed2 8000 687s
+main_r3_seed2 8500 723s
+main_r3_seed2 9000 761s
+main_r3_seed2 9500 801s
+main_r3_seed2 10000 840s
+main_r3_seed2 10500 879s
+main_r3_seed2 {"model": "main_r3", "seed": 2, "seconds": 887.6295788288116, "recall@1": 0.4620521019467695, "pgexplainer": {"captions": 200, "seconds": 44.69740605354309, "final_loss": -0.4361509462981485}}
+exit 0
+Thu 19 Nov 2026 00:42:01 +07

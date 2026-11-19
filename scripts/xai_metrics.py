@@ -54,7 +54,15 @@ orders the same image parts and is measured the same way, by deletion and insert
   margin as value function (keep only a set of parts), the listwise idea of RankingSHAP / RankSHAP; also the
   reference the other explainers are checked against (Spearman of their order with the Shapley values, top-5 overlap);
 - gnnexplainer (on the first --gnn captions of the sample): a soft mask over the parts' input vectors, learned to keep
-  the final score with a size and an entropy penalty (Ying et al., NeurIPS 2019, on features), parts ordered by mask.
+  the final score with a size and an entropy penalty (Ying et al., NeurIPS 2019, on features), parts ordered by mask;
+- pgexplainer: GNNExplainer's mask amortized by one MLP over the parts' encoded vectors (Luo et al., NeurIPS 2020),
+  trained once per checkpoint on --pg-train val captions outside the comparison sample and the evidence captions;
+- gnn_lrp: relevant walks through the two GAT layers (Schnake et al., TPAMI 2022), summed per part;
+- graphsvx (on the first --gnn captions): a Kernel SHAP weighted surrogate of the same value function and budget as
+  shapley (Duval and Malliaros, ECML-PKDD 2021);
+- subgraphx (on the first --gnn captions): Monte Carlo tree search over connected subgraphs with local Shapley
+  rewards (Yuan et al., ICML 2021), parts ordered by the pruning path.
+The adaptations of the last four to the reranker are written in src/explain/xai_baselines.py.
 Per explainer: Fid+@k / Fid-@k, rank, lost rank 1, k_flip, and the normalized areas under the curves
 (deletion: mean over k = 1..K of the share of the graph effect still there, lower is better; insertion: mean share
 kept when only the first k parts stay, higher is better), with a paired Wilcoxon test against "model", and, for the
@@ -78,9 +86,10 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphIndex, GraphStore  # noqa: E402
+from src.explain import xai_baselines as baselines  # noqa: E402
 from src.explain.score_breakdown import top50_deltas  # noqa: E402
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count,  # noqa: E402
-                                     message_drop, rank_of, real_nodes)
+                                     margin_values, message_drop, rank_of, real_nodes, split)
 from src.graph.counts import CAPTION_CLASSES, compatible  # noqa: E402
 from src.graph.dedup import PERSON, ancestors, coarse_type, same_type  # noqa: E402
 from src.graph.scene_graph import Vocab  # noqa: E402
@@ -92,7 +101,7 @@ MODELS = {"countonly_factual_r3": (REPO_ROOT / "experiments" / "improve" / "coun
           "main_r3": (REPO_ROOT / "experiments" / "level1" / "gat", None)}
 KS, RANDOM, THRESHOLDS, SUB_NODES, SUB_EDGES, COSINE, CURVE = (1, 3, 5), 10, (0.8, 0.9), 3, 3, .955, 10
 EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "shapley")
+              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley")
 ALPHAS, ALPHA_KS, ALPHA_DRAWS, PERMUTATIONS = (0.1, 0.5), (5, 10), 10, 16
 GENERIC_PEOPLE = {"person", "people", "persons", "someone", "somebody", "human", "humans", "individual", "crowd"}
 KIND_NAMES = {EDGE_LABELLED: "labelled", EDGE_COMPLETION: "completion", EDGE_GLOBAL: "global"}
@@ -150,10 +159,6 @@ def ranked_parts(pairs, index, scales):
         triples[j] = t["term"] * scales["triples"]
     parts = [("node", j, float(t)) for j, t in enumerate(nodes)] + [("triple", j, float(t)) for j, t in enumerate(triples)]
     return sorted(parts, key=lambda p: -p[2]), nodes, triples
-
-
-def split(parts):
-    return [p[1] for p in parts if p[0] == "node"], [p[1] for p in parts if p[0] == "triple"]
 
 
 def random_parts(rng, index, n_nodes, n_triples):
@@ -326,15 +331,6 @@ def occlusion(ctx, column, index, every, base):
     return [(kind, j, float(base - s)) for (kind, j), s in zip(every, scores)]
 
 
-def margin_values(ctx, column, edits, chunk=256):
-    """Target final score minus the best other candidate's, for each edited graph (the rank-1 margin)."""
-    values = []
-    for start in range(0, len(edits), chunk):
-        *_, full = ctx.rescore(column, edits[start:start + chunk], full=True)
-        values.extend(full[:, column] - np.delete(full, column, axis=1).max(1))
-    return np.array(values)
-
-
 def shapley(ctx, column, index, every, rng, permutations=PERMUTATIONS):
     """Shapley values of the parts by permutation sampling, with a ranking value function.
 
@@ -394,9 +390,11 @@ def agreement(order, reference):
             "top5_overlap": len(set(order[:5]) & top) / min(5, len(parts))}
 
 
-def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty):
-    """Every explainer's order of the same image parts, and the attributions of the decompositions among them."""
+def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty, pg=None):
+    """Every explainer's order of the same image parts, the attributions of the decompositions among them, IG's
+    completeness, GNN-LRP's check and the seconds each explainer took."""
     store = ctx.store
+    seconds, started = {}, time.time()
     every = [(kind, j) for kind, j, _ in ranked]
     orders = {"model": [p[:2] for p in ranked], "lowest": [p[:2] for p in ranked[::-1]]}
     orders["random"] = [every[i] for i in rng.permutation(len(every))]
@@ -406,20 +404,31 @@ def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty):
     triples = store.part_vectors[index.fields["triple_rows"][labelled]] @ caption
     clip = [("node", j, float(v)) for j, v in enumerate(nodes)] + [("triple", j, float(v)) for j, v in enumerate(triples)]
     orders["clip"] = [p[:2] for p in sorted(clip, key=lambda p: -p[2])]
+    seconds["clip"], started = time.time() - started, time.time()
     node_grad, triple_grad = ctx.gradient_terms(column, index)
     grad = [("node", j, float(v)) for j, v in enumerate(node_grad)] + [("triple", j, float(v)) for j, v in enumerate(triple_grad)]
     orders["gradient"] = [p[:2] for p in sorted(grad, key=lambda p: -p[2])]
+    seconds["gradient"], started = time.time() - started, time.time()
     ig, completeness = integrated_gradients(ctx, column, index)
     orders["integrated_gradients"] = [p[:2] for p in sorted(ig, key=lambda p: -p[2])]
+    seconds["integrated_gradients"], started = time.time() - started, time.time()
     if gnn:
         orders["gnnexplainer"] = [p[:2] for p in gnnexplainer_order(ctx, column, index, base, empty)]
+        seconds["gnnexplainer"], started = time.time() - started, time.time()
+    if pg is not None:
+        orders["pgexplainer"] = [p[:2] for p in sorted(pg.explain(ctx, column, index), key=lambda p: -p[2])]
+        seconds["pgexplainer"], started = time.time() - started, time.time()
+    lrp, lrp_check = baselines.gnn_lrp(ctx, column, index)
+    orders["gnn_lrp"] = [p[:2] for p in sorted(lrp, key=lambda p: -p[2])]
+    seconds["gnn_lrp"] = time.time() - started
     attributions = {"model": {p[:2]: p[2] for p in ranked}, "gradient": {p[:2]: p[2] for p in grad},
                     "integrated_gradients": {p[:2]: p[2] for p in ig}}
-    return orders, attributions, completeness
+    return orders, attributions, completeness, lrp_check, seconds
 
 
-def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
-    """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes."""
+def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0):
+    """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes; pg is the
+    trained PGExplainer of this checkpoint, seed its seed (for the rng of GraphSVX and SubgraphX)."""
     store, column = ctx.store, ctx.top
     image_id = ctx.ids[column]
     graph = store.graphs[image_id]
@@ -550,17 +559,34 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False):
                                 "all": ends["subject"] and ends["object"] and predicate})
     out["triple_validity"] = triple_validity
     if compare and n_parts and effect > 1e-4:
-        orders, attributions, completeness = explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty)
+        orders, attributions, completeness, lrp_check, seconds = explainer_orders(ctx, column, index, ranked, rng, gnn,
+                                                                                  base, empty, pg)
         every = [p[:2] for p in ranked]
+        started = time.time()
         occluded = occlusion(ctx, column, index, every, base)
         orders["occlusion"] = [p[:2] for p in sorted(occluded, key=lambda p: -p[2])]
         attributions["occlusion"] = {p[:2]: p[2] for p in occluded}
+        seconds["occlusion"] = time.time() - started
         reference = None
         if gnn:
+            started = time.time()
             values, efficiency = shapley(ctx, column, index, every, rng)
             orders["shapley"] = [p[:2] for p in sorted(values, key=lambda p: -p[2])]
             reference = {p[:2]: p[2] for p in values}
             out["shapley_efficiency"] = efficiency
+            seconds["shapley"] = time.time() - started
+            # GraphSVX and SubgraphX draw from their own rng, so the other explainers' draws stay as before
+            caption = [int(x) for x in ctx.caption_id.split("_")]
+            extra_rng = np.random.default_rng([2027, seed, *caption])
+            started = time.time()
+            svx, out["graphsvx_efficiency"] = baselines.graphsvx(ctx, column, index, every, extra_rng,
+                                                                 PERMUTATIONS * (len(every) + 1))
+            orders["graphsvx"] = [p[:2] for p in sorted(svx, key=lambda p: -p[2])]
+            seconds["graphsvx"], started = time.time() - started, time.time()
+            sx, out["subgraphx_evaluations"] = baselines.subgraphx(ctx, column, index, every, extra_rng)
+            orders["subgraphx"] = [p[:2] for p in sorted(sx, key=lambda p: -p[2])]
+            seconds["subgraphx"] = time.time() - started
+        out["explainer_seconds"], out["gnn_lrp_check"] = seconds, lrp_check
         seed = [2026, int(ctx.caption_id.split("_")[0]), int(ctx.caption_id.split("_")[1])]
         out["explainers"] = {}
         for name, order in orders.items():
@@ -724,6 +750,19 @@ def aggregate(records):
     if ig:
         out["ig_completeness"] = {"captions": len(ig), "mean_abs_gap_share": mean(
             [abs(c["sum"] - c["difference"]) / abs(c["difference"]) for c in ig if abs(c["difference"]) > 1e-6])}
+    svx = [r["graphsvx_efficiency"] for r in usable if "graphsvx_efficiency" in r]
+    if svx:
+        out["graphsvx_efficiency"] = {"captions": len(svx),
+                                      "max_abs_gap": max(abs(c["sum"] - c["difference"]) for c in svx),
+                                      "evaluations_mean": mean([c["evaluations"] for c in svx])}
+    lrp = [r["gnn_lrp_check"] for r in usable if "gnn_lrp_check" in r]
+    if lrp:
+        out["gnn_lrp_check"] = {"captions": len(lrp),
+                                "max_layer_gap": max(max(c["layer1_gap"], c["layer2_gap"]) for c in lrp),
+                                "max_conservation_gap": max(abs(c["output_relevance"] - c["walks"]) for c in lrp)}
+    sub = [r["subgraphx_evaluations"] for r in usable if "subgraphx_evaluations" in r]
+    if sub:
+        out["subgraphx_evaluations_mean"] = mean(sub)
     compared = [r for r in usable if "explainers" in r]
     if compared:
         out["explainers"] = {}
@@ -733,7 +772,9 @@ def aggregate(records):
             entry = {"captions": len(rows), "deletion_auc": mean([c.get("deletion_auc") for c in rows]),
                      "insertion_auc": mean([c.get("insertion_auc") for c in rows]),
                      "k_flip_reached": mean([c["k_flip"] is not None for c in rows]),
-                     "k_flip_mean": mean([c["k_flip"] for c in rows])}
+                     "k_flip_mean": mean([c["k_flip"] for c in rows]),
+                     "seconds": mean([r["explainer_seconds"].get(name) for r in compared
+                                      if name in r["explainers"] and "explainer_seconds" in r])}
             for k in KS:
                 entry[f"plus_{k}_lost_rank1"] = mean([c["deletion_rank"][k] > 1 for c in rows if len(c["sizes"]) > k])
                 entry[f"minus_{k}_rank"] = mean([c["insertion_rank"][k] for c in rows if len(c["sizes"]) > k])
@@ -757,6 +798,27 @@ def aggregate(records):
     return out
 
 
+def train_pg(model, store, device, pool, count, seed):
+    """PGExplainer of one checkpoint, trained on the first count captions of pool whose rank-1 image has a positive
+    graph effect; returns it and {captions, seconds, final_loss}."""
+    started = time.time()
+
+    def prepare(cid):
+        ctx = QueryContext(model, store, cid, device)
+        index = image_index(store, store.graphs[ctx.ids[ctx.top]])
+        (base, empty), _ = ctx.rescore(ctx.top, [edit(index), edit(index, drop_nodes=range(real_nodes(index)))])
+        return ctx, ctx.top, index, float(base), float(empty)
+    chosen = []
+    for cid in pool:
+        if len(chosen) == count:
+            break
+        _, _, _, base, empty = prepare(cid)
+        if base - empty > 1e-4:
+            chosen.append(cid)
+    explainer, loss = baselines.train_pgexplainer([lambda cid=cid: prepare(cid) for cid in chosen], seed=2027 + seed)
+    return explainer, {"captions": len(chosen), "seconds": time.time() - started, "final_loss": loss}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs="+", default=list(MODELS))
@@ -765,6 +827,8 @@ def main() -> None:
     parser.add_argument("--compare", type=int, default=1000, help="captions of the explainer comparison (rng 2026)")
     parser.add_argument("--gnn", type=int, default=200,
                         help="first captions of the comparison that also run GNNExplainer and Shapley sampling")
+    parser.add_argument("--pg-train", type=int, default=200,
+                        help="val captions (outside the comparison and the evidence captions) that train PGExplainer")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--merge", action="store_true", help="add these runs to an existing metrics.json / cases.json")
@@ -820,12 +884,16 @@ def main() -> None:
                 sys.exit(f"stop before {run}: {free:.1f} GB free < {MIN_FREE_GB} GB")
             model, _, saved = load_run_model(root / run, device, store=store)
             started = time.time()
+            pool = sorted(set(caption_ids) - compare_ids - set(case_ids))
+            pg, pg_info = (train_pg(model, store, device, np.random.default_rng(2027).permutation(pool), args.pg_train,
+                                    seed) if compare_ids and args.pg_train else (None, None))
             records, hits = [], 0
             for n, cid in enumerate(caption_ids):
                 ctx = QueryContext(model, store, cid, device)
                 rng = np.random.default_rng([2026, seed, int(cid.split("_")[0]), int(cid.split("_")[1])])
                 keep = seed == 0 and cid in case_ids
-                record = measure(ctx, rng, info, detail=keep, compare=cid in compare_ids, gnn=cid in gnn_ids)
+                record = measure(ctx, rng, info, detail=keep, compare=cid in compare_ids, gnn=cid in gnn_ids, pg=pg,
+                                 seed=seed)
                 hits += record["correct"]
                 if keep:
                     detailed.setdefault(cid, {})[name] = record
@@ -841,7 +909,7 @@ def main() -> None:
                         rng = np.random.default_rng([2026, seed, int(cid.split("_")[0]), int(cid.split("_")[1])])
                         detailed.setdefault(cid, {})[name] = measure(ctx, rng, info, detail=True)
             result["runs"][run] = {"model": name, "seed": seed, "seconds": time.time() - started,
-                                   "recall@1": hits / len(caption_ids),
+                                   "recall@1": hits / len(caption_ids), "pgexplainer": pg_info,
                                    "groups": {group: aggregate([r for r in records if keep(r)])
                                               for group, keep in (("all", lambda r: True), ("correct", lambda r: r["correct"]),
                                                                   ("wrong", lambda r: not r["correct"]))}}
