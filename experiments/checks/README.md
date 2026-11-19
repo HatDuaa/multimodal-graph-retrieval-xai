@@ -205,6 +205,37 @@ python scripts/checks/three_channel_probe.py --top-k 50,100,200,0
 
 Khoảng 15 phút trên máy GPU (phần lớn là xếp hạng lại cả pool); riêng `--top-k 50` mất chưa tới 2 phút.
 
+## 7. CLIP đa ngữ cho truy vấn tiếng Việt (dòng 9 bảng phân công)
+
+Người làm: Khang (hỗ trợ). Chạy trên molab (`notebooks/mkgw_molab.py`, bước 3b) ngày 2026-11-17.
+
+**Câu hỏi.** Encoder CLIP của project (OpenAI ViT-B/32) chỉ được huấn luyện với văn bản tiếng Anh. MMKG tiếng Việt cần một encoder hiểu được truy vấn tiếng Việt. Câu hỏi là chọn encoder nào.
+
+**Nơi chọn.** Encoder được chọn trên tập val của MKG-W, không chọn trên MMKG tiếng Việt. Lý do: kết quả chính trên MMKG tiếng Việt là zero-shot, không được chọn gì trên chính bộ đó (`vietnamese-mmkg/DATA_CARD.md`, mục 8).
+- Có 84 thực thể val của MKG-W có mô tả tiếng Việt trên Wikidata. Mỗi thực thể được hỏi hai lần, bằng tiếng Việt và bằng tiếng Anh, cả hai đều đã che tên theo cùng một hàm `mask_name`.
+- Pool là toàn bộ 892 ảnh val. Encoder đóng băng, không có ngẫu nhiên, nên chỉ chạy một lần.
+
+| Encoder | R@1 vi | R@5 vi | R@10 vi | MRR vi | R@1 en | MRR en |
+|---|---|---|---|---|---|---|
+| OpenAI ViT-B/32 (encoder hiện tại) | 10.71 | 16.67 | 17.86 | 14.10 | 35.71 | 46.03 |
+| XLM-R base + ViT-B/32 (LAION-5B) | 25.00 | 50.00 | 61.90 | 37.83 | 28.57 | 40.50 |
+| M-CLIP: text đa ngữ chưng cất vào không gian OpenAI B/32 | 28.57 | 51.19 | 55.95 | 40.05 | 33.33 | 44.62 |
+| **XLM-R large + ViT-H/14 (LAION-5B)** | **40.48** | **64.29** | **78.57** | **51.80** | 40.48 | 51.31 |
+
+**Kết luận.**
+- Encoder OpenAI B/32 mất gần hết khả năng khi truy vấn bằng tiếng Việt: R@1 giảm từ 35,71 xuống 10,71.
+- XLM-R large ViT-H/14 cao nhất trên truy vấn tiếng Việt và không chênh lệch giữa tiếng Việt với tiếng Anh. **Chốt encoder này cho mọi truy vấn tiếng Việt** (dòng 32).
+- Cấp độ 1 và 2 vẫn giữ OpenAI B/32, vì toàn bộ kết quả tiếng Anh đã chạy bằng encoder này và cùng một tệp chia.
+- Hạn chế: chỉ có 84 câu, nên khoảng cách giữa hai encoder B/32 đa ngữ (25,00 so với 28,57, tức 3 câu) nằm trong mức nhiễu. Khoảng cách từ các encoder B/32 lên H/14 (12 điểm trở lên) thì rõ ràng.
+
+**Chạy lại.**
+
+```bash
+python scripts/checks/multilingual_clip_probe.py --large   # cần ảnh MKG-W; trên GPU khoảng 1 phút
+```
+
+Kết quả: `multilingual_clip_probe.json`.
+
 ## File giữ lại
 
 | Thứ | Ở đâu | Ghi chú |

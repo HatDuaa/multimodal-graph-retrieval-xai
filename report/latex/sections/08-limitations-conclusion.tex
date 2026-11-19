@@ -1,0 +1,48 @@
+% =====================================================================
+\section{Demo, hạn chế và kết luận}
+\label{sec:conclusion}
+
+\subsection{Demo}
+\label{sec:demo}
+
+\file{app/demo_app.py} là một giao diện Gradio, chạy được trên GPU 8\,GB. Người dùng nhập truy vấn tiếng Anh, chọn CLIP thuần
+hoặc CLIP + đồ thị, rồi xem top-$k$ ảnh. Mỗi ảnh kèm bảng giải thích như Mục~\ref{sec:method-expl}, khung của các vật thể khớp
+vẽ trên ảnh, và cột ``bỏ phần này'': chấm lại ảnh bằng chính mô hình sau khi bỏ phần khớp đó khỏi đồ thị ảnh. Câu gõ vào được
+tách bằng FACTUAL-T5 và cùng luật số lượng như lúc đóng gói dữ liệu. Phép kiểm tra ở Mục~\ref{sec:checks} bảo đảm demo cho
+cùng kết quả với pipeline đánh giá. Video dự phòng theo kịch bản \file{docs/demo-video-script.md}.
+
+\subsection{Hạn chế}
+
+\begin{itemize}
+\item \textbf{Chỉ 3 seed.} Mọi kiểm định giữa các cấu hình chỉ dựa trên 3 seed mỗi bên.
+\item \textbf{Val được dùng nhiều lần} để chọn từng bước của mô hình chính VG, nên số val hơi lạc quan (từ val sang test giảm
+0,96 điểm R@1). Test vẫn chỉ chấm một lần.
+\item \textbf{Chưa tách được đóng góp của từng loại cạnh} trong mô hình chính VG: bước đồ thị liền gộp bốn thay đổi, và chưa có
+ablation chỉ bỏ cạnh kNN.
+\item \textbf{Đếm số lượng coi mọi người là một loại.} Câu ``a lone woman'' trong ảnh nhiều người bị coi là sai số lượng.
+Ở 8,4\% node câu có số lượng, bảng $g$ làm đổi node ảnh được ghép, có khi sang một node khác nhãn.
+\item \textbf{Lỗi parser.} Thư viện FactualSceneGraph 0.7.3 cắt token cuối của câu dài nhất trong mỗi batch. Khoảng 1,8\%
+caption bị ảnh hưởng; 0,26\% (train), 0,24\% (val) và 0,31\% (test) mất một phần chữ. Lỗi xảy ra như nhau ở cả ba split.
+Nhóm không parse lại dữ liệu, giữ nguyên các số đã báo, và đã sửa lỗi này trong demo.
+\item \textbf{Thuộc tính và chữ trong ảnh chưa được dùng}, dù nhiều ca thất bại liên quan tới chúng.
+\item \textbf{Giới hạn của xếp lại.} 3,3\% câu test VG có ảnh đúng nằm ngoài top-50 của CLIP và không cứu được bằng xếp lại.
+\item \textbf{MKG-W.} Phương pháp năm 2024 không đóng góp vào dòng chính ($\beta = 0$). Đặc trưng ảnh của NativE (383 chiều,
+do tác giả trích sẵn) khác CLIP ViT-B/32 của nhóm. Cache Wikidata phải lấy lại ngày 17/11: 441 thực thể mất nhãn tiếng Anh,
+số truy vấn val khớp được thực thể đổi từ 704 xuống 703. Bộ câu tự viết chỉ có 25 câu.
+\end{itemize}
+Hạn chế riêng của phần đánh giá lời giải thích và phần MMKG tiếng Việt ghi ở Mục~\ref{sec:xai} và Mục~\ref{sec:vnmmkg}.
+
+\subsection{Kết luận}
+
+Báo cáo trả lời ba câu hỏi của đề như sau.
+\begin{enumerate}
+\item \textbf{Kết quả nào phù hợp nhất?} Trên VG $\cap$ COCO, xếp lại top-50 của CLIP bằng scene graph nâng R@1 test từ
+39,32 lên 47,95. Trên MKG-W, kênh đếm cạnh tri thức nâng R@1 test từ 24,89 lên 29,82.
+\item \textbf{Tri thức quan hệ giúp ở đâu?} Trên VG, mức tăng so với CLIP tăng theo số vật thể trong câu; câu chỉ nêu vật thể,
+không có quan hệ, không tăng (−0,80 điểm). Trên 15 câu gián tiếp tự viết của MKG-W, R@1 tăng từ 40 lên 80; câu trực tiếp không đổi. Thay
+đồ thị bằng đồ thị của ảnh khác, hoặc xáo cạnh tri thức, đều làm kết quả thấp hơn CLIP.
+\item \textbf{Vì sao mô hình trả về kết quả này?} Lời giải thích là các đại lượng của chính điểm đồ thị; với mô hình chính
+của VG, điểm tách chính xác thành từng phần. Mục~\ref{sec:xai} đo fidelity, validity và sparsity của lời giải thích này.
+\end{enumerate}
+Hai kết quả âm được ghi nhận: ở mô hình cấp~1, cạnh đóng góp khoảng 0,5 điểm R@1; ở MKG-W, NativE nhận trọng số 0 khi kết
+hợp với kênh đếm cạnh.

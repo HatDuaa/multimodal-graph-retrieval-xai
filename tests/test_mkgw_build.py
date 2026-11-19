@@ -69,3 +69,13 @@ def test_to_image_entry_url_is_none_without_p18():
     row = _fake_rows(1)[0]
     row["image"] = None
     assert to_image_entry(row, "en", 640)["url"] is None
+
+
+def test_replace_stats_block_replaces_instead_of_appending(tmp_path):
+    from src.data.build_mkgw_split import STATS_BEGIN, STATS_END, replace_stats_block
+    md = tmp_path / "data_stats.md"
+    md.write_text("# header\n", encoding="utf-8")
+    replace_stats_block(md, f"{STATS_BEGIN}\nold\n{STATS_END}")
+    replace_stats_block(md, f"{STATS_BEGIN}\nnew\n{STATS_END}")
+    text = md.read_text(encoding="utf-8")
+    assert text.count(STATS_BEGIN) == 1 and "new" in text and "old" not in text and text.startswith("# header")

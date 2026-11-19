@@ -1,0 +1,18 @@
+\begin{abstract}
+Báo cáo trình bày một hệ thống truy vấn văn bản--ảnh (text-to-image retrieval). Hệ thống dùng dữ liệu đồ thị để xếp
+hạng lại kết quả của CLIP đóng băng, và kèm mỗi kết quả một lời giải thích lấy từ chính phép tính xếp hạng. Trên Visual
+Genome $\cap$ COCO (cấp độ~1), một mô hình GATv2 chạy trên scene graph của ảnh và trên đồ thị tách từ câu truy vấn. Mô
+hình nâng R@1 trên tập test từ 39,32 lên \pmstd{47,95}{0,15} (3 seed). Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 val giảm
+2,39 điểm; thay đồ thị của ảnh bằng đồ thị của một ảnh khác làm R@1 val giảm xuống 21,91, thấp hơn CLIP thuần. Trên MKG-W (cấp độ~2),
+nhóm tái lập NativE (SIGIR 2024), đạt MRR 36,99 so với 36,58 của bài báo, rồi đưa đồ thị tri thức vào điểm xếp hạng. Kênh
+đếm cạnh của đồ thị tri thức nâng R@1 test từ 24,89 lên 29,82. Trên 15 truy vấn gián tiếp tự viết, R@1 tăng từ 40 lên 80.
+Khi kết hợp với kênh đếm cạnh, tập validation chọn trọng số 0 cho tín hiệu của NativE. Ở cấp độ~3,
+nhóm đo fidelity, validity và sparsity của lời giải thích, và chạy phương pháp của cấp độ~2 trên một đồ thị tri thức đa
+phương thức tiếng Việt do nhóm tự xây. Ở mọi thực nghiệm, trọng số kết hợp, checkpoint và từng bước xây mô hình được chọn
+trên train hoặc validation, không dựa trên tập test. Kết quả báo cáo dạng trung bình $\pm$ độ lệch chuẩn qua 3 seed.
+\end{abstract}
+
+\begin{IEEEkeywords}
+truy vấn đa phương thức, scene graph, đồ thị tri thức đa phương thức, mạng nơ-ron đồ thị, xếp hạng lại, giải thích mô
+hình, fidelity
+\end{IEEEkeywords}
