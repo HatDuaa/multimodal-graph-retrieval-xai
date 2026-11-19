@@ -51,9 +51,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import xai_metrics as xm  # noqa: E402
 from src.data.graph_store import GraphIndex  # noqa: E402
+from src.graph.soft_match import PRONOUNS  # noqa: E402
 from src.explain import synthetic_graphs as synthetic  # noqa: E402
 from src.explain.xai_metrics import QueryContext  # noqa: E402
-from src.graph.counts import IMAGE_BUCKETS  # noqa: E402
+from src.graph.counts import image_bucket  # noqa: E402
 from src.graph.scene_graph import Vocab  # noqa: E402
 from src.train_graph_reranker import batch_loss, build_model, load_run_model  # noqa: E402
 from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
@@ -108,7 +109,8 @@ def explain(ctx, column, info, pg, gm, seed, answers, decoys=()):
     against each answer in answers ({name: parts}); None when the image has no positive graph effect."""
     assert ctx.top == column
     rng = np.random.default_rng([2026, seed, *xm.caption_numbers(ctx.caption_id)])
-    record = xm.measure(ctx, rng, info, compare=True, gnn=True, pg=pg, seed=seed, gm=gm, keep_orders=True)
+    record = xm.measure(ctx, rng, info, compare=True, gnn=True, pg=pg, seed=seed, gm=gm, keep_orders=True,
+                        cf_target=False)
     if "orders" not in record:
         return None
     scores = {name: {key: gt_scores(order, parts, decoys if key == "main" else ()) for key, parts in answers.items()}
@@ -137,14 +139,9 @@ def info_for(name, matcher, config):
 def add_parts(store, encoder, keys, prompt):
     """Append CLIP vectors of part keys the table lacks (node texts with the concept prompt, as the packaging)."""
     missing = sorted({k for k in keys if k not in store.part_row})
-    if not missing:
-        return 0
-    texts = [prompt.format(k.split(":", 1)[1]) if k.startswith("node:") else k.split(":", 1)[1] for k in missing]
-    vectors = encoder.encode_texts(texts)
-    offset = len(store.part_vectors)
-    store.part_vectors = np.concatenate([store.part_vectors, vectors.astype(np.float32)])
-    store.part_row.update({k: offset + i for i, k in enumerate(missing)})
-    store._device_tables = {}
+    if missing:
+        texts = [prompt.format(k.split(":", 1)[1]) if k.startswith("node:") else k.split(":", 1)[1] for k in missing]
+        store.append_parts(missing, encoder.encode_texts(texts))
     return len(missing)
 
 
@@ -162,10 +159,12 @@ def positions(store, graph, objects=(), relations=()):
 
 
 def trained_explainers(model, store, device, pool, count, seed):
+    """PGExplainer and GraphMask trained on the first count captions of pool with a positive graph effect; returns
+    them, their training info and the training captions."""
     chosen = xm.training_captions(model, store, device, pool, count)
     pg, pg_info = xm.train_pg(model, store, device, chosen, seed)
     gm, gm_info = xm.train_gm(model, store, device, chosen, seed)
-    return pg, gm, {"pgexplainer": pg_info, "graphmask": gm_info}
+    return pg, gm, {"pgexplainer": pg_info, "graphmask": gm_info}, set(chosen)
 
 
 def save(folder, metrics, cases):
@@ -203,12 +202,17 @@ def explainer_pool(store, exclude):
 # C. planted ---------------------------------------------------------------------------------------------------------
 
 def plant(graph, motifs, rng):
-    """A copy of graph with each motif (subject name, predicate, object name) added as two new nodes and one relation,
-    in random order; returns the copy and, per motif, (object indices, relation index)."""
+    """A copy of graph with each motif (subject name, predicate, object name) added as two new nodes and one relation;
+    returns the copy and, per motif, (object indices, relation index).
+
+    Objects and relations are shuffled afterwards, as in the synthetic scenes, so a planted part's list position says
+    nothing: explainers sort stably, and parts appended last would lose every tie.
+    """
     graph = copy.deepcopy(graph)
     objects, relations = graph["objects"], graph["relations"]
     boxes = [o.get("box") for o in objects]
-    placed = []
+    has_buckets = any("count_bucket" in x for x in objects)
+    first_new, placed = len(objects), {}
     for i in rng.permutation(len(motifs)):
         s, p, o = motifs[i]
         ids = []
@@ -222,21 +226,28 @@ def plant(graph, motifs, rng):
             objects.append(new)
             ids.append(new["id"])
         relations.append({"subject": ids[0], "predicate": p, "object": ids[1]})
-        placed.append((int(i), [len(objects) - 2, len(objects) - 1], len(relations) - 1))
-    counts = {}
-    for obj in objects:
-        counts[obj["name"]] = counts.get(obj["name"], 0) + 1
-    for obj in objects[-2 * len(motifs):]:
-        if "count_bucket" in objects[0] or any("count_bucket" in x for x in objects[:-2 * len(motifs)]):
-            c = counts[obj["name"]]
-            obj["count_bucket"] = IMAGE_BUCKETS.index("1" if c == 1 else "2" if c == 2 else "3-4" if c <= 4 else ">=5")
-    return graph, {i: (objs, rel) for i, objs, rel in sorted(placed)}
+        placed[int(i)] = ([len(objects) - 2, len(objects) - 1], len(relations) - 1)
+    if has_buckets or (not boxes and "width" in graph):
+        counts = {}
+        for obj in objects:
+            counts[obj["name"]] = counts.get(obj["name"], 0) + 1
+        for obj in objects[first_new:]:
+            obj["count_bucket"] = image_bucket(counts[obj["name"]])
+    object_order, relation_order = rng.permutation(len(objects)), rng.permutation(len(relations))
+    object_at = {int(old): new for new, old in enumerate(object_order)}
+    relation_at = {int(old): new for new, old in enumerate(relation_order)}
+    graph["objects"] = [objects[int(j)] for j in object_order]
+    graph["relations"] = [relations[int(j)] for j in relation_order]
+    return graph, {i: ([object_at[j] for j in objs], relation_at[rel]) for i, (objs, rel) in sorted(placed.items())}
 
 
 def caption_motif(store, cid, rng):
-    """(caption relation, decoy) for planting, or None when the caption has no relation with two named ends."""
+    """(caption relation, decoy) for planting, or None when the caption has no relation with two named ends.
+
+    Pronoun ends ("who", "those") are not names: the query graph drops them (GraphStore._graph_parts), so planting
+    one would plant a part no caption node can match."""
     query = store.queries[cid]
-    names = {o["id"]: o["name"] for o in query["objects"]}
+    names = {o["id"]: o["name"] for o in query["objects"] if o["name"] not in PRONOUNS}
     rels = [r for r in query["relations"] if names.get(r["subject"]) and names.get(r["object"])
             and r["subject"] != r["object"]]
     if not rels:
@@ -267,8 +278,9 @@ def run_planted(args):
             model, _, _ = load_run_model(root / run, args.device, store=store)
             started = time.time()
             pool = explainer_pool(store, [])
-            pg, gm, trained = trained_explainers(model, store, args.device, pool, args.explainer_train, seed)
-            training = set(pool[:400].tolist())
+            pg, gm, trained, chosen = trained_explainers(model, store, args.device, pool, args.explainer_train, seed)
+            # the first 400 of the pool stay out as in the committed runs, and so does every training caption
+            training = set(pool[:400].tolist()) | chosen
             order = [c for c in np.random.default_rng(2029).permutation(ids) if c not in training]
             cases, tried = [], 0
             for cid in order:
@@ -316,32 +328,35 @@ def run_planted(args):
 # A. Visual Genome region graphs -------------------------------------------------------------------------------------
 
 def json_items(path, chunk=1 << 24):
-    """The items of a top-level JSON list, decoded one at a time (region_graphs.json is 2.8 GB)."""
+    """The items of a top-level JSON list, decoded one at a time (region_graphs.json is 2.8 GB). Items are decoded at
+    an offset into the buffer, which is cut once per chunk read, not once per item."""
     decoder = json.JSONDecoder()
+    skip = " \t\r\n,"
     with path.open(encoding="utf-8") as handle:
-        buffer, started = "", False
+        buffer, at, started = "", 0, False
         while True:
             data = handle.read(chunk)
-            buffer += data
+            buffer = buffer[at:] + data
+            at = 0
             while True:
-                buffer = buffer.lstrip()
-                if not started:
-                    if not buffer:
-                        break
-                    assert buffer[0] == "[", "expected a JSON list"
-                    buffer, started = buffer[1:], True
-                    continue
-                buffer = buffer.lstrip(",").lstrip()
-                if not buffer or buffer[0] == "]":
+                while at < len(buffer) and buffer[at] in (skip if started else skip[:-1]):
+                    at += 1
+                if at == len(buffer):
                     break
+                if not started:
+                    assert buffer[at] == "[", "expected a JSON list"
+                    at, started = at + 1, True
+                    continue
+                if buffer[at] == "]":
+                    return
                 try:
-                    item, end = decoder.raw_decode(buffer)
+                    item, end = decoder.raw_decode(buffer, at)
                 except json.JSONDecodeError:
                     if not data:
                         raise
                     break
                 yield item
-                buffer = buffer[end:]
+                at = end
             if not data:
                 return
 
@@ -503,7 +518,7 @@ def run_regions(args):
             run = f"{name}_seed{seed}"
             model, _, _ = load_run_model(root / run, args.device, store=store)
             started = time.time()
-            pg, gm, trained = trained_explainers(model, store, args.device, explainer_pool(store, []),
+            pg, gm, trained, _ = trained_explainers(model, store, args.device, explainer_pool(store, []),
                                                  args.explainer_train, seed)
             cases, tried, rank1 = [], 0, 0
             for q in queries:
@@ -626,7 +641,7 @@ def run_synthetic(args):
         model.load_state_dict(state["model"])
         model.eval()
         started = time.time()
-        pg, gm, trained = trained_explainers(model, store, args.device, pool, args.explainer_train, seed)
+        pg, gm, trained, _ = trained_explainers(model, store, args.device, pool, args.explainer_train, seed)
         cases, tried = [], 0
         for cid in explain_ids:
             if len(cases) == args.cases:

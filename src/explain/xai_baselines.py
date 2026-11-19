@@ -120,7 +120,7 @@ class PGExplainer(nn.Module):
                [("triple", j, float(mask[n + j])) for j in range(labelled_count(index))]
 
 
-def train_pgexplainer(contexts, seed, epochs=10, lr=3e-3, size=2., entropy=0.1, t0=5., t1=1.):
+def train_pgexplainer(contexts, seed, epochs=10, lr=3e-3, size=2., entropy=0.1, t0=5., t1=1., device="cpu"):
     """Train PGExplainer on (QueryContext factory, ...) items: contexts is a list of callables returning
     (ctx, column, index, base, empty) for one training caption, effect = base - empty > 1e-4.
 
@@ -129,7 +129,7 @@ def train_pgexplainer(contexts, seed, epochs=10, lr=3e-3, size=2., entropy=0.1, 
     """
     with torch.random.fork_rng():
         torch.manual_seed(seed)
-        explainer = PGExplainer()
+        explainer = PGExplainer().to(device)  # initialized on the CPU first, so the seed gives one start
         optimizer = torch.optim.Adam(explainer.parameters(), lr=lr)
         generator = torch.Generator().manual_seed(seed)
         order_rng = np.random.default_rng(seed)
@@ -631,14 +631,14 @@ def graphmask_loss(ctx, column, explainer, index, base, effect, lagrange, genera
     return l0, divergence
 
 
-def train_graphmask(contexts, seed, epochs=10, lr=3e-3, lagrange_lr=1e-2, tolerance=0.05):
+def train_graphmask(contexts, seed, epochs=10, lr=3e-3, lagrange_lr=1e-2, tolerance=0.05, device="cpu"):
     """Train GraphMask on the same training captions as PGExplainer (contexts: callables returning
     (ctx, column, index, base, empty)). GraphMask's constrained objective: minimize the L0 penalty subject to a
     score change of at most tolerance x the graph effect, by gradient descent on the gates and ascent on the Lagrange
     multiplier. Returns the explainer and the last epoch's mean L0 penalty and mean divergence."""
     with torch.random.fork_rng():
         torch.manual_seed(seed)
-        explainer = GraphMask()
+        explainer = GraphMask().to(device)  # initialized on the CPU first, so the seed gives one start
         optimizer = torch.optim.Adam(explainer.parameters(), lr=lr)
         generator = torch.Generator().manual_seed(seed)
         order_rng = np.random.default_rng(seed)

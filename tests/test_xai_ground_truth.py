@@ -89,3 +89,53 @@ def test_planting_into_an_image_without_objects_gives_the_parts_a_box():
     graph = {"width": 10, "height": 8, "objects": [], "relations": []}
     planted, _ = gt.plant(graph, [("man", "holding", "cup"), ("lamp", "near", "rock")], np.random.default_rng(0))
     assert [obj["box"] for obj in planted["objects"]] == [[0, 0, 10, 8]] * 4
+
+
+def test_planted_parts_are_not_always_last():
+    graph = {"width": 10, "height": 10, "relations": [],
+             "objects": [{"id": i, "name": f"thing{i}", "box": [1, 1, 2, 2], "count_bucket": 0} for i in range(6)]}
+    last = []
+    for seed in range(20):
+        planted, placed = gt.plant(graph, [("man", "holding", "cup"), ("lamp", "near", "rock")],
+                                   np.random.default_rng(seed))
+        objects, relation = placed[0]
+        assert [planted["objects"][j]["name"] for j in objects] == ["man", "cup"]
+        rel = planted["relations"][relation]
+        assert (rel["subject"], rel["object"]) == tuple(planted["objects"][j]["id"] for j in objects)
+        last.append(set(objects) | set(placed[1][0]) == set(range(6, 10)))
+    assert not all(last)
+
+
+class Queries:
+    def __init__(self, query):
+        self.queries = {"c": query}
+
+
+def test_caption_motifs_skip_pronoun_ends():
+    query = {"objects": [{"id": 0, "name": "who"}, {"id": 1, "name": "man"}, {"id": 2, "name": "table"}],
+             "relations": [{"subject": 0, "predicate": "at", "object": 2},
+                           {"subject": 1, "predicate": "at", "object": 2}]}
+    motif, _ = gt.caption_motif(Queries(query), "c", np.random.default_rng(0))
+    assert motif == ("man", "at", "table")
+    query["relations"] = query["relations"][:1]
+    assert gt.caption_motif(Queries(query), "c", np.random.default_rng(0)) is None
+
+
+def test_json_items_reads_a_list_across_chunk_borders(tmp_path):
+    items = [{"id": i, "text": "x" * (i % 7), "nested": [i, {"a": i}]} for i in range(50)]
+    path = tmp_path / "items.json"
+    path.write_text("  [\n" + " ,\n ".join(__import__("json").dumps(x) for x in items) + "\n]\n", encoding="utf-8")
+    for chunk in (7, 64, 1 << 20):
+        assert list(gt.json_items(path, chunk=chunk)) == items
+
+
+def test_a_label_matcher_ignores_parts_appended_to_the_store_after_it():
+    data = synthetic.make_dataset(1, n_train=2, n_val=1, candidates=3)
+    keys = synthetic.part_keys(data)
+    vectors = F.normalize(torch.randn(len(keys), 512), dim=-1).numpy()
+    sentences = F.normalize(torch.randn(len(data["captions"]), 512), dim=-1).numpy()
+    store = synthetic.synthetic_store(data, vectors, {k: i for i, k in enumerate(keys)}, sentences)
+    matcher = gt.matcher_of(store)
+    store.append_parts(["node:unicorn"], np.ones((1, 512), dtype=np.float32))
+    assert store.part_row["node:unicorn"] == len(keys) and len(store.part_vectors) == len(keys) + 1
+    assert matcher("unicorn", "unicorn", None) is not None

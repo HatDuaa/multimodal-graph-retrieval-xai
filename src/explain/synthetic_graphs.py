@@ -21,7 +21,7 @@ synthetic. A model of the main architecture is trained on these captions (script
 import numpy as np
 
 from src.data.graph_store import GraphStore
-from src.graph.counts import IMAGE_BUCKETS
+from src.graph.counts import image_bucket
 
 OBJECTS = ("man", "woman", "boy", "girl", "dog", "cat", "horse", "bird", "car", "bus", "bike", "boat", "table",
            "chair", "bench", "bed", "couch", "cup", "plate", "bowl", "bottle", "pizza", "cake", "banana", "apple",
@@ -30,10 +30,6 @@ OBJECTS = ("man", "woman", "boy", "girl", "dog", "cat", "horse", "bird", "car", 
 PREDICATES = ("on", "holding", "wearing", "next to", "behind", "under", "riding", "in front of")
 NEGATIVE_KINDS = ("predicate", "object", "relation")
 WIDTH, HEIGHT = 640, 480
-
-
-def bucket(count):
-    return IMAGE_BUCKETS.index("1" if count == 1 else "2" if count == 2 else "3-4" if count <= 4 else ">=5")
 
 
 def motif(rng):
@@ -85,7 +81,7 @@ def scene(rng, names, relations, exclude=(), background=(5, 11), extra=(3, 8), l
     for obj in objects:
         counts[obj["name"]] = counts.get(obj["name"], 0) + 1
     for obj in objects:
-        obj["count_bucket"] = bucket(counts[obj["name"]])
+        obj["count_bucket"] = image_bucket(counts[obj["name"]])
     graph = {"width": WIDTH, "height": HEIGHT, "objects": objects,
              "relations": [{"subject": s, "predicate": p, "object": o} for s, p, o, _ in unique]}
     return graph, motif_nodes, [i for i, r in enumerate(unique) if r[3]]

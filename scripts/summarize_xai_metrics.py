@@ -12,14 +12,13 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.utils.config import REPO_ROOT  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from xai_metrics import EXPLAINERS, MESSAGE_ORDERS  # noqa: E402 (one list for the measure and the tables)
 
 OUT = REPO_ROOT / "experiments" / "xai-metrics-v3"
 MODELS = ("countonly_factual_r3", "main_r3")
 GROUPS = ("all", "correct", "wrong")
 KS = ("1", "3", "5")
-EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley", "cf_gnnexplainer", "graphmask", "gstarx")
-MESSAGE_ORDERS = ("graphmask", "attention", "random")
 DECOMPOSITIONS = ("model", "gradient", "integrated_gradients", "occlusion")
 
 

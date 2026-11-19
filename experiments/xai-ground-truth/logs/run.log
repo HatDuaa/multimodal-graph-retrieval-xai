@@ -177,3 +177,74 @@ synthetic_seed2 100 431s
 synthetic_seed2 {"model": "synthetic", "seed": 2, "captions_tried": 100, "val_recall@1": 1.0, "pgexplainer": {"captions": 200, "seconds": 58.89250588417053, "final_loss": -0.30614254575921224}, "graphmask": {"captions": 200, "seconds": 59.59739804267883, "l0": 3.074524701562886e-07, "divergence": 0.04839035676071944, "lagrange": 0.9949713292159156}, "seconds": 430.74823212623596}
 exit 0
 Thu 19 Nov 2026 17:45:58 +07
+Thu 19 Nov 2026 19:36:42 +07
+review rerun: step planted
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+countonly_factual_r3_seed0 10 365s
+countonly_factual_r3_seed0 20 449s
+countonly_factual_r3_seed0 30 538s
+countonly_factual_r3_seed0 40 633s
+countonly_factual_r3_seed0 50 731s
+countonly_factual_r3_seed0 60 829s
+countonly_factual_r3_seed0 70 934s
+countonly_factual_r3_seed0 80 1027s
+countonly_factual_r3_seed0 90 1113s
+countonly_factual_r3_seed0 100 1213s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "captions_tried": 248, "pgexplainer": {"captions": 200, "seconds": 126.95489001274109, "final_loss": -0.9801340400706977}, "graphmask": {"captions": 200, "seconds": 116.93984007835388, "l0": 0.8804817208647728, "divergence": 0.13802708211392087, "lagrange": 0.3480083565972946}, "seconds": 1213.1600887775421}
+countonly_factual_r3_seed1 10 356s
+countonly_factual_r3_seed1 20 472s
+countonly_factual_r3_seed1 30 573s
+countonly_factual_r3_seed1 40 664s
+countonly_factual_r3_seed1 50 746s
+countonly_factual_r3_seed1 60 865s
+countonly_factual_r3_seed1 70 952s
+countonly_factual_r3_seed1 80 1040s
+countonly_factual_r3_seed1 90 1137s
+countonly_factual_r3_seed1 100 1212s
+countonly_factual_r3_seed1 {"model": "countonly_factual_r3", "seed": 1, "captions_tried": 247, "pgexplainer": {"captions": 200, "seconds": 127.19990086555481, "final_loss": -0.922577597014606}, "graphmask": {"captions": 200, "seconds": 117.50059604644775, "l0": 0.99997060328722, "divergence": 3.5646120613819222e-06, "lagrange": 0.047692003715812274}, "seconds": 1211.7346110343933}
+countonly_factual_r3_seed2 10 357s
+countonly_factual_r3_seed2 20 463s
+countonly_factual_r3_seed2 30 581s
+countonly_factual_r3_seed2 40 672s
+countonly_factual_r3_seed2 50 781s
+countonly_factual_r3_seed2 60 872s
+countonly_factual_r3_seed2 70 942s
+countonly_factual_r3_seed2 80 1048s
+countonly_factual_r3_seed2 90 1130s
+countonly_factual_r3_seed2 100 1241s
+countonly_factual_r3_seed2 {"model": "countonly_factual_r3", "seed": 2, "captions_tried": 233, "pgexplainer": {"captions": 200, "seconds": 125.87947511672974, "final_loss": -0.8366752699390054}, "graphmask": {"captions": 200, "seconds": 121.85827207565308, "l0": 0.9999983987212181, "divergence": 6.779854629712644e-08, "lagrange": 0.03705771083015097}, "seconds": 1241.056071281433}
+main_r3_seed0 10 191s
+main_r3_seed0 20 224s
+main_r3_seed0 30 250s
+main_r3_seed0 40 281s
+main_r3_seed0 50 310s
+main_r3_seed0 60 342s
+main_r3_seed0 70 369s
+main_r3_seed0 80 403s
+main_r3_seed0 90 432s
+main_r3_seed0 100 458s
+main_r3_seed0 {"model": "main_r3", "seed": 0, "captions_tried": 230, "pgexplainer": {"captions": 200, "seconds": 78.57622194290161, "final_loss": -0.4909178398549557}, "graphmask": {"captions": 200, "seconds": 76.36837410926819, "l0": 1.1736290456777766e-06, "divergence": 0.11304422398890893, "lagrange": 1.9685016818344618}, "seconds": 457.83284401893616}
+main_r3_seed1 10 175s
+main_r3_seed1 20 207s
+main_r3_seed1 30 236s
+main_r3_seed1 40 266s
+main_r3_seed1 50 293s
+main_r3_seed1 60 325s
+main_r3_seed1 70 359s
+main_r3_seed1 80 387s
+main_r3_seed1 90 414s
+main_r3_seed1 100 439s
+main_r3_seed1 {"model": "main_r3", "seed": 1, "captions_tried": 238, "pgexplainer": {"captions": 200, "seconds": 71.91109013557434, "final_loss": -0.47255497397854923}, "graphmask": {"captions": 200, "seconds": 68.68046593666077, "l0": 1.8043223602037805e-06, "divergence": 0.07939431598606461, "lagrange": 1.6901914855837779}, "seconds": 439.1601650714874}
+main_r3_seed2 10 159s
+main_r3_seed2 20 190s
+main_r3_seed2 30 212s
+main_r3_seed2 40 241s
+main_r3_seed2 50 271s
+main_r3_seed2 60 297s
+main_r3_seed2 70 322s
+main_r3_seed2 80 350s
+main_r3_seed2 90 376s
+main_r3_seed2 100 400s
+main_r3_seed2 {"model": "main_r3", "seed": 2, "captions_tried": 212, "pgexplainer": {"captions": 200, "seconds": 62.03321099281311, "final_loss": -0.4361509462981485}, "graphmask": {"captions": 200, "seconds": 60.687191009521484, "l0": 0.0010865939808837185, "divergence": 0.17670533041658928, "lagrange": 3.212750315554438}, "seconds": 399.7202179431915}
+exit 0

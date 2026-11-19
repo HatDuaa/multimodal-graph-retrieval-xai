@@ -44,9 +44,11 @@ GraphXAI cài một motif quyết định nhãn, nên motif là đáp án đúng
 - Với một câu val có quan hệ (chủ thể, vị từ, đối tượng) đủ tên, cài quan hệ đó vào một ứng viên đang ở hạng 2–5: hai node mới mang tên của câu và vị từ của câu giữa chúng.
 - Cùng lúc cài một **mồi nhử** cùng dạng, với tên và vị từ không có trong câu (tên từ lamp, fence, cloud, bench, sign, pole, window, plant, curtain, rock; vị từ từ near, behind, next to, above, under).
 - Node mới lấy box của một node ngẫu nhiên của ảnh và nhóm số lượng theo số node cùng tên; ảnh không có vật nào thì box là cả ảnh.
+  Node và quan hệ mới được xáo vào vị trí ngẫu nhiên trong danh sách của ảnh: nhiều cách giải thích sắp xếp ổn định, nên phần luôn đứng cuối sẽ thua mọi lần hoà điểm.
+- Bỏ quan hệ có đầu là đại từ (who, those, which, ...), vì ảnh không có vật mang tên đó.
   Văn bản phần mới chưa có trong bảng được mã hoá bằng CLIP đóng băng của cấu hình, như demo làm với truy vấn gõ tay.
 - **Chỉ giữ ca mà ảnh sau khi cài lên hạng 1**, nên mô hình cần chính các phần đã cài (bỏ chúng thì ảnh về đồ thị gốc, hạng cũ ≥ 2).
-  Để có 100 ca, cần thử 228–268 câu (countonly) và 216–240 câu (`main_r3`).
+  Để có 100 ca, cần thử 233–248 câu (countonly) và 212–238 câu (`main_r3`).
 - Đáp án: 3 phần cài vào (2 node, 1 bộ ba); 3 phần mồi nhử chấm riêng.
 
 ### A. Region graph của Visual Genome (`vg-regions/`): độ hợp lý
@@ -66,24 +68,24 @@ GraphXAI cài một motif quyết định nhãn, nên motif là đáp án đúng
 
 | Cách | B. tổng hợp | C. countonly | C. `main_r3` | A. countonly | A. `main_r3` |
 |---|---|---|---|---|---|
-| occlusion | **1,000** | **0,648** | **0,588** | **0,771** | **0,758** |
-| GraphSVX | 0,333 | 0,469 | 0,391 | 0,620 | 0,512 |
-| Shapley | 0,514 | 0,464 | 0,380 | 0,592 | 0,505 |
-| SubgraphX | 0,839 | 0,602 | 0,003 | 0,453 | 0,594 |
-| IG | 0,802 | 0,390 | 0,388 | 0,539 | 0,433 |
-| GNNExplainer | 0,772 | 0,429 | 0,379 | 0,543 | 0,427 |
-| **E** (`model`) | 0,665 | 0,410 | 0,248 | 0,595 | 0,281 |
-| GStarX | 0,283 | 0,348 | 0,274 | 0,393 | 0,422 |
-| CF-GNNExplainer | 0,699 | 0,361 | 0,250 | 0,396 | 0,225 |
-| clip | 0,878 | 0,357 | 0,338 | 0,386 | 0,378 |
-| GNN-LRP | 0,550 | 0,255 | 0,118 | 0,357 | 0,263 |
-| PGExplainer | 0,511 | 0,149 | 0,145 | 0,193 | 0,183 |
-| gradient | 0,423 | 0,053 | 0,057 | 0,136 | 0,082 |
-| GraphMask | 0,173 | 0,029 | 0,103 | 0,098 | 0,103 |
-| random | 0,143 | 0,050 | 0,052 | 0,050 | 0,057 |
-| lowest | 0,000 | 0,001 | 0,008 | 0,000 | 0,002 |
+| occlusion | **1,000** | **0,654** | **0,606** | **0,771** | **0,758** |
+| GraphSVX | 0,333 | 0,466 | 0,396 | 0,620 | 0,512 |
+| Shapley | 0,514 | 0,445 | 0,389 | 0,592 | 0,505 |
+| SubgraphX | 0,839 | 0,465 | 0,020 | 0,453 | 0,594 |
+| IG | 0,802 | 0,388 | 0,396 | 0,539 | 0,433 |
+| GNNExplainer | 0,772 | 0,434 | 0,386 | 0,543 | 0,427 |
+| **E** (`model`) | 0,665 | 0,416 | 0,250 | 0,595 | 0,281 |
+| GStarX | 0,283 | 0,372 | 0,288 | 0,393 | 0,422 |
+| CF-GNNExplainer | 0,699 | 0,356 | 0,244 | 0,396 | 0,225 |
+| clip | 0,878 | 0,376 | 0,356 | 0,386 | 0,378 |
+| GNN-LRP | 0,550 | 0,255 | 0,116 | 0,357 | 0,263 |
+| PGExplainer | 0,511 | 0,143 | 0,150 | 0,193 | 0,183 |
+| gradient | 0,423 | 0,062 | 0,051 | 0,136 | 0,082 |
+| GraphMask | 0,173 | 0,062 | 0,105 | 0,098 | 0,103 |
+| random | 0,143 | 0,049 | 0,052 | 0,050 | 0,057 |
+| lowest | 0,000 | 0,001 | 0,003 | 0,000 | 0,002 |
 
-**AUROC của E:** B 0,956; C 0,893 (countonly) và 0,760 (`main_r3`); A 0,938 và 0,746.
+**AUROC của E:** B 0,956; C 0,896 (countonly) và 0,766 (`main_r3`); A 0,938 và 0,746.
 
 Đọc bảng:
 
@@ -96,9 +98,9 @@ GraphXAI cài một motif quyết định nhãn, nên motif là đáp án đúng
 - **Shapley và GraphSVX tốt trên ảnh thật, kém trên dữ liệu tổng hợp** (0,51 và 0,33).
   Hàm giá trị của chúng là biên hạng 1 khi chỉ giữ một liên minh, trong khi 19 ảnh âm giữ nguyên đồ thị; một lý do có thể, chưa kiểm riêng, là khi motif chưa đủ thì biên âm như nhau với mọi liên minh, nên giá trị dồn vào các tương tác bậc cao.
 - **SubgraphX phụ thuộc vào tính liên thông.**
-  Nó giữ thành phần liên thông lớn nhất khi tỉa, nên với `main_r3`, nơi đồ thị không có cạnh hoàn thiện và cụm phần cài vào tách rời khỏi phần còn lại của ảnh (đã kiểm), nó luôn tỉa cụm đó trước: GEA 0,003, phần đúng đầu tiên ở vị trí 46,6 trên khoảng 50.
-  Với countonly và mô hình tổng hợp, cạnh hoàn thiện nối các phần lại; SubgraphX đứng thứ hai ở C (countonly) và thứ ba ở B.
-- **clip rất mạnh trên dữ liệu tổng hợp** (0,878) vì ở đó phần đúng chính là phần mang tên trong câu, và xếp mồi nhử về cuối tốt hơn mọi cách khác ở C (phân vị 0,81–0,82; trừ SubgraphX với `main_r3`, 0,93, cũng vì nó tỉa cụm tách rời trước), nhưng chỉ ở mức trung bình trên ảnh thật: clip không biết mô hình dùng gì.
+  Nó giữ thành phần liên thông lớn nhất khi tỉa, nên với `main_r3`, nơi đồ thị không có cạnh hoàn thiện và cụm phần cài vào tách rời khỏi phần còn lại của ảnh (đã kiểm), nó thường tỉa cụm đó sớm: GEA 0,020, AUROC 0,278, phần đúng đầu tiên ở vị trí 28,8 trên khoảng 50.
+  Với countonly và mô hình tổng hợp, cạnh hoàn thiện nối các phần lại; SubgraphX ngang GraphSVX ở C (countonly, 0,465 và 0,466) và đứng thứ ba ở B.
+- **clip rất mạnh trên dữ liệu tổng hợp** (0,878) vì ở đó phần đúng chính là phần mang tên trong câu, và xếp mồi nhử về cuối tốt hơn mọi cách khác ở C (phân vị 0,81 ở cả hai mô hình), nhưng chỉ ở mức trung bình trên ảnh thật: clip không biết mô hình dùng gì.
 - **GraphMask gần mức ngẫu nhiên ở cả năm cột**, khớp với v3: trên dữ liệu tổng hợp, nó đóng mọi cổng mà vẫn thoả ràng buộc (điểm đổi 0,03–0,05 hiệu ứng), tức mô hình không cần message, nên không có gì để GraphMask phân biệt.
 - **GStarX và CF-GNNExplainer ở mức giữa**, không lần nào vượt occlusion hay IG.
 - **Với đáp án theo nhãn (A)**, IG, GraphSVX và Shapley tăng nhiều nhất (+0,09 đến +0,14 GEA) và tới gần occlusion, còn occlusion giảm nhẹ (−0,02 đến −0,04): các cách này hay xếp cao cả những node cùng tên mà người gán nhãn không chọn.
@@ -117,7 +119,7 @@ GraphXAI cài một motif quyết định nhãn, nên motif là đáp án đúng
 - C cài phần mới với box sao chép từ node có sẵn; cụm cài vào có thể dễ nhận ra hơn một phần tự nhiên.
 - A là độ hợp lý: một cách giải thích trung thực vẫn có thể lệch khỏi đáp án của người.
 - B dùng từ vựng nhỏ (40 tên, 8 vị từ) và mô hình học lại trên dữ liệu đó, không phải chính checkpoint của nhóm.
-- Mọi kết quả ở đây chạy bằng `run.sh` sau khi sửa khởi tạo GraphMask (xem `experiments/xai-metrics-v3/REPORT.md`); dữ liệu tổng hợp sinh lại được từ seed 2031, còn các checkpoint tổng hợp (`synthetic/models/*.pt`, 12 MB) không đưa vào git, `synthetic train` dựng lại chúng.
+- Mọi kết quả ở đây chạy bằng `run.sh` sau khi sửa khởi tạo GraphMask (xem `experiments/xai-metrics-v3/REPORT.md`); C chạy lại sau review PR #52 (xáo vị trí phần cài vào, bỏ đại từ), A và B không chạy lại vì các sửa đó chỉ chạm C; dữ liệu tổng hợp sinh lại được từ seed 2031, còn các checkpoint tổng hợp (`synthetic/models/*.pt`, 12 MB) không đưa vào git, `synthetic train` dựng lại chúng.
 
 Phụ lục dưới là bảng đầy đủ của `scripts/summarize_xai_ground_truth.py` (cũng ở `logs/tables.md`).
 
@@ -125,53 +127,53 @@ Phụ lục dưới là bảng đầy đủ của `scripts/summarize_xai_ground_
 
 ### countonly_factual_r3
 
-ca theo seed: 100, 100, 100; cỡ đáp án 3,0 ± 0,0; số phần 45,4 ± 1,2.
+ca theo seed: 100, 100, 100; cỡ đáp án 3,0 ± 0,0; số phần 45,6 ± 0,9.
 
 **đáp án chính.**
 
 | Cách | GEA | Precision@g | AUROC | Vị trí phần đúng đầu tiên | Phân vị của mồi nhử (cao tốt) |
 | --- | --- | --- | --- | --- | --- |
-| model | 0,410 ± 0,053 | 0,537 ± 0,058 | 0,893 ± 0,031 | 1,63 ± 0,46 | 0,682 ± 0,005 |
-| random | 0,050 ± 0,012 | 0,081 ± 0,019 | 0,509 ± 0,021 | 11,12 ± 1,50 | 0,493 ± 0,022 |
-| lowest | 0,001 ± 0,001 | 0,002 ± 0,002 | 0,107 ± 0,031 | 34,08 ± 1,53 | 0,318 ± 0,005 |
-| clip | 0,357 ± 0,036 | 0,477 ± 0,036 | 0,894 ± 0,004 | 2,05 ± 0,10 | 0,815 ± 0,005 |
-| gradient | 0,053 ± 0,034 | 0,087 ± 0,052 | 0,299 ± 0,103 | 18,40 ± 6,33 | 0,353 ± 0,011 |
-| integrated_gradients | 0,390 ± 0,038 | 0,519 ± 0,046 | 0,864 ± 0,035 | 1,60 ± 0,20 | 0,526 ± 0,021 |
-| occlusion | 0,648 ± 0,058 | 0,721 ± 0,050 | 0,910 ± 0,032 | 1,51 ± 0,30 | 0,553 ± 0,042 |
-| gnnexplainer | 0,429 ± 0,029 | 0,552 ± 0,030 | 0,828 ± 0,013 | 1,67 ± 0,14 | 0,610 ± 0,012 |
-| pgexplainer | 0,149 ± 0,013 | 0,234 ± 0,018 | 0,664 ± 0,008 | 4,11 ± 0,45 | 0,549 ± 0,013 |
-| gnn_lrp | 0,255 ± 0,008 | 0,369 ± 0,011 | 0,702 ± 0,017 | 3,06 ± 0,20 | 0,543 ± 0,021 |
-| graphsvx | 0,469 ± 0,028 | 0,600 ± 0,026 | 0,939 ± 0,004 | 1,38 ± 0,08 | 0,674 ± 0,010 |
-| subgraphx | 0,602 ± 0,053 | 0,646 ± 0,054 | 0,831 ± 0,023 | 3,95 ± 1,69 | 0,432 ± 0,017 |
-| shapley | 0,464 ± 0,030 | 0,593 ± 0,028 | 0,936 ± 0,006 | 1,37 ± 0,09 | 0,665 ± 0,001 |
-| cf_gnnexplainer | 0,361 ± 0,028 | 0,490 ± 0,033 | 0,777 ± 0,012 | 2,12 ± 0,34 | 0,576 ± 0,020 |
-| graphmask | 0,029 ± 0,017 | 0,046 ± 0,027 | 0,506 ± 0,024 | 13,57 ± 3,30 | 0,484 ± 0,043 |
-| gstarx | 0,348 ± 0,037 | 0,473 ± 0,035 | 0,877 ± 0,006 | 1,87 ± 0,23 | 0,663 ± 0,004 |
+| model | 0,416 ± 0,057 | 0,543 ± 0,058 | 0,896 ± 0,033 | 1,57 ± 0,37 | 0,679 ± 0,003 |
+| random | 0,049 ± 0,003 | 0,080 ± 0,006 | 0,511 ± 0,004 | 10,96 ± 0,66 | 0,492 ± 0,020 |
+| lowest | 0,001 ± 0,001 | 0,002 ± 0,002 | 0,104 ± 0,033 | 34,34 ± 2,37 | 0,321 ± 0,003 |
+| clip | 0,376 ± 0,026 | 0,498 ± 0,027 | 0,897 ± 0,006 | 2,08 ± 0,11 | 0,815 ± 0,006 |
+| gradient | 0,062 ± 0,040 | 0,100 ± 0,061 | 0,306 ± 0,117 | 17,81 ± 6,80 | 0,348 ± 0,009 |
+| integrated_gradients | 0,388 ± 0,032 | 0,520 ± 0,039 | 0,861 ± 0,033 | 1,59 ± 0,17 | 0,531 ± 0,017 |
+| occlusion | 0,654 ± 0,055 | 0,729 ± 0,047 | 0,912 ± 0,026 | 1,50 ± 0,30 | 0,556 ± 0,037 |
+| gnnexplainer | 0,434 ± 0,034 | 0,560 ± 0,033 | 0,825 ± 0,014 | 1,66 ± 0,12 | 0,599 ± 0,019 |
+| pgexplainer | 0,143 ± 0,013 | 0,227 ± 0,017 | 0,661 ± 0,014 | 4,17 ± 0,55 | 0,547 ± 0,013 |
+| gnn_lrp | 0,255 ± 0,019 | 0,368 ± 0,025 | 0,696 ± 0,015 | 3,13 ± 0,24 | 0,543 ± 0,016 |
+| graphsvx | 0,466 ± 0,020 | 0,597 ± 0,018 | 0,941 ± 0,002 | 1,38 ± 0,09 | 0,681 ± 0,012 |
+| subgraphx | 0,465 ± 0,008 | 0,520 ± 0,009 | 0,725 ± 0,010 | 5,06 ± 0,22 | 0,519 ± 0,019 |
+| shapley | 0,445 ± 0,025 | 0,577 ± 0,030 | 0,937 ± 0,002 | 1,40 ± 0,11 | 0,664 ± 0,007 |
+| cf_gnnexplainer | 0,356 ± 0,034 | 0,487 ± 0,038 | 0,784 ± 0,019 | 1,98 ± 0,30 | 0,572 ± 0,025 |
+| graphmask | 0,062 ± 0,007 | 0,098 ± 0,008 | 0,545 ± 0,020 | 10,86 ± 1,44 | 0,445 ± 0,054 |
+| gstarx | 0,372 ± 0,029 | 0,493 ± 0,032 | 0,880 ± 0,008 | 2,09 ± 0,11 | 0,663 ± 0,006 |
 
 ### main_r3
 
-ca theo seed: 100, 100, 100; cỡ đáp án 3,0 ± 0,0; số phần 50,1 ± 2,7.
+ca theo seed: 100, 100, 100; cỡ đáp án 3,0 ± 0,0; số phần 49,7 ± 2,4.
 
 **đáp án chính.**
 
 | Cách | GEA | Precision@g | AUROC | Vị trí phần đúng đầu tiên | Phân vị của mồi nhử (cao tốt) |
 | --- | --- | --- | --- | --- | --- |
-| model | 0,248 ± 0,013 | 0,373 ± 0,012 | 0,760 ± 0,006 | 1,83 ± 0,09 | 0,621 ± 0,019 |
-| random | 0,052 ± 0,010 | 0,084 ± 0,017 | 0,508 ± 0,007 | 11,66 ± 1,29 | 0,507 ± 0,021 |
-| lowest | 0,008 ± 0,002 | 0,013 ± 0,003 | 0,240 ± 0,006 | 28,26 ± 1,06 | 0,379 ± 0,019 |
-| clip | 0,338 ± 0,012 | 0,460 ± 0,012 | 0,874 ± 0,005 | 2,70 ± 0,11 | 0,811 ± 0,008 |
-| gradient | 0,057 ± 0,012 | 0,088 ± 0,017 | 0,547 ± 0,020 | 12,23 ± 0,40 | 0,540 ± 0,010 |
-| integrated_gradients | 0,388 ± 0,020 | 0,537 ± 0,017 | 0,851 ± 0,011 | 1,39 ± 0,03 | 0,591 ± 0,014 |
-| occlusion | 0,588 ± 0,005 | 0,696 ± 0,005 | 0,956 ± 0,003 | 1,25 ± 0,02 | 0,648 ± 0,044 |
-| gnnexplainer | 0,379 ± 0,008 | 0,523 ± 0,010 | 0,828 ± 0,008 | 1,55 ± 0,08 | 0,574 ± 0,002 |
-| pgexplainer | 0,145 ± 0,003 | 0,226 ± 0,002 | 0,646 ± 0,013 | 4,98 ± 0,23 | 0,562 ± 0,021 |
-| gnn_lrp | 0,118 ± 0,012 | 0,187 ± 0,017 | 0,652 ± 0,012 | 4,38 ± 0,34 | 0,498 ± 0,016 |
-| graphsvx | 0,391 ± 0,023 | 0,524 ± 0,019 | 0,919 ± 0,010 | 1,49 ± 0,09 | 0,650 ± 0,039 |
-| subgraphx | 0,003 ± 0,006 | 0,003 ± 0,006 | 0,041 ± 0,007 | 46,60 ± 2,64 | 0,927 ± 0,012 |
-| shapley | 0,380 ± 0,021 | 0,512 ± 0,017 | 0,921 ± 0,007 | 1,55 ± 0,10 | 0,643 ± 0,032 |
-| cf_gnnexplainer | 0,250 ± 0,020 | 0,366 ± 0,025 | 0,607 ± 0,028 | 4,76 ± 0,78 | 0,503 ± 0,030 |
-| graphmask | 0,103 ± 0,033 | 0,144 ± 0,046 | 0,486 ± 0,057 | 14,31 ± 4,93 | 0,629 ± 0,104 |
-| gstarx | 0,274 ± 0,007 | 0,389 ± 0,008 | 0,835 ± 0,011 | 2,80 ± 0,19 | 0,610 ± 0,025 |
+| model | 0,250 ± 0,010 | 0,376 ± 0,008 | 0,766 ± 0,006 | 1,83 ± 0,10 | 0,623 ± 0,016 |
+| random | 0,052 ± 0,008 | 0,084 ± 0,013 | 0,504 ± 0,004 | 11,85 ± 1,08 | 0,510 ± 0,024 |
+| lowest | 0,003 ± 0,001 | 0,004 ± 0,002 | 0,234 ± 0,006 | 29,09 ± 0,91 | 0,377 ± 0,016 |
+| clip | 0,356 ± 0,011 | 0,483 ± 0,012 | 0,882 ± 0,004 | 2,48 ± 0,10 | 0,812 ± 0,008 |
+| gradient | 0,051 ± 0,011 | 0,079 ± 0,013 | 0,540 ± 0,019 | 12,44 ± 0,30 | 0,542 ± 0,014 |
+| integrated_gradients | 0,396 ± 0,021 | 0,546 ± 0,018 | 0,857 ± 0,012 | 1,39 ± 0,02 | 0,595 ± 0,013 |
+| occlusion | 0,606 ± 0,002 | 0,711 ± 0,004 | 0,970 ± 0,003 | 1,26 ± 0,01 | 0,649 ± 0,040 |
+| gnnexplainer | 0,386 ± 0,005 | 0,531 ± 0,007 | 0,834 ± 0,007 | 1,55 ± 0,08 | 0,574 ± 0,004 |
+| pgexplainer | 0,150 ± 0,004 | 0,234 ± 0,004 | 0,649 ± 0,011 | 4,79 ± 0,27 | 0,563 ± 0,021 |
+| gnn_lrp | 0,116 ± 0,016 | 0,183 ± 0,023 | 0,649 ± 0,013 | 4,43 ± 0,35 | 0,499 ± 0,014 |
+| graphsvx | 0,396 ± 0,032 | 0,529 ± 0,028 | 0,928 ± 0,008 | 1,51 ± 0,09 | 0,650 ± 0,035 |
+| subgraphx | 0,020 ± 0,010 | 0,020 ± 0,010 | 0,278 ± 0,004 | 28,77 ± 1,52 | 0,711 ± 0,012 |
+| shapley | 0,389 ± 0,020 | 0,520 ± 0,017 | 0,930 ± 0,006 | 1,54 ± 0,09 | 0,643 ± 0,031 |
+| cf_gnnexplainer | 0,244 ± 0,020 | 0,357 ± 0,026 | 0,591 ± 0,028 | 5,13 ± 0,94 | 0,501 ± 0,032 |
+| graphmask | 0,105 ± 0,031 | 0,148 ± 0,043 | 0,542 ± 0,057 | 14,33 ± 4,81 | 0,577 ± 0,103 |
+| gstarx | 0,288 ± 0,004 | 0,404 ± 0,004 | 0,842 ± 0,008 | 2,77 ± 0,23 | 0,610 ± 0,023 |
 
 ## A. Region graph Visual Genome (`vg-regions`)
 

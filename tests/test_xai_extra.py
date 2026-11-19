@@ -7,7 +7,7 @@ import pytest
 import torch
 
 from src.explain import xai_baselines as baselines
-from src.explain.xai_counterfactual import cf_gnnexplainer, exact_counterfactual, flipped, removal
+from src.explain.xai_counterfactual import cf_gnnexplainer, exact_counterfactual, exact_counterfactuals, flipped, removal
 from src.explain.xai_metrics import QueryContext, edit, image_index, labelled_count, real_nodes
 from tests.test_demo_countonly import count_model_and_batch
 
@@ -106,7 +106,7 @@ def test_closed_graphmask_gates_send_the_baseline_and_learn_it():
     with torch.enable_grad(), baselines.gated_messages(ctx.model, explainer, record=record):
         gated, _ = ctx.score_images(column, index.to_batch(ctx.store.part_table("cpu"), "cpu"), 1)
         grad, = torch.autograd.grad(gated[0, column], [explainer.baselines[0]])
-    assert float(gated[0, column]) != pytest.approx(float(plain[0, column]), abs=1e-6)
+    assert float(gated[0, column].detach()) != pytest.approx(float(plain[0, column]), abs=1e-6)
     assert grad.abs().sum() > 0
     # one record per layer, over the input edges that are not self-loops
     src, dst = index.fields["edge_src"], index.fields["edge_dst"]
@@ -138,3 +138,38 @@ def test_cf_gnnexplainer_returns_a_valid_counterfactual():
     if out["parts"] is not None:
         *_, full = ctx.rescore(column, [removal(index, out["parts"])], full=True)
         assert flipped(full, column)[0] and out["size"] == len(out["parts"])
+
+
+def smallest_by_brute_force(ctx, column, index, every, max_size, target):
+    for size in range(1, max_size + 1):
+        sets = [list(c) for c in combinations(every, size)]
+        *_, full = ctx.rescore(column, [removal(index, c) for c in sets], full=True)
+        if flipped(full, column, target).any():
+            return size, int(flipped(full, column, target).sum())
+    return None, 0
+
+
+def test_one_rescoring_serves_the_rank_one_and_the_target_counterfactuals():
+    ctx, column, index, every = context()
+    other = 1 - column
+    both = exact_counterfactuals(ctx, column, index, every, max_size=3, targets=(None, other))
+    for out, target in zip(both, (None, other)):
+        size, sets = smallest_by_brute_force(ctx, column, index, every, 3, target)
+        assert (out["size"], out["sets"]) == (size, sets)
+        assert out == exact_counterfactual(ctx, column, index, every, max_size=3, target=target)
+    # with two candidates, the other one is rank 1 exactly when the explained image loses it
+    assert both[0]["size"] == both[1]["size"]
+
+
+@pytest.mark.skipif(not torch.backends.mps.is_available() and not torch.cuda.is_available(), reason="no accelerator")
+def test_trained_explainers_follow_the_model_device():
+    device = "cuda" if torch.cuda.is_available() else "mps"
+    store, model, _ = count_model_and_batch()
+    model = model.to(device)
+    ctx = QueryContext(model, store, "q", device)
+    index = image_index(store, store.graphs[ctx.ids[ctx.top]])
+    (base, empty), _ = ctx.rescore(ctx.top, [edit(index), edit(index, drop_nodes=range(real_nodes(index)))])
+    items = [lambda: (ctx, ctx.top, index, float(base), float(empty))]
+    gm, _ = baselines.train_graphmask(items, seed=0, epochs=1, device=device)
+    pg, _ = baselines.train_pgexplainer(items, seed=0, epochs=1, device=device)
+    assert all(p.device.type == device for p in [*gm.parameters(), *pg.parameters()])

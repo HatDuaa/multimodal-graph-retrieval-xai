@@ -11,13 +11,13 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.utils.config import REPO_ROOT  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from summarize_xai_metrics import EXPLAINERS, number, row  # noqa: E402
 
 OUT = REPO_ROOT / "experiments" / "xai-ground-truth"
 BENCHMARKS = (("planted", "C. Cài phần đúng vào ảnh thật", ("main",)),
               ("vg-regions", "A. Region graph Visual Genome", ("main", "label")),
               ("synthetic", "B. Dữ liệu tổng hợp", ("main",)))
-EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley", "cf_gnnexplainer", "graphmask", "gstarx")
 METRICS = ("gea", "precision", "auroc", "first", "decoy_percentile")
 
 
@@ -49,18 +49,10 @@ def summarize(metrics):
     return out
 
 
-def number(value, digits):
-    return f"{value:.{digits}f}".replace(".", ",").replace("-", "−")
-
-
 def cell(s, scale=1., digits=3):
     if s is None:
         return "n/a"
     return f"{number(s['mean'] * scale, digits)} ± {number(s['std'] * scale, digits)}"
-
-
-def row(*cells):
-    return "| " + " | ".join(str(c) for c in cells) + " |"
 
 
 def tables(summaries):

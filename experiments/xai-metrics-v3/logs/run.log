@@ -139,3 +139,53 @@ main_r3_seed2 10500 1258s
 main_r3_seed2 {"model": "main_r3", "seed": 2, "seconds": 1269.5370361804962, "recall@1": 0.4620521019467695, "pgexplainer": {"captions": 200, "seconds": 43.0272479057312, "final_loss": -0.4361509462981485}, "graphmask": {"captions": 200, "seconds": 41.04917287826538, "l0": 0.0010865939808837185, "divergence": 0.17670533041658928, "lagrange": 3.212750315554438}}
 exit 0
 Thu 19 Nov 2026 19:09:13 +07
+Thu 19 Nov 2026 19:36:42 +07
+review rerun: model countonly_factual_r3 seed 0
+countonly_factual_r3_seed0 500 481s
+countonly_factual_r3_seed0 1000 614s
+countonly_factual_r3_seed0 1500 812s
+countonly_factual_r3_seed0 2000 986s
+countonly_factual_r3_seed0 2500 1142s
+countonly_factual_r3_seed0 3000 1282s
+countonly_factual_r3_seed0 3500 1510s
+countonly_factual_r3_seed0 4000 1753s
+countonly_factual_r3_seed0 4500 1932s
+countonly_factual_r3_seed0 5000 2168s
+countonly_factual_r3_seed0 5500 2355s
+countonly_factual_r3_seed0 6000 2566s
+countonly_factual_r3_seed0 6500 2736s
+countonly_factual_r3_seed0 7000 2893s
+countonly_factual_r3_seed0 7500 3078s
+countonly_factual_r3_seed0 8000 3268s
+countonly_factual_r3_seed0 8500 3402s
+countonly_factual_r3_seed0 9000 3576s
+countonly_factual_r3_seed0 9500 3758s
+countonly_factual_r3_seed0 10000 3916s
+countonly_factual_r3_seed0 10500 4078s
+countonly_factual_r3_seed0 {"model": "countonly_factual_r3", "seed": 0, "seconds": 4122.495693206787, "recall@1": 0.49148876140317876, "pgexplainer": {"captions": 200, "seconds": 125.07181215286255, "final_loss": -0.9801340400706977}, "graphmask": {"captions": 200, "seconds": 121.71794366836548, "l0": 0.8233112880587578, "divergence": 0.2416784517867359, "lagrange": 0.5525360049307563}}
+exit 0
+Thu 19 Nov 2026 20:45:30 +07
+review rerun: model main_r3 seed 0
+main_r3_seed0 500 212s
+main_r3_seed0 1000 276s
+main_r3_seed0 1500 356s
+main_r3_seed0 2000 435s
+main_r3_seed0 2500 514s
+main_r3_seed0 3000 584s
+main_r3_seed0 3500 674s
+main_r3_seed0 4000 758s
+main_r3_seed0 4500 841s
+main_r3_seed0 5000 898s
+main_r3_seed0 5500 946s
+main_r3_seed0 6000 994s
+main_r3_seed0 6500 1036s
+main_r3_seed0 7000 1080s
+main_r3_seed0 7500 1129s
+main_r3_seed0 8000 1175s
+main_r3_seed0 8500 1216s
+main_r3_seed0 9000 1260s
+main_r3_seed0 9500 1311s
+main_r3_seed0 10000 1361s
+main_r3_seed0 10500 1407s
+main_r3_seed0 {"model": "main_r3", "seed": 0, "seconds": 1420.9270770549774, "recall@1": 0.46666039687764505, "pgexplainer": {"captions": 200, "seconds": 63.219494104385376, "final_loss": -0.4909178398549557}, "graphmask": {"captions": 200, "seconds": 60.81723594665527, "l0": 1.1736290456777766e-06, "divergence": 0.11304422398890893, "lagrange": 1.9685016818344618}}
+exit 0

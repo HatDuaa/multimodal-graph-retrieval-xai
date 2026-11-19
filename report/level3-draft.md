@@ -43,7 +43,7 @@ Từ kết luận 2, demo thêm một cột kiểm chứng bằng chính mô hì
 Bản v3 và ba benchmark có đáp án biết trước bổ sung ba kết luận:
 
 5. **Phản thực tế ngắn có thật, và occlusion tìm ra nó:** khoảng 3/4 ảnh hạng 1 mất hạng 1 khi bỏ ≤ 2 phần, hơn nửa chỉ với 1 phần; thứ tự của occlusion cho phản thực tế nhỏ nhất ở hơn 90% các câu đó (E: 60% với countonly).
-6. **Trên đáp án biết trước, occlusion đúng nhất ở cả ba bộ** (GEA 1,00 trên dữ liệu tổng hợp, 0,59–0,77 trên ảnh thật); E của countonly ngang Shapley trên region graph VG (0,60 so với 0,59), E của `main_r3` kém hơn rõ (0,25–0,28).
+6. **Trên đáp án biết trước, occlusion đúng nhất ở cả ba bộ** (GEA 1,00 trên dữ liệu tổng hợp, 0,61–0,77 trên ảnh thật); E của countonly ngang Shapley trên region graph VG (0,60 so với 0,59), E của `main_r3` kém hơn rõ (0,25–0,28).
 7. **Ba cách mới không vượt các cách cũ:** GStarX khớp Shapley tốt thứ hai (Spearman 0,65–0,66) với ít lượt chấm hơn; CF-GNNExplainer tìm được phản thực tế ở ít câu hơn mức có thật; GraphMask gần ngẫu nhiên, vì truyền tin GAT mang rất ít điểm.
 
 ## 1. Yêu cầu của đề và phạm vi
@@ -374,13 +374,14 @@ v3 thêm ba cách theo các họ còn thiếu ở v2: phản thực tế, mặt 
 | **GStarX** | 0,16 | 1,39 | 0,65 | −0,13 | 1,26 | 0,66 |
 | E | 0,07 | 1,26 | 0,61 | 0,24 | 0,76 | 0,46 |
 | **CF-GNNExplainer** | 0,33 | 0,68 | 0,18 | 0,41 | −0,73 | 0,01 |
-| **GraphMask** | 0,83 | −0,22 | −0,17 | 0,77 | −0,86 | 0,01 |
+| **GraphMask** | 0,88 | −0,28 | −0,17 | 0,77 | −0,86 | 0,01 |
 | random | 0,89 | 0,21 | 0,00 | 0,84 | −0,62 | −0,01 |
 
 - GStarX khớp Shapley tốt thứ hai sau GraphSVX, với khoảng nửa số lượt chấm; insertion AUC cao nhưng deletion AUC kém occlusion và Shapley.
 - CF-GNNExplainer cho một thứ tự kém: loss của nó chỉ đòi lật hạng 1 với ít phần nhất, không đòi xếp đúng các phần còn lại.
 - GraphMask gần như ngẫu nhiên ở mức các phần.
-  Với countonly nó giữ gần hết cổng mở (tỉ lệ 0,93–1,00) và thoả ràng buộc; với `main_r3` nó đóng gần hết cổng và vượt ràng buộc (điểm đổi 8–18% hiệu ứng thay vì 5%).
+  Với countonly seed 1 và 2 nó giữ gần hết cổng mở và thoả ràng buộc; với `main_r3` nó đóng gần hết cổng và vượt ràng buộc (điểm đổi 8–18% hiệu ứng thay vì 5%).
+  Việc học của countonly seed 0 không ổn định: cùng seed, 9 lần học với 1, 4 và 8 luồng CPU cho điểm đổi 0,07–0,74 hiệu ứng, không lần nào thoả 5% (`scripts/checks/graphmask_stability.py`); `main_r3` cho đúng 0,113 cả 9 lần.
   Trong cả hai trường hợp, xác suất của các message gần như bằng nhau, nên không xếp được các phần.
 - Cổng của GraphMask khởi tạo ở trạng thái mở: với khởi tạo ngẫu nhiên, countonly seed 0 đóng hết cổng cùng lúc và không mở lại được (điểm đổi 0,61 hiệu ứng), lỗi đã sửa trước khi chạy v3.
 
@@ -390,13 +391,13 @@ Trên tập con 200 câu, duyệt mọi tập 1 hoặc 2 phần của ảnh hạ
 
 | | countonly | `main_r3` |
 |---|---|---|
-| Có phản thực tế ≤ 2 phần | 74,2 ± 1,9% | 70,8 ± 1,2% |
-| trong đó cỡ 1 | 53,6% | 51,6% |
+| Có phản thực tế ≤ 2 phần | 74,2 ± 1,9% | 70,7 ± 1,3% |
+| trong đó cỡ 1 | 53,5% | 51,5% |
 | Ảnh sai: bỏ ≤ 2 phần thì ảnh vàng lên hạng 1 | 19,4 ± 4,2% | 15,3 ± 3,6% |
 | CF-GNNExplainer tìm được phản thực tế | 45,7 ± 4,3% | 34,6 ± 2,9% |
-| Phản thực tế tham lam (bỏ dần theo thứ tự, k ≤ 10) đúng cỡ nhỏ nhất: occlusion | 90,7% | 92,5% |
+| Phản thực tế tham lam (bỏ dần theo thứ tự, k ≤ 10) đúng cỡ nhỏ nhất: occlusion | 90,6% | 92,4% |
 | GraphSVX / Shapley | 81,3% / 77,5% | 82,3% / 77,1% |
-| E | 59,9% | 46,5% |
+| E | 59,7% | 46,7% |
 
 - Phần lớn ảnh hạng 1 phụ thuộc vào một hoặc hai phần; ảnh hạng 1 sai dễ lật hơn ảnh đúng (84% so với 53–63% với ≤ 2 phần).
 - Bỏ dần theo thứ tự của occlusion là cách tìm phản thực tế tốt nhất: nếu có một phần mà bỏ một mình đã lật hạng 1, đó chính là phần làm mất nhiều điểm nhất.
@@ -410,10 +411,10 @@ Ngừng truyền top-k message của ảnh hạng 1 (giữ bộ ba), theo GraphM
 |---|---|---|
 | Câu mà ngừng mọi message làm ảnh mất điểm | 12,2% | 48,2% |
 | Điểm đổi TB khi ngừng mọi message (sau − trước) | +0,0079 | −0,0010 |
-| AUC mất điểm (cao tốt): GraphMask / attention / random | −0,28 / −0,23 / −0,19 | 0,40 / 0,41 / 0,32 |
+| AUC mất điểm (cao tốt): GraphMask / attention / random | −0,12 / −0,23 / −0,19 | 0,40 / 0,41 / 0,32 |
 
 - Truyền tin GAT mang rất ít điểm: với countonly, ngừng mọi message trung bình còn làm điểm tăng; với `main_r3`, chỉ giảm 0,0010.
-- Với countonly, không thứ tự nào hơn ngẫu nhiên; với `main_r3`, GraphMask ngang attention và cả hai hơn ngẫu nhiên.
+- Với countonly, không thứ tự nào hơn ngẫu nhiên có ý nghĩa (GraphMask so với random: p lớn nhất 0,66); với `main_r3`, GraphMask ngang attention và cả hai hơn ngẫu nhiên.
 - Điều này củng cố mục 6.6: các cách giải thích dựa trên message (attention, GraphMask) có ít thứ để giải thích trên mô hình này.
 
 ### 6.11. Ba benchmark có đáp án biết trước
@@ -423,30 +424,30 @@ Nhóm dựng ba bộ mà đáp án có sẵn, không gán tay, và chấm cả 1
 
 - **B. Dữ liệu tổng hợp** (độ trung thực): câu là motif 2–3 vật và 1–2 quan hệ; ảnh vàng chứa motif trong một cảnh ngẫu nhiên; 19 ảnh âm, mỗi ảnh thiếu đúng một phần của motif, và mỗi phần bị thiếu ở ít nhất một ảnh âm, nên mô hình cần mọi phần của đáp án.
   Điểm CLIP là hằng số; mô hình cùng kiến trúc countonly học lại, R@1 val tổng hợp 100% ở cả 3 seed.
-- **C. Cài vào ảnh thật** (độ trung thực trên mô hình thật): cài quan hệ của câu (2 node, 1 bộ ba) cùng một mồi nhử không liên quan vào một ứng viên hạng 2–5, chỉ giữ ca mà ảnh lên hạng 1.
+- **C. Cài vào ảnh thật** (độ trung thực trên mô hình thật): cài quan hệ của câu (2 node, 1 bộ ba) cùng một mồi nhử không liên quan vào một ứng viên hạng 2–5, ở vị trí ngẫu nhiên trong danh sách phần của ảnh, chỉ giữ ca mà ảnh lên hạng 1.
 - **A. Region graph Visual Genome** (độ hợp lý): mô tả vùng của ảnh val làm truy vấn, đáp án là các object và quan hệ người gán nhãn nói tới (TB 3,4 phần).
 
 | GEA | B. tổng hợp | C. countonly | C. `main_r3` | A. countonly | A. `main_r3` |
 |---|---|---|---|---|---|
-| occlusion | **1,000** | **0,648** | **0,588** | **0,771** | **0,758** |
-| GraphSVX | 0,333 | 0,469 | 0,391 | 0,620 | 0,512 |
-| Shapley | 0,514 | 0,464 | 0,380 | 0,592 | 0,505 |
-| SubgraphX | 0,839 | 0,602 | 0,003 | 0,453 | 0,594 |
-| IG | 0,802 | 0,390 | 0,388 | 0,539 | 0,433 |
-| GNNExplainer | 0,772 | 0,429 | 0,379 | 0,543 | 0,427 |
-| **E** | 0,665 | 0,410 | 0,248 | 0,595 | 0,281 |
-| GStarX | 0,283 | 0,348 | 0,274 | 0,393 | 0,422 |
-| CF-GNNExplainer | 0,699 | 0,361 | 0,250 | 0,396 | 0,225 |
-| clip | 0,878 | 0,357 | 0,338 | 0,386 | 0,378 |
-| GNN-LRP | 0,550 | 0,255 | 0,118 | 0,357 | 0,263 |
-| PGExplainer | 0,511 | 0,149 | 0,145 | 0,193 | 0,183 |
-| gradient | 0,423 | 0,053 | 0,057 | 0,136 | 0,082 |
-| GraphMask | 0,173 | 0,029 | 0,103 | 0,098 | 0,103 |
-| random | 0,143 | 0,050 | 0,052 | 0,050 | 0,057 |
+| occlusion | **1,000** | **0,654** | **0,606** | **0,771** | **0,758** |
+| GraphSVX | 0,333 | 0,466 | 0,396 | 0,620 | 0,512 |
+| Shapley | 0,514 | 0,445 | 0,389 | 0,592 | 0,505 |
+| SubgraphX | 0,839 | 0,465 | 0,020 | 0,453 | 0,594 |
+| IG | 0,802 | 0,388 | 0,396 | 0,539 | 0,433 |
+| GNNExplainer | 0,772 | 0,434 | 0,386 | 0,543 | 0,427 |
+| **E** | 0,665 | 0,416 | 0,250 | 0,595 | 0,281 |
+| GStarX | 0,283 | 0,372 | 0,288 | 0,393 | 0,422 |
+| CF-GNNExplainer | 0,699 | 0,356 | 0,244 | 0,396 | 0,225 |
+| clip | 0,878 | 0,376 | 0,356 | 0,386 | 0,378 |
+| GNN-LRP | 0,550 | 0,255 | 0,116 | 0,357 | 0,263 |
+| PGExplainer | 0,511 | 0,143 | 0,150 | 0,193 | 0,183 |
+| gradient | 0,423 | 0,062 | 0,051 | 0,136 | 0,082 |
+| GraphMask | 0,173 | 0,062 | 0,105 | 0,098 | 0,103 |
+| random | 0,143 | 0,049 | 0,052 | 0,050 | 0,057 |
 
 - **Occlusion đứng đầu ở cả năm cột**, và đúng tuyệt đối trên dữ liệu tổng hợp.
 - **E của countonly** đặt một phần đúng lên đầu ở mọi ca tổng hợp (AUROC 0,956) và ngang Shapley trên region graph; **E của `main_r3`** kém rõ ở A và C, như các mục trước.
-- **SubgraphX phụ thuộc tính liên thông:** với `main_r3` (không có cạnh hoàn thiện), cụm phần cài vào tách khỏi phần còn lại của ảnh, và SubgraphX, vốn giữ thành phần liên thông lớn nhất khi tỉa, luôn tỉa cụm đó trước (GEA 0,003).
+- **SubgraphX phụ thuộc tính liên thông:** với `main_r3` (không có cạnh hoàn thiện), cụm phần cài vào tách khỏi phần còn lại của ảnh, và SubgraphX, vốn giữ thành phần liên thông lớn nhất khi tỉa, thường tỉa cụm đó sớm (GEA 0,020, phần đúng đầu tiên ở vị trí 28,8 trên khoảng 50).
 - **Shapley và GraphSVX kém trên dữ liệu tổng hợp** (0,51 và 0,33) dù tốt trên ảnh thật; clip mạnh trên dữ liệu tổng hợp (0,878) vì ở đó phần đúng trùng tên trong câu.
 - **GraphMask gần ngẫu nhiên ở cả năm cột**; trên dữ liệu tổng hợp nó đóng mọi cổng mà vẫn thoả ràng buộc, tức mô hình không cần message.
 - Bảng đầy đủ (precision@g, AUROC, vị trí phần đúng đầu tiên, phân vị mồi nhử, đáp án theo nhãn) ở `experiments/xai-ground-truth/REPORT.md`.
@@ -553,7 +554,7 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
 - Hai giải thích chưa kiểm riêng: phần nền của term dưới z-score (mục 6.3) và lý do countonly khớp vị từ kém (mục 6.4).
 - Bỏ node cũng bỏ các bộ ba chạm vào nó, nên hiệu ứng của một node đã gồm phần của các bộ ba đó.
 - Chỉ đo trên ảnh hạng 1, chỉ trên val.
-- Phản thực tế nhỏ nhất chỉ duyệt tới cỡ 2; GraphMask với `main_r3` không thoả ràng buộc 5%.
+- Phản thực tế nhỏ nhất chỉ duyệt tới cỡ 2; GraphMask với `main_r3` không thoả ràng buộc 5%, và với countonly seed 0 kết quả học đổi theo số luồng CPU.
 - Benchmark có đáp án: 100 ca mỗi seed, chọn theo điều kiện ảnh có đáp án ở hạng 1 (ca dễ hơn trung bình); A đo độ hợp lý, không phải độ trung thực; B dùng từ vựng nhỏ và một mô hình học lại, không phải checkpoint của nhóm.
 
 ## 11. MMKG tiếng Việt và phân tích chuyển giao

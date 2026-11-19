@@ -5,8 +5,8 @@ labelled triples) such that removing them (xai_metrics.edit, the same edit as th
 lose rank 1, or, with a target column (the gold image of a caption whose rank-1 image is wrong), makes the target
 rank 1. Only the explained image is edited; the caption and the other 49 candidates stay as they are.
 
-- exact_counterfactual: every set of at most max_size parts, smallest first; the reference of the smallest
-  counterfactual within that size.
+- exact_counterfactuals: every set of at most max_size parts, smallest first; the reference of the smallest
+  counterfactual within that size (several targets share the rescoring).
 - cf_gnnexplainer: CF-GNNExplainer (Lucic et al., AISTATS 2022) on part masks. The original learns a sparse
   perturbation of the adjacency matrix with the loss L_pred + beta * L_dist, where L_pred is active only while the
   prediction has not changed. Here a part with mask m takes m * its vector + (1 - m) * its kind's neutral vector
@@ -38,35 +38,48 @@ def flipped(full, column, target=None):
     return (rank_of(scores, target) == 1).numpy()
 
 
-def exact_counterfactual(ctx, column, index, every, max_size=2, target=None, chunk=256):
-    """The smallest counterfactuals among all sets of at most max_size of the parts every.
+def exact_counterfactuals(ctx, column, index, every, max_size=2, targets=(None,), chunk=256):
+    """The smallest counterfactuals among all sets of at most max_size of the parts every, for each target of
+    targets (None: the explained image loses rank 1; a column: that candidate becomes rank 1). Every set is rescored
+    once and checked against every target.
 
-    Returns {"size": smallest size with a counterfactual (None if none up to max_size), "sets": how many sets of
-    that size are counterfactuals, "parts": the one among them with the lowest score of the explained image (target
-    None) or the highest target margin, "evaluations": edits rescored}.
+    Returns, per target, {"size": smallest size with a counterfactual (None if none up to max_size), "sets": how many
+    sets of that size are counterfactuals, "parts": the one among them with the lowest score of the explained image
+    (target None) or the highest target margin, "evaluations": edits rescored until that size was done}.
     """
+    results = [None] * len(targets)
     evaluations = 0
     for size in range(1, max_size + 1):
         sets = list(combinations(range(len(every)), size))
-        if not sets:
+        open_ = [t for t, r in enumerate(results) if r is None]
+        if not sets or not open_:
             break
-        hits, best, best_value = 0, None, None
+        hits, best, best_value = [0] * len(targets), [None] * len(targets), [None] * len(targets)
         for start in range(0, len(sets), chunk):
             batch = sets[start:start + chunk]
             *_, full = ctx.rescore(column, [removal(index, [every[i] for i in s]) for s in batch], full=True)
             evaluations += len(batch)
-            ok = flipped(full, column, target)
-            for s, row, good in zip(batch, full, ok):
-                if not good:
-                    continue
-                hits += 1
-                value = (-row[column] if target is None
-                         else row[target] - np.delete(row, target).max())
-                if best_value is None or value > best_value:
-                    best, best_value = s, value
-        if hits:
-            return {"size": size, "sets": hits, "parts": [every[i] for i in best], "evaluations": evaluations}
-    return {"size": None, "sets": 0, "parts": None, "evaluations": evaluations}
+            for t in open_:
+                target = targets[t]
+                for s, row, good in zip(batch, full, flipped(full, column, target)):
+                    if not good:
+                        continue
+                    hits[t] += 1
+                    value = (-row[column] if target is None
+                             else row[target] - np.delete(row, target).max())
+                    if best_value[t] is None or value > best_value[t]:
+                        best[t], best_value[t] = s, value
+        for t in open_:
+            if hits[t]:
+                results[t] = {"size": size, "sets": hits[t], "parts": [every[i] for i in best[t]],
+                              "evaluations": evaluations}
+    total = sum(len(list(combinations(range(len(every)), size))) for size in range(1, max_size + 1))
+    return [r if r is not None else {"size": None, "sets": 0, "parts": None, "evaluations": total} for r in results]
+
+
+def exact_counterfactual(ctx, column, index, every, max_size=2, target=None, chunk=256):
+    """exact_counterfactuals for one target."""
+    return exact_counterfactuals(ctx, column, index, every, max_size, (target,), chunk)[0]
 
 
 def cf_gnnexplainer(ctx, column, index, base, empty, target=None, steps=200, beta=0.5, lr=0.1, kappa=0.01):

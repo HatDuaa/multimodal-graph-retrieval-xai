@@ -101,7 +101,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphIndex, GraphStore  # noqa: E402
 from src.explain import xai_baselines as baselines  # noqa: E402
 from src.explain.score_breakdown import top50_deltas  # noqa: E402
-from src.explain.xai_counterfactual import cf_gnnexplainer, exact_counterfactual  # noqa: E402
+from src.explain.xai_counterfactual import cf_gnnexplainer, exact_counterfactual, exact_counterfactuals  # noqa: E402
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count,  # noqa: E402
                                      margin_values, message_drop, rank_of, real_nodes, split)
 from src.graph.counts import CAPTION_CLASSES, compatible  # noqa: E402
@@ -146,7 +146,8 @@ class LabelMatcher:
     """Does an image node carry a caption node's label? Strict (alias or WordNet hyponym) and v1's lenient test."""
 
     def __init__(self, vectors, rows, vocab):
-        self.vectors, self.rows, self.vocab, self.cache = vectors, rows, vocab, {}
+        # a copy of rows: a store that appends parts later (planted) must not grow it past the end of vectors
+        self.vectors, self.rows, self.vocab, self.cache = vectors, dict(rows), vocab, {}
 
     def __call__(self, query, image, synset):
         key = (query, image, synset)
@@ -482,10 +483,12 @@ def message_curves(ctx, column, index, gm_edges, alpha, rng, base):
     return out
 
 
-def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0, gm=None, keep_orders=False):
+def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0, gm=None, keep_orders=False,
+            cf_target=True):
     """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes; pg and gm are
     the trained PGExplainer and GraphMask of this checkpoint, seed its seed (for the rng of GraphSVX, SubgraphX,
-    GStarX and the random message order); keep_orders also returns every explainer's order of the parts."""
+    GStarX and the random message order); keep_orders also returns every explainer's order of the parts;
+    cf_target False skips the target counterfactual of a wrong image."""
     store, column = ctx.store, ctx.top
     image_id = ctx.ids[column]
     graph = store.graphs[image_id]
@@ -652,11 +655,14 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
             cf_parts, out["cf_gnnexplainer"] = cf_gnnexplainer(ctx, column, index, base, empty)
             orders["cf_gnnexplainer"] = [p[:2] for p in sorted(cf_parts, key=lambda p: -p[2])]
             seconds["cf_gnnexplainer"], started = time.time() - started, time.time()
-            out["cf_exact"] = exact_counterfactual(ctx, column, index, every, max_size=CF_SIZE)
+            # one rescoring of every set serves both the rank-1 counterfactual and, for a wrong image, the target one
+            wanted = cf_target and not out["correct"] and gold_column is not None
+            found = exact_counterfactuals(ctx, column, index, every, max_size=CF_SIZE,
+                                          targets=(None, gold_column) if wanted else (None,))
+            out["cf_exact"] = found[0]
+            if wanted:
+                out["cf_target"] = found[1]
             seconds["cf_exact"] = time.time() - started
-            if not out["correct"] and gold_column is not None:
-                out["cf_target"] = exact_counterfactual(ctx, column, index, every, max_size=CF_SIZE,
-                                                        target=gold_column)
         out["explainer_seconds"], out["gnn_lrp_check"] = seconds, lrp_check
         seed = [2026, *caption]
         out["explainers"] = {}
@@ -743,7 +749,8 @@ def counterfactual_summary(usable):
     """Exact smallest counterfactuals (at most CF_SIZE parts), CF-GNNExplainer's, the target ones of wrong images, and
     every explainer's greedy one (k_flip) set against the exact one."""
     out = {}
-    exact = [r for r in usable if "cf_exact" in r and "explainers" in r]
+    # the gnn subset only: evidence captions outside it also get cf_exact (detail), at seed 0 alone
+    exact = [r for r in usable if "cf_exact" in r and "cf_gnnexplainer" in r]
     if not exact:
         return out
     found = [r for r in exact if r["cf_exact"]["size"] is not None]
@@ -965,7 +972,7 @@ def train_pg(model, store, device, chosen, seed):
     """PGExplainer of one checkpoint, trained on the chosen captions; returns it and {captions, seconds, final_loss}."""
     started = time.time()
     items = [lambda cid=cid: training_item(model, store, device, cid) for cid in chosen]
-    explainer, loss = baselines.train_pgexplainer(items, seed=2027 + seed)
+    explainer, loss = baselines.train_pgexplainer(items, seed=2027 + seed, device=device)
     return explainer, {"captions": len(chosen), "seconds": time.time() - started, "final_loss": loss}
 
 
@@ -973,7 +980,7 @@ def train_gm(model, store, device, chosen, seed):
     """GraphMask of one checkpoint, trained on the same captions as PGExplainer; returns it and its training info."""
     started = time.time()
     items = [lambda cid=cid: training_item(model, store, device, cid) for cid in chosen]
-    explainer, info = baselines.train_graphmask(items, seed=2027 + seed)
+    explainer, info = baselines.train_graphmask(items, seed=2027 + seed, device=device)
     return explainer, {"captions": len(chosen), "seconds": time.time() - started, **info}
 
 
