@@ -4,10 +4,12 @@ Nháp để nhóm duyệt rồi ghép vào bản báo cáo chính.
 Cùng quy ước với `report/level1-draft.md`: thuật ngữ tiếng Anh giữ nguyên, kèm giải thích lần đầu; mọi con số lấy từ file kết quả trong `experiments/`, đường dẫn ghi ở cuối từng mục và ở mục 12.
 Phần này thuộc dòng 27–29 của bảng phân công (đo fidelity, validity, sparsity).
 Người soạn: Nhi cùng công cụ AI (Claude).
-Bản nháp ngày **2026-11-18**.
+Bản nháp ngày **2026-11-19**.
 
 > **Số liệu.** Cả hai mô hình đều đo bằng bản đo thứ hai (**v2**, `experiments/xai-metrics-v2/`), gồm cả phần so sánh 13 cách giải thích.
 > Bản đo thứ nhất (**v1**, `experiments/xai-metrics/`) giữ nguyên làm tham khảo; mục 3.3 ghi v2 sửa gì so với v1.
+> Bản thứ ba (**v3**, `experiments/xai-metrics-v3/`) thêm 3 cách giải thích (CF-GNNExplainer, GraphMask, GStarX), phản thực tế nhỏ nhất và mức message (mục 6.8–6.10); mọi số của v2 giữ nguyên trong v3 (kiểm tuyệt đối 14 542 giá trị).
+> Ba benchmark có đáp án biết trước ở `experiments/xai-ground-truth/` (mục 6.11).
 
 ## Tóm tắt
 
@@ -38,6 +40,12 @@ Bốn kết luận:
 
 Từ kết luận 2, demo thêm một cột kiểm chứng bằng chính mô hình cho mỗi dòng giải thích (mục 8).
 
+Bản v3 và ba benchmark có đáp án biết trước bổ sung ba kết luận:
+
+5. **Phản thực tế ngắn có thật, và occlusion tìm ra nó:** khoảng 3/4 ảnh hạng 1 mất hạng 1 khi bỏ ≤ 2 phần, hơn nửa chỉ với 1 phần; thứ tự của occlusion cho phản thực tế nhỏ nhất ở hơn 90% các câu đó (E: 60% với countonly).
+6. **Trên đáp án biết trước, occlusion đúng nhất ở cả ba bộ** (GEA 1,00 trên dữ liệu tổng hợp, 0,59–0,77 trên ảnh thật); E của countonly ngang Shapley trên region graph VG (0,60 so với 0,59), E của `main_r3` kém hơn rõ (0,25–0,28).
+7. **Ba cách mới không vượt các cách cũ:** GStarX khớp Shapley tốt thứ hai (Spearman 0,65–0,66) với ít lượt chấm hơn; CF-GNNExplainer tìm được phản thực tế ở ít câu hơn mức có thật; GraphMask gần ngẫu nhiên, vì truyền tin GAT mang rất ít điểm.
+
 ## 1. Yêu cầu của đề và phạm vi
 
 Đề (`assignments/Project03_Multimodal_XAI.pdf`, cấp độ 3) yêu cầu hai việc:
@@ -52,6 +60,7 @@ Phạm vi phần đo giải thích:
 - **Ảnh được giải thích:** ảnh mô hình xếp hạng 1 cho mỗi câu, dù đúng hay sai; kết quả tách riêng hai nhóm ở phụ lục của `experiments/xai-metrics-v2/REPORT.md`.
 - **Câu:** toàn bộ 10 633 câu val cho fidelity, validity, sparsity và đồ thị con.
   Phần so sánh các cách giải thích dùng một mẫu cố định 1 000 câu (rng 2026), giữ các câu có hiệu ứng đồ thị dương (TB 983 câu mỗi seed với countonly, 977 với `main_r3`); GNNExplainer, GraphSVX, SubgraphX và Shapley chạy trên 200 câu đầu của mẫu (TB 196 và 195 câu sau khi lọc); PGExplainer học trên 200 câu val khác, ngoài mẫu so sánh và ngoài 13 câu bằng chứng.
+  v3 chạy CF-GNNExplainer, GStarX và phản thực tế nhỏ nhất trên cùng tập con 200 câu, GraphMask trên cả mẫu 1 000 câu (học trên cùng 200 câu với PGExplainer).
 
 ## 2. Lời giải thích được đánh giá
 
@@ -290,6 +299,7 @@ Các câu mà số cạnh vào lớn hơn số cạnh bỏ: 10 481 câu mỗi se
   Nhưng hiệu ứng nhỏ: Δ điểm trung bình như cắt ngẫu nhiên (cả hai đều làm điểm tăng nhẹ), và nhỏ hơn nhiều so với bỏ phần (mục 6.1).
 - Ablation bỏ cạnh lúc train làm R@1 giảm 2,39 (`experiments/improve/no-edges/`): cạnh có ích ở tổng thể, nhưng tác dụng trải trên nhiều cạnh, không nằm ở vài cạnh có attention cao.
 
+
 ### 6.7. So sánh 13 cách giải thích
 
 **countonly** (983 câu mỗi seed; Shapley, GraphSVX, SubgraphX và GNNExplainer 196 câu; thời gian trên CPU):
@@ -347,6 +357,99 @@ Kiểm định Wilcoxon ghép cặp với E trên deletion AUC: mọi cách khá
   - SubgraphX có k_flip thấp nhất trong bốn cách mới (60% và 50%) và tốn nhiều lượt chấm nhất với countonly; một lý do có thể, chưa kiểm riêng, là nó chọn cả một đồ thị con liên thông, trong khi các độ đo ở đây bỏ hoặc giữ từng phần một.
 - **lowest** (E đảo ngược) kém nhất trên mọi trục ở cả hai mô hình, đúng như mong đợi của một phép kiểm tra: thứ tự của E mang thông tin thật.
 - **Gradient × input gần như ngẫu nhiên** ở cả hai mô hình: đạo hàm cục bộ không nói gì về việc bỏ hẳn một phần.
+
+### 6.8. Ba cách giải thích mới (v3)
+
+v3 thêm ba cách theo các họ còn thiếu ở v2: phản thực tế, mặt nạ trên message, và Shapley có cấu trúc.
+
+| Cách | Loại | Chỉnh cho reranker |
+|---|---|---|
+| CF-GNNExplainer (Lucic và cộng sự, AISTATS 2022) | Phản thực tế: mặt nạ thưa nhỏ nhất làm đổi dự đoán | Mặt nạ trên các phần, phần bị bỏ chuyển về vector trung tính; loss = hinge trên biên hạng 1 + β · tỉ lệ phần bị bỏ; mỗi bước bỏ thật các phần có mặt nạ < 0,5 rồi chấm lại |
+| GraphMask (Schlichtkrull và cộng sự, ICLR 2021) | Cổng hard concrete trên từng message của từng lớp GAT, message bị đóng thay bằng baseline học được | Một MLP chung mỗi lớp, học bằng Lagrange (điểm đổi ≤ 5% hiệu ứng) trên 200 câu val; cổng gắn bằng hook của PyG, không sửa mô hình; bộ ba lấy giá trị cạnh có nhãn của nó, node lấy giá trị lớn nhất của message nó gửi |
+| GStarX (Zhang và cộng sự, NeurIPS 2022) | Giá trị Hamiache-Navarro: Shapley chỉ cho liên minh liên thông | Đồ thị các phần (node kề nhau theo cạnh có nhãn và cạnh hoàn thiện, bộ ba kề hai đầu); HN tính chính xác trên các tập liên thông ≤ 5 phần được lấy mẫu; TB 542 lượt chấm mỗi câu (countonly), 318 (`main_r3`) |
+
+| Cách | countonly: deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | Spearman với Shapley | `main_r3`: deletion | Insertion | Spearman |
+|---|---|---|---|---|---|---|
+| GraphSVX | −0,24 | 1,56 | 0,75 | −0,71 | 1,50 | 0,72 |
+| **GStarX** | 0,16 | 1,39 | 0,65 | −0,13 | 1,26 | 0,66 |
+| E | 0,07 | 1,26 | 0,61 | 0,24 | 0,76 | 0,46 |
+| **CF-GNNExplainer** | 0,33 | 0,68 | 0,18 | 0,41 | −0,73 | 0,01 |
+| **GraphMask** | 0,83 | −0,22 | −0,17 | 0,77 | −0,86 | 0,01 |
+| random | 0,89 | 0,21 | 0,00 | 0,84 | −0,62 | −0,01 |
+
+- GStarX khớp Shapley tốt thứ hai sau GraphSVX, với khoảng nửa số lượt chấm; insertion AUC cao nhưng deletion AUC kém occlusion và Shapley.
+- CF-GNNExplainer cho một thứ tự kém: loss của nó chỉ đòi lật hạng 1 với ít phần nhất, không đòi xếp đúng các phần còn lại.
+- GraphMask gần như ngẫu nhiên ở mức các phần.
+  Với countonly nó giữ gần hết cổng mở (tỉ lệ 0,93–1,00) và thoả ràng buộc; với `main_r3` nó đóng gần hết cổng và vượt ràng buộc (điểm đổi 8–18% hiệu ứng thay vì 5%).
+  Trong cả hai trường hợp, xác suất của các message gần như bằng nhau, nên không xếp được các phần.
+- Cổng của GraphMask khởi tạo ở trạng thái mở: với khởi tạo ngẫu nhiên, countonly seed 0 đóng hết cổng cùng lúc và không mở lại được (điểm đổi 0,61 hiệu ứng), lỗi đã sửa trước khi chạy v3.
+
+### 6.9. Phản thực tế nhỏ nhất
+
+Trên tập con 200 câu, duyệt mọi tập 1 hoặc 2 phần của ảnh hạng 1, tìm tập nhỏ nhất mà bỏ đi thì ảnh mất hạng 1:
+
+| | countonly | `main_r3` |
+|---|---|---|
+| Có phản thực tế ≤ 2 phần | 74,2 ± 1,9% | 70,8 ± 1,2% |
+| trong đó cỡ 1 | 53,6% | 51,6% |
+| Ảnh sai: bỏ ≤ 2 phần thì ảnh vàng lên hạng 1 | 19,4 ± 4,2% | 15,3 ± 3,6% |
+| CF-GNNExplainer tìm được phản thực tế | 45,7 ± 4,3% | 34,6 ± 2,9% |
+| Phản thực tế tham lam (bỏ dần theo thứ tự, k ≤ 10) đúng cỡ nhỏ nhất: occlusion | 90,7% | 92,5% |
+| GraphSVX / Shapley | 81,3% / 77,5% | 82,3% / 77,1% |
+| E | 59,9% | 46,5% |
+
+- Phần lớn ảnh hạng 1 phụ thuộc vào một hoặc hai phần; ảnh hạng 1 sai dễ lật hơn ảnh đúng (84% so với 53–63% với ≤ 2 phần).
+- Bỏ dần theo thứ tự của occlusion là cách tìm phản thực tế tốt nhất: nếu có một phần mà bỏ một mình đã lật hạng 1, đó chính là phần làm mất nhiều điểm nhất.
+- CF-GNNExplainer, phương pháp viết riêng cho phản thực tế, tìm được ít hơn nhiều so với mức có thật.
+
+### 6.10. Mức message: GraphMask, attention GAT và ngẫu nhiên
+
+Ngừng truyền top-k message của ảnh hạng 1 (giữ bộ ba), theo GraphMask, theo attention GAT, và ngẫu nhiên:
+
+| | countonly | `main_r3` |
+|---|---|---|
+| Câu mà ngừng mọi message làm ảnh mất điểm | 12,2% | 48,2% |
+| Điểm đổi TB khi ngừng mọi message (sau − trước) | +0,0079 | −0,0010 |
+| AUC mất điểm (cao tốt): GraphMask / attention / random | −0,28 / −0,23 / −0,19 | 0,40 / 0,41 / 0,32 |
+
+- Truyền tin GAT mang rất ít điểm: với countonly, ngừng mọi message trung bình còn làm điểm tăng; với `main_r3`, chỉ giảm 0,0010.
+- Với countonly, không thứ tự nào hơn ngẫu nhiên; với `main_r3`, GraphMask ngang attention và cả hai hơn ngẫu nhiên.
+- Điều này củng cố mục 6.6: các cách giải thích dựa trên message (attention, GraphMask) có ít thứ để giải thích trên mô hình này.
+
+### 6.11. Ba benchmark có đáp án biết trước
+
+Validity ở mục 6.4 chấm bằng WordNet, không biết phần nào thực sự khiến ảnh đứng hạng 1.
+Nhóm dựng ba bộ mà đáp án có sẵn, không gán tay, và chấm cả 16 cách bằng **GEA** (Jaccard giữa g phần đầu của thứ tự và đáp án g phần; Agarwal và cộng sự, GraphXAI, 2023), precision@g và AUROC; mỗi mô hình, mỗi seed, 100 ca mà ảnh có đáp án đứng hạng 1.
+
+- **B. Dữ liệu tổng hợp** (độ trung thực): câu là motif 2–3 vật và 1–2 quan hệ; ảnh vàng chứa motif trong một cảnh ngẫu nhiên; 19 ảnh âm, mỗi ảnh thiếu đúng một phần của motif, và mỗi phần bị thiếu ở ít nhất một ảnh âm, nên mô hình cần mọi phần của đáp án.
+  Điểm CLIP là hằng số; mô hình cùng kiến trúc countonly học lại, R@1 val tổng hợp 100% ở cả 3 seed.
+- **C. Cài vào ảnh thật** (độ trung thực trên mô hình thật): cài quan hệ của câu (2 node, 1 bộ ba) cùng một mồi nhử không liên quan vào một ứng viên hạng 2–5, chỉ giữ ca mà ảnh lên hạng 1.
+- **A. Region graph Visual Genome** (độ hợp lý): mô tả vùng của ảnh val làm truy vấn, đáp án là các object và quan hệ người gán nhãn nói tới (TB 3,4 phần).
+
+| GEA | B. tổng hợp | C. countonly | C. `main_r3` | A. countonly | A. `main_r3` |
+|---|---|---|---|---|---|
+| occlusion | **1,000** | **0,648** | **0,588** | **0,771** | **0,758** |
+| GraphSVX | 0,333 | 0,469 | 0,391 | 0,620 | 0,512 |
+| Shapley | 0,514 | 0,464 | 0,380 | 0,592 | 0,505 |
+| SubgraphX | 0,839 | 0,602 | 0,003 | 0,453 | 0,594 |
+| IG | 0,802 | 0,390 | 0,388 | 0,539 | 0,433 |
+| GNNExplainer | 0,772 | 0,429 | 0,379 | 0,543 | 0,427 |
+| **E** | 0,665 | 0,410 | 0,248 | 0,595 | 0,281 |
+| GStarX | 0,283 | 0,348 | 0,274 | 0,393 | 0,422 |
+| CF-GNNExplainer | 0,699 | 0,361 | 0,250 | 0,396 | 0,225 |
+| clip | 0,878 | 0,357 | 0,338 | 0,386 | 0,378 |
+| GNN-LRP | 0,550 | 0,255 | 0,118 | 0,357 | 0,263 |
+| PGExplainer | 0,511 | 0,149 | 0,145 | 0,193 | 0,183 |
+| gradient | 0,423 | 0,053 | 0,057 | 0,136 | 0,082 |
+| GraphMask | 0,173 | 0,029 | 0,103 | 0,098 | 0,103 |
+| random | 0,143 | 0,050 | 0,052 | 0,050 | 0,057 |
+
+- **Occlusion đứng đầu ở cả năm cột**, và đúng tuyệt đối trên dữ liệu tổng hợp.
+- **E của countonly** đặt một phần đúng lên đầu ở mọi ca tổng hợp (AUROC 0,956) và ngang Shapley trên region graph; **E của `main_r3`** kém rõ ở A và C, như các mục trước.
+- **SubgraphX phụ thuộc tính liên thông:** với `main_r3` (không có cạnh hoàn thiện), cụm phần cài vào tách khỏi phần còn lại của ảnh, và SubgraphX, vốn giữ thành phần liên thông lớn nhất khi tỉa, luôn tỉa cụm đó trước (GEA 0,003).
+- **Shapley và GraphSVX kém trên dữ liệu tổng hợp** (0,51 và 0,33) dù tốt trên ảnh thật; clip mạnh trên dữ liệu tổng hợp (0,878) vì ở đó phần đúng trùng tên trong câu.
+- **GraphMask gần ngẫu nhiên ở cả năm cột**; trên dữ liệu tổng hợp nó đóng mọi cổng mà vẫn thoả ràng buộc, tức mô hình không cần message.
+- Bảng đầy đủ (precision@g, AUROC, vị trí phần đúng đầu tiên, phân vị mồi nhử, đáp án theo nhãn) ở `experiments/xai-ground-truth/REPORT.md`.
 
 ## 7. Bằng chứng trên 13 truy vấn
 
@@ -435,6 +538,10 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
    Ở countonly, cách cắt đó làm mất hạng 1 nhiều gấp khoảng 2 lần ngẫu nhiên, nhưng chỉ ở 3,5% câu.
 7. **Các cách giải thích GNN phổ biến không vượt E trên mô hình này**, trừ GraphSVX vốn là một phép ước lượng Shapley.
    PGExplainer, GNN-LRP và SubgraphX khớp Shapley kém hơn E nhiều (Spearman ≤ 0,11 so với 0,46–0,61); với `main_r3`, PGExplainer và GNN-LRP hơn E ở deletion AUC và k_flip nhưng kém E nhiều ở insertion AUC.
+   Trong ba cách thêm ở v3, chỉ GStarX đáng dùng (Spearman 0,65–0,66); CF-GNNExplainer và GraphMask kém E.
+8. **Phản thực tế ngắn có thật:** khoảng 3/4 ảnh hạng 1 mất hạng 1 khi bỏ ≤ 2 phần; bỏ dần theo occlusion tìm đúng cỡ nhỏ nhất ở hơn 90% các câu đó.
+9. **Trên đáp án biết trước, occlusion đúng nhất ở cả ba benchmark**; E của countonly ngang Shapley trên region graph VG, E của `main_r3` kém hơn.
+   Nếu cần một lời giải thích kiểm chứng duy nhất cho demo, occlusion là lựa chọn được ủng hộ bởi mọi phép đo ở đây, đúng với cột "Bỏ phần này" đã có.
 
 ## 10. Hạn chế
 
@@ -446,6 +553,8 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
 - Hai giải thích chưa kiểm riêng: phần nền của term dưới z-score (mục 6.3) và lý do countonly khớp vị từ kém (mục 6.4).
 - Bỏ node cũng bỏ các bộ ba chạm vào nó, nên hiệu ứng của một node đã gồm phần của các bộ ba đó.
 - Chỉ đo trên ảnh hạng 1, chỉ trên val.
+- Phản thực tế nhỏ nhất chỉ duyệt tới cỡ 2; GraphMask với `main_r3` không thoả ràng buộc 5%.
+- Benchmark có đáp án: 100 ca mỗi seed, chọn theo điều kiện ảnh có đáp án ở hạng 1 (ca dễ hơn trung bình); A đo độ hợp lý, không phải độ trung thực; B dùng từ vựng nhỏ và một mô hình học lại, không phải checkpoint của nhóm.
 
 ## 11. MMKG tiếng Việt và phân tích chuyển giao
 
@@ -462,6 +571,8 @@ Nội dung mục này do Khang viết.
 | Script đo | `scripts/xai_metrics.py` (v2), `scripts/xai_metrics_v1.py` (v1), `src/explain/xai_metrics.py` |
 | Script tổng hợp bảng | `scripts/summarize_xai_metrics.py` (v2), `scripts/summarize_xai_metrics_v1.py` (v1) |
 | Lệnh chạy lại | `experiments/xai-metrics-v2/run.sh`, `experiments/xai-metrics/run.sh` |
+| v3: 16 cách, phản thực tế nhỏ nhất, mức message | `experiments/xai-metrics-v3/metrics.json`, `summary.json`, `REPORT.md`; `scripts/xai_metrics.py`, `src/explain/xai_counterfactual.py`, `src/explain/xai_baselines.py`; `experiments/xai-metrics-v3/run.sh` |
+| Ba benchmark có đáp án biết trước | `experiments/xai-ground-truth/{planted,vg-regions,synthetic}/metrics.json`, `summary.json`, `REPORT.md`; `scripts/xai_ground_truth.py`, `src/explain/synthetic_graphs.py`; `experiments/xai-ground-truth/run.sh` |
 
 **Khai báo công cụ AI:** code đo, phần chạy thí nghiệm và bản nháp này được viết cùng Claude (Anthropic); Nhi duyệt định nghĩa các độ đo, kết quả và kết luận.
 Mọi con số lấy từ các file ở bảng trên.
