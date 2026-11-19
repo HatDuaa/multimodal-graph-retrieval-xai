@@ -554,12 +554,18 @@ HC_BETA, HC_GAMMA, HC_ZETA = 2 / 3, -0.1, 1.1          # hard concrete (Louizos 
 class GraphMask(nn.Module):
     """One gate per GAT message and layer, predicted by a small MLP per layer from the message's source and target
     vectors at that layer, its edge vector and the message itself; a closed message is replaced by a learned
-    baseline vector of that layer (the messages' softmax weights stay as they are)."""
+    baseline vector of that layer (the messages' softmax weights stay as they are).
 
-    def __init__(self, layers=2, dim=256, heads=4, channels=64, hidden=64):
+    The gates start open (output bias open_bias): from a random start the hard concrete gates of a checkpoint could all
+    close at once, where the clamp leaves no gradient to reopen them however large the Lagrange multiplier grows
+    (countonly seed 0: score change 0.61 of the graph effect against a tolerance of 0.05)."""
+
+    def __init__(self, layers=2, dim=256, heads=4, channels=64, hidden=64, open_bias=3.):
         super().__init__()
         self.gates = nn.ModuleList(nn.Sequential(nn.Linear(4 * dim, hidden), nn.ReLU(), nn.Linear(hidden, 1))
                                    for _ in range(layers))
+        for gate in self.gates:
+            nn.init.constant_(gate[-1].bias, open_bias)
         self.baselines = nn.ParameterList(nn.Parameter(torch.zeros(heads, channels)) for _ in range(layers))
 
     def log_alpha(self, layer, x, edges, attrs, messages):
@@ -618,7 +624,9 @@ def graphmask_loss(ctx, column, explainer, index, base, effect, lagrange, genera
     record = []
     with gated_messages(ctx.model, explainer, generator, record):
         fused, _ = ctx.score_images(column, images, 1)
-    l0 = torch.cat([explainer.open_probability(a) for _, _, a in record]).mean() if record else fused.new_zeros(())
+    gates = torch.cat([explainer.open_probability(a) for _, _, a in record]) if record else fused.new_zeros(0)
+    # an image without proper edges has no message to gate (the mean of nothing would be NaN)
+    l0 = gates.mean() if gates.numel() else fused.new_zeros(())
     divergence = (fused[0, column] - base).abs() / effect
     return l0, divergence
 

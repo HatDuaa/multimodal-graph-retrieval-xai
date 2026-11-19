@@ -216,6 +216,9 @@ def plant(graph, motifs, rng):
             new = {"id": max([x["id"] for x in objects], default=-1) + 1, "name": name, "synset": None}
             if boxes and all(b is not None for b in boxes):
                 new["box"] = list(boxes[int(rng.integers(len(boxes)))])
+            elif not boxes and "width" in graph:
+                # an image graph with no object: the planted parts cover the whole image
+                new["box"] = [0, 0, graph["width"], graph["height"]]
             objects.append(new)
             ids.append(new["id"])
         relations.append({"subject": ids[0], "predicate": p, "object": ids[1]})

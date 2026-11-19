@@ -83,3 +83,9 @@ def test_the_synthetic_store_batches_for_the_main_architecture():
         scores, _ = model(batch)
     assert scores.shape == (2, 6) and torch.isfinite(scores).all()
     assert (batch["clip"] == 0).all()
+
+
+def test_planting_into_an_image_without_objects_gives_the_parts_a_box():
+    graph = {"width": 10, "height": 8, "objects": [], "relations": []}
+    planted, _ = gt.plant(graph, [("man", "holding", "cup"), ("lamp", "near", "rock")], np.random.default_rng(0))
+    assert [obj["box"] for obj in planted["objects"]] == [[0, 0, 10, 8]] * 4
