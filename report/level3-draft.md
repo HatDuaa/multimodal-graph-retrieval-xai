@@ -365,7 +365,7 @@ v3 thêm ba cách theo các họ còn thiếu ở v2: phản thực tế, mặt 
 | Cách | Loại | Chỉnh cho reranker |
 |---|---|---|
 | CF-GNNExplainer (Lucic và cộng sự, AISTATS 2022) | Phản thực tế: mặt nạ thưa nhỏ nhất làm đổi dự đoán | Mặt nạ trên các phần, phần bị bỏ chuyển về vector trung tính; loss = hinge trên biên hạng 1 + β · tỉ lệ phần bị bỏ; mỗi bước bỏ thật các phần có mặt nạ < 0,5 rồi chấm lại |
-| GraphMask (Schlichtkrull và cộng sự, ICLR 2021) | Cổng hard concrete trên từng message của từng lớp GAT, message bị đóng thay bằng baseline học được | Một MLP chung mỗi lớp, học bằng Lagrange (điểm đổi ≤ 5% hiệu ứng) trên 200 câu val; cổng gắn bằng hook của PyG, không sửa mô hình; bộ ba lấy giá trị cạnh có nhãn của nó, node lấy giá trị lớn nhất của message nó gửi |
+| GraphMask (Schlichtkrull và cộng sự, ICLR 2021) | Cổng hard concrete trên từng message của từng lớp GAT, message bị đóng thay bằng baseline học được | Một MLP chung mỗi lớp, học bằng Lagrange (điểm đổi ≤ 5% hiệu ứng) trên 200 câu val, trả về trạng thái mở ít cổng nhất trong ràng buộc trong các lần chấm mỗi 100 bước; cổng gắn bằng hook của PyG, không sửa mô hình; bộ ba lấy giá trị cạnh có nhãn của nó, node lấy giá trị lớn nhất của message nó gửi |
 | GStarX (Zhang và cộng sự, NeurIPS 2022) | Giá trị Hamiache-Navarro: Shapley chỉ cho liên minh liên thông | Đồ thị các phần (node kề nhau theo cạnh có nhãn và cạnh hoàn thiện, bộ ba kề hai đầu); HN tính chính xác trên các tập liên thông ≤ 5 phần được lấy mẫu; TB 542 lượt chấm mỗi câu (countonly), 318 (`main_r3`) |
 
 | Cách | countonly: deletion AUC (thấp tốt) | Insertion AUC (cao tốt) | Spearman với Shapley | `main_r3`: deletion | Insertion | Spearman |
@@ -374,16 +374,18 @@ v3 thêm ba cách theo các họ còn thiếu ở v2: phản thực tế, mặt 
 | **GStarX** | 0,16 | 1,39 | 0,65 | −0,13 | 1,26 | 0,66 |
 | E | 0,07 | 1,26 | 0,61 | 0,24 | 0,76 | 0,46 |
 | **CF-GNNExplainer** | 0,33 | 0,68 | 0,18 | 0,41 | −0,73 | 0,01 |
-| **GraphMask** | 0,88 | −0,28 | −0,17 | 0,77 | −0,86 | 0,01 |
+| **GraphMask** | 0,77 | −0,11 | −0,11 | 0,78 | −0,92 | 0,00 |
 | random | 0,89 | 0,21 | 0,00 | 0,84 | −0,62 | −0,01 |
 
 - GStarX khớp Shapley tốt thứ hai sau GraphSVX, với khoảng nửa số lượt chấm; insertion AUC cao nhưng deletion AUC kém occlusion và Shapley.
 - CF-GNNExplainer cho một thứ tự kém: loss của nó chỉ đòi lật hạng 1 với ít phần nhất, không đòi xếp đúng các phần còn lại.
 - GraphMask gần như ngẫu nhiên ở mức các phần.
-  Với countonly seed 1 và 2 nó giữ gần hết cổng mở và thoả ràng buộc; với `main_r3` nó đóng gần hết cổng và vượt ràng buộc (điểm đổi 8–18% hiệu ứng thay vì 5%).
-  Việc học của countonly seed 0 không ổn định: cùng seed, 9 lần học với 1, 4 và 8 luồng CPU cho điểm đổi 0,07–0,74 hiệu ứng, không lần nào thoả 5% (`scripts/checks/graphmask_stability.py`); `main_r3` cho đúng 0,113 cả 9 lần.
+  Cả 6 checkpoint thoả ràng buộc: với countonly nó giữ 96–99% cổng mở (điểm đổi 0,002–0,040 hiệu ứng); với `main_r3` nó đóng gần hết cổng mà điểm chỉ đổi 0,018–0,044 hiệu ứng, tức mô hình gần như không cần message.
   Trong cả hai trường hợp, xác suất của các message gần như bằng nhau, nên không xếp được các phần.
-- Cổng của GraphMask khởi tạo ở trạng thái mở: với khởi tạo ngẫu nhiên, countonly seed 0 đóng hết cổng cùng lúc và không mở lại được (điểm đổi 0,61 hiệu ứng), lỗi đã sửa trước khi chạy v3.
+- Cách học GraphMask phải sửa hai lần.
+  Cổng khởi tạo ở trạng thái mở: với khởi tạo ngẫu nhiên, countonly seed 0 đóng hết cổng cùng lúc và không mở lại được (điểm đổi 0,61 hiệu ứng).
+  Bản đầu của v3 lấy trạng thái epoch cuối và không ổn định: khi ràng buộc thoả dư, hệ số Lagrange về 0, các cổng của một lớp đóng cùng lúc và lần học dừng giữa cú sập đó; 9 lần học countonly seed 0 với 1, 4 và 8 luồng CPU cho điểm đổi 0,07–0,74 hiệu ứng, `main_r3` cho 0,113 cả 9 lần, không lần nào thoả 5%.
+  Bản hiện tại chấm explainer mỗi 100 bước và trả về trạng thái mở ít cổng nhất trong ràng buộc (bước học 3e−4, bước Lagrange 0,1, 20 epoch); 12 lần học lại cùng seed đều thoả ràng buộc (`scripts/checks/graphmask_stability.py`), và các cách khác không đổi số nào khi chạy lại.
 
 ### 6.9. Phản thực tế nhỏ nhất
 
@@ -411,10 +413,10 @@ Ngừng truyền top-k message của ảnh hạng 1 (giữ bộ ba), theo GraphM
 |---|---|---|
 | Câu mà ngừng mọi message làm ảnh mất điểm | 12,2% | 48,2% |
 | Điểm đổi TB khi ngừng mọi message (sau − trước) | +0,0079 | −0,0010 |
-| AUC mất điểm (cao tốt): GraphMask / attention / random | −0,12 / −0,23 / −0,19 | 0,40 / 0,41 / 0,32 |
+| AUC mất điểm (cao tốt): GraphMask / attention / random | −0,23 / −0,23 / −0,19 | 0,41 / 0,41 / 0,32 |
 
 - Truyền tin GAT mang rất ít điểm: với countonly, ngừng mọi message trung bình còn làm điểm tăng; với `main_r3`, chỉ giảm 0,0010.
-- Với countonly, không thứ tự nào hơn ngẫu nhiên có ý nghĩa (GraphMask so với random: p lớn nhất 0,66); với `main_r3`, GraphMask ngang attention và cả hai hơn ngẫu nhiên.
+- Với countonly, không thứ tự nào hơn ngẫu nhiên có ý nghĩa (GraphMask so với random: p lớn nhất 0,40); với `main_r3`, GraphMask ngang attention và cả hai hơn ngẫu nhiên.
 - Điều này củng cố mục 6.6: các cách giải thích dựa trên message (attention, GraphMask) có ít thứ để giải thích trên mô hình này.
 
 ### 6.11. Ba benchmark có đáp án biết trước
@@ -442,14 +444,14 @@ Nhóm dựng ba bộ mà đáp án có sẵn, không gán tay, và chấm cả 1
 | GNN-LRP | 0,550 | 0,255 | 0,116 | 0,357 | 0,263 |
 | PGExplainer | 0,511 | 0,143 | 0,150 | 0,193 | 0,183 |
 | gradient | 0,423 | 0,062 | 0,051 | 0,136 | 0,082 |
-| GraphMask | 0,173 | 0,062 | 0,105 | 0,098 | 0,103 |
+| GraphMask | 0,171 | 0,060 | 0,101 | 0,070 | 0,108 |
 | random | 0,143 | 0,049 | 0,052 | 0,050 | 0,057 |
 
 - **Occlusion đứng đầu ở cả năm cột**, và đúng tuyệt đối trên dữ liệu tổng hợp.
 - **E của countonly** đặt một phần đúng lên đầu ở mọi ca tổng hợp (AUROC 0,956) và ngang Shapley trên region graph; **E của `main_r3`** kém rõ ở A và C, như các mục trước.
 - **SubgraphX phụ thuộc tính liên thông:** với `main_r3` (không có cạnh hoàn thiện), cụm phần cài vào tách khỏi phần còn lại của ảnh, và SubgraphX, vốn giữ thành phần liên thông lớn nhất khi tỉa, thường tỉa cụm đó sớm (GEA 0,020, phần đúng đầu tiên ở vị trí 28,8 trên khoảng 50).
 - **Shapley và GraphSVX kém trên dữ liệu tổng hợp** (0,51 và 0,33) dù tốt trên ảnh thật; clip mạnh trên dữ liệu tổng hợp (0,878) vì ở đó phần đúng trùng tên trong câu.
-- **GraphMask gần ngẫu nhiên ở cả năm cột**; trên dữ liệu tổng hợp nó đóng mọi cổng mà vẫn thoả ràng buộc, tức mô hình không cần message.
+- **GraphMask gần ngẫu nhiên ở cả năm cột**; trên dữ liệu tổng hợp và với `main_r3` nó đóng gần hết cổng mà vẫn thoả ràng buộc, tức mô hình không cần message.
 - Bảng đầy đủ (precision@g, AUROC, vị trí phần đúng đầu tiên, phân vị mồi nhử, đáp án theo nhãn) ở `experiments/xai-ground-truth/REPORT.md`.
 
 ## 7. Bằng chứng trên 13 truy vấn
@@ -554,7 +556,7 @@ Ví dụ trên val với `main_r3_seed0`: câu "A batter is preparing to hit the
 - Hai giải thích chưa kiểm riêng: phần nền của term dưới z-score (mục 6.3) và lý do countonly khớp vị từ kém (mục 6.4).
 - Bỏ node cũng bỏ các bộ ba chạm vào nó, nên hiệu ứng của một node đã gồm phần của các bộ ba đó.
 - Chỉ đo trên ảnh hạng 1, chỉ trên val.
-- Phản thực tế nhỏ nhất chỉ duyệt tới cỡ 2; GraphMask với `main_r3` không thoả ràng buộc 5%, và với countonly seed 0 kết quả học đổi theo số luồng CPU.
+- Phản thực tế nhỏ nhất chỉ duyệt tới cỡ 2; với countonly, trạng thái GraphMask được chọn vẫn đổi theo số luồng CPU (L0 0,82–0,99), dù luôn thoả ràng buộc 5%.
 - Benchmark có đáp án: 100 ca mỗi seed, chọn theo điều kiện ảnh có đáp án ở hạng 1 (ca dễ hơn trung bình); A đo độ hợp lý, không phải độ trung thực; B dùng từ vựng nhỏ và một mô hình học lại, không phải checkpoint của nhóm.
 
 ## 11. MMKG tiếng Việt và phân tích chuyển giao

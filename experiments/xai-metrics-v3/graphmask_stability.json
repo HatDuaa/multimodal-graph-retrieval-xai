@@ -2,186 +2,324 @@
  "rule": "Does GraphMask training (scripts/xai_metrics.py, v3) give the same gates when it is run again?\n\nFor each model and seed, trains GraphMask on the same 200 val captions as scripts/xai_metrics.py, several times in one\nprocess and under several CPU thread counts, and records the last epoch's L0 and divergence of each try.\nNothing else is measured; the reranker is not trained and the test split is never loaded.\nWrites experiments/xai-metrics-v3/graphmask_stability.json.\n",
  "torch": "2.14.0",
  "default_threads": 4,
+ "training": "after 792c851 (best state within the tolerance, lr 3e-4, Lagrange step 0.1, 20 epochs)",
  "tries": [
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 1,
    "repeat": 0,
-   "l0": 0.5707870738208294,
-   "divergence": 0.7368978286375568,
-   "lagrange": 1.5487615062855382,
-   "seconds": 85.79414701461792
+   "l0": 0.9775409200787544,
+   "divergence": 0.014857257133949133,
+   "lagrange": 3.2068272219970813,
+   "step": 2100,
+   "seconds": 39.46453881263733
   },
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 1,
    "repeat": 1,
-   "l0": 0.5707870738208294,
-   "divergence": 0.7368978286375568,
-   "lagrange": 1.5487615062855382,
-   "seconds": 88.19541192054749
-  },
-  {
-   "model": "countonly_factual_r3",
-   "seed": 0,
-   "threads": 1,
-   "repeat": 2,
-   "l0": 0.5707870738208294,
-   "divergence": 0.7368978286375568,
-   "lagrange": 1.5487615062855382,
-   "seconds": 86.2483959197998
+   "l0": 0.9775409200787544,
+   "divergence": 0.014857257133949133,
+   "lagrange": 3.2068272219970813,
+   "step": 2100,
+   "seconds": 36.243659019470215
   },
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 4,
    "repeat": 0,
-   "l0": 0.8775685268640518,
-   "divergence": 0.09466599027725607,
-   "lagrange": 0.2585063835419924,
-   "seconds": 86.13318610191345
+   "l0": 0.9653326907753944,
+   "divergence": 0.018557704042759724,
+   "lagrange": 0.0,
+   "step": 1600,
+   "seconds": 52.613194942474365
   },
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 4,
    "repeat": 1,
-   "l0": 0.8775685268640518,
-   "divergence": 0.09466599027725607,
-   "lagrange": 0.2585063835419924,
-   "seconds": 86.95271801948547
-  },
-  {
-   "model": "countonly_factual_r3",
-   "seed": 0,
-   "threads": 4,
-   "repeat": 2,
-   "l0": 0.8226730899512767,
-   "divergence": 0.2408480196432322,
-   "lagrange": 0.5508709754049989,
-   "seconds": 87.334547996521
+   "l0": 0.9778340247273445,
+   "divergence": 0.011198060282404186,
+   "lagrange": 1.8996094861999677,
+   "step": 1900,
+   "seconds": 52.91372895240784
   },
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 8,
    "repeat": 0,
-   "l0": 0.8248613822460175,
-   "divergence": 0.2226694107273397,
-   "lagrange": 0.5145146575011526,
-   "seconds": 92.89103507995605
+   "l0": 0.988270822763443,
+   "divergence": 0.0005649073211964151,
+   "lagrange": 17.34072597809128,
+   "step": 200,
+   "seconds": 60.65411186218262
   },
   {
    "model": "countonly_factual_r3",
    "seed": 0,
    "threads": 8,
    "repeat": 1,
-   "l0": 0.8248613822460175,
-   "divergence": 0.2226694107273397,
-   "lagrange": 0.5145146575011526,
-   "seconds": 95.41243600845337
-  },
-  {
-   "model": "countonly_factual_r3",
-   "seed": 0,
-   "threads": 8,
-   "repeat": 2,
-   "l0": 0.8912633562088013,
-   "divergence": 0.07238117855658857,
-   "lagrange": 0.21394312908875138,
-   "seconds": 94.7489902973175
+   "l0": 0.8212863653898239,
+   "divergence": 0.04752692694244615,
+   "lagrange": 2.9566343005746805,
+   "step": 1900,
+   "seconds": 59.751890897750854
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 1,
    "repeat": 0,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 36.287676095962524
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 41.207942962646484
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 1,
    "repeat": 1,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 36.22411608695984
-  },
-  {
-   "model": "main_r3",
-   "seed": 0,
-   "threads": 1,
-   "repeat": 2,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 36.30268311500549
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 22.858575105667114
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 4,
    "repeat": 0,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 56.215479135513306
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 32.72183799743652
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 4,
    "repeat": 1,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 54.69079923629761
-  },
-  {
-   "model": "main_r3",
-   "seed": 0,
-   "threads": 4,
-   "repeat": 2,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 55.10330009460449
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 34.73419904708862
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 8,
    "repeat": 0,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 62.786251068115234
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 44.249988079071045
   },
   {
    "model": "main_r3",
    "seed": 0,
    "threads": 8,
    "repeat": 1,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 64.58290410041809
-  },
-  {
-   "model": "main_r3",
-   "seed": 0,
-   "threads": 8,
-   "repeat": 2,
-   "l0": 1.1736290456777766e-06,
-   "divergence": 0.11304422398890893,
-   "lagrange": 1.9685016818344618,
-   "seconds": 63.778193950653076
+   "l0": 5.542813236615984e-05,
+   "divergence": 0.031256392477152985,
+   "lagrange": 0.013204154372215272,
+   "step": 4000,
+   "seconds": 45.182568073272705
   }
- ]
+ ],
+ "before_fix": {
+  "training": "f281117..8b9cd17 (last epoch, lr 3e-3, Lagrange step 0.01, 10 epochs)",
+  "tries": [
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 0,
+    "l0": 0.5707870738208294,
+    "divergence": 0.7368978286375568,
+    "lagrange": 1.5487615062855382,
+    "seconds": 85.79414701461792
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 1,
+    "l0": 0.5707870738208294,
+    "divergence": 0.7368978286375568,
+    "lagrange": 1.5487615062855382,
+    "seconds": 88.19541192054749
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 2,
+    "l0": 0.5707870738208294,
+    "divergence": 0.7368978286375568,
+    "lagrange": 1.5487615062855382,
+    "seconds": 86.2483959197998
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 0,
+    "l0": 0.8775685268640518,
+    "divergence": 0.09466599027725607,
+    "lagrange": 0.2585063835419924,
+    "seconds": 86.13318610191345
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 1,
+    "l0": 0.8775685268640518,
+    "divergence": 0.09466599027725607,
+    "lagrange": 0.2585063835419924,
+    "seconds": 86.95271801948547
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 2,
+    "l0": 0.8226730899512767,
+    "divergence": 0.2408480196432322,
+    "lagrange": 0.5508709754049989,
+    "seconds": 87.334547996521
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 0,
+    "l0": 0.8248613822460175,
+    "divergence": 0.2226694107273397,
+    "lagrange": 0.5145146575011526,
+    "seconds": 92.89103507995605
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 1,
+    "l0": 0.8248613822460175,
+    "divergence": 0.2226694107273397,
+    "lagrange": 0.5145146575011526,
+    "seconds": 95.41243600845337
+   },
+   {
+    "model": "countonly_factual_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 2,
+    "l0": 0.8912633562088013,
+    "divergence": 0.07238117855658857,
+    "lagrange": 0.21394312908875138,
+    "seconds": 94.7489902973175
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 0,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 36.287676095962524
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 1,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 36.22411608695984
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 1,
+    "repeat": 2,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 36.30268311500549
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 0,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 56.215479135513306
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 1,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 54.69079923629761
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 4,
+    "repeat": 2,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 55.10330009460449
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 0,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 62.786251068115234
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 1,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 64.58290410041809
+   },
+   {
+    "model": "main_r3",
+    "seed": 0,
+    "threads": 8,
+    "repeat": 2,
+    "l0": 1.1736290456777766e-06,
+    "divergence": 0.11304422398890893,
+    "lagrange": 1.9685016818344618,
+    "seconds": 63.778193950653076
+   }
+  ]
+ }
 }

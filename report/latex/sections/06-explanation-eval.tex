@@ -217,7 +217,8 @@ Gradient $\times$ input gần như ngẫu nhiên, và E đảo ngược cho kế
 Bản v3 (\file{experiments/xai-metrics-v3/}) thêm ba cách giải thích thuộc các họ còn thiếu: phản thực tế CF-GNNExplainer~\cite{xai-lucic2022cfgnn}, cổng trên message GraphMask~\cite{xai-schlichtkrull2021graphmask}, và giá trị Shapley có cấu trúc GStarX~\cite{xai-zhang2022gstarx}.
 Mọi số của v2 giữ nguyên trong v3 (14\,542 giá trị trùng tuyệt đối), nên Bảng~\ref{tab:xai-explainers} vẫn đúng.
 GStarX khớp Shapley tốt thứ hai sau GraphSVX ($\rho=0{,}653$ với countonly, $0{,}656$ với \texttt{main\_r3}) với khoảng nửa số lượt chấm (542 và 318 mỗi câu); insertion AUC của nó cao (1,385 và 1,257) nhưng deletion AUC kém occlusion (0,161 và $-0{,}131$).
-CF-GNNExplainer cho thứ tự kém ($\rho=0{,}182$ và 0,009), và GraphMask gần mức ngẫu nhiên (deletion AUC 0,883 và 0,767; ngẫu nhiên 0,891 và 0,838).
+CF-GNNExplainer cho thứ tự kém ($\rho=0{,}182$ và 0,009), và GraphMask gần mức ngẫu nhiên (deletion AUC 0,765 và 0,775; ngẫu nhiên 0,891 và 0,838).
+GraphMask học được trong ràng buộc 5\% ở cả 6 checkpoint, sau khi sửa cách học để giữ trạng thái mở ít cổng nhất trong ràng buộc thay cho trạng thái epoch cuối; với \texttt{main\_r3} nó đóng gần hết message mà điểm chỉ đổi 2--4\% hiệu ứng.
 
 \textbf{Phản thực tế nhỏ nhất.}
 Duyệt mọi tập 1 hoặc 2 phần của ảnh hạng 1 trên tập con 200 câu, \pmstd{74,2}{1,9}\% ảnh (countonly) và \pmstd{70,7}{1,3}\% (\texttt{main\_r3}) mất hạng 1 khi bỏ $\le 2$ phần, 53,5\% và 51,5\% chỉ với 1 phần.
@@ -226,7 +227,7 @@ Bỏ dần theo thứ tự của occlusion cho phản thực tế đúng cỡ nh
 
 \textbf{Mức message.}
 Ngừng mọi message GAT của ảnh hạng 1 (giữ bộ ba) làm ảnh mất điểm ở 12,2\% câu với countonly, và trung bình điểm còn tăng ($+0{,}0079$); với \texttt{main\_r3}, tỉ lệ là 48,2\% nhưng điểm chỉ giảm trung bình 0,0010.
-Ngừng dần top-$k$ message theo GraphMask, theo attention GAT hay ngẫu nhiên: với countonly, không thứ tự nào hơn ngẫu nhiên; với \texttt{main\_r3}, GraphMask và attention ngang nhau (AUC mất điểm 0,40 và 0,41) và hơn ngẫu nhiên (0,32).
+Ngừng dần top-$k$ message theo GraphMask, theo attention GAT hay ngẫu nhiên: với countonly, không thứ tự nào hơn ngẫu nhiên; với \texttt{main\_r3}, GraphMask và attention ngang nhau (AUC mất điểm 0,41 và 0,41) và hơn ngẫu nhiên (0,32).
 Truyền tin GAT mang rất ít điểm, nên các cách giải thích theo message có ít thứ để giải thích trên mô hình này.
 
 \begin{table}[t]
@@ -251,7 +252,7 @@ Truyền tin GAT mang rất ít điểm, nên các cách giải thích theo mess
     GStarX & 0,283 & 0,372 & 0,288 & 0,393 & 0,422 \\
     CF-GNNExplainer & 0,699 & 0,356 & 0,244 & 0,396 & 0,225 \\
     CLIP & 0,878 & 0,376 & 0,356 & 0,386 & 0,378 \\
-    GraphMask & 0,173 & 0,062 & 0,105 & 0,098 & 0,103 \\
+    GraphMask & 0,171 & 0,060 & 0,101 & 0,070 & 0,108 \\
     Ngẫu nhiên & 0,143 & 0,049 & 0,052 & 0,050 & 0,057 \\
     \bottomrule
   \end{tabular}
