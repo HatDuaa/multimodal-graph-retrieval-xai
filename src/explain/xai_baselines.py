@@ -631,36 +631,77 @@ def graphmask_loss(ctx, column, explainer, index, base, effect, lagrange, genera
     return l0, divergence
 
 
-def train_graphmask(contexts, seed, epochs=10, lr=3e-3, lagrange_lr=1e-2, tolerance=0.05, device="cpu"):
+@torch.no_grad()
+def graphmask_state(items, explainer, tolerance):
+    """Mean L0 penalty and mean divergence of the deterministic gates (the ones graphmask() explains with) over the
+    training items."""
+    rows = [graphmask_loss(ctx, column, explainer, index, base, base - empty, 0., None, tolerance)
+            for ctx, column, index, base, empty in items]
+    return float(np.mean([float(a) for a, _ in rows])), float(np.mean([float(b) for _, b in rows]))
+
+
+def better_state(state, best, tolerance):
+    """GraphMask's goal: the fewest open gates among states within the tolerance, else the smallest divergence."""
+    if best is None:
+        return True
+    (l0, divergence), (best_l0, best_divergence) = state, best
+    if divergence <= tolerance or best_divergence <= tolerance:
+        return divergence <= tolerance and (best_divergence > tolerance or l0 < best_l0)
+    return divergence < best_divergence
+
+
+def train_graphmask(contexts, seed, epochs=20, lr=3e-4, lagrange_lr=0.1, tolerance=0.05, check_every=100,
+                    device="cpu"):
     """Train GraphMask on the same training captions as PGExplainer (contexts: callables returning
     (ctx, column, index, base, empty)). GraphMask's constrained objective: minimize the L0 penalty subject to a
     score change of at most tolerance x the graph effect, by gradient descent on the gates and ascent on the Lagrange
-    multiplier. Returns the explainer and the last epoch's mean L0 penalty and mean divergence."""
+    multiplier.
+
+    The descent-ascent does not settle: when the constraint is slack the multiplier decays to 0 and the gates of a
+    layer close at once, and closed hard concrete gates get no gradient to reopen (countonly seed 0 ended inside such
+    a collapse, with a divergence of 0.07 to 0.74 depending on the CPU thread count). So every check_every steps the
+    deterministic gates are scored on all training captions, and the best state (better_state) is the one returned;
+    the start, every gate open, is the first candidate. A small learning rate and a fast multiplier make the collapses
+    rarer. Returns the explainer and {l0, divergence (of the returned state), lagrange (at the end), step (of the
+    returned state), history: [(step, l0, divergence)]}."""
+    items = [c() for c in contexts]
     with torch.random.fork_rng():
         torch.manual_seed(seed)
         explainer = GraphMask().to(device)  # initialized on the CPU first, so the seed gives one start
         optimizer = torch.optim.Adam(explainer.parameters(), lr=lr)
         generator = torch.Generator().manual_seed(seed)
         order_rng = np.random.default_rng(seed)
-        lagrange, last = 1., []
+        lagrange, step, history, best, best_weights, best_step = 1., 0, [], None, None, 0
+
+        def check():
+            nonlocal best, best_weights, best_step
+            state = graphmask_state(items, explainer, tolerance)
+            history.append((step, *state))
+            if better_state(state, best, tolerance):
+                best, best_step = state, step
+                best_weights = {k: v.detach().clone() for k, v in explainer.state_dict().items()}
+        check()
         for _ in range(epochs):
-            last = []
-            for i in order_rng.permutation(len(contexts)):
-                ctx, column, index, base, empty = contexts[i]()
+            for i in order_rng.permutation(len(items)):
+                ctx, column, index, base, empty = items[i]
                 with torch.enable_grad():
                     l0, divergence = graphmask_loss(ctx, column, explainer, index, base, base - empty, lagrange,
                                                     generator, tolerance)
                     loss = l0 + lagrange * (divergence - tolerance)
-                    optimizer.zero_grad()
                     grads = torch.autograd.grad(loss, list(explainer.parameters()), allow_unused=True)
                 for p, g in zip(explainer.parameters(), grads):
                     p.grad = g
                 optimizer.step()
                 lagrange = max(0., lagrange + lagrange_lr * float(divergence.detach() - tolerance))
-                last.append((float(l0.detach()), float(divergence.detach())))
+                step += 1
+                if step % check_every == 0:
+                    check()
+        if step % check_every:
+            check()
+        explainer.load_state_dict(best_weights)
     explainer.eval()
-    return explainer, {"l0": float(np.mean([a for a, _ in last])) if last else None,
-                       "divergence": float(np.mean([b for _, b in last])) if last else None, "lagrange": lagrange}
+    return explainer, {"l0": best[0], "divergence": best[1], "lagrange": lagrange, "step": best_step,
+                       "history": history}
 
 
 @torch.no_grad()

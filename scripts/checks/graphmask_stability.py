@@ -52,6 +52,7 @@ def main() -> None:
                     _, info = xm.train_gm(model, store, device, chosen, seed)
                     row = {"model": name, "seed": seed, "threads": threads, "repeat": repeat,
                            "l0": info["l0"], "divergence": info["divergence"], "lagrange": info["lagrange"],
+                           "step": info.get("step"),
                            "seconds": time.time() - started}
                     result["tries"].append(row)
                     print(json.dumps(row), flush=True)

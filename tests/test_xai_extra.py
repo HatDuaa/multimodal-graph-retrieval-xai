@@ -117,6 +117,30 @@ def test_closed_graphmask_gates_send_the_baseline_and_learn_it():
     assert all(0 <= v <= 1 for *_, v in parts)
 
 
+def test_graphmask_keeps_the_sparsest_state_within_the_tolerance():
+    better = baselines.better_state
+    assert better((0.9, 0.01), None, 0.05)
+    assert better((0.5, 0.04), (0.9, 0.01), 0.05)  # fewer open gates, still within
+    assert not better((0.1, 0.30), (0.9, 0.01), 0.05)  # sparser but outside the tolerance
+    assert better((0.9, 0.01), (0.1, 0.30), 0.05)  # the first state within the tolerance wins
+    assert better((0.1, 0.20), (0.5, 0.30), 0.05)  # none within: the smaller divergence
+
+
+def test_trained_graphmask_returns_its_best_checked_state():
+    ctx, column, index, _ = context()
+    (base, empty), _ = ctx.rescore(column, [edit(index), edit(index, drop_nodes=range(real_nodes(index)))])
+    items = [lambda: (ctx, column, index, float(base), float(empty))]
+    explainer, info = baselines.train_graphmask(items, seed=0, epochs=6, lr=3e-2, check_every=2)
+    steps = [s for s, *_ in info["history"]]
+    assert steps == [0, 2, 4, 6]
+    chosen = next(h for h in info["history"] if h[0] == info["step"])
+    assert (info["l0"], info["divergence"]) == chosen[1:]
+    # the returned weights are that state's: scoring them again gives its numbers
+    assert baselines.graphmask_state([items[0]()], explainer, 0.05) == pytest.approx(chosen[1:])
+    for h in info["history"]:
+        assert not baselines.better_state(h[1:], chosen[1:], 0.05) or h == chosen
+
+
 def test_exact_counterfactual_is_the_smallest_removal_that_costs_rank_one():
     ctx, column, index, every = context()
     out = exact_counterfactual(ctx, column, index, every, max_size=len(every))
