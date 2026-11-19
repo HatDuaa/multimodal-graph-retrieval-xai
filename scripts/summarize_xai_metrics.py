@@ -60,7 +60,7 @@ def cell(stats, key, scale=1., digits=2, std=True):
     if key not in stats:
         return "n/a"
     text = number(stats[key]["mean"] * scale, digits)
-    return f"{text} ± {number(stats[key]['std'] * scale, digits)}" if std else text
+    return f"{text} ± {number(stats[key]['std'] * abs(scale), digits)}" if std else text
 
 
 def pct(stats, key, std=True):
@@ -214,9 +214,9 @@ def model_tables(name, summary):
     if "messages.captions" in a:
         lines += ["**Mức message: GraphMask so với attention GAT** (ngừng truyền top-k message; phần trăm của điểm mất "
                   "khi ngừng mọi message, chỉ ở câu mà message giúp ảnh).", ""]
-        lines += header("Nhóm", "Câu", "Message giúp ảnh (%)", "Δ điểm khi ngừng mọi message", "Message / ảnh", "Thứ tự",
+        lines += header("Nhóm", "Câu", "Message giúp ảnh (%)", "Δ điểm (sau − trước) khi ngừng mọi message", "Message / ảnh", "Thứ tự",
                         "AUC mất điểm (cao tốt)",
-                        "Mất k = 1 / 3 / 5 (%)", "Δ điểm k = 1 / 3 / 5", "p Wilcoxon so với GraphMask (lớn nhất qua seed)")
+                        "Mất k = 1 / 3 / 5 (%)", "Điểm mất (trước − sau) k = 1 / 3 / 5", "p Wilcoxon so với GraphMask (lớn nhất qua seed)")
         for group in GROUPS:
             g = s[group]
             if "messages.captions" not in g:
