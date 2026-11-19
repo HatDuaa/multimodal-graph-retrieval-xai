@@ -1,0 +1,7 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+NOTE: test split — alpha/beta come from experiments/level2/val/choice.json, nothing is tuned here.
+seed 0 (NativE-AdvRelRotatE[rmask_seed0_e1000.ckpt]/ent): {'clip': 25.0, 'kg_triple': 29.82, 'native': 29.82, 'native_emb': 26.01, 'shuffled_edges': 21.3, 'random_emb': 29.82} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.75, 1.0]}
+seed 1 (NativE-AdvRelRotatE[rmask_seed1_e1000.ckpt]/ent): {'clip': 25.0, 'kg_triple': 29.82, 'native': 29.82, 'native_emb': 25.56, 'shuffled_edges': 21.41, 'random_emb': 29.82} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.6, 1.0]}
+seed 2 (NativE-AdvRelRotatE[rmask_seed2_e1000.ckpt]/ent): {'clip': 25.0, 'kg_triple': 29.82, 'native': 29.82, 'native_emb': 26.57, 'shuffled_edges': 21.52, 'random_emb': 29.82} choice {'native': [0.0, 0.0], 'kg_triple': [0.0, 0.0], 'native_emb': [0.7, 1.0]}
+-> /home/marimo/work/multimodal-graph-retrieval-xai/experiments/level2/test
