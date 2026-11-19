@@ -1,10 +1,12 @@
 """Download the annotation files for Visual Genome ∩ COCO (no images).
 
-Usage:  python scripts/download_data.py [--force]
+Usage:  python scripts/download_data.py [--force] [--regions]
 
 Files land in data/raw/. Images are NOT downloaded here: only the images of the fixed
 subset are fetched later, once the split has been built. After downloading, the script
 prints one MANIFEST line per file (name, size, sha256) to paste into data/MANIFEST.md.
+--regions also fetches the Visual Genome region graphs (332 MB zipped): the annotated graph of every region
+description, used only as the known answers of the level-3 explanation benchmark (scripts/xai_ground_truth.py).
 """
 import argparse
 import hashlib
@@ -35,6 +37,7 @@ FILES = [
     # Karpathy split; dataset_coco.json holds split, cocoid and the 5 captions of every image
     ("https://cs.stanford.edu/people/karpathy/deepimagesent/caption_datasets.zip", "coco", True),
 ]
+REGIONS = [(VG + "region_graphs.json.zip", "visual_genome", True)]
 
 
 def sha256(path: Path) -> str:
@@ -60,11 +63,12 @@ def download(url: str, dest: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--force", action="store_true", help="re-download files that already exist")
+    ap.add_argument("--regions", action="store_true", help="also fetch region_graphs.json (explanation benchmark)")
     args = ap.parse_args()
 
     raw = resolve(load_config(), "raw")
     rows = []
-    for url, sub, unzip in FILES:
+    for url, sub, unzip in FILES + (REGIONS if args.regions else []):
         folder = raw / sub
         folder.mkdir(parents=True, exist_ok=True)
         dest = folder / url.rsplit("/", 1)[1]

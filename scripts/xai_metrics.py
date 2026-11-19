@@ -394,6 +394,12 @@ def fid_alpha(ctx, column, index, order, every, seed, base, empty):
             for sign in ("plus", "minus") for k in ALPHA_KS for alpha in ALPHAS}
 
 
+def caption_numbers(caption_id):
+    """The numbers in a caption id ("<image>_<k>" for val captions; "region_<id>" or "val_<k>" for the known-answer
+    benchmarks), which seed the per-caption random draws."""
+    return [int(x) for x in str(caption_id).split("_") if x.isdigit()]
+
+
 def agreement(order, reference):
     """Spearman between an order's positions and reference values, and the top-5 overlap with the reference."""
     from scipy import stats
@@ -476,10 +482,10 @@ def message_curves(ctx, column, index, gm_edges, alpha, rng, base):
     return out
 
 
-def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0, gm=None):
+def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0, gm=None, keep_orders=False):
     """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes; pg and gm are
     the trained PGExplainer and GraphMask of this checkpoint, seed its seed (for the rng of GraphSVX, SubgraphX,
-    GStarX and the random message order)."""
+    GStarX and the random message order); keep_orders also returns every explainer's order of the parts."""
     store, column = ctx.store, ctx.top
     image_id = ctx.ids[column]
     graph = store.graphs[image_id]
@@ -612,7 +618,7 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
     if compare and n_parts and effect > 1e-4:
         orders, attributions, completeness, lrp_check, seconds, gm_edges = explainer_orders(
             ctx, column, index, ranked, rng, gnn, base, empty, pg, gm)
-        caption = [int(x) for x in ctx.caption_id.split("_")]
+        caption = caption_numbers(ctx.caption_id)
         if gm_edges is not None:
             out["messages"] = message_curves(ctx, column, index, gm_edges, alpha,
                                              np.random.default_rng([2028, seed, *caption]), base)
@@ -652,7 +658,7 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
                 out["cf_target"] = exact_counterfactual(ctx, column, index, every, max_size=CF_SIZE,
                                                         target=gold_column)
         out["explainer_seconds"], out["gnn_lrp_check"] = seconds, lrp_check
-        seed = [2026, int(ctx.caption_id.split("_")[0]), int(ctx.caption_id.split("_")[1])]
+        seed = [2026, *caption]
         out["explainers"] = {}
         for name, order in orders.items():
             entry = curves(ctx, column, order, index, base, empty, attributions.get(name))
@@ -661,6 +667,8 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
                 entry["agreement"] = agreement(order, reference)
             out["explainers"][name] = entry
         out["ig_completeness"] = completeness
+        if keep_orders:
+            out["orders"] = orders
     if detail and n_parts:
         if "cf_exact" not in out:
             out["cf_exact"] = exact_counterfactual(ctx, column, index, [p[:2] for p in ranked], max_size=CF_SIZE)

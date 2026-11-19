@@ -134,9 +134,10 @@ class QueryContext:
     """One val caption scored over its 50 candidates, ready to rescore edits of one candidate's graph."""
 
     @torch.no_grad()
-    def __init__(self, model, store, caption_id, device):
+    def __init__(self, model, store, caption_id, device, overrides=None):
+        """overrides: {image_id: graph} that replace stored image graphs in the batch (GraphStore.batch)."""
         self.model, self.store, self.caption_id, self.device = model, store, str(caption_id), device
-        self.batch = store.batch([self.caption_id], device)
+        self.batch = store.batch([self.caption_id], device, overrides=overrides)
         self.fused, self.detail = model(self.batch, return_encoded=True)
         self.fused = self.fused[0]
         self.ids = [int(i) for i in self.batch['candidate_ids'][0]]
