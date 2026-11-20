@@ -13,6 +13,7 @@
 \setdefaultlanguage{vietnamese}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{float}   % [H] cho bảng và hình của phụ lục
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{xcolor}
@@ -77,6 +78,8 @@ Mã nguồn: \repo}
 
 % Phụ lục đặt sau tài liệu tham khảo, sang trang mới để bảng và hình không chen vào danh mục.
 \clearpage
+\onecolumn
+\raggedbottom
 \input{sections/10-appendix-vnmmkg}
 
 \end{document}
