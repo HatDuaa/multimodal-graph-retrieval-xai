@@ -18,6 +18,9 @@ python scripts/download_data.py
 
 Tải khoảng 170 MB vào `data/raw/visual_genome/` và `data/raw/coco/`, giải nén, rồi in ra các dòng checksum để đối chiếu với `MANIFEST.md`. Script **không tải ảnh**: ảnh chỉ tải cho tập con cố định sau khi đã có file split (cả bộ ảnh Visual Genome nặng khoảng 15 GB, không cần).
 
+Thêm `--regions` để tải `region_graphs.json` của Visual Genome (332 MB nén).
+File này chỉ dùng làm đáp án biết trước cho benchmark giải thích cấp độ 3 (`scripts/xai_ground_truth.py`, mục `vg-regions`), không dùng để train hay chọn siêu tham số.
+
 ## Tải ảnh
 
 Link từng ảnh nằm sẵn trong file split (`data/splits/vg_coco_*.json`, trường `url`, máy chủ `cs.stanford.edu/people/rak248/VG_100K*`). Tải bằng script, **không tải tay**:

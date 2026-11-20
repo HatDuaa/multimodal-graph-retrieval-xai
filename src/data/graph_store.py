@@ -332,14 +332,19 @@ class GraphStore:
                                             self.part_row)
         self._device_tables = {}
 
+    def append_parts(self, keys, vectors):
+        """Append the vectors of part keys the table lacks (keys already in it keep their row)."""
+        keep = [row for row, key in enumerate(keys) if key not in self.part_row]
+        if keep:
+            offset = len(self.part_vectors)
+            self.part_vectors = np.concatenate([self.part_vectors, np.asarray(vectors, dtype=np.float32)[keep]])
+            self.part_row.update({keys[row]: offset + i for i, row in enumerate(keep)})
+            self._device_tables = {}
+
     def replace_image_graphs(self, graphs, extra_vectors=None, extra_keys=()):
         """Swap in other image graphs (corruption controls); extra part vectors are appended to the table."""
         if extra_vectors is not None and len(extra_keys):
-            missing = [key for key in extra_keys if key not in self.part_row]
-            keep = [row for row, key in enumerate(extra_keys) if key not in self.part_row]
-            offset = len(self.part_vectors)
-            self.part_vectors = np.concatenate([self.part_vectors, np.asarray(extra_vectors, dtype=np.float32)[keep]])
-            self.part_row.update({key: offset + row for row, key in enumerate(missing)})
+            self.append_parts(list(extra_keys), extra_vectors)
         self.graphs = dict(graphs)
         self.image_index = None
         self._device_tables = {}

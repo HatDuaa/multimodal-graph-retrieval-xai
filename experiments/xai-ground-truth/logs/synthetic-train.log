@@ -1,0 +1,29 @@
+/Users/nhinbm/venvs/mgrx/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/Users/nhinbm/Desktop/master/graph_ml/multimodal-graph-retrieval-xai/scripts/xai_ground_truth.py:596: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  losses.append(float(loss))
+synthetic seed 0 epoch 0 {"epoch": 0, "loss": 2.80155403943772, "val_recall@1": 0.9985}
+synthetic seed 0 epoch 1 {"epoch": 1, "loss": 2.515638307053992, "val_recall@1": 0.9995}
+synthetic seed 0 epoch 2 {"epoch": 2, "loss": 2.2787442993610463, "val_recall@1": 1.0}
+synthetic seed 0 epoch 3 {"epoch": 3, "loss": 2.004126269132533, "val_recall@1": 0.9995}
+synthetic seed 0 epoch 4 {"epoch": 4, "loss": 1.7142613599909113, "val_recall@1": 1.0}
+synthetic seed 0 epoch 5 {"epoch": 5, "loss": 1.3924370947036337, "val_recall@1": 1.0}
+synthetic seed 0 epoch 6 {"epoch": 6, "loss": 1.0848755383111062, "val_recall@1": 0.999}
+synthetic seed 0 epoch 7 {"epoch": 7, "loss": 0.7907101984353776, "val_recall@1": 0.9995}
+synthetic seed 1 epoch 0 {"epoch": 0, "loss": 2.8001619209634496, "val_recall@1": 0.999}
+synthetic seed 1 epoch 1 {"epoch": 1, "loss": 2.5102963003706424, "val_recall@1": 0.9985}
+synthetic seed 1 epoch 2 {"epoch": 2, "loss": 2.268474228838657, "val_recall@1": 0.9995}
+synthetic seed 1 epoch 3 {"epoch": 3, "loss": 1.997253176379711, "val_recall@1": 1.0}
+synthetic seed 1 epoch 4 {"epoch": 4, "loss": 1.7074437794533182, "val_recall@1": 1.0}
+synthetic seed 1 epoch 5 {"epoch": 5, "loss": 1.3959244515033478, "val_recall@1": 1.0}
+synthetic seed 1 epoch 6 {"epoch": 6, "loss": 1.0859896489914427, "val_recall@1": 0.9995}
+synthetic seed 1 epoch 7 {"epoch": 7, "loss": 0.798930287361145, "val_recall@1": 1.0}
+synthetic seed 2 epoch 0 {"epoch": 0, "loss": 2.800228126505588, "val_recall@1": 0.9945}
+synthetic seed 2 epoch 1 {"epoch": 1, "loss": 2.5156595377211874, "val_recall@1": 0.99}
+synthetic seed 2 epoch 2 {"epoch": 2, "loss": 2.277209265434996, "val_recall@1": 1.0}
+synthetic seed 2 epoch 3 {"epoch": 3, "loss": 2.000468985197392, "val_recall@1": 1.0}
+synthetic seed 2 epoch 4 {"epoch": 4, "loss": 1.7121903953400064, "val_recall@1": 0.9995}
+synthetic seed 2 epoch 5 {"epoch": 5, "loss": 1.4070256327060944, "val_recall@1": 0.999}
+synthetic seed 2 epoch 6 {"epoch": 6, "loss": 1.0863358394262639, "val_recall@1": 1.0}
+synthetic seed 2 epoch 7 {"epoch": 7, "loss": 0.8058756062007965, "val_recall@1": 0.9995}

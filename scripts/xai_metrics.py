@@ -1,4 +1,17 @@
-"""Level-3 explanation metrics on val, version 2: fidelity, validity, sparsity, subgraphs and other explainers.
+"""Level-3 explanation metrics on val, version 3: fidelity, validity, sparsity, subgraphs, counterfactuals and 16
+explainers.
+
+Version 3 adds to version 2 (PR #38, results in experiments/xai-metrics-v2/, kept as they are), with every version-2
+number unchanged (same captions, edits and random draws; the new methods draw from their own rng):
+- three explainers: cf_gnnexplainer (src/explain/xai_counterfactual.py), graphmask and gstarx
+  (src/explain/xai_baselines.py), in the comparison below;
+- counterfactuals (on the --gnn captions): the exact smallest set of at most CF_SIZE parts whose removal costs the
+  image rank 1 (cf_exact), CF-GNNExplainer's smallest valid removal (cf_gnnexplainer), and, for a wrong rank-1 image,
+  the exact smallest removal that makes the gold image rank 1 (cf_target); every explainer's k_flip is its greedy
+  counterfactual, compared with the exact one;
+- messages (on every comparison caption): GraphMask explains GAT messages, not parts, so it is also measured on its
+  own unit: the score lost when the top-k messages (k = 1..K) stop carrying (message_drop), as a share of the score
+  lost when every message stops, against the GAT attention order and a random order.
 
 Version 2 of scripts/xai_metrics_v1.py (PR #36). Same models, captions, edits and random draws; it fixes what an
 audit of version 1 found and adds a comparison with other explainers. Results go to experiments/xai-metrics-v2/;
@@ -88,6 +101,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data.graph_store import EDGE_COMPLETION, EDGE_GLOBAL, EDGE_LABELLED, GraphIndex, GraphStore  # noqa: E402
 from src.explain import xai_baselines as baselines  # noqa: E402
 from src.explain.score_breakdown import top50_deltas  # noqa: E402
+from src.explain.xai_counterfactual import cf_gnnexplainer, exact_counterfactual, exact_counterfactuals  # noqa: E402
 from src.explain.xai_metrics import (QueryContext, edit, image_index, keep_only, labelled_count,  # noqa: E402
                                      margin_values, message_drop, rank_of, real_nodes, split)
 from src.graph.counts import CAPTION_CLASSES, compatible  # noqa: E402
@@ -96,12 +110,13 @@ from src.graph.scene_graph import Vocab  # noqa: E402
 from src.train_graph_reranker import load_run_model  # noqa: E402
 from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
 
-OUT = REPO_ROOT / "experiments" / "xai-metrics-v2"
+OUT = REPO_ROOT / "experiments" / "xai-metrics-v3"
 MODELS = {"countonly_factual_r3": (REPO_ROOT / "experiments" / "improve" / "count-only", "configs/count_v1.yaml"),
           "main_r3": (REPO_ROOT / "experiments" / "level1" / "gat", None)}
 KS, RANDOM, THRESHOLDS, SUB_NODES, SUB_EDGES, COSINE, CURVE = (1, 3, 5), 10, (0.8, 0.9), 3, 3, .955, 10
 EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley")
+              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley", "cf_gnnexplainer", "graphmask", "gstarx")
+CF_SIZE, MESSAGE_ORDERS = 2, ("graphmask", "attention", "random")
 ALPHAS, ALPHA_KS, ALPHA_DRAWS, PERMUTATIONS = (0.1, 0.5), (5, 10), 10, 16
 GENERIC_PEOPLE = {"person", "people", "persons", "someone", "somebody", "human", "humans", "individual", "crowd"}
 KIND_NAMES = {EDGE_LABELLED: "labelled", EDGE_COMPLETION: "completion", EDGE_GLOBAL: "global"}
@@ -131,7 +146,8 @@ class LabelMatcher:
     """Does an image node carry a caption node's label? Strict (alias or WordNet hyponym) and v1's lenient test."""
 
     def __init__(self, vectors, rows, vocab):
-        self.vectors, self.rows, self.vocab, self.cache = vectors, rows, vocab, {}
+        # a copy of rows: a store that appends parts later (planted) must not grow it past the end of vectors
+        self.vectors, self.rows, self.vocab, self.cache = vectors, dict(rows), vocab, {}
 
     def __call__(self, query, image, synset):
         key = (query, image, synset)
@@ -379,6 +395,12 @@ def fid_alpha(ctx, column, index, order, every, seed, base, empty):
             for sign in ("plus", "minus") for k in ALPHA_KS for alpha in ALPHAS}
 
 
+def caption_numbers(caption_id):
+    """The numbers in a caption id ("<image>_<k>" for val captions; "region_<id>" or "val_<k>" for the known-answer
+    benchmarks), which seed the per-caption random draws."""
+    return [int(x) for x in str(caption_id).split("_") if x.isdigit()]
+
+
 def agreement(order, reference):
     """Spearman between an order's positions and reference values, and the top-5 overlap with the reference."""
     from scipy import stats
@@ -390,9 +412,9 @@ def agreement(order, reference):
             "top5_overlap": len(set(order[:5]) & top) / min(5, len(parts))}
 
 
-def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty, pg=None):
+def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty, pg=None, gm=None):
     """Every explainer's order of the same image parts, the attributions of the decompositions among them, IG's
-    completeness, GNN-LRP's check and the seconds each explainer took."""
+    completeness, GNN-LRP's check, the seconds each explainer took and GraphMask's per-edge values (or None)."""
     store = ctx.store
     seconds, started = {}, time.time()
     every = [(kind, j) for kind, j, _ in ranked]
@@ -418,17 +440,55 @@ def explainer_orders(ctx, column, index, ranked, rng, gnn, base, empty, pg=None)
     if pg is not None:
         orders["pgexplainer"] = [p[:2] for p in sorted(pg.explain(ctx, column, index), key=lambda p: -p[2])]
         seconds["pgexplainer"], started = time.time() - started, time.time()
+    gm_edges = None
+    if gm is not None:
+        gm_parts, gm_edges = baselines.graphmask(ctx, column, index, gm)
+        orders["graphmask"] = [p[:2] for p in sorted(gm_parts, key=lambda p: -p[2])]
+        seconds["graphmask"], started = time.time() - started, time.time()
     lrp, lrp_check = baselines.gnn_lrp(ctx, column, index)
     orders["gnn_lrp"] = [p[:2] for p in sorted(lrp, key=lambda p: -p[2])]
     seconds["gnn_lrp"] = time.time() - started
     attributions = {"model": {p[:2]: p[2] for p in ranked}, "gradient": {p[:2]: p[2] for p in grad},
                     "integrated_gradients": {p[:2]: p[2] for p in ig}}
-    return orders, attributions, completeness, lrp_check, seconds
+    return orders, attributions, completeness, lrp_check, seconds, gm_edges
 
 
-def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0):
-    """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes; pg is the
-    trained PGExplainer of this checkpoint, seed its seed (for the rng of GraphSVX and SubgraphX)."""
+def message_curves(ctx, column, index, gm_edges, alpha, rng, base):
+    """Score lost when the first k messages of an order stop carrying (message_drop, k = 0..K), in final-score units
+    and, where stopping every message costs the image more than 1e-4 (the messages help it), as a share of that loss;
+    orders: GraphMask's edge values, the GAT attention, random. Only edges that carry a message (not self-loop
+    relations) are ordered."""
+    src, dst = index.fields["edge_src"], index.fields["edge_dst"]
+    carrying = [e for e in range(len(src)) if src[e] != dst[e]]
+    if not carrying:
+        return None
+    orders = {"graphmask": sorted(carrying, key=lambda e: -gm_edges[e]),
+              "attention": sorted(carrying, key=lambda e: -np.nan_to_num(alpha[e], nan=-1.)),
+              "random": [carrying[i] for i in rng.permutation(len(carrying))]}
+    sizes = list(range(min(CURVE, len(carrying)) + 1))
+    edits, masks = [edit(index)], [message_drop(index, carrying)]
+    for name in MESSAGE_ORDERS:
+        for n in sizes:
+            edits.append(edit(index))
+            masks.append(message_drop(index, orders[name][:n]))
+    scores, _ = ctx.rescore(column, edits, message_masks=masks)
+    effect = base - float(scores[0])
+    out = {"edges": len(carrying), "effect": effect, "sizes": sizes}
+    for i, name in enumerate(MESSAGE_ORDERS):
+        curve = scores[1 + i * len(sizes):1 + (i + 1) * len(sizes)]
+        out[name] = {"scores": curve.tolist(), "loss": {k: float(base - curve[k]) for k in KS if k < len(sizes)}}
+        if effect > 1e-4 and len(sizes) > 1:
+            out[name]["loss_auc"] = float(np.mean([(base - s) / effect for s in curve[1:]]))
+            out[name]["loss_share"] = {k: float((base - curve[k]) / effect) for k in KS if k < len(sizes)}
+    return out
+
+
+def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, seed=0, gm=None, keep_orders=False,
+            cf_target=True):
+    """Every metric for the rank-1 image of one caption; info gives synsets, buckets and count classes; pg and gm are
+    the trained PGExplainer and GraphMask of this checkpoint, seed its seed (for the rng of GraphSVX, SubgraphX,
+    GStarX and the random message order); keep_orders also returns every explainer's order of the parts;
+    cf_target False skips the target counterfactual of a wrong image."""
     store, column = ctx.store, ctx.top
     image_id = ctx.ids[column]
     graph = store.graphs[image_id]
@@ -559,8 +619,12 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
                                 "all": ends["subject"] and ends["object"] and predicate})
     out["triple_validity"] = triple_validity
     if compare and n_parts and effect > 1e-4:
-        orders, attributions, completeness, lrp_check, seconds = explainer_orders(ctx, column, index, ranked, rng, gnn,
-                                                                                  base, empty, pg)
+        orders, attributions, completeness, lrp_check, seconds, gm_edges = explainer_orders(
+            ctx, column, index, ranked, rng, gnn, base, empty, pg, gm)
+        caption = caption_numbers(ctx.caption_id)
+        if gm_edges is not None:
+            out["messages"] = message_curves(ctx, column, index, gm_edges, alpha,
+                                             np.random.default_rng([2028, seed, *caption]), base)
         every = [p[:2] for p in ranked]
         started = time.time()
         occluded = occlusion(ctx, column, index, every, base)
@@ -576,7 +640,6 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
             out["shapley_efficiency"] = efficiency
             seconds["shapley"] = time.time() - started
             # GraphSVX and SubgraphX draw from their own rng, so the other explainers' draws stay as before
-            caption = [int(x) for x in ctx.caption_id.split("_")]
             extra_rng = np.random.default_rng([2027, seed, *caption])
             started = time.time()
             svx, out["graphsvx_efficiency"] = baselines.graphsvx(ctx, column, index, every, extra_rng,
@@ -585,9 +648,23 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
             seconds["graphsvx"], started = time.time() - started, time.time()
             sx, out["subgraphx_evaluations"] = baselines.subgraphx(ctx, column, index, every, extra_rng)
             orders["subgraphx"] = [p[:2] for p in sorted(sx, key=lambda p: -p[2])]
-            seconds["subgraphx"] = time.time() - started
+            seconds["subgraphx"], started = time.time() - started, time.time()
+            gx, out["gstarx_evaluations"] = baselines.gstarx(ctx, column, index, every, extra_rng)
+            orders["gstarx"] = [p[:2] for p in sorted(gx, key=lambda p: -p[2])]
+            seconds["gstarx"], started = time.time() - started, time.time()
+            cf_parts, out["cf_gnnexplainer"] = cf_gnnexplainer(ctx, column, index, base, empty)
+            orders["cf_gnnexplainer"] = [p[:2] for p in sorted(cf_parts, key=lambda p: -p[2])]
+            seconds["cf_gnnexplainer"], started = time.time() - started, time.time()
+            # one rescoring of every set serves both the rank-1 counterfactual and, for a wrong image, the target one
+            wanted = cf_target and not out["correct"] and gold_column is not None
+            found = exact_counterfactuals(ctx, column, index, every, max_size=CF_SIZE,
+                                          targets=(None, gold_column) if wanted else (None,))
+            out["cf_exact"] = found[0]
+            if wanted:
+                out["cf_target"] = found[1]
+            seconds["cf_exact"] = time.time() - started
         out["explainer_seconds"], out["gnn_lrp_check"] = seconds, lrp_check
-        seed = [2026, int(ctx.caption_id.split("_")[0]), int(ctx.caption_id.split("_")[1])]
+        seed = [2026, *caption]
         out["explainers"] = {}
         for name, order in orders.items():
             entry = curves(ctx, column, order, index, base, empty, attributions.get(name))
@@ -596,6 +673,13 @@ def measure(ctx, rng, info, detail=False, compare=False, gnn=False, pg=None, see
                 entry["agreement"] = agreement(order, reference)
             out["explainers"][name] = entry
         out["ig_completeness"] = completeness
+        if keep_orders:
+            out["orders"] = orders
+    if detail and n_parts:
+        if "cf_exact" not in out:
+            out["cf_exact"] = exact_counterfactual(ctx, column, index, [p[:2] for p in ranked], max_size=CF_SIZE)
+        if out["cf_exact"]["parts"]:
+            out["cf_exact"]["names"] = [part_name(graph, parts_info, kind, j) for kind, j in out["cf_exact"]["parts"]]
     if detail:
         out["explanation"] = [{"kind": kind, "part": part_name(graph, parts_info, kind, j), "term": t}
                               for kind, j, t in ranked[:5]]
@@ -658,6 +742,65 @@ def additivity_summary(items):
                   "median_ratio": float(np.median(measured[positive] / predicted[positive])) if positive.any() else None,
                   "spearman": float(stats.spearmanr(predicted, measured).statistic),
                   "gap_share_of_effect": float(np.mean(np.abs(measured - predicted) / effect))}
+    return out
+
+
+def counterfactual_summary(usable):
+    """Exact smallest counterfactuals (at most CF_SIZE parts), CF-GNNExplainer's, the target ones of wrong images, and
+    every explainer's greedy one (k_flip) set against the exact one."""
+    out = {}
+    # the gnn subset only: evidence captions outside it also get cf_exact (detail), at seed 0 alone
+    exact = [r for r in usable if "cf_exact" in r and "cf_gnnexplainer" in r]
+    if not exact:
+        return out
+    found = [r for r in exact if r["cf_exact"]["size"] is not None]
+    out["exact"] = {"captions": len(exact), "found": len(found) / len(exact), "max_size": CF_SIZE,
+                    **{f"size_{s}": mean([r["cf_exact"]["size"] == s for r in exact]) for s in range(1, CF_SIZE + 1)},
+                    "sets_mean": mean([r["cf_exact"]["sets"] for r in found]),
+                    "evaluations_mean": mean([r["cf_exact"]["evaluations"] for r in exact])}
+    cf = [r for r in exact if "cf_gnnexplainer" in r]
+    if cf:
+        valid = [r for r in cf if r["cf_gnnexplainer"]["size"] is not None]
+        both = [r for r in valid if r["cf_exact"]["size"] is not None]
+        out["cf_gnnexplainer"] = {"captions": len(cf), "found": len(valid) / len(cf),
+                                  "size_mean": mean([r["cf_gnnexplainer"]["size"] for r in valid]),
+                                  "size_median": float(np.median([r["cf_gnnexplainer"]["size"] for r in valid])) if valid else None,
+                                  "share_of_parts": mean([r["cf_gnnexplainer"]["size"] / r["parts"] for r in valid]),
+                                  "optimal": mean([r["cf_gnnexplainer"]["size"] == r["cf_exact"]["size"] for r in both]),
+                                  "gap_to_exact": mean([r["cf_gnnexplainer"]["size"] - r["cf_exact"]["size"] for r in both]),
+                                  "found_where_exact_not": mean([r["cf_gnnexplainer"]["size"] is not None for r in cf
+                                                                 if r["cf_exact"]["size"] is None])}
+    target = [r["cf_target"] for r in usable if "cf_target" in r]
+    if target:
+        out["target"] = {"captions": len(target), "found": mean([t["size"] is not None for t in target]),
+                         **{f"size_{s}": mean([t["size"] == s for t in target]) for s in range(1, CF_SIZE + 1)}}
+    out["greedy"] = {}
+    for name in EXPLAINERS:
+        rows = [(r["explainers"][name]["k_flip"], r["cf_exact"]["size"]) for r in exact if name in r["explainers"]]
+        if not rows:
+            continue
+        paired = [(k, e) for k, e in rows if k is not None and e is not None]
+        out["greedy"][name] = {"captions": len(rows), "found": mean([k is not None for k, _ in rows]),
+                               "size_mean": mean([k for k, _ in rows]),
+                               "optimal": mean([k == e for k, e in paired]),
+                               "gap_to_exact": mean([k - e for k, e in paired])}
+    return out
+
+
+def message_summary(messages):
+    """Message-level deletion: mean loss AUC and loss shares per order, GraphMask against attention and random."""
+    usable = [m for m in messages if "loss_auc" in m["graphmask"]]
+    out = {"captions": len(messages), "defined": len(usable), "edges_mean": mean([m["edges"] for m in messages]),
+           "effect_mean": mean([m["effect"] for m in messages]),
+           "messages_help": mean([m["effect"] > 1e-4 for m in messages])}
+    for name in MESSAGE_ORDERS:
+        out[name] = {"loss_auc": mean([m[name]["loss_auc"] for m in usable]),
+                     **{f"loss_share_{k}": mean([m[name]["loss_share"][k] for m in usable if k in m[name]["loss_share"]])
+                        for k in KS},
+                     **{f"loss_{k}": mean([m[name]["loss"][k] for m in messages if k in m[name]["loss"]]) for k in KS}}
+    for other in ("attention", "random"):
+        out[f"graphmask_vs_{other}"] = wilcoxon([m["graphmask"]["loss_auc"] for m in usable],
+                                                [m[other]["loss_auc"] for m in usable])
     return out
 
 
@@ -763,6 +906,13 @@ def aggregate(records):
     sub = [r["subgraphx_evaluations"] for r in usable if "subgraphx_evaluations" in r]
     if sub:
         out["subgraphx_evaluations_mean"] = mean(sub)
+    gx = [r["gstarx_evaluations"] for r in usable if "gstarx_evaluations" in r]
+    if gx:
+        out["gstarx_evaluations_mean"] = mean(gx)
+    out["counterfactual"].update(counterfactual_summary(usable))
+    messages = [r["messages"] for r in usable if r.get("messages")]
+    if messages:
+        out["messages"] = message_summary(messages)
     compared = [r for r in usable if "explainers" in r]
     if compared:
         out["explainers"] = {}
@@ -798,25 +948,40 @@ def aggregate(records):
     return out
 
 
-def train_pg(model, store, device, pool, count, seed):
-    """PGExplainer of one checkpoint, trained on the first count captions of pool whose rank-1 image has a positive
-    graph effect; returns it and {captions, seconds, final_loss}."""
-    started = time.time()
+def training_item(model, store, device, cid):
+    """(ctx, column, index, base, empty) of a caption's rank-1 image, for the trained explainers."""
+    ctx = QueryContext(model, store, cid, device)
+    index = image_index(store, store.graphs[ctx.ids[ctx.top]])
+    (base, empty), _ = ctx.rescore(ctx.top, [edit(index), edit(index, drop_nodes=range(real_nodes(index)))])
+    return ctx, ctx.top, index, float(base), float(empty)
 
-    def prepare(cid):
-        ctx = QueryContext(model, store, cid, device)
-        index = image_index(store, store.graphs[ctx.ids[ctx.top]])
-        (base, empty), _ = ctx.rescore(ctx.top, [edit(index), edit(index, drop_nodes=range(real_nodes(index)))])
-        return ctx, ctx.top, index, float(base), float(empty)
+
+def training_captions(model, store, device, pool, count):
+    """The first count captions of pool whose rank-1 image has a positive graph effect."""
     chosen = []
     for cid in pool:
         if len(chosen) == count:
             break
-        _, _, _, base, empty = prepare(cid)
+        _, _, _, base, empty = training_item(model, store, device, cid)
         if base - empty > 1e-4:
             chosen.append(cid)
-    explainer, loss = baselines.train_pgexplainer([lambda cid=cid: prepare(cid) for cid in chosen], seed=2027 + seed)
+    return chosen
+
+
+def train_pg(model, store, device, chosen, seed):
+    """PGExplainer of one checkpoint, trained on the chosen captions; returns it and {captions, seconds, final_loss}."""
+    started = time.time()
+    items = [lambda cid=cid: training_item(model, store, device, cid) for cid in chosen]
+    explainer, loss = baselines.train_pgexplainer(items, seed=2027 + seed, device=device)
     return explainer, {"captions": len(chosen), "seconds": time.time() - started, "final_loss": loss}
+
+
+def train_gm(model, store, device, chosen, seed):
+    """GraphMask of one checkpoint, trained on the same captions as PGExplainer; returns it and its training info."""
+    started = time.time()
+    items = [lambda cid=cid: training_item(model, store, device, cid) for cid in chosen]
+    explainer, info = baselines.train_graphmask(items, seed=2027 + seed, device=device)
+    return explainer, {"captions": len(chosen), "seconds": time.time() - started, **info}
 
 
 def main() -> None:
@@ -885,15 +1050,19 @@ def main() -> None:
             model, _, saved = load_run_model(root / run, device, store=store)
             started = time.time()
             pool = sorted(set(caption_ids) - compare_ids - set(case_ids))
-            pg, pg_info = (train_pg(model, store, device, np.random.default_rng(2027).permutation(pool), args.pg_train,
-                                    seed) if compare_ids and args.pg_train else (None, None))
+            pg, pg_info, gm, gm_info = None, None, None, None
+            if compare_ids and args.pg_train:
+                chosen = training_captions(model, store, device, np.random.default_rng(2027).permutation(pool),
+                                           args.pg_train)
+                pg, pg_info = train_pg(model, store, device, chosen, seed)
+                gm, gm_info = train_gm(model, store, device, chosen, seed)
             records, hits = [], 0
             for n, cid in enumerate(caption_ids):
                 ctx = QueryContext(model, store, cid, device)
                 rng = np.random.default_rng([2026, seed, int(cid.split("_")[0]), int(cid.split("_")[1])])
                 keep = seed == 0 and cid in case_ids
                 record = measure(ctx, rng, info, detail=keep, compare=cid in compare_ids, gnn=cid in gnn_ids, pg=pg,
-                                 seed=seed)
+                                 seed=seed, gm=gm)
                 hits += record["correct"]
                 if keep:
                     detailed.setdefault(cid, {})[name] = record
@@ -910,6 +1079,7 @@ def main() -> None:
                         detailed.setdefault(cid, {})[name] = measure(ctx, rng, info, detail=True)
             result["runs"][run] = {"model": name, "seed": seed, "seconds": time.time() - started,
                                    "recall@1": hits / len(caption_ids), "pgexplainer": pg_info,
+                                   "graphmask": gm_info,
                                    "groups": {group: aggregate([r for r in records if keep(r)])
                                               for group, keep in (("all", lambda r: True), ("correct", lambda r: r["correct"]),
                                                                   ("wrong", lambda r: not r["correct"]))}}

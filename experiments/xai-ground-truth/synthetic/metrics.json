@@ -1,0 +1,1052 @@
+{
+  "rule": "Level-3 explanations against known answers: three benchmarks where the parts that should explain the rank-1 image\nare known before any explainer runs, scored for all 16 explainers of scripts/xai_metrics.py (version 3).\n\nThe explained image is always the rank-1 candidate, and only captions whose rank-1 image is the one with the answer\nare kept. Each explainer orders the image's parts (object nodes and labelled triples); with g the size of the answer:\n- GEA, graph explanation accuracy (Agarwal et al., GraphXAI, Scientific Data 2023): Jaccard of the first g parts of\n  the order with the answer;\n- precision@g: share of the answer among the first g parts;\n- AUROC: probability that an answer part comes before a part outside the answer (from the order's positions);\n- first: 1-based position of the first answer part.\n\nBenchmarks (results in experiments/xai-ground-truth/<benchmark>/):\n- planted (C), real models: a val caption's relation (subject, predicate, object) is planted into one of its\n  candidates ranked 2 to 5 (two new object nodes with the caption's names, the caption's predicate between them),\n  with a decoy of the same shape whose names and predicate are not in the caption. The case is kept only when the\n  planted image becomes rank 1, so the model needs the planted parts (removing them gives back the old, lower rank).\n  Answer: the three planted parts; the decoy's three parts are scored apart (their mean position percentile). New\n  nodes take boxes of random nodes of the image and a count bucket from their name's count. Part texts that the\n  tables lack are encoded with the frozen CLIP of the configuration, as the demo does for typed queries.\n- vg-regions (A), real models: Visual Genome region descriptions of val images, with their region graphs\n  (data/raw/visual_genome/region_graphs.json, scripts/download_data.py --regions) as the known answer: the image's\n  nodes that are the region's annotated objects, and its triples between them with the region's predicates. The\n  query graph is the region graph itself (canonical names and predicates; no parser, so a wrong explanation cannot\n  come from parsing), the sentence vector is CLIP of the phrase, and the candidates are the CLIP top-50 of the val\n  images. Two answers: instance (exactly the annotated nodes) and label (every node with the name of an annotated one,\n  since the model matches labels and cannot tell two instances of one name apart). This is plausibility (agreement with\n  people), not faithfulness. `prepare` writes the region queries of val once (data/processed/xai_regions/).\n- synthetic (B), a model of the main architecture trained here: src/explain/synthetic_graphs.py, where every part of\n  the answer is needed to beat some negative. `train` trains three seeds; the explained captions are val captions\n  0..1999, PGExplainer and GraphMask train on val captions 2000..2199.\n\nUsage:\n  python scripts/xai_ground_truth.py planted [--models ...] [--seeds 0 1 2] [--cases 100]\n  python scripts/xai_ground_truth.py vg-regions prepare\n  python scripts/xai_ground_truth.py vg-regions [--models ...]\n  python scripts/xai_ground_truth.py synthetic train\n  python scripts/xai_ground_truth.py synthetic\nWrites <benchmark>/metrics.json (per run: per explainer means over cases) and cases.json (per case and explainer).\n",
+  "runs": {
+    "synthetic_seed0": {
+      "model": "synthetic",
+      "seed": 0,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 42.00972509384155,
+        "final_loss": -0.35574560693698004
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 42.92244100570679,
+        "l0": 1.996449977696102e-05,
+        "divergence": 0.01413811520065792,
+        "lagrange": 0.0,
+        "step": 4000,
+        "history": [
+          [
+            0,
+            0.9900372147560119,
+            0.0
+          ],
+          [
+            100,
+            0.24405395798385143,
+            0.006039760023536473
+          ],
+          [
+            200,
+            0.0446125060133636,
+            0.01010245262825265
+          ],
+          [
+            300,
+            0.012767592249438166,
+            0.009609359860914992
+          ],
+          [
+            400,
+            0.005151061918004416,
+            0.011877942361115857
+          ],
+          [
+            500,
+            0.0025697276103892365,
+            0.013190942879125487
+          ],
+          [
+            600,
+            0.0015112005620903802,
+            0.014352975702804542
+          ],
+          [
+            700,
+            0.0010227963520446793,
+            0.01524324922431333
+          ],
+          [
+            800,
+            0.0007407962276920443,
+            0.015978178784890246
+          ],
+          [
+            900,
+            0.000567215194896562,
+            0.016581310291185217
+          ],
+          [
+            1000,
+            0.0004466338258498581,
+            0.01662279971737007
+          ],
+          [
+            1100,
+            0.00035794207979051863,
+            0.017043316495983164
+          ],
+          [
+            1200,
+            0.0003013286363420775,
+            0.017185087713114625
+          ],
+          [
+            1300,
+            0.0002583092594068148,
+            0.01716720504755358
+          ],
+          [
+            1400,
+            0.00021882244873268065,
+            0.01749594731016259
+          ],
+          [
+            1500,
+            0.0001893953363833134,
+            0.017859752214426407
+          ],
+          [
+            1600,
+            0.0001654037757543847,
+            0.017320875692967093
+          ],
+          [
+            1700,
+            0.00014495863124466268,
+            0.017234535903389768
+          ],
+          [
+            1800,
+            0.00012911674533825135,
+            0.016728917129798473
+          ],
+          [
+            1900,
+            0.00011494768032207502,
+            0.016974841364149142
+          ],
+          [
+            2000,
+            0.00010303837254468817,
+            0.01701164258574579
+          ],
+          [
+            2100,
+            9.283140552724944e-05,
+            0.016470210991665225
+          ],
+          [
+            2200,
+            8.378829589673842e-05,
+            0.016394013034817478
+          ],
+          [
+            2300,
+            7.620751265676518e-05,
+            0.016459607014926405
+          ],
+          [
+            2400,
+            6.908890932209034e-05,
+            0.016760744767507278
+          ],
+          [
+            2500,
+            6.258772250475886e-05,
+            0.016867515778847632
+          ],
+          [
+            2600,
+            5.7616596359366666e-05,
+            0.016604050017726878
+          ],
+          [
+            2700,
+            5.2784170693485064e-05,
+            0.01670639012977517
+          ],
+          [
+            2800,
+            4.863092049163242e-05,
+            0.015649539064834243
+          ],
+          [
+            2900,
+            4.4983985817452775e-05,
+            0.01549860027507748
+          ],
+          [
+            3000,
+            4.142829430747952e-05,
+            0.01515303309041883
+          ],
+          [
+            3100,
+            3.838966509192687e-05,
+            0.015242359419644344
+          ],
+          [
+            3200,
+            3.535387464125961e-05,
+            0.015386596473545068
+          ],
+          [
+            3300,
+            3.2826584788381294e-05,
+            0.015332390634939656
+          ],
+          [
+            3400,
+            3.042292195459595e-05,
+            0.015097911370612565
+          ],
+          [
+            3500,
+            2.8183166859889754e-05,
+            0.015683167025235888
+          ],
+          [
+            3600,
+            2.6307726652703423e-05,
+            0.015843558961278176
+          ],
+          [
+            3700,
+            2.4509180236691462e-05,
+            0.01554239269666141
+          ],
+          [
+            3800,
+            2.2858903578253375e-05,
+            0.015537203299827525
+          ],
+          [
+            3900,
+            2.1366391558785834e-05,
+            0.014140397908577143
+          ],
+          [
+            4000,
+            1.996449977696102e-05,
+            0.01413811520065792
+          ]
+        ]
+      },
+      "seconds": 456.45546102523804,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.7274761904761905,
+          "main_precision": 0.8193333333333332,
+          "main_auroc": 0.968116946486606,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.13187301587301586,
+          "main_precision": 0.21133333333333332,
+          "main_auroc": 0.48520667612687746,
+          "main_first": 4.36
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.031883053513394065,
+          "main_first": 14.75
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.4716111111111112,
+          "main_precision": 0.6033333333333334,
+          "main_auroc": 0.6520211031515211,
+          "main_first": 1.14
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.7750238095238096,
+          "main_precision": 0.8486666666666666,
+          "main_auroc": 0.9204651987589294,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.7889761904761906,
+          "main_precision": 0.8519999999999999,
+          "main_auroc": 0.8969465620636674,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.6469285714285715,
+          "main_precision": 0.7633333333333333,
+          "main_auroc": 0.9335261151501862,
+          "main_first": 1.02
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.4654285714285715,
+          "main_precision": 0.6066666666666667,
+          "main_auroc": 0.720292258833358,
+          "main_first": 1.12
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.34026190476190477,
+          "main_precision": 0.488,
+          "main_auroc": 0.787436099710403,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.8365555555555556,
+          "main_precision": 0.8799999999999999,
+          "main_auroc": 0.9414203443071091,
+          "main_first": 1.0
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.37583333333333335,
+          "main_precision": 0.5233333333333333,
+          "main_auroc": 0.8499041301090838,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.6463809523809525,
+          "main_precision": 0.7259999999999998,
+          "main_auroc": 0.7612254678328207,
+          "main_first": 2.05
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.15808730158730155,
+          "main_precision": 0.24199999999999997,
+          "main_auroc": 0.5422968063899178,
+          "main_first": 4.43
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.2552936507936508,
+          "main_precision": 0.39,
+          "main_auroc": 0.7524717767612504,
+          "main_first": 1.95
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    },
+    "synthetic_seed1": {
+      "model": "synthetic",
+      "seed": 1,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 65.98162388801575,
+        "final_loss": -0.20766137320781128
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 44.39616417884827,
+        "l0": 2.3930137742809166e-05,
+        "divergence": 0.01704996814565675,
+        "lagrange": 0.0021104883402585984,
+        "step": 4000,
+        "history": [
+          [
+            0,
+            0.9903380820155143,
+            0.0
+          ],
+          [
+            100,
+            0.09532486479729414,
+            0.00951661969349516
+          ],
+          [
+            200,
+            0.04419890933670104,
+            0.004918266822887745
+          ],
+          [
+            300,
+            0.027515672014560552,
+            0.00891426736111498
+          ],
+          [
+            400,
+            0.014603616133099422,
+            0.013743993241187127
+          ],
+          [
+            500,
+            0.007276243583764881,
+            0.017032321660808522
+          ],
+          [
+            600,
+            0.0037246111613785616,
+            0.020360393086302792
+          ],
+          [
+            700,
+            0.002158068662029109,
+            0.021844157442974393
+          ],
+          [
+            800,
+            0.0014693255792371928,
+            0.022421736275052808
+          ],
+          [
+            900,
+            0.0010254984880339179,
+            0.02213351537098788
+          ],
+          [
+            1000,
+            0.0007682636627214379,
+            0.022878469176284853
+          ],
+          [
+            1100,
+            0.0005950678503995733,
+            0.023208130593046654
+          ],
+          [
+            1200,
+            0.00047742564275722545,
+            0.02107351066544652
+          ],
+          [
+            1300,
+            0.0003883941903040977,
+            0.019918646485393765
+          ],
+          [
+            1400,
+            0.0003229289383853029,
+            0.020200243082463203
+          ],
+          [
+            1500,
+            0.0002736634253597003,
+            0.020953914822130174
+          ],
+          [
+            1600,
+            0.00023414325282828942,
+            0.02069408913067491
+          ],
+          [
+            1700,
+            0.00020329534312168106,
+            0.0189580218766514
+          ],
+          [
+            1800,
+            0.00017613960479593516,
+            0.019876059440339305
+          ],
+          [
+            1900,
+            0.00015574364985013745,
+            0.019364445204801087
+          ],
+          [
+            2000,
+            0.00013694223961238094,
+            0.018895391590303914
+          ],
+          [
+            2100,
+            0.00012146064560965897,
+            0.019280502368369524
+          ],
+          [
+            2200,
+            0.00010954501833793983,
+            0.018512388363960783
+          ],
+          [
+            2300,
+            9.716348484744231e-05,
+            0.01878823298866337
+          ],
+          [
+            2400,
+            8.852089001265995e-05,
+            0.018779530434985644
+          ],
+          [
+            2500,
+            8.047503904208497e-05,
+            0.018689509807336434
+          ],
+          [
+            2600,
+            7.289886956755253e-05,
+            0.018546365258189326
+          ],
+          [
+            2700,
+            6.653184753076858e-05,
+            0.0187425299732422
+          ],
+          [
+            2800,
+            6.091858925060478e-05,
+            0.018925497075470046
+          ],
+          [
+            2900,
+            5.580454970072424e-05,
+            0.019334119462437228
+          ],
+          [
+            3000,
+            5.115628311955334e-05,
+            0.018214006851339944
+          ],
+          [
+            3100,
+            4.695239089983261e-05,
+            0.01790509819682484
+          ],
+          [
+            3200,
+            4.3462177048922965e-05,
+            0.018006888652816997
+          ],
+          [
+            3300,
+            4.0275163348724165e-05,
+            0.01825621620462698
+          ],
+          [
+            3400,
+            3.716004392856576e-05,
+            0.017723500423162477
+          ],
+          [
+            3500,
+            3.4144917127036936e-05,
+            0.01776595458970405
+          ],
+          [
+            3600,
+            3.190072491634055e-05,
+            0.017798912748985457
+          ],
+          [
+            3700,
+            2.9648135283650843e-05,
+            0.017928725933015813
+          ],
+          [
+            3800,
+            2.7573775259952526e-05,
+            0.016941584925625648
+          ],
+          [
+            3900,
+            2.558873093960301e-05,
+            0.017037181438108746
+          ],
+          [
+            4000,
+            2.3930137742809166e-05,
+            0.01704996814565675
+          ]
+        ]
+      },
+      "seconds": 472.7714192867279,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.510357142857143,
+          "main_precision": 0.6419999999999999,
+          "main_auroc": 0.9261201246179573,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.13823015873015873,
+          "main_precision": 0.21533333333333327,
+          "main_auroc": 0.4943250728459706,
+          "main_first": 4.04
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.07387987538204256,
+          "main_first": 13.7
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.3679523809523809,
+          "main_precision": 0.482,
+          "main_auroc": 0.6065807447082215,
+          "main_first": 2.31
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.8351904761904763,
+          "main_precision": 0.8913333333333334,
+          "main_auroc": 0.9465687512951445,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.8070476190476191,
+          "main_precision": 0.8686666666666666,
+          "main_auroc": 0.9050353305048351,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.5920238095238096,
+          "main_precision": 0.714,
+          "main_auroc": 0.9083012593500983,
+          "main_first": 1.03
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.5943968253968254,
+          "main_precision": 0.7179999999999999,
+          "main_auroc": 0.7446390623738146,
+          "main_first": 1.0
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.3375714285714287,
+          "main_precision": 0.48599999999999993,
+          "main_auroc": 0.7914534159425025,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.850936507936508,
+          "main_precision": 0.8873333333333332,
+          "main_auroc": 0.9380868810927635,
+          "main_first": 1.0
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.5881666666666667,
+          "main_precision": 0.7066666666666667,
+          "main_auroc": 0.9440728085926228,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.7321825396825398,
+          "main_precision": 0.7979999999999999,
+          "main_auroc": 0.8550201667269779,
+          "main_first": 1.6
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.18415079365079365,
+          "main_precision": 0.26733333333333326,
+          "main_auroc": 0.5517560764771292,
+          "main_first": 4.65
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.31546031746031744,
+          "main_precision": 0.458,
+          "main_auroc": 0.8010934577347889,
+          "main_first": 1.69
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    },
+    "synthetic_seed2": {
+      "model": "synthetic",
+      "seed": 2,
+      "captions_tried": 100,
+      "val_recall@1": 1.0,
+      "pgexplainer": {
+        "captions": 200,
+        "seconds": 72.68525314331055,
+        "final_loss": -0.30614254575921224
+      },
+      "graphmask": {
+        "captions": 200,
+        "seconds": 52.33840370178223,
+        "l0": 1.3101440151217503e-05,
+        "divergence": 0.014427054875995963,
+        "lagrange": 0.0,
+        "step": 4000,
+        "history": [
+          [
+            0,
+            0.9901110395789147,
+            0.0
+          ],
+          [
+            100,
+            0.0957389285415411,
+            0.0036722889463999308
+          ],
+          [
+            200,
+            0.0300377438403666,
+            0.004665016254743932
+          ],
+          [
+            300,
+            0.013164159326115622,
+            0.00988185213858742
+          ],
+          [
+            400,
+            0.006287169820134295,
+            0.01650980230069763
+          ],
+          [
+            500,
+            0.0034055728103703584,
+            0.02015754241743707
+          ],
+          [
+            600,
+            0.0019420046420054859,
+            0.0221507913977257
+          ],
+          [
+            700,
+            0.001231692820765602,
+            0.024373964358383092
+          ],
+          [
+            800,
+            0.0007591589562071021,
+            0.025239168885455
+          ],
+          [
+            900,
+            0.0005337011576284568,
+            0.023129455172311283
+          ],
+          [
+            1000,
+            0.00039487793205807977,
+            0.02430756014684448
+          ],
+          [
+            1100,
+            0.0003112063054959435,
+            0.02518015223395196
+          ],
+          [
+            1200,
+            0.0002473803672546637,
+            0.02490024390688632
+          ],
+          [
+            1300,
+            0.00020296194814363843,
+            0.023155297543416963
+          ],
+          [
+            1400,
+            0.00017012779583183146,
+            0.019799962339020566
+          ],
+          [
+            1500,
+            0.00014425095760998375,
+            0.020419486971732112
+          ],
+          [
+            1600,
+            0.00012411890250405122,
+            0.019554156152662473
+          ],
+          [
+            1700,
+            0.0001085982884569603,
+            0.018877155826703528
+          ],
+          [
+            1800,
+            9.437931047614257e-05,
+            0.01858642684004735
+          ],
+          [
+            1900,
+            8.234437565533881e-05,
+            0.018473995941931207
+          ],
+          [
+            2000,
+            7.332932621238797e-05,
+            0.01889740931750566
+          ],
+          [
+            2100,
+            6.588033167417962e-05,
+            0.018546743296465138
+          ],
+          [
+            2200,
+            5.9248046970878934e-05,
+            0.018298853726591915
+          ],
+          [
+            2300,
+            5.319250891147931e-05,
+            0.019146437638410133
+          ],
+          [
+            2400,
+            4.7827305653527216e-05,
+            0.019133690769740495
+          ],
+          [
+            2500,
+            4.317403563732114e-05,
+            0.018720162955032718
+          ],
+          [
+            2600,
+            3.961901453635619e-05,
+            0.018088774031657522
+          ],
+          [
+            2700,
+            3.618315709786657e-05,
+            0.01776544625794486
+          ],
+          [
+            2800,
+            3.3176366113139014e-05,
+            0.016961696516445954
+          ],
+          [
+            2900,
+            3.02055727570405e-05,
+            0.01697991638297026
+          ],
+          [
+            3000,
+            2.7891546000091694e-05,
+            0.017140060697838636
+          ],
+          [
+            3100,
+            2.573218480279138e-05,
+            0.017364440960009234
+          ],
+          [
+            3200,
+            2.3707688122271975e-05,
+            0.017358422469442303
+          ],
+          [
+            3300,
+            2.177069489050609e-05,
+            0.017393571456377686
+          ],
+          [
+            3400,
+            2.0274730636629102e-05,
+            0.01616367871672992
+          ],
+          [
+            3500,
+            1.8958348146043136e-05,
+            0.015255507617839613
+          ],
+          [
+            3600,
+            1.7476461147225562e-05,
+            0.015096580122899468
+          ],
+          [
+            3700,
+            1.6232189566949272e-05,
+            0.015192181654747401
+          ],
+          [
+            3800,
+            1.5144322828177792e-05,
+            0.014436034938480589
+          ],
+          [
+            3900,
+            1.4060295420676993e-05,
+            0.014743403437241795
+          ],
+          [
+            4000,
+            1.3101440151217503e-05,
+            0.014427054875995963
+          ]
+        ]
+      },
+      "seconds": 480.3945400714874,
+      "summary": {
+        "cases": 100,
+        "model": {
+          "cases": 100,
+          "main_gea": 0.7580476190476191,
+          "main_precision": 0.8386666666666666,
+          "main_auroc": 0.9728655045533527,
+          "main_first": 1.0
+        },
+        "random": {
+          "cases": 100,
+          "main_gea": 0.1588730158730159,
+          "main_precision": 0.254,
+          "main_auroc": 0.5188689013686691,
+          "main_first": 3.48
+        },
+        "lowest": {
+          "cases": 100,
+          "main_gea": 0.0,
+          "main_precision": 0.0,
+          "main_auroc": 0.027134495446647148,
+          "main_first": 14.85
+        },
+        "clip": {
+          "cases": 100,
+          "main_gea": 0.8783333333333334,
+          "main_precision": 0.9239999999999999,
+          "main_auroc": 0.9894147815491469,
+          "main_first": 1.0
+        },
+        "gradient": {
+          "cases": 100,
+          "main_gea": 0.43067460317460315,
+          "main_precision": 0.5586666666666666,
+          "main_auroc": 0.6146686051077692,
+          "main_first": 1.65
+        },
+        "integrated_gradients": {
+          "cases": 100,
+          "main_gea": 0.7943095238095238,
+          "main_precision": 0.86,
+          "main_auroc": 0.9316172542599014,
+          "main_first": 1.0
+        },
+        "occlusion": {
+          "cases": 100,
+          "main_gea": 1.0,
+          "main_precision": 1.0,
+          "main_auroc": 1.0,
+          "main_first": 1.0
+        },
+        "gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.719404761904762,
+          "main_precision": 0.7986666666666666,
+          "main_auroc": 0.8585299433338133,
+          "main_first": 1.0
+        },
+        "pgexplainer": {
+          "cases": 100,
+          "main_gea": 0.2929285714285714,
+          "main_precision": 0.44066666666666654,
+          "main_auroc": 0.7759908481124426,
+          "main_first": 1.0
+        },
+        "gnn_lrp": {
+          "cases": 100,
+          "main_gea": 0.5905238095238096,
+          "main_precision": 0.7166666666666666,
+          "main_auroc": 0.7323216457289986,
+          "main_first": 1.0
+        },
+        "graphsvx": {
+          "cases": 100,
+          "main_gea": 0.32197619047619047,
+          "main_precision": 0.4699999999999999,
+          "main_auroc": 0.7853590104826949,
+          "main_first": 1.0
+        },
+        "subgraphx": {
+          "cases": 100,
+          "main_gea": 0.8294285714285715,
+          "main_precision": 0.8693333333333332,
+          "main_auroc": 0.9366135591532648,
+          "main_first": 1.01
+        },
+        "shapley": {
+          "cases": 100,
+          "main_gea": 0.577,
+          "main_precision": 0.6926666666666665,
+          "main_auroc": 0.9446560116783802,
+          "main_first": 1.0
+        },
+        "cf_gnnexplainer": {
+          "cases": 100,
+          "main_gea": 0.716968253968254,
+          "main_precision": 0.7866666666666667,
+          "main_auroc": 0.8082301287492463,
+          "main_first": 1.72
+        },
+        "graphmask": {
+          "cases": 100,
+          "main_gea": 0.1709206349206349,
+          "main_precision": 0.25266666666666665,
+          "main_auroc": 0.5452827596723882,
+          "main_first": 4.75
+        },
+        "gstarx": {
+          "cases": 100,
+          "main_gea": 0.2791666666666667,
+          "main_precision": 0.4193333333333333,
+          "main_auroc": 0.7840405905583923,
+          "main_first": 1.78
+        },
+        "answer_size": 4.04,
+        "parts": 18.6,
+        "k_flip_reached": 1.0
+      }
+    }
+  },
+  "benchmark": "synthetic",
+  "cases_per_run": 100,
+  "data": {
+    "seed": 2031,
+    "train": 6000,
+    "val": 2400,
+    "candidates": 20,
+    "explain": 2000,
+    "epochs": 8,
+    "lr": 0.001,
+    "batch": 32
+  }
+}

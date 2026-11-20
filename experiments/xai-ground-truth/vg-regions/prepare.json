@@ -1,0 +1,13 @@
+{
+  "regions": "data/processed/xai_regions/regions_val.json",
+  "stats": {
+    "images": 2126,
+    "regions": 105434,
+    "unmapped_object": 10133,
+    "no_triple": 67268,
+    "duplicate": 1784,
+    "level1_name_mismatch": 0,
+    "queries": 26249,
+    "gold_in_top50": 14951
+  }
+}

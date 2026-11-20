@@ -1,4 +1,5 @@
-"""Mean +- std over seeds of experiments/xai-metrics-v2/metrics.json, and the evidence table of cases.json (seed 0).
+"""Mean +- std over seeds of experiments/xai-metrics-v3/metrics.json (or v2, --dir), and the evidence table of
+cases.json (seed 0). Tables of version-3 measures (counterfactuals, messages) are left out for a version-2 folder.
 
 Writes <dir>/summary.json and prints the markdown tables of <dir>/REPORT.md (saved as <dir>/logs/tables.md by run.sh).
 """
@@ -11,13 +12,13 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.utils.config import REPO_ROOT  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from xai_metrics import EXPLAINERS, MESSAGE_ORDERS  # noqa: E402 (one list for the measure and the tables)
 
-OUT = REPO_ROOT / "experiments" / "xai-metrics-v2"
+OUT = REPO_ROOT / "experiments" / "xai-metrics-v3"
 MODELS = ("countonly_factual_r3", "main_r3")
 GROUPS = ("all", "correct", "wrong")
 KS = ("1", "3", "5")
-EXPLAINERS = ("model", "random", "lowest", "clip", "gradient", "integrated_gradients", "occlusion", "gnnexplainer",
-              "pgexplainer", "gnn_lrp", "graphsvx", "subgraphx", "shapley")
 DECOMPOSITIONS = ("model", "gradient", "integrated_gradients", "occlusion")
 
 
@@ -58,7 +59,7 @@ def cell(stats, key, scale=1., digits=2, std=True):
     if key not in stats:
         return "n/a"
     text = number(stats[key]["mean"] * scale, digits)
-    return f"{text} ± {number(stats[key]['std'] * scale, digits)}" if std else text
+    return f"{text} ± {number(stats[key]['std'] * abs(scale), digits)}" if std else text
 
 
 def pct(stats, key, std=True):
@@ -179,6 +180,58 @@ def model_tables(name, summary):
                          " / ".join(pct(g, f"{c}.gold.first_{k}", False) for k in KS)))
     lines.append("")
 
+    if "counterfactual.exact.captions" in a:
+        c = "counterfactual"
+        lines += ["**Phản thực tế nhỏ nhất** (tập con so sánh: mọi tập ≤ 2 phần, CF-GNNExplainer, và k_flip của từng "
+                  "cách giải thích như một phản thực tế tham lam).", ""]
+        lines += header("Nhóm", "Câu", "Có tập ≤ 2 phần (%)", "Cỡ 1 / cỡ 2 (%)", "Số tập nhỏ nhất (TB)",
+                        "CF-GNNExplainer tìm được (%)", "Cỡ TB / trung vị", "% số phần", "Bằng cỡ nhỏ nhất (%)",
+                        "Thừa so với nhỏ nhất", "Ảnh sai: gold lên hạng 1 với ≤ 2 phần (%)")
+        for group in GROUPS:
+            g = s[group]
+            if f"{c}.exact.captions" not in g:
+                continue
+            lines.append(row(group, cell(g, f"{c}.exact.captions", digits=0, std=False), pct(g, f"{c}.exact.found"),
+                             f"{pct(g, f'{c}.exact.size_1', False)} / {pct(g, f'{c}.exact.size_2', False)}",
+                             cell(g, f"{c}.exact.sets_mean", digits=1), pct(g, f"{c}.cf_gnnexplainer.found"),
+                             f"{cell(g, f'{c}.cf_gnnexplainer.size_mean', digits=1)} / "
+                             f"{cell(g, f'{c}.cf_gnnexplainer.size_median', digits=1, std=False)}",
+                             pct(g, f"{c}.cf_gnnexplainer.share_of_parts"), pct(g, f"{c}.cf_gnnexplainer.optimal"),
+                             cell(g, f"{c}.cf_gnnexplainer.gap_to_exact", digits=2), pct(g, f"{c}.target.found")))
+        lines.append("")
+        lines += ["**Phản thực tế tham lam theo thứ tự của từng cách** (bỏ dần theo thứ tự đến khi mất hạng 1, k ≤ 10).",
+                  ""]
+        lines += header("Nhóm", "Cách", "Tìm được (%)", "Cỡ TB", "Bằng cỡ nhỏ nhất (%)", "Thừa so với nhỏ nhất")
+        for group in GROUPS:
+            g = s[group]
+            for name in EXPLAINERS:
+                p = f"{c}.greedy.{name}"
+                if f"{p}.captions" in g:
+                    lines.append(row(group, name, pct(g, f"{p}.found"), cell(g, f"{p}.size_mean", digits=2),
+                                     pct(g, f"{p}.optimal"), cell(g, f"{p}.gap_to_exact", digits=2)))
+        lines.append("")
+    if "messages.captions" in a:
+        lines += ["**Mức message: GraphMask so với attention GAT** (ngừng truyền top-k message; phần trăm của điểm mất "
+                  "khi ngừng mọi message, chỉ ở câu mà message giúp ảnh).", ""]
+        lines += header("Nhóm", "Câu", "Message giúp ảnh (%)", "Δ điểm (sau − trước) khi ngừng mọi message", "Message / ảnh", "Thứ tự",
+                        "AUC mất điểm (cao tốt)",
+                        "Mất k = 1 / 3 / 5 (%)", "Điểm mất (trước − sau) k = 1 / 3 / 5", "p Wilcoxon so với GraphMask (lớn nhất qua seed)")
+        for group in GROUPS:
+            g = s[group]
+            if "messages.captions" not in g:
+                continue
+            for name in MESSAGE_ORDERS:
+                p = f"messages.{name}"
+                lines.append(row(group, cell(g, "messages.captions", digits=0, std=False),
+                                 pct(g, "messages.messages_help", False),
+                                 cell(g, "messages.effect_mean", -1., digits=4),
+                                 cell(g, "messages.edges_mean", digits=0, std=False),
+                                 name, cell(g, f"{p}.loss_auc", digits=3),
+                                 " / ".join(pct(g, f"{p}.loss_share_{k}", False) for k in KS),
+                                 " / ".join(cell(g, f"{p}.loss_{k}", digits=4, std=False) for k in KS),
+                                 worst_p(g, f"messages.graphmask_vs_{name}.p") if name != "graphmask" else ""))
+        lines.append("")
+
     lines += ["**Validity ngữ nghĩa** (dòng vật thể và dòng bộ ba của E).", ""]
     lines += header("Nhóm", "Dòng vật thể", "strict (%)", "alias", "WordNet strict", "lenient (như v1)",
                     "WordNet lenient", "CLIP ≥ 0,955", "Cùng danh từ chính", "Dòng có số", "Khớp nhóm số (%)",
@@ -260,7 +313,9 @@ def model_tables(name, summary):
                  f"tổng relevance các walk lệch relevance đầu ra tối đa {worst_p(a, 'gnn_lrp_check.max_conservation_gap')}."
                  if "gnn_lrp_check.max_layer_gap" in a else "")
               + (f" SubgraphX: TB {cell(a, 'subgraphx_evaluations_mean', digits=0, std=False)} lượt chấm mỗi câu."
-                 if "subgraphx_evaluations_mean" in a else ""), ""]
+                 if "subgraphx_evaluations_mean" in a else "")
+              + (f" GStarX: TB {cell(a, 'gstarx_evaluations_mean', digits=0, std=False)} lượt chấm mỗi câu."
+                 if "gstarx_evaluations_mean" in a else ""), ""]
     return lines
 
 
@@ -273,7 +328,7 @@ def evidence(cases, model):
     lines += header("Câu (caption_id)", "Ảnh hạng 1", "E top-3 (term)", "Bỏ top-3: Δ điểm, hạng (ngẫu nhiên)",
                     "Chỉ giữ top-3: Δ điểm, hạng (ngẫu nhiên)", "k_flip", "k giữ 80%", "Phần cho 80% term",
                     "Tính cộng k = 3: dự đoán / đo", "Vật thể khớp strict", "Bộ ba khớp đủ",
-                    "Cắt truyền tin: Δ top (ngẫu nhiên)")
+                    "Cắt truyền tin: Δ top (ngẫu nhiên)", "Phản thực tế nhỏ nhất (≤ 2 phần)")
     for cid, case in cases.items():
         c = case.get(model)
         if c is None:
@@ -281,7 +336,7 @@ def evidence(cases, model):
         caption = f"{case['caption']} ({cid})"
         image = f"{c['image_id']} ({'đúng' if c['correct'] else 'sai'})"
         if c["empty_explanation"]:
-            lines.append(row(caption, image, "E rỗng", *["n/a"] * 9))
+            lines.append(row(caption, image, "E rỗng", *["n/a"] * 10))
             continue
         top = "; ".join(f"{e['part']} ({short(e['term'])})" for e in c["explanation"][:3])
         f3 = c["fidelity"]["3"]
@@ -296,10 +351,13 @@ def evidence(cases, model):
         sub = c["subgraph"]
         cut = (f"{short(sub['messages']['top']['delta'], 4)} ({short(sub['messages']['random']['delta'], 4)})"
                if sub and sub.get("messages") else "không có cạnh vào")
+        cf = c.get("cf_exact")
+        cf = ("n/a" if cf is None else "; ".join(cf.get("names") or []) + f" ({cf['sets']} tập cỡ {cf['size']})"
+              if cf["size"] else "không có")
         lines.append(row(caption, image, top, edit("plus"), edit("minus"), c["k_flip"] or "> 10",
                          c["sparsity"]["fidelity"]["k80"] or "> 10", c["sparsity"]["terms"]["n80"],
                          f"{short(add['predicted'])} / {short(add['measured'])}", f"{strict}/{len(c['validity'])}",
-                         f"{sum(t['all'] for t in triples)}/{len(triples)}", cut))
+                         f"{sum(t['all'] for t in triples)}/{len(triples)}", cut, cf))
     lines.append("")
     return lines
 

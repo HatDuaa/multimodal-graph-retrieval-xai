@@ -43,6 +43,8 @@ không có quan hệ, không tăng (−0,80 điểm). Trên 15 câu gián tiếp
 đồ thị bằng đồ thị của ảnh khác, hoặc xáo cạnh tri thức, đều làm kết quả thấp hơn CLIP.
 \item \textbf{Vì sao mô hình trả về kết quả này?} Lời giải thích là các đại lượng của chính điểm đồ thị; với mô hình chính
 của VG, điểm tách chính xác thành từng phần. Mục~\ref{sec:xai} đo fidelity, validity và sparsity của lời giải thích này.
+Trên ba bộ có đáp án biết trước, occlusion là cách giải thích đúng nhất, và lời giải thích của mô hình chính
+ngang Shapley trên region graph của Visual Genome (Mục~\ref{sec:xai-v3}).
 \end{enumerate}
 Hai kết quả âm được ghi nhận: ở mô hình cấp~1, cạnh đóng góp khoảng 0,5 điểm R@1; ở MKG-W, NativE nhận trọng số 0 khi kết
 hợp với kênh đếm cạnh.

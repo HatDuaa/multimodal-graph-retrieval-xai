@@ -1,7 +1,6 @@
 """Level-3 explanation metrics: part-level graph edits and rescoring among the candidates."""
 import numpy as np
 import pytest
-import torch
 
 from src.data.graph_store import EDGE_LABELLED, GraphIndex
 from src.explain.xai_metrics import QueryContext, edit, image_index, keep_only, labelled_count, real_nodes
