@@ -13,7 +13,8 @@
 \setdefaultlanguage{vietnamese}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{float}   % [H] cho bảng và hình của phụ lục
+\usepackage{cuted}   % strip: bảng, hình trải hai cột đặt đúng chỗ trong phụ lục
+\usepackage{capt-of} % \captionof bên trong strip
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{xcolor}
@@ -76,10 +77,8 @@ Mã nguồn: \repo}
 \bibliographystyle{IEEEtran}
 \bibliography{references,refs-xai,refs-vnmmkg}
 
-% Phụ lục đặt sau tài liệu tham khảo, sang trang mới để bảng và hình không chen vào danh mục.
+% Phụ lục đặt sau tài liệu tham khảo, sang trang mới.
 \clearpage
-\onecolumn
-\raggedbottom
 \input{sections/10-appendix-vnmmkg}
 
 \end{document}
