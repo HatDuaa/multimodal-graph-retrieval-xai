@@ -1,0 +1,297 @@
+% Phụ lục: chi tiết MMKG tiếng Việt (Khang).
+% Nguồn số liệu: vietnamese-mmkg/{entities,triples,images,queries_auto}.jsonl, queries_hand.json, DATA_CARD.md,
+% experiments/level3/vnmmkg/xlmr_h14/{a0_metrics,a0_explanations}.json. Điểm đồ thị ở Bảng tab:app-walk tính lại
+% bằng EntityLinker + MkgwGraphScorer của scripts/eval_vnmmkg_transfer.py (load_kg), không cần encoder.
+\appendices
+\section{Chi tiết MMKG tiếng Việt}\label{app:vnmmkg}
+
+Phụ lục này bổ sung cho mục~\ref{sec:vnmmkg}: quy trình dựng bộ dữ liệu, thống kê đầy đủ, vài mẫu dữ liệu thật và
+một ví dụ chạy mô hình chuyển giao (kênh đếm cạnh KG với encoder XLM-R H/14) trên một câu, từng bước một.
+
+\subsection{Quy trình dựng}
+
+Hình~\ref{fig:app-pipeline} tóm tắt các bước của \texttt{python -m src.data.build\_vnmmkg}. Mọi lời gọi mạng
+(Wikidata, Wikipedia, Commons) được cache trong \file{data/raw/vnmmkg/}, nên chạy lại từ cache cho ra đúng các file
+đã commit. Hai bước có người duyệt (ảnh và triple) lưu quyết định trong \file{review_images.json} và
+\file{review_triples.json}.
+
+\begin{figure*}[t]
+\centering
+\footnotesize
+\begin{tikzpicture}[
+  box/.style={draw=cGray, rounded corners=2pt, align=center, text width=2.85cm, minimum height=1.35cm,
+    inner sep=3pt, fill=white},
+  hum/.style={box, draw=cTri, very thick},
+  arr/.style={-{Stealth[length=2mm]}, cGray, thick},
+  node distance=0.42cm]
+\node[box] (sparql) {\textbf{Wikidata SPARQL}\\ \texttt{P17}=Việt Nam và có \texttt{P1435} hoặc thuộc 10 lớp công
+  trình\\ 339 ứng viên};
+\node[box, right=of sparql] (valid) {\textbf{Lọc}\\ có nhãn vi, bài viwiki, Commons category; bỏ hiện vật di
+  động\\ 133 hợp lệ};
+\node[box, right=of valid] (top) {\textbf{Xếp theo sitelink}\\ lấy 110 ứng viên đầu để duyệt ảnh};
+\node[hum, right=of top] (img) {\textbf{Duyệt ảnh (tay)}\\ $\le$12 ứng viên/di tích; giữ 331, bỏ 541, quá
+  hạn mức 144};
+\node[box, right=of img] (lm) {\textbf{75 di tích}\\ 3--5 ảnh mỗi di tích; 35 di tích bị loại vì còn
+  $<$3 ảnh};
+\node[box, below=0.7cm of lm] (ctx) {\textbf{75 thực thể ngữ cảnh}\\ thêm theo bậc tới tổng 150 (bỏ 51 thực thể
+  do giới hạn)};
+\node[box, left=of ctx] (tri) {\textbf{Đề xuất triple}\\ Wikidata truthy, infobox viwiki (3 trường), 2 quy tắc
+  (tỉnh, thời kỳ)};
+\node[hum, left=of tri] (rev) {\textbf{Duyệt triple (tay)}\\ 107 triple infobox và suy diễn; bỏ 1};
+\node[box, left=of rev] (kg) {\textbf{KG}: 325 triple, 13 quan hệ\\ Wikidata 257, infobox 26, suy diễn 42};
+\node[box, left=of kg] (q) {\textbf{Truy vấn}\\ 197 tự động (câu đầu viwiki, che tên); 30 soạn tay, khoá
+  trước khi chạy};
+\draw[arr] (sparql) -- (valid);
+\draw[arr] (valid) -- (top);
+\draw[arr] (top) -- (img);
+\draw[arr] (img) -- (lm);
+\draw[arr] (lm) -- (ctx);
+\draw[arr] (ctx) -- (tri);
+\draw[arr] (tri) -- (rev);
+\draw[arr] (rev) -- (kg);
+\draw[arr] (kg) -- (q);
+\end{tikzpicture}
+\caption{Quy trình dựng MMKG tiếng Việt. Viền đỏ: bước duyệt tay. Số liệu lấy từ thống kê của bản build
+(\texttt{DATA\_CARD.md}, mục 7).}
+\label{fig:app-pipeline}
+\end{figure*}
+
+\subsection{Thống kê}
+
+Bảng~\ref{tab:app-entities} chia 150 thực thể theo loại; Bảng~\ref{tab:app-relations} chia 325 triple theo quan
+hệ và nguồn. 271 triple nối một di tích với một thực thể ngữ cảnh, 47 triple nối hai thực thể ngữ cảnh (ví dụ
+Phật giáo \texttt{P138} Phật), 7 triple nối hai di tích (ví dụ Quần thể di tích Cố đô Huế \texttt{P527} Lăng
+Khải Định). Mỗi di tích có trung bình 3,8 cạnh (trung vị 3, ít nhất 1, nhiều nhất 17 ở Quần thể di tích Cố đô
+Huế); 7 di tích không có cạnh \texttt{P31} nên không được cộng điểm khi câu chỉ nhắc loại công trình. 9 thực thể
+ngữ cảnh không có nhãn tiếng Việt (ví dụ ``Ramsar site'', ``Gothic Revival''), nên linker không bao giờ nối được
+chúng.
+
+\begin{table}[t]
+\centering
+\caption{150 thực thể theo loại.}
+\label{tab:app-entities}
+\footnotesize
+\begin{tabular}{@{}p{1.9cm}rp{4.9cm}@{}}
+\toprule
+Loại & Số & Ví dụ \\
+\midrule
+Di tích & 75 & Chùa Một Cột, Nhà thờ Đức Bà Sài Gòn, Vịnh Hạ Long \\
+Lớp & 17 & chùa, đền, nhà thờ Kitô giáo, nhà thờ chính tòa, lăng, tháp \\
+Tỉnh, thành & 13 & Hà Nội, Thành phố Hồ Chí Minh, Huế, Khánh Hòa \\
+Người & 7 & Lý Thái Tông, Thích Nhất Hạnh, Tự Đức \\
+Tôn giáo & 5 & Phật giáo, Công giáo, đạo Cao Đài \\
+Đối tượng thờ & 5 & Maria, Phật, Thánh Giuse \\
+Danh hiệu & 5 & di sản thế giới, Bảo vật quốc gia của Việt Nam \\
+Thời kỳ & 4 & nhà Lý, nhà Lê trung hưng, nhà Nguyễn, Pháp thuộc \\
+Phong cách & 2 & Gothic Revival, Romanesque Revival \\
+Khác & 17 & Hoàng thành Huế, Trung Bộ, Cột cờ Hà Nội \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{vietnamese-mmkg/entities.jsonl}, trường \texttt{category}.}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{325 triple theo quan hệ và nguồn (WD: Wikidata, IB: infobox, SD: suy diễn).}
+\label{tab:app-relations}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Quan hệ & Nghĩa & WD & IB & SD & Tổng \\
+\midrule
+\texttt{P31} & là một (lớp) & 86 & & & 86 \\
+\texttt{P140} & tôn giáo & 40 & 17 & & 57 \\
+\texttt{P131} & thuộc đơn vị hành chính & 29 & & 22 & 51 \\
+\texttt{P1435} & danh hiệu di sản & 36 & & & 36 \\
+\texttt{P527} & gồm có & 22 & & & 22 \\
+\texttt{P2348} & thời kỳ & 1 & & 20 & 21 \\
+\texttt{P361} & là một phần của & 20 & & & 20 \\
+\texttt{P149} & phong cách kiến trúc & 9 & & & 9 \\
+\texttt{P112} & người sáng lập & & 7 & & 7 \\
+\texttt{P825} & thờ & 5 & 2 & & 7 \\
+\texttt{P138} & đặt tên theo & 4 & & & 4 \\
+\texttt{P276} & vị trí & 4 & & & 4 \\
+\texttt{P186} & vật liệu & 1 & & & 1 \\
+\midrule
+Tổng & & 257 & 26 & 42 & 325 \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{vietnamese-mmkg/triples.jsonl}, trường \texttt{r} và \texttt{source}.}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Ảnh và truy vấn.}
+\label{tab:app-images-queries}
+\footnotesize
+\begin{tabular}{@{}p{4.6cm}r@{}}
+\toprule
+Thành phần & Số \\
+\midrule
+Ảnh đã duyệt & 331 \\
+\quad di tích có 5 / 4 / 3 ảnh & 45 / 16 / 14 \\
+\quad CC BY-SA / CC BY / Public Domain / CC0 & 163 / 83 / 57 / 28 \\
+Truy vấn tự động & 197 \\
+\quad di tích có 3 / 2 / 1 câu & 53 / 16 / 6 \\
+\quad số từ (trung bình; ít nhất -- nhiều nhất) & 28,9; 7--90 \\
+Truy vấn soạn tay (trực tiếp / gián tiếp) & 12 / 18 \\
+\quad số từ (trung bình; ít nhất -- nhiều nhất) & 14,8; 7--30 \\
+\quad câu gián tiếp có 1 / 2 / 3 / 4 đáp án & 15 / 1 / 1 / 1 \\
+Chia A1 (val / test): di tích & 38 / 37 \\
+\quad ảnh; câu tự động & 170 / 161; 94 / 103 \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{vietnamese-mmkg/images.jsonl}, \file{queries_auto.jsonl}, \file{queries_hand.json},
+\file{data/splits/vnmmkg_val.json}, \file{vnmmkg_test.json}.}
+\end{table}
+
+\subsection{Mẫu dữ liệu}
+
+Hình~\ref{fig:app-samples} là bốn ảnh trong bộ, mỗi ảnh kèm các triple của di tích đó. Có thể thấy phần lớn
+triple (tỉnh, thời kỳ, người sáng lập, danh hiệu) là điều không nhìn ra từ ảnh; đây là lý do kênh KG giúp được ở
+câu gián tiếp. Bảng~\ref{tab:app-records} là một bản ghi thật của mỗi file, cùng lấy theo Chùa Một Cột.
+
+\begin{figure*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}cccc@{}}
+\includegraphics[height=2.9cm]{vnmmkg/69.jpg} &
+\includegraphics[height=2.9cm]{vnmmkg/41.jpg} &
+\includegraphics[height=2.9cm]{vnmmkg/55.jpg} &
+\includegraphics[height=2.9cm]{vnmmkg/122.jpg} \\[2pt]
+\parbox[t]{4.1cm}{\textbf{(a) Chùa Một Cột} (ảnh 69)\\
+\texttt{P31} chùa; \texttt{P131} Hà Nội; \texttt{P140} Phật giáo; \texttt{P2348} nhà Lý (SD, năm 1049 trong
+infobox); \texttt{P112} Lý Thái Tông (IB).} &
+\parbox[t]{4.1cm}{\textbf{(b) Nhà thờ Đức Bà Sài Gòn} (ảnh 41)\\
+\texttt{P31} nhà thờ chính tòa, tiểu vương cung thánh đường; \texttt{P131} TP.~Hồ Chí Minh; \texttt{P140} Công
+giáo; \texttt{P149} Romanesque Revival; \texttt{P2348} nhà Nguyễn (SD); \texttt{P825} Maria.} &
+\parbox[t]{4.1cm}{\textbf{(c) Tháp Po Nagar} (ảnh 55)\\
+\texttt{P31} đền; \texttt{P131} Khánh Hòa (SD). Chỉ có 2 triple: ít cạnh thì kênh KG ít giúp được.} &
+\parbox[t]{4.1cm}{\textbf{(d) Lăng Khải Định} (ảnh 122)\\
+\texttt{P31} lăng, tượng đài; \texttt{P131} Thừa Thiên - Huế (SD, tỉnh trước sáp nhập); \texttt{P1435} part of
+UNESCO World Heritage Site; \texttt{P2348} Pháp thuộc (SD); \texttt{P361} Hoàng thành Huế.} \\
+\end{tabular}
+\caption{Bốn ảnh mẫu và triple của di tích tương ứng (IB: từ infobox, SD: suy diễn, còn lại từ Wikidata). Ảnh
+Wikimedia Commons, đã thu nhỏ: (a) Cookie Nguyen, CC BY-SA 4.0; (b) Balon Greyjoy, CC0; (c) Ms Sarah Welch, CC0;
+(d) dronepicr, CC BY 2.0.}
+\label{fig:app-samples}
+\end{figure*}
+
+\begin{table*}[t]
+\centering
+\caption{Một bản ghi của mỗi file dữ liệu (rút gọn trường), cùng một di tích.}
+\label{tab:app-records}
+\footnotesize
+\begin{tabular}{@{}p{2.7cm}p{14.3cm}@{}}
+\toprule
+File & Nội dung \\
+\midrule
+\file{entities.jsonl} & \texttt{qid} Q1186292, \texttt{kind} landmark, \texttt{label\_vi} ``Chùa Một Cột'',
+\texttt{aliases\_vi} [``Chùa Hoa Sen'', ``Chùa Diên Hựu'', ``Diên Hựu'', ``Liên Hoa Đài'', ``Diên Hựu tự''],
+\texttt{desc\_vi} ``công trình Phật giáo tại Hà Nội, Việt Nam'', \texttt{viwiki\_revid} 75560666,
+\texttt{sitelinks} 17. \\
+\file{triples.jsonl} & \texttt{h} Q1186292, \texttt{r} P2348, \texttt{t} Q878309 (nhà Lý), \texttt{source}
+derived, \texttt{evidence} ``rule:period year 1049 from Thông tin chùa|founded=1049'', \texttt{reviewed} true. \\
+\file{images.jsonl} & \texttt{image\_id} 69, \texttt{qid} Q1186292, \texttt{file\_title} ``File:Buddhist flags at
+the One Piller Pagoda in 2016 (3).jpg'', 640$\times$360, \texttt{license} CC BY-SA 4.0, \texttt{artist} Cookie
+Nguyen, \texttt{sha256} c1555ccf\ldots \\
+\file{queries_auto.jsonl} & Câu gốc viwiki: ``\underline{Chùa Một Cột} có tên ban đầu là \underline{Liên Hoa
+Đài} (\ldots) tức là Đài \underline{Hoa Sen} với lối kiến trúc độc đáo: một điện thờ đặt trên \underline{một
+cột} trụ duy nhất.'' $\rightarrow$ truy vấn \texttt{Q1186292\_auto\_0}: ``có tên ban đầu là tức là Đài với lối
+kiến trúc độc đáo: một điện thờ đặt trên trụ duy nhất.'' (phần gạch chân bị che; phần trong ngoặc bị bỏ). Cụm
+``một cột'' bị che vì trùng tên sau khi bỏ tiền tố ``Chùa'', đúng hạn chế đã ghi trong data card. \\
+\file{queries_hand.json} & \texttt{hand\_indirect\_01}, nhóm gián tiếp: ``Ngôi chùa ở Hà Nội được xây dựng dưới
+thời nhà Lý''; \texttt{pattern} [(P31, chùa), (P131, Hà Nội), (P2348, nhà Lý)]; đáp án tính từ pattern trên
+\file{triples.jsonl}: [Q1186292]. Câu trực tiếp \texttt{hand\_direct\_01} cùng đáp án: ``Ngôi điện gỗ nhỏ mái
+ngói cong đặt trên một trụ đá duy nhất giữa hồ nước vuông, có cầu thang dẫn lên''. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Ví dụ suy luận từng bước}\label{app:vn-walk}
+
+Mô hình tốt nhất của cấp 2 (\texttt{kg\_triple}) chạy trên bộ tiếng Việt theo giao thức A0, không học gì thêm.
+Với câu \texttt{hand\_indirect\_01} ``Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý'', các bước là:
+
+\begin{enumerate}
+\item \textbf{Truy hồi bằng encoder.} Câu và 331 ảnh được mã hoá bằng XLM-R large + ViT-H/14 (đóng băng); xếp ảnh
+  theo cosine, giữ top-50.
+\item \textbf{Liên kết thực thể.} \texttt{EntityLinker} đưa câu về chữ thường, tách âm tiết, so khớp chính xác
+  với nhãn và alias tiếng Việt (tối đa 12 âm tiết). Ba thực thể được nối: ``hà nội'' $\rightarrow$ Q1858 (Hà
+  Nội), ``nhà lý'' $\rightarrow$ Q878309 (nhà Lý), ``chùa'' $\rightarrow$ Q5393308 (lớp chùa).
+\item \textbf{Đếm cạnh.} Với mỗi ảnh trong top-50, điểm đồ thị là số cạnh KG trực tiếp giữa di tích của ảnh và
+  ba thực thể trên (Bảng~\ref{tab:app-walk}, Hình~\ref{fig:app-walk}).
+\item \textbf{Kết hợp.} Điểm cuối $\alpha\, z(\mathrm{CLIP}) + (1-\alpha)\, z(\text{đồ thị})$ với $\alpha=0$ lấy
+  từ MKG-W val, nên thứ tự do số cạnh quyết định; ảnh cùng số cạnh giữ thứ tự CLIP.
+\item \textbf{Kết quả và giải thích.} Ảnh hạng 1 là ảnh 69 của Chùa Một Cột, đúng đáp án. Giải thích in ra là chính
+  ba cạnh đã đếm: \texttt{P131}~$\rightarrow$~Hà Nội, \texttt{P2348}~$\rightarrow$~nhà Lý,
+  \texttt{P31}~$\rightarrow$~chùa.
+\end{enumerate}
+
+\begin{table}[t]
+\centering
+\caption{Điểm đồ thị của câu ``Ngôi chùa ở Hà Nội được xây dựng dưới thời nhà Lý'' trên 75 di tích.}
+\label{tab:app-walk}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcp{3.6cm}@{}}
+\toprule
+Di tích & Cạnh & Cạnh khớp \\
+\midrule
+\textbf{Chùa Một Cột} (đáp án) & \textbf{3} & \texttt{P131} Hà Nội, \texttt{P2348} nhà Lý, \texttt{P31} chùa \\
+Chùa Trấn Quốc & 2 & \texttt{P131} Hà Nội, \texttt{P31} chùa \\
+Đền Lý Bát Đế & 2 & \texttt{P2348} nhà Lý, \texttt{P31} chùa \\
+18 di tích khác & 1 & \texttt{P131} Hà Nội hoặc \texttt{P31} chùa \\
+54 di tích còn lại & 0 & \\
+\bottomrule
+\end{tabular}
+\tabsrc{linker và hàm đếm cạnh của \texttt{eval\_vnmmkg\_transfer.py}, tính trên mọi di tích; khi chạy thật chỉ
+ảnh trong top-50 CLIP được chấm. Ảnh hạng 1: \texttt{a0\_explanations.json}.}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\footnotesize
+\begin{tikzpicture}[
+  lm/.style={draw=cClip, very thick, rounded corners=2pt, fill=cClip!8, align=center, inner sep=3pt},
+  ent/.style={draw=cTri, thick, rounded corners=2pt, fill=cTri!10, align=center, inner sep=3pt},
+  oth/.style={draw=cGray!60, rounded corners=2pt, text=cGray, align=center, inner sep=2pt},
+  hit/.style={cTri, very thick},
+  miss/.style={cGray!60},
+  lab/.style={font=\scriptsize\ttfamily, fill=white, inner sep=1pt}]
+\node[ent] (hn) at (0,0) {Hà Nội};
+\node[ent] (ly) at (2.6,0) {nhà Lý};
+\node[ent] (chua) at (5.2,0) {chùa};
+\node[lm] (mc) at (2.6,-2.6) {\textbf{Chùa Một Cột}\\ 3 cạnh};
+\node[lm, draw=cGray, fill=white] (tq) at (0,-2.6) {Chùa Trấn Quốc\\ 2 cạnh};
+\node[lm, draw=cGray, fill=white] (lbd) at (5.2,-2.6) {Đền Lý Bát Đế\\ 2 cạnh};
+\node[oth] (pg) at (1.4,-3.9) {Phật giáo};
+\node[oth] (ltt) at (3.8,-3.9) {Lý Thái Tông};
+\draw[hit, opacity=.45] (tq) -- (hn);
+\draw[hit, opacity=.45] (tq) -- (chua);
+\draw[hit, opacity=.45] (lbd) -- (chua);
+\draw[hit, opacity=.45] (lbd) -- (ly);
+\draw[hit] (mc) -- node[lab, pos=.62] {P131} (hn);
+\draw[hit] (mc) -- node[lab, pos=.5] {P2348} (ly);
+\draw[hit] (mc) -- node[lab, pos=.62] {P31} (chua);
+\draw[miss] (mc) -- node[lab, text=cGray] {P140} (pg);
+\draw[miss] (mc) -- node[lab, text=cGray] {P112} (ltt);
+\node[font=\scriptsize, text=cGray, align=center] at (2.6,0.6) {thực thể linker nối được từ câu};
+\end{tikzpicture}
+\caption{Đồ thị con quanh ví dụ. Đỏ: cạnh tới thực thể được nhắc trong câu (được đếm; cạnh nhạt là của hai ứng viên
+kế tiếp); xám: cạnh có trong KG nhưng câu không nhắc. Chùa Một Cột hơn hai ứng viên kế tiếp một cạnh, đúng là cạnh không nhìn thấy trong ảnh.}
+\label{fig:app-walk}
+\end{figure}
+
+\textbf{Một câu trực tiếp bị kênh KG làm sai.} Câu \texttt{hand\_direct\_02} ``Nhà thờ gạch đỏ có hai tháp chuông
+nhọn cân xứng hai bên mặt tiền, ở giữa có cửa sổ hoa hồng tròn'' có đáp án Nhà thờ Đức Bà Sài Gòn. Linker nối
+``nhà thờ'' vào lớp Q16970 và ``tháp'' vào lớp Q199451. Đáp án chỉ có \texttt{P31} tới lớp con nhà thờ chính tòa,
+nên không được cạnh nào; ảnh hạng 1 là của Nhà thờ Tân Định (một nhà thờ thường, được 1 cạnh \texttt{P31} $\rightarrow$
+nhà thờ Kitô giáo). Ở $\alpha=0$, một cạnh này thắng mọi chi tiết hình ảnh mà encoder bắt được. Đây là nguyên nhân
+nhóm trực tiếp giảm R@1 từ 75,00 xuống 33,33 ở Bảng~\ref{tab:vn-a0}.
+
+\textbf{Chạy lại.} \texttt{python scripts/eval\_vnmmkg\_transfer.py -{}-encoder xlmr\_h14} ghi
+\file{a0_metrics.json}, \file{a1_metrics.json} và \file{a0_explanations.json} vào
+\file{experiments/level3/vnmmkg/xlmr_h14/}; encoder đóng băng nên kết quả tất định.
