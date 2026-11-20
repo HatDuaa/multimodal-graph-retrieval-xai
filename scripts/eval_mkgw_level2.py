@@ -152,7 +152,7 @@ class Data:
         self.pool = np.stack([img_feats[rows[i]] for i in self.pool_ids])
 
         raw = REPO_ROOT / "data" / "raw" / "mkgw"
-        cache = [json.loads(l) for l in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
+        cache = [json.loads(line) for line in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
         self.id2qid = {r["id"]: r["qid"] for r in cache}
         self.nid_of = {q: i for i, q in self.id2qid.items()}
         self.label = {r["qid"]: r.get("label_en") for r in cache}
@@ -212,7 +212,7 @@ def main() -> None:
     texts, q_feats, golds = split_queries(data, cfg)
     clip, ranked = data.topk(q_feats)
     linked = [data.linker.link(t) for t in texts]
-    has_link = np.array([len(l) > 0 for l in linked])
+    has_link = np.array([len(links) > 0 for links in linked])
     groups = {"linked": has_link, "no_link": ~has_link}
 
     def ev(rank_lists, mask=None):

@@ -53,8 +53,8 @@ def encode(encoder: str, image_paths: list[Path], texts: list[str]) -> tuple[np.
 
 
 def load_kg():
-    entities = [json.loads(l) for l in (VN / "entities.jsonl").read_text(encoding="utf-8").splitlines()]
-    triples = [json.loads(l) for l in (VN / "triples.jsonl").read_text(encoding="utf-8").splitlines()]
+    entities = [json.loads(line) for line in (VN / "entities.jsonl").read_text(encoding="utf-8").splitlines()]
+    triples = [json.loads(line) for line in (VN / "triples.jsonl").read_text(encoding="utf-8").splitlines()]
     names = {e["qid"]: [e.get("label_vi")] + list(e.get("aliases_vi") or []) for e in entities}
     linker = EntityLinker(names, max_ngram=12)
     adj = [{"h_qid": t["h"], "t_qid": t["t"], "r_pid": t["r"], "kgc_split": "train"} for t in triples]

@@ -23,7 +23,7 @@ from src.utils.config import REPO_ROOT, load_config  # noqa: E402
 def main() -> None:
     cfg = load_config()
     raw = REPO_ROOT / "data" / "raw" / "mkgw"
-    cache = [json.loads(l) for l in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
+    cache = [json.loads(line) for line in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
     id2qid = {r["id"]: r["qid"] for r in cache}
     rels = json.loads((raw / "wikidata_relations.json").read_text(encoding="utf-8"))
     id2pid = {v["id"]: pid for pid, v in rels.items()}

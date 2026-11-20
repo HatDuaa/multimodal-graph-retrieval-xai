@@ -72,7 +72,8 @@ def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Voc
             continue
         by_id[obj["object_id"]] = len(objects)
         item = {"id": len(objects), "name": name}
-        if include_source_ids: item["source_object_id"] = int(obj["object_id"])
+        if include_source_ids:
+            item["source_object_id"] = int(obj["object_id"])
         objects.append(item)
     relations = []
     seen = set()
@@ -90,7 +91,8 @@ def build_scene_graph(objects_entry: dict, relationships_entry: dict, vocab: Voc
                     continue
                 by_id[oid] = len(objects)
                 item = {"id": len(objects), "name": name}
-                if include_source_ids: item["source_object_id"] = int(oid)
+                if include_source_ids:
+                    item["source_object_id"] = int(oid)
                 objects.append(item)
             endpoints.append(by_id[oid])
         if None in endpoints:

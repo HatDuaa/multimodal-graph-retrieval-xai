@@ -73,7 +73,7 @@ def main() -> None:
 
     # graph channels
     raw = REPO_ROOT / "data" / "raw" / "mkgw"
-    cache_rows = [json.loads(l) for l in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
+    cache_rows = [json.loads(line) for line in (raw / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()]
     id2qid = {r["id"]: r["qid"] for r in cache_rows}
     rels = json.loads((raw / "wikidata_relations.json").read_text(encoding="utf-8"))
     linker = EntityLinker.from_cache(raw / "wikidata_entities.jsonl", lang=cfg["mkgw"]["query_lang"])

@@ -21,7 +21,7 @@ def main() -> None:
     native_repo = Path(cfg["mkgw"]["native_repo"]).expanduser()
     lines = (native_repo / "benchmarks" / "MKG-W" / "relation2id.txt").read_text().splitlines()
     n = int(lines[0])
-    pairs = [(l.rsplit(" ", 1)[0].rsplit("/", 1)[-1], int(l.rsplit(" ", 1)[1])) for l in lines[1 : n + 1]]
+    pairs = [(line.rsplit(" ", 1)[0].rsplit("/", 1)[-1], int(line.rsplit(" ", 1)[1])) for line in lines[1 : n + 1]]
 
     values = " ".join(f"wd:{pid}" for pid, _ in pairs)
     query = ('SELECT ?item ?label WHERE { VALUES ?item { %s } '
