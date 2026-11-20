@@ -1,4 +1,9 @@
-"""Build additive attribute graph caches for train/validation (never test)."""
+"""Build additive attribute graph caches.
+
+Image graphs are built for every image of train, val and test (test images are gallery entries; their graphs
+already exist in vg_coco_scene_graphs.jsonl). Query graphs are built only for train and val captions: test captions
+are never parsed.
+"""
 import json
 import sys
 from pathlib import Path
@@ -52,7 +57,7 @@ def main():
                            for s in ('train', 'val', 'test') for im in all_images[s]), encoding='utf-8')
     # Verify structure against existing graphs for train/val.
     old_path = resolve(cfg, 'graphs') / 'vg_coco_scene_graphs.jsonl'
-    old = {json.loads(x)['image_id']: json.loads(x) for x in old_path.read_text().splitlines()}
+    old = {g['image_id']: g for g in map(json.loads, old_path.read_text().splitlines())}
     for iid, g in graphs.items():
         assert [{k: o[k] for k in ('id', 'name')} for o in g['objects']] == old[iid]['objects']
         assert g['relations'] == old[iid]['relations']

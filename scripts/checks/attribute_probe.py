@@ -11,11 +11,8 @@ from scripts.checks.three_channel_probe import candidate_pools, fuse_rows, ranke
 from src.features.extract_clip import ClipEncoder, load_features
 from src.graph.parse_query import parse_many
 from src.graph.scene_graph import Vocab, iter_scene_graphs, load_raw, normalize_label
-from src.graph.soft_match import channel_scores, instance_parts, query_instance_parts
+from src.graph.soft_match import PRONOUNS, channel_scores, instance_parts, query_instance_parts
 from src.utils.config import load_config, resolve
-
-PRONOUNS = {'that', 'it', 'they', 'them', 'he', 'she', 'this', 'these', 'those', 'there', 'who', 'which', 'what',
-            'one', 'other', 'each', 'some', 'something', 'someone'}
 
 
 def attr_text(attrs, name, cap=None):
@@ -26,18 +23,14 @@ def attr_text(attrs, name, cap=None):
     return (" ".join(values) + " " + normalize_label(name)).strip()
 
 
-def object_attributes(objs, object_id):
-    return next((x.get('attributes', []) for x in objs if x['id'] == object_id), [])
-
-
-def variant_parts(graph, query=False, variant='A_none'):
+def variant_parts(graph, query, variant):
+    """Node and triple texts of the B, C and D variants (A_none uses query_instance_parts / instance_parts)."""
     objs = graph.get('objects', [])
     names = {o['id']: o['name'] for o in objs}
+    attributes = {o['id']: o.get('attributes', []) for o in objs}
 
     def obj_text(o):
         attrs = o.get('attributes', [])
-        if variant == 'A_none':
-            return [o['name']]
         if variant in ('B_concat', 'D_parts_triples'):
             return [attr_text(attrs, o['name'], 2) if (attrs or query) else o['name']]
         if query:
@@ -46,7 +39,7 @@ def variant_parts(graph, query=False, variant='A_none'):
 
     nodes = []
     for o in objs:
-        if query and o['name'] in PRONOUNS:
+        if query and (not o['name'] or o['name'] in PRONOUNS):
             continue
         nodes.extend(obj_text(o))
     triples = []
@@ -57,12 +50,15 @@ def variant_parts(graph, query=False, variant='A_none'):
         pred = r['predicate'].lower() if query else r['predicate']
         triples.append(f'{s} {pred} {o}')
         if variant == 'D_parts_triples':
-            sa, oa = object_attributes(objs, r['subject']), object_attributes(objs, r['object'])
+            sa, oa = attributes[r['subject']], attributes[r['object']]
             if query:
                 triples[-1] = f'{attr_text(sa, s) if sa else s} {pred} {attr_text(oa, o) if oa else o}'
             else:
-                for a in (sa + oa)[:4]:
-                    triples.append(f'{attr_text([a], s)} {pred} {o}' if a in sa else f'{s} {pred} {attr_text([a], o)}')
+                # at most 4 attribute triples, subject attributes first; the side comes from the list, not the value,
+                # so an attribute both ends share gives one triple for each end
+                sides = [(a, True) for a in sa] + [(a, False) for a in oa]
+                for a, on_subject in sides[:4]:
+                    triples.append(f'{attr_text([a], s)} {pred} {o}' if on_subject else f'{s} {pred} {attr_text([a], o)}')
     return nodes, (list(dict.fromkeys(triples)) if query else triples)
 
 
@@ -111,14 +107,16 @@ def main():
     assert ranked == recomputed, 'top50 mismatch'
     golds = [gold[i] for i in ids]
     parsed = parse_many([text[i] for i in ids], args.workers, True)
-    raw = load_raw(cfg)
-    vocab = Vocab.from_config(cfg)
-    graphs = {g['image_id']: g for g in iter_scene_graphs(raw, vocab, pool, False)}
-    # Join image attributes by original object id is unavailable after packaging; use normalized empty fallback
-    # and query-only variants remain measured.
+    # Image graphs with attributes joined by Visual Genome object id (scripts/build_attribute_data.py). The file
+    # also holds train and test graphs; only the val pool is kept. Without it, image graphs carry no attributes and
+    # only the query side of each variant changes.
     attr_file = resolve(cfg, 'graphs') / 'vg_coco_scene_graphs_attr.jsonl'
     if attr_file.exists():
-        graphs = {json.loads(line)['image_id']: json.loads(line) for line in attr_file.read_text().splitlines()}
+        wanted = set(pool)
+        graphs = {g['image_id']: g for g in map(json.loads, attr_file.read_text().splitlines())
+                  if g['image_id'] in wanted}
+    else:
+        graphs = {g['image_id']: g for g in iter_scene_graphs(load_raw(cfg), Vocab.from_config(cfg), pool, False)}
 
     report = {'split': 'val', 'fixed': {'alpha': .6, 'beta': .7, 'temperature': .05}, 'results': {},
               'coverage': {'image_graphs_train_val_only': True}, 'runtime_seconds': None}
@@ -141,7 +139,6 @@ def main():
                            for k, p in enumerate(parsed) if any(o.get('attributes') for o in p.get('objects', []))]
         report['results'][v] = {'fixed': fixed, 'best': best,
                                 'distinct_texts': len(set(node_texts) | set(triple_texts)),
-                                'vector_rows': len(set(node_texts) | set(triple_texts)),
                                 'query_adjective_r1': float(np.mean(with_adjectives))}
         if v == 'A_none':
             save_reference(resolve(cfg, 'experiments') / 'checks/attribute_probe_reference_scores.npz', ids, ranked,

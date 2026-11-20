@@ -1,6 +1,8 @@
 # Attribute probe (validation only)
 
-Visual Genome `attributes.json.zip` đã được tải bằng `scripts/download_data.py` (83 280 561 bytes; SHA-256 `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7`). Các graph thuộc tính được tạo cho train và val; test không được đọc hay chấm điểm.
+Visual Genome `attributes.json.zip` đã được tải bằng `scripts/download_data.py` (83 280 561 bytes; SHA-256 `7f71c80fb5396c67a3022e0748de16a3253b7fe5759e151215e0f1a3de3f38c7`). Graph thuộc tính của ảnh được tạo cho cả train, val và test (ảnh test là ảnh trong kho, graph của chúng đã có sẵn trong `vg_coco_scene_graphs.jsonl`).
+Query graph chỉ được tạo cho câu train và val; câu test không được parse hay chấm điểm.
+Probe chỉ dùng graph của ảnh val.
 
 Coverage trên 51 208 ảnh (1 368 247 object instances; thuộc tính được dựng từ annotation, không chấm điểm test): 43,56% instance có ít nhất một thuộc tính; trung bình 0,626 thuộc tính/object. Các thuộc tính thường gặp nhất: white, black, blue, green, red, brown, yellow, small, large, gray, wooden, metal, silver, grey, tall, long, dark, pink, clear, standing, here, round, tan, wood, purple, open, short, glass, big. Một số nhãn nhiễu như `here` và `standing` vẫn còn trong nguồn.
 
@@ -14,6 +16,9 @@ Trên query train (234 854): 19,32% object có amod và 49,57% query có ít nh�
 | D_parts_triples | 0.425186 | 0.429418 (0.6,0.4) | 0.698956 | 0.702624 | 0.803630 | 0.809743 | 0.550995 | 0.555399 |
 
 C_parts tăng R@1 ở best grid nhưng fixed setting chỉ là 0.438540, gain +0.003574, dưới ngưỡng adoption +0.005. Theo spec không adopt attributes; chạy các ablation `_r2` trên dữ liệu hiện tại. Giữ A_none làm đường dẫn tương thích. B_concat và D_parts_triples làm giảm R@1. Probe chưa chạy shuffled control riêng sau khi sửa cuối; đây là concern cần ghi rõ trước khi dùng kết quả trong báo cáo cuối.
+
+Ghi chú (PR #53): khi tạo bộ ba có thuộc tính cho ảnh, bản probe dùng để ra bảng trên gán một thuộc tính mà cả hai đầu cùng có (ví dụ `white` ở cả `dog` và `cat`) cho đầu chủ ngữ, nên sinh `white dog on cat` hai lần và không bao giờ sinh `dog on white cat`.
+Lỗi này chỉ ảnh hưởng dòng D_parts_triples; `scripts/checks/attribute_probe.py` đã được sửa, nhưng dòng D trong bảng chưa được chạy lại.
 
 Các file chính: `data/graphs/vg_coco_scene_graphs_attr.jsonl`, `data/processed/query_graphs_train_attr.json`, `data/processed/query_graphs_val_attr.json`, `scripts/build_attribute_data.py`, `scripts/checks/attribute_probe.py`, `experiments/checks/attribute_probe.json`, `experiments/checks/attribute_probe_reference_scores.npz`, `tests/test_attributes.py`.
 
