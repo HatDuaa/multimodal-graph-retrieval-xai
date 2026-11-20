@@ -76,7 +76,7 @@ nguyên từng byte các file kết quả cũ (\file{experiments/level2/val/READ
 \textbf{Các lần đọc test khác và một lần chạy lại độc lập.} (1) Khi kiểm tra code đánh giá,
 một lần chạy thử \texttt{--split test --hand} với embedding giả đã in ra số test của dòng đếm cạnh, kể cả trên bộ câu tự
 viết. Dòng này không có tham số nào ngoài $\alpha$, và $\alpha$ đã chốt trên val; không có gì được chỉnh sau đó.
-(2) Ngày 18/11, Khang chạy lại độc lập toàn bộ cấp~2 trên molab: tự huấn luyện NativE 3 seed (MRR rmask \pmstd{36,89}{0,27},
+(2) Ngày 18/11, nhóm chạy lại độc lập toàn bộ cấp~2 trên molab: tự huấn luyện NativE 3 seed (MRR rmask \pmstd{36,89}{0,27},
 bản gốc 37,06), dùng đặc trưng CLIP gốc thay cho bản nhóm trích lại, tự chọn $\alpha,\beta$ trên val rồi chấm test một lần.
 Val lại chọn $\alpha = 0$, $\beta = 0$ ở cả 3 seed; dòng chính trên test cho đúng R@1 29,82, cosine NativE
 \pmstd{26,05}{0,51} và cạnh xáo trộn \pmstd{21,41}{0,11}, gần với Bảng~\ref{tab:l2-results}. CLIP thuần trên test là 25,00
