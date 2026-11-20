@@ -72,8 +72,8 @@ def main() -> None:
     cfg = load_config()
     images = json.loads((resolve(cfg, "splits") / "mkgw_val.json").read_text(encoding="utf-8"))["images"]
     raw = REPO_ROOT / "data" / "raw"
-    cache = {json.loads(l)["qid"]: json.loads(l)
-             for l in (raw / "mkgw" / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()}
+    cache = {json.loads(line)["qid"]: json.loads(line)
+             for line in (raw / "mkgw" / "wikidata_entities.jsonl").read_text(encoding="utf-8").splitlines()}
     paths = [raw / "images" / im["file_name"] for im in images]
     missing = [p.name for p in paths if not p.exists()]
     assert not missing, f"missing MKG-W images: {missing[:5]}"

@@ -1,6 +1,6 @@
 import json
 
-from src.data.vnmmkg_cache import load_entities
+from src.data.vnmmkg_cache import infobox_rows, load_entities, load_link_qids, load_viwiki
 
 
 def test_load_entities_follows_redirects(tmp_path):
@@ -14,8 +14,6 @@ def test_load_entities_follows_redirects(tmp_path):
     assert set(ents) == {"Q1", "Q9"}
     assert ents["Q1"]["claims"]["P31"][0]["value"] == "Q9"
 
-
-from src.data.vnmmkg_cache import infobox_rows, load_link_qids, load_viwiki
 
 
 def test_viwiki_loaders_and_infobox_rows(tmp_path):

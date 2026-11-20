@@ -132,7 +132,7 @@ def main() -> None:
         f"## MKG-W retrieval split (built {json.dumps(dict(seed=cfg['seed'], lang=lang))})\n",
         f"- Cache: {len(cache)} entities; usable (description + author image + non-empty masked query): {len(usable)}",
         f"- Dropped: {dropped}",
-        f"- Split sizes: " + ", ".join(f"{s} {len(r)}" for s, r in splits.items()),
+        "- Split sizes: " + ", ".join(f"{s} {len(r)}" for s, r in splits.items()),
         f"- KGC triples copied with their NativE split: {n_triples}",
         STATS_END,
     ]

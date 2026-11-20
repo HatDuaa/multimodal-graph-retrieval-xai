@@ -272,7 +272,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
     run_dir.mkdir(parents=True, exist_ok=True)
     decay, no_decay = [], []
     for name, parameter in model.named_parameters():
-        if name.startswith("weight_map") and not args.adaptive_weights: continue
+        if name.startswith("weight_map") and not args.adaptive_weights:
+            continue
         no_decay_names = ("log_tau", "log_temperature", "log_graph_temperature", "weight_bias", "dustbin_")
         (no_decay if name.startswith(no_decay_names) else decay).append(parameter)
     optimizer = torch.optim.AdamW([{"params": decay, "weight_decay": 1e-4}, {"params": no_decay, "weight_decay": 0}], lr=args.lr)
@@ -302,14 +303,17 @@ def train(args, store, run_dir: Path, device, cfg=None):
         metadata = {"args": vars(args), "config": cfg, "device": str(device),
                     "train_candidates_sha256": sha256(store.base / store.cfg["paths"]["processed"] / "candidates_train.npz"),
                     "val_candidates_sha256": sha256(store.base / store.cfg["paths"]["processed"] / "candidates_val.npz")}
-        try: metadata["git_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-        except Exception: metadata["git_commit"] = "unknown"
+        try:
+            metadata["git_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        except Exception:
+            metadata["git_commit"] = "unknown"
         (run_dir / "config.json").write_text(json.dumps(metadata, indent=2, default=str), encoding="utf-8")
     rows = list(rows_for(store, train_arrays, args.limit_train))
     for epoch in range(start_epoch, args.epochs + 1):
         if stale >= 2:
             break
-        started = time.time(); model.train()
+        started = time.time()
+        model.train()
         # Warm up graph parameters for epoch 1; gates open only after that epoch.
         model.set_epoch(epoch)
         # Only the fault reproduction uses the legacy order; all reported runs shuffle.
@@ -331,7 +335,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
                 (loss * (len(part) / len(batch))).backward()
                 del loss
             optimizer.step()
-        model.eval(); metrics = evaluate_val(model, store, val_arrays, device, args.eval_batch_size)
+        model.eval()
+        metrics = evaluate_val(model, store, val_arrays, device, args.eval_batch_size)
         gradient_norms = {}
         for name, parameter in model.named_parameters():
             if parameter.grad is not None:
@@ -343,7 +348,8 @@ def train(args, store, run_dir: Path, device, cfg=None):
                         "gpu_memory_peak_bytes": torch.cuda.max_memory_allocated() if torch.cuda.is_available() else 0,
                         "rss_peak_bytes": peak_rss_bytes()})
         last_metrics = metrics
-        with log.open("a", encoding="utf-8") as handle: handle.write(json.dumps(metrics) + "\n")
+        with log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(metrics) + "\n")
         print(json.dumps(metrics), flush=True)
         gc.collect()
         score = metrics["recall@1"]
@@ -379,9 +385,11 @@ def main() -> None:
         set_seed(args.seed)
         model = build_model(args, device, store)
         model.load_state_dict(torch.load(args.eval_only, map_location=device)["model"])
-        model.eval(); print(json.dumps(evaluate_val(model, store, store.candidates("val"), device, args.eval_batch_size)))
+        model.eval()
+        print(json.dumps(evaluate_val(model, store, store.candidates("val"), device, args.eval_batch_size)))
         return
     train(args, store, run_dir, device, cfg)
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

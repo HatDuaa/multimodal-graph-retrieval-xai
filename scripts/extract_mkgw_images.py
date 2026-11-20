@@ -26,7 +26,7 @@ from PIL import Image
 from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.utils.config import REPO_ROOT, load_config, resolve  # noqa: E402
+from src.utils.config import load_config, resolve  # noqa: E402
 
 Image.MAX_IMAGE_PIXELS = None      # some Commons scans are huge; we downscale anyway
 

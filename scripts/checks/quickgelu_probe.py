@@ -36,6 +36,10 @@ def validation_metrics(enc: ClipEncoder, cfg: dict) -> dict:
     return evaluate(ranked, [gold for _, gold in captions], ks=VG_KS)
 
 
+def recalls(d: dict) -> str:
+    return "/".join(f"{d['ours'][f'recall@{k}']:.2f}" for k in COCO_KS)
+
+
 def main() -> None:
     cfg = load_config()
     _, coco_paths, coco_ids, coco_caps = prepare_coco5k(cfg, download=False)
@@ -73,9 +77,8 @@ def main() -> None:
     print("model | warning | val R@1 | COCO t2i R@1/5/10 | COCO i2t R@1/5/10")
     for name, result in results.items():
         val = result["vg_coco_val"]
-        fmt = lambda d: "/".join(f"{d['ours'][f'recall@{k}']:.2f}" for k in COCO_KS)
         print(f"{name} | {result['quickgelu_warning']} | {100 * val['recall@1']:.2f} | "
-              f"{fmt(result['coco5k']['text_to_image'])} | {fmt(result['coco5k']['image_to_text'])}")
+              f"{recalls(result['coco5k']['text_to_image'])} | {recalls(result['coco5k']['image_to_text'])}")
     print("wrote", out)
 
 

@@ -1,9 +1,10 @@
 import hashlib
+import json
 
 import pytest
 
-from src.data.build_vnmmkg import (apply_triple_review, build_dataset, replace_stats_block, run_build,
-                                   scale_problems, select_images, split_landmarks)
+from src.data.build_vnmmkg import (apply_triple_review, build_dataset, replace_stats_block, resolve_hand_queries,
+                                   run_build, scale_problems, select_images, split_landmarks)
 from src.data.vnmmkg_text import contains_name, name_variants
 from tests.vnmmkg_fixtures import make_raw_cache
 
@@ -128,10 +129,6 @@ def test_build_refuses_missing_period_qid(tmp_path):
     with pytest.raises(ValueError, match="qid"):
         build_dataset(cfg_v, raw, out, seed=0)
 
-
-import json
-
-from src.data.build_vnmmkg import resolve_hand_queries
 
 
 def _hand(qid="h1", group="indirect", text="Ngôi chùa ở Hà Nội có người dựng", pattern=None, gold=None):
