@@ -1,0 +1,174 @@
+% =====================================================================
+% III-A: cấp độ 1. Ablation ở cuối (III-A5); kết quả test ở Mục IV-B.
+\subsection{Cấp độ 1: xếp lại bằng scene graph trên VG $\cap$ COCO}
+\label{sec:method-l1}
+
+\subsubsection{Dựng đồ thị}\label{sec:l1-graphs}
+\textbf{Đồ thị ảnh.} Mỗi ảnh có một scene graph riêng, lấy từ \texttt{objects.json} và \texttt{relationships.json} của
+Visual Genome~\cite{krishna2017vg} (VG). Nhãn giữ dạng mở, chỉ chuẩn hoá alias, không lọc về VG150 (bước kiểm tra độ phủ cho
+thấy lọc VG150 làm mất các nhãn hay gặp như \emph{water}, \emph{grass}, \emph{field}). Quan hệ có hướng; các quan hệ trùng
+cả ba thành phần được gộp. Không có cạnh giữa các ảnh, nên đồ thị không chứa cạnh suy ra từ thống kê toàn tập. Mỗi ảnh
+train và val có trung bình 26,7 node và 18,0 cạnh; 3,0\% ảnh không có cạnh nào.
+
+\textbf{Đồ thị câu.} Mô hình cấp độ~1 tách caption bằng SceneGraphParser~\cite{schuster2015sgparser} (gói
+\texttt{sng\_parser}): trung bình 3,06 vật thể và 1,65 quan hệ mỗi câu, và 14,2\% câu val không tách được quan hệ nào. Mô
+hình chính dùng FACTUAL-T5 large~\cite{li2023factual}, một parser seq2seq đã huấn luyện sẵn để sinh scene graph từ câu.
+Parser chỉ chạy suy luận, không tinh chỉnh. Trên val, FACTUAL giảm tỉ lệ node là đại từ từ 3,9\% xuống 0,1\%, và tăng tỉ lệ
+câu có ít nhất một quan hệ từ 85,8\% lên 97,3\%. (Nguồn: \file{experiments/data_stats.md},
+\file{experiments/improve/parser-compare/REPORT.md}.)
+
+\subsubsection{Bộ xếp lại GATv2}\label{sec:l1-model}
+\textbf{Mã hoá đồ thị.} Đồ thị câu và đồ thị ảnh dùng chung một bộ mã hoá. Vector khởi đầu của mỗi node là vector CLIP
+text của nhãn (câu mẫu ``a photo of a \{nhãn\}''), chiếu từ 512 xuống 256 chiều. Mỗi cạnh mang vector của nhãn quan hệ.
+Hai lớp GATv2~\cite{brody2022gatv2} (4 head) cho mỗi node gom thông tin từ hàng xóm theo trọng số attention học được. Mỗi
+bộ ba (chủ thể, quan hệ, đối tượng) đi qua một MLP. Vector cuối của mỗi phần là $\mathrm{L2}(f + U g)$, với $f$ là vector
+ban đầu, $g$ là đầu ra GAT và $U$ khởi tạo bằng 0.
+
+\textbf{Hai kênh khớp.} Kênh vật thể chỉ so vật thể với vật thể; kênh bộ ba chỉ so bộ ba với bộ ba. Với phần $i$ của câu
+và phần $j$ cùng loại của ảnh, $\mathit{sim}_{ij}$ là cosine giữa hai vector. Mỗi phần của câu được so với mọi phần cùng
+loại của ảnh qua attention:
+\begin{equation}
+a_{ij} = \operatorname{softmax}_j\!\left(\mathit{sim}_{ij}/\tau\right),\qquad s_i = \textstyle\sum_j a_{ij}\,\mathit{sim}_{ij}.
+\end{equation}
+Trọng số của từng phần trong câu là
+$w_i = \operatorname{softmax}_i(u^\top p_i)$, với $p_i$ là vector của phần $i$. Điểm của kênh là
+$S = \sum_i w_i s_i$.
+
+\textbf{Trộn điểm.} Ba trọng số kênh tính riêng cho từng câu từ vector CLIP của câu:
+$[a, b, c] = \operatorname{softmax}(W q + \mathit{bias})$. Điểm đồ thị là
+$G = z\big((b\,z(S_\text{obj}) + c\,z(S_\text{tri}))/(b+c)\big)$, và điểm cuối là $a\,z(\text{CLIP}) + (1-a)\,G$. Đây
+đúng là công thức của đề với $\alpha = a$, chỉ khác ở chỗ $\alpha$ thay đổi theo câu. Mọi tham số mới khởi tạo sao cho mô
+hình chưa huấn luyện cho đúng phép thử không huấn luyện đã đo trước ($U=0$, $u=0$, $W=0$,
+$\mathit{bias} = \log(0{,}60;\,0{,}28;\,0{,}12)$, $\tau = 0{,}05$). Mô hình có 1\,054\,214 tham số huấn luyện được; CLIP
+không nằm trong số này (chi tiết: \file{docs/level1-model.md}).
+
+\textbf{Huấn luyện.} Loss là cross-entropy trên 50 ứng viên của điểm cuối, chia cho nhiệt độ học được. AdamW, lr
+$10^{-3}$, weight decay $10^{-4}$, batch 256, dropout 0,1. Epoch đầu khoá $W$ và $\mathit{bias}$ để phần đồ thị học trước.
+Dừng sớm khi R@1 val không tăng sau 2 epoch, tối đa 10 epoch, giữ checkpoint tốt nhất theo val. Ứng viên của câu train lấy
+trong một nhóm ảnh train cố định (Mục~\ref{sec:leakage}). Mỗi cấu hình chạy 3 seed (0, 1, 2).
+
+\subsubsection{Mô hình chính}\label{sec:method-main}
+Mô hình chính (\texttt{countonly\_factual\_r3}) giữ nguyên khung trên và thay bốn chỗ. Mỗi thay đổi được giữ lại vì làm R@1
+val tăng qua 3 seed (Bảng~\ref{tab:l1-chain}).
+\begin{enumerate}
+\item \textbf{Đồ thị câu từ FACTUAL-T5} thay cho \texttt{sng\_parser}.
+\item \textbf{Trộn điểm thô:} điểm cuối $= a\cdot\cos + b\cdot S_\text{obj} + c\cdot S_\text{tri}$, bỏ z-score. Ứng viên
+không có phần nào để so ở một kênh nhận điểm trung bình của các ứng viên có phần đó. Nhờ bỏ chuẩn hoá, điểm cuối tách
+\emph{chính xác} thành tổng các phần, nên lời giải thích không cần xấp xỉ.
+\item \textbf{Đồ thị ảnh sạch và liền.} Hai node cùng loại (cùng synset hoặc hypernym trong WordNet~\cite{miller1995wordnet})
+có IoU $\ge 0{,}7$ được gộp làm một. Mỗi cạnh có hộp ở hai đầu được gán 6 số hình học (độ lệch tâm, tỉ lệ kích thước, IoU,
+tỉ lệ diện tích). Mỗi node nhận thêm cạnh từ 5 node gần nhất, và một node tổng nối tới mọi node. Cạnh thêm này chỉ truyền tin
+trong GAT, không được tính là bộ ba. Sau bước này 100\% đồ thị ảnh val liền một khối (cấp độ~1: 4,7\%).
+\item \textbf{Số lượng.} Mỗi node ảnh biết có bao nhiêu vật cùng loại trong ảnh (nhóm 1 / 2 / 3--4 / $\ge5$). Luật viết tay
+trên câu gán mỗi vật thể một lớp số lượng (số nêu rõ, ``a pair of'', danh từ số nhiều, \dots; còn lại là ``không rõ''). Một
+bảng học được $g$ ($7\times4$, khởi tạo 0, hàng ``không rõ'' cố định bằng 0) được cộng vào $\mathit{sim}_{ij}$ của kênh vật
+thể.
+\end{enumerate}
+
+\subsubsection{Lời giải thích sinh từ cơ chế xếp hạng}\label{sec:method-expl}
+Nhóm không chạy bước tìm đường đi nào sau khi đã có kết quả; mọi số trong lời giải thích được ghi lại trong cùng lần tính
+điểm. Với mô hình chính, vì trộn điểm thô, điểm cuối tách chính xác thành
+$a\cdot\cos + \sum_i b\,w_i \sum_j a_{ij}\mathit{sim}_{ij} + \sum_i c\,w_i \sum_j a_{ij}\mathit{sim}_{ij}$. Bảng giải thích
+ghi với mỗi phần $i$ của câu: $w_i$, phần $j$ của ảnh có attention lớn nhất, độ khớp, phần trăm của điểm cuối và, với vật
+thể có số lượng, giá trị $g$ đã cộng. Một cột nữa ghi giá trị của dòng đó trừ trung bình của chính dòng đó trên 50 ứng
+viên. Tổng cột này đúng bằng điểm cuối trừ điểm trung bình, nên cột này cho biết phần đóng góp của từng dòng vào chênh lệch
+giữa ảnh này và các ảnh khác. Đồ thị con câu $\leftrightarrow$ ảnh hiển thị trong demo (Mục~\ref{sec:demo}) là chính các cặp
+$(i, j)$ này.
+
+\subsubsection{Ablation}\label{sec:l1-ablation}
+Mọi số trong mục này là R@1, trung bình $\pm$ độ lệch chuẩn qua 3 seed; khi so hai cấu hình, nhóm dùng kiểm định Welch trên
+3 seed mỗi bên.
+
+\begin{table}[t]
+\centering
+\caption{Từng bước từ mô hình cấp~1 tới mô hình chính, R@1 và MRR trên val. $p$: Welch so với bước trước.}
+\label{tab:l1-chain}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{3.4cm}ccc}
+\toprule
+Bước (đổi một thứ so với bước trước) & R@1 & MRR & Chênh R@1 ($p$) \\
+\midrule
+Mô hình cấp 1 & \pmstd{46,48}{0,24} & 58,85 & \\
++ Đồ thị câu FACTUAL-T5 & \pmstd{47,23}{0,36} & 59,49 & +0,76 ($\approx$0,05) \\
++ Trộn điểm thô & \pmstd{47,48}{0,10} & 59,72 & +0,25 (n.s.) \\
++ Đồ thị ảnh sạch và liền\textsuperscript{*} & \pmstd{48,38}{0,17} & 60,51 & +0,90 (0,003) \\
++ Số lượng và bảng $g$ & \textbf{\pmstd{48,91}{0,21}} & \textbf{60,86} & +0,53 (0,032) \\
+\bottomrule
+\multicolumn{4}{p{0.95\columnwidth}}{\scriptsize \textsuperscript{*}Gộp bốn thay đổi (gộp trùng, hình học cạnh, cạnh
+kNN, node tổng) theo quyết định của nhóm; ablation bỏ cạnh ở Bảng~\ref{tab:l1-ablation-main} đo phần đóng góp của cạnh.}
+\end{tabular}
+\tabsrc{\file{experiments/improve/README.md}}
+\end{table}
+
+\textbf{Từng bước xây mô hình chính} (Bảng~\ref{tab:l1-chain}). Mỗi bước đổi một thứ và được giữ lại khi R@1 val tăng qua 3
+seed. Mức tăng của bước trộn điểm thô không có ý nghĩa thống kê. Bước này vẫn được giữ vì nó cho phép tách chính xác điểm
+cuối thành từng phần (Mục~\ref{sec:method-expl}) và có độ lệch giữa các seed nhỏ nhất. Các hướng thử trên val nhưng không
+giữ (so khớp bộ ba tách thành phần, kênh mức cả đồ thị, gom vật cùng loại thành một node nhóm, \dots) ghi ở
+\file{experiments/improve/README.md}. Ví dụ, gom vật cùng loại làm R@1 giảm 0,63 điểm ($p = 0{,}019$), nên mô hình chính chỉ
+thêm số lượng vào từng node. Thêm thuộc tính (màu, chất liệu) vào phép thử không huấn luyện chỉ tăng R@1 val 0,36 điểm,
+dưới ngưỡng 0,5 điểm nhóm đặt trước, nên nhóm không thêm thuộc tính vào mô hình
+(\file{experiments/checks/attribute-probe.REPORT.md}).
+
+\textbf{Cải thiện có đến từ cấu trúc quan hệ không.} Đề yêu cầu bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên để kiểm tra điều
+này. Nhóm làm hai loại ablation. Loại thứ nhất huấn luyện lại từ đầu, cùng công thức, cùng 3 seed
+(Bảng~\ref{tab:l1-ablation} cho mô hình cấp~1, dòng ``bỏ mọi cạnh'' của Bảng~\ref{tab:l1-ablation-main} cho mô hình chính).
+Loại thứ hai giữ nguyên checkpoint và chỉ phá đồ thị lúc chấm.
+
+\begin{table}[t]
+\centering
+\caption{Ablation của mô hình cấp~1, mỗi dòng huấn luyện lại từ đầu. R@1.}
+\label{tab:l1-ablation}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{4.3cm}cc}
+\toprule
+Cấu hình & Val & Test \\
+\midrule
+Mô hình cấp 1 & \pmstd{46,48}{0,24} & \pmstd{45,77}{0,23} \\
+$a,b,c$ cố định cho mọi câu & \pmstd{46,13}{0,15} & \pmstd{45,13}{0,05} \\
+Bỏ GAT (không lan truyền) & \pmstd{46,71}{0,07} & \pmstd{45,95}{0,20} \\
+Tắt kênh bộ ba (GAT vẫn dùng cạnh) & \pmstd{45,99}{0,05} & \pmstd{45,07}{0,22} \\
+Bỏ hẳn quan hệ & \pmstd{45,98}{0,10} & \pmstd{45,26}{0,14} \\
+Câu không qua bộ mã hoá đồ thị & \pmstd{46,92}{0,07} & \pmstd{45,61}{0,29} \\
+Nối lại cạnh ngẫu nhiên (giữ bậc) & \pmstd{46,24}{0,24} & \pmstd{45,50}{0,40} \\
+Loss LambdaRank thay cross-entropy & \pmstd{45,18}{0,34} & \pmstd{44,28}{0,30} \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/level1/README.md}}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Ablation và đối chứng của mô hình chính, chỉ trên val. R@1 (chênh so với mô hình đủ).}
+\label{tab:l1-ablation-main}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{3.5cm}cc}
+\toprule
+ & Mô hình chính & Mô hình cấp 1 \\
+\midrule
+Đủ đồ thị & \pmstd{48,91}{0,21} & \pmstd{46,48}{0,24} \\
+\multicolumn{3}{l}{\emph{Huấn luyện lại}} \\
+Bỏ mọi cạnh & $-$2,39 ($p$ = 0,0024) & $-$0,50 ($p$ = 0,055) \\
+\multicolumn{3}{l}{\emph{Chỉ phá lúc chấm}} \\
+Đồ thị của một ảnh khác & 21,91 ($-$27,00) & 26,33 ($-$20,15) \\
+Nối lại quan hệ có nhãn ngẫu nhiên & 48,32 ($-$0,59) & 46,29 ($-$0,19) \\
+Bỏ bảng $g$ & $-$0,35 & --- \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/improve/no-edges/REPORT.md}, \file{experiments/improve/controls/README.md}}
+\end{table}
+
+Bảng~\ref{tab:l1-ablation} và~\ref{tab:l1-ablation-main} cho bốn kết luận.
+\begin{itemize}
+\item \textbf{Mô hình dựa vào đồ thị của đúng ảnh.} Khi mỗi ảnh mang scene graph của một ảnh khác, R@1 val của mô hình chính
+giảm từ 48,91 xuống 21,91, thấp hơn CLIP thuần (39,13).
+\item \textbf{Ở mô hình cấp~1, cạnh đóng góp ít.} Bỏ hẳn quan hệ làm R@1 giảm khoảng 0,5 điểm; bỏ GAT không làm giảm kết quả.
+\item \textbf{Ở mô hình chính, cạnh đóng góp 2,39 điểm.} Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 val giảm 2,39 điểm
+($p = 0{,}0024$), tương ứng 24\% mức chênh giữa mô hình chính và CLIP trên val (2,39 / 9,78); ở mô hình cấp~1 tỉ lệ này là
+7\%. Khi bỏ cạnh, mô hình chính còn 46,52, ngang mô hình cấp~1 (46,48). Xáo các quan hệ có nhãn lúc chấm làm R@1 giảm 0,59
+điểm. Phần đóng góp riêng của từng loại cạnh (quan hệ có nhãn, kNN, node tổng) chưa được tách.
+\item \textbf{Phần mất khi bỏ cạnh tập trung ở câu có quan hệ và câu nhiều vật thể}; câu chỉ có vật thể gần như không đổi
+(\file{experiments/improve/no-edges/REPORT.md}).
+\end{itemize}

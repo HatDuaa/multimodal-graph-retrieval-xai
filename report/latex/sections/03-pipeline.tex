@@ -1,0 +1,45 @@
+% =====================================================================
+% Mục III: pipeline chung và ba cấp độ (03-1, 03-2, 03-3). Ablation của từng cấp nằm cuối mục con của cấp đó;
+% kết quả chính trên test ở Mục IV.
+\section{Pipeline}
+\label{sec:pipeline}
+
+Cả ba cấp độ dùng chung một pipeline, đúng quy trình gợi ý trong đề (Hình~\ref{fig:pipeline}).
+\begin{enumerate}
+\item CLIP ViT-B/32 (trọng số OpenAI, đóng băng) mã hoá câu truy vấn và lấy 50 ảnh có cosine lớn nhất (FAISS~\cite{johnson2019faiss}
+ở VG và demo; phép nhân ma trận trực tiếp ở MKG-W vì pool chỉ có 892 ảnh).
+\item Với từng ứng viên, một mô-đun đồ thị tính điểm đồ thị. Ở VG, đó là điểm khớp giữa đồ thị câu và scene graph của ảnh.
+Ở MKG-W, đó là quan hệ giữa thực thể ứng viên và các thực thể được nhắc trong câu.
+\item Điểm cuối kết hợp hai điểm theo dạng $\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$ của đề. Mô hình cấp~1
+và MKG-W chuẩn hoá từng điểm bằng z-score trong 50 ứng viên của truy vấn; mô hình chính của VG cộng điểm thô
+(Mục~\ref{sec:method-main}). Ứng viên được sắp lại theo điểm cuối.
+\item Lời giải thích của mỗi ứng viên là chính các đại lượng đã cộng vào điểm đồ thị. Không có bước tìm đường đi nào chạy
+sau khi đã có thứ hạng (Mục~\ref{sec:method-expl} và~\ref{sec:l2-expl}).
+\end{enumerate}
+Vì chỉ xếp lại 50 ứng viên, giới hạn trên của mọi mô hình là recall@50 của CLIP. Trên test VG, chỉ số này là 96,66\%.
+Mục~\ref{sec:method-l1}--\ref{sec:method-l3} mô tả từng cấp độ; mỗi mục kết thúc bằng các ablation dùng để kiểm tra
+thành phần của cấp đó. Dữ liệu, cách chia tập và kết quả chính trên test ở Mục~\ref{sec:exp}.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\scriptsize, node distance=3mm and 4mm,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=7mm, inner sep=2pt},
+  arr/.style={-{Stealth[length=1.6mm]}, thick, cGray}]
+\node[box, fill=cClip!12] (q) {Truy vấn\\(câu)};
+\node[box, fill=cClip!12, right=of q] (clip) {CLIP\\đóng băng};
+\node[box, fill=cClip!12, right=of clip] (top) {Top-50\\ứng viên};
+\node[box, fill=cObj!15, below=6mm of q] (qg) {Đồ thị câu /\\thực thể nhắc tới};
+\node[box, fill=cObj!15, right=of qg] (gs) {Điểm đồ thị\\(GATv2 / KG)};
+\node[box, fill=cTri!12, right=of gs] (ig) {Scene graph ảnh /\\đồ thị tri thức};
+\node[box, fill=yellow!20, below=6mm of gs] (fuse) {$\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$};
+\node[box, right=of fuse] (out) {Thứ hạng\\+ giải thích};
+\draw[arr] (q) -- (clip); \draw[arr] (clip) -- (top);
+\draw[arr] (q) -- (qg); \draw[arr] (qg) -- (gs); \draw[arr] (ig) -- (gs);
+\draw[arr] (top) -- (ig);
+\draw[arr] (gs) -- (fuse); \draw[arr] (top.south) |- ($(fuse.north east)+(0,0.5mm)$);
+\draw[arr] (fuse) -- (out);
+\end{tikzpicture}
+\caption{Pipeline chung. Phần màu xanh là CLIP đóng băng. Phần đồ thị chỉ chấm lại 50 ứng viên của CLIP. Lời giải thích
+là các đại lượng của chính điểm đồ thị.}
+\label{fig:pipeline}
+\end{figure}

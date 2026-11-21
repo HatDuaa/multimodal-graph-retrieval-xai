@@ -63,20 +63,25 @@ Mã nguồn: \repo}
 
 \input{sections/00-abstract}
 \input{sections/01-introduction}
-\input{sections/02-data-leakage}
-\input{sections/03-method}
-\input{sections/04-level1-results}
-\input{sections/05-level2-results}
-\InputIfFileExists{sections/06-explanation-eval}{}{\section{Đánh giá lời giải thích}\label{sec:xai}\todo{chưa có mục}}
-\InputIfFileExists{sections/07-vietnamese-mmkg}{}{\section{MMKG tiếng Việt}\label{sec:vnmmkg}\todo{chưa có mục}}
-\input{sections/08-limitations-conclusion}
-\input{sections/09-contributions}
+\input{sections/02-related-work}
+\input{sections/03-pipeline}
+\input{sections/03-1-pipeline-level1}
+\input{sections/03-2-pipeline-level2}
+\input{sections/03-3-pipeline-level3}
+\input{sections/04-experiments}
+\input{sections/04-1-experiments-level1}
+\input{sections/04-2-experiments-level2}
+\input{sections/04-3-experiments-level3}
+\input{sections/05-conclusion}
+\input{sections/06-contributions}
 
 \bibliographystyle{IEEEtran}
-\bibliography{references,refs-xai,refs-vnmmkg}
+\bibliography{references,refs-related,refs-xai,refs-vnmmkg}
 
-% Phụ lục đặt sau tài liệu tham khảo, sang trang mới.
+% Phụ lục đặt sau tài liệu tham khảo, sang trang mới; không tính vào giới hạn trang.
 \clearpage
 \input{sections/10-appendix-vnmmkg}
+\input{sections/11-appendix-scene-ranker}
+\input{sections/12-appendix-xai-details}
 
 \end{document}

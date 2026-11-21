@@ -1,0 +1,137 @@
+% Phụ lục B: scene ranker, bộ xếp lại thứ hai trên VG ∩ COCO, phát triển song song ở repo cá nhân của một thành viên.
+% Không tính vào giới hạn trang. Nguồn số: report/scene-ranker.md, từ các file chép nguyên trong
+% experiments/improve/scene-ranker/personal-repo/ (commit cdb4b5b của repo cá nhân): test_eval_0070_metrics.json,
+% test_eval_0069_val_metrics.json, rank_train_{0056,0057,0063,0065}_metrics.json, rank_ablation_{0058,0062,0064}_metrics.json,
+% comparison_test.json.
+\section{Scene ranker: khớp scene graph bằng Sinkhorn}\label{app:scene-ranker}
+
+Phụ lục này mô tả dòng scene ranker của Bảng~\ref{tab:l1-test}. Mô hình được phát triển, train và chấm test ở một repo cá
+nhân, trên cùng split Karpathy của VG $\cap$ COCO, cùng pool và cùng CLIP ViT-B/32 với repo nhóm; CLIP thuần tính trong repo
+đó cho R@1 test 39,32 và MRR@50 51,99, khớp với 39,32 và 52,00 của repo nhóm. Hai repo xử lý dữ liệu độc lập nên bộ caption
+lệch 3 câu ở val (10\,630) và 6 câu ở test (10\,690). Các file kết quả được chép nguyên vào
+\file{experiments/improve/scene-ranker/personal-repo/}; mô tả đầy đủ ở \file{report/scene-ranker.md}.
+
+\subsection{Mô hình}
+\textbf{Hai scene graph.} Câu được FACTUAL-T5 base tách thành thực thể, thuộc tính và bộ ba, tối đa 8 thực thể và 6 quan hệ.
+Ảnh dùng chú thích VG: 64 vật thể có khung lớn nhất, tối đa 4 thuộc tính mỗi vật thể, 64 quan hệ.
+
+\textbf{Mã hoá node.} Mỗi node gộp vector CLIP text của tên, của thuộc tính, đặc trưng số (IDF; tỉ lệ khung và số lượng ở
+phía ảnh) và vector concept sau GAT:
+$\mathbf h^{(0)}_n = W \mathbf f_n + \overline{W_a \mathbf f_a} + W_x \mathbf x_n + \overline{\operatorname{GAT}(\mathbf z)_c}$.
+GAT 2 lớp, 4 head, chạy trên một concept graph gồm 1\,687 synset xuất hiện trong ít nhất 20 ảnh train và 13\,807 cạnh (1\,486
+cạnh hypernym của WordNet, 12\,114 cạnh đồng xuất hiện trên ảnh train, 207 cạnh ConceptNet 5.7). Sau đó 2 lớp attention dùng
+chung cho câu và ảnh truyền tin dọc cạnh quan hệ của scene graph. Vector để khớp là
+$\mathbf p_n = \operatorname{normalize}(\mathbf f_n + U \mathbf h_n)$ với $U$ khởi tạo 0.
+
+\textbf{Khớp Sinkhorn có thùng rác.} Hai kênh: thực thể câu với vật thể ảnh, quan hệ câu với quan hệ ảnh. Mỗi kênh đưa ma
+trận cosine qua 20 vòng Sinkhorn với nhiệt độ $\tau$ và điểm thùng rác $z$ học được:
+$P = \operatorname{Sinkhorn}(\mathit{sim}/\tau, z)$, $S_{\text{ch}} = \sum_i w_i \sum_j P_{ij}\,\mathit{sim}_{ij}$. Mỗi phần của
+câu gửi đi một đơn vị khối lượng và mỗi phần của ảnh nhận tối đa một đơn vị; phần không có đối tác đủ tốt đi vào thùng rác và
+không cộng điểm, nên một vật thể của ảnh không bị tính nhiều lần.
+
+\textbf{Điểm và huấn luyện.} Điểm đồ thị cộng hai kênh với sáu term cố định (điểm đường đi trên concept graph, thuộc tính khớp
+theo từ và theo CLIP text, số lượng, độ nổi bật theo diện tích, độ giống giữa cụm danh từ và nhãn vật thể); điểm cuối là
+$0{,}65\cdot\text{CLIP} + 0{,}35\cdot\text{đồ thị}$. Loss là cross-entropy của điểm cuối cộng 0,3 lần cross-entropy của riêng
+điểm đồ thị. Mô hình có 709\,469 tham số; AdamW, lr 0,001, batch 64 caption, tối đa 10 epoch, chọn epoch theo MRR val.
+
+\textbf{Chống rò rỉ.} Từ vựng concept, IDF và cạnh đồng xuất hiện chỉ đếm trên ảnh train. $\alpha$, epoch và mọi siêu tham số
+chọn trên val. Test mở đúng một lần (run 0070), sau khi cùng code đánh giá chạy lại toàn bộ chuỗi trên val và khớp từng bước
+với các run đã lưu (run 0069).
+
+\subsection{Kết quả và ablation}
+
+\begin{table}[!htb]
+\centering
+\caption{Scene ranker trên val và test. B1, B2: hai mốc không học (cộng IDF các concept khớp; mở rộng bằng đường đi
+$\le 2$ cạnh). MRR dạng tỉ lệ, tính trên toàn gallery như repo cá nhân.}
+\label{tab:app-sr-results}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+ & Mô hình & R@1 & R@5 & R@10 & MRR \\
+\midrule
+\multirow{4}{*}{Val} & CLIP & 39,14 & 67,89 & 78,98 & 0,5239 \\
+ & B1 & 40,20 & 68,76 & 79,99 & 0,5350 \\
+ & B2 & 40,25 & 68,72 & 79,93 & 0,5352 \\
+ & Scene ranker & \pmstd{49,69}{0,05} & \pmstd{76,00}{0,18} & \pmstd{85,11}{0,12} & \pmstd{0,6165}{0,0003} \\
+\midrule
+\multirow{4}{*}{Test} & CLIP & 39,32 & 66,38 & 77,32 & 0,5203 \\
+ & B1 & 40,37 & 67,46 & 78,39 & 0,5307 \\
+ & B2 & 40,41 & 67,46 & 78,40 & 0,5314 \\
+ & Scene ranker & \pmstd{48,57}{0,36} & \pmstd{75,28}{0,03} & \pmstd{84,54}{0,11} & \pmstd{0,6080}{0,0021} \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{test_eval_0070_metrics.json}, \file{rank_train_*_metrics.json}.}
+\end{table}
+
+\begin{table}[!htb]
+\centering
+\caption{Ablation lúc chấm của scene ranker trên val (checkpoint đã train, phá đồ thị lúc chấm), trung bình 3 seed.}
+\label{tab:app-sr-ablation}
+\footnotesize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Biến thể & MRR & R@1 \\
+\midrule
+Mô hình đầy đủ & \pmstd{0,6165}{0,0003} & 49,69 \\
+Xáo cạnh concept graph & \pmstd{0,6153}{0,0004} & 49,56 \\
+Bỏ cạnh concept graph & \pmstd{0,6124}{0,0009} & 49,14 \\
+Bỏ 6 term cố định & \pmstd{0,6150}{0,0008} & 49,58 \\
+Bỏ kênh quan hệ & \pmstd{0,6105}{0,0013} & 48,99 \\
+Xáo cạnh scene graph (câu và ảnh) & \pmstd{0,5986}{0,0015} & 47,62 \\
+Bỏ cạnh scene graph (câu và ảnh) & \pmstd{0,5375}{0,0019} & 40,86 \\
+Bỏ phần học được ($U\mathbf h = 0$) & \pmstd{0,5528}{0,0007} & 42,57 \\
+Scene graph của ảnh khác & \pmstd{0,3892}{0,0043} & 24,96 \\
+CLIP & 0,5239 & 39,14 \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{rank_ablation_{0058,0062,0064}_metrics.json}.}
+\end{table}
+
+Trên test, từng seed hơn CLIP với khoảng tin cậy 95\% của chênh MRR (bootstrap ghép cặp) là [+0,079; +0,097],
+[+0,077; +0,094] và [+0,081; +0,098] (Bảng~\ref{tab:app-sr-results}). Chấm bằng scene graph của ảnh khác làm MRR rơi dưới
+CLIP, nên điểm đồ thị đọc nội dung của đúng ảnh (Bảng~\ref{tab:app-sr-ablation}). Phá cạnh lúc chấm đưa đầu vào ra ngoài phân
+phối train, nên mức giảm là cận trên của vai trò cạnh. Train lại từ đầu không có cạnh nào (run 0065, một seed) đạt MRR val
+0,6071, chỉ thua mô hình có cạnh 0,0097 (KTC 95\% [$-0{,}0141$; $-0{,}0055$]): cạnh đóng góp khoảng 10\% phần tăng so với
+CLIP, phần còn lại đến từ việc khớp từng phần của câu với từng vật thể của ảnh. Kết luận này cùng chiều với ablation bỏ cạnh
+của mô hình chính (Bảng~\ref{tab:l1-ablation-main}).
+
+\subsection{Giải thích và 10 truy vấn}
+Điểm cuối là tổng các số hạng, nên lời giải thích của một cặp (câu, ảnh) là bảng các số hạng: phần CLIP, từng thực thể và
+quan hệ của câu (phần ảnh nhận nhiều khối lượng nhất, phần vào thùng rác, đóng góp vào điểm) và từng term cố định. Trên val,
+seed 0: tổng các phần khớp điểm cuối với sai số tối đa $1{,}4\cdot10^{-5}$ trên 10 ứng viên đầu của mọi caption; với 10
+caption có ảnh đúng ở hạng 1, xoá vật thể đóng góp nhiều nhất làm điểm giảm mạnh hơn xoá ngẫu nhiên ở 10/10 ca (trung bình
+$-1{,}45$ so với $+0{,}006$), và 5/10 ca ảnh đúng mất hạng 1. Bảng~\ref{tab:app-sr-cases} là 5 truy vấn thành công (CLIP xếp
+ảnh đúng ở hạng 39--45, mô hình đưa lên hạng 1) và 5 truy vấn thất bại (CLIP hạng 1, mô hình đẩy xuống hạng 9--10).
+
+\begin{table}[!htb]
+\centering
+\caption{Mười truy vấn val của scene ranker. Hạng ảnh đúng theo CLIP $\to$ theo mô hình.}
+\label{tab:app-sr-cases}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.3cm}c>{\raggedright\arraybackslash}p{3.9cm}@{}}
+\toprule
+Truy vấn & Hạng & Cặp khớp quyết định / nguyên nhân \\
+\midrule
+a device to use and work on bike fenders & 45 $\to$ 1 & bike fenders $\to$ fender; device $\to$ fender blender \\
+The organizer is sitting next to the computer screen. & 45 $\to$ 1 & organizer $\to$ organizer; screen $\to$ computer \\
+A large city bus is parked on the side of a street. & 42 $\to$ 1 & city bus $\to$ bus; street $\to$ street \\
+A woman with a red scarf and black leather jacket walking in the city. & 40 $\to$ 1 & scarf $\to$ scarf; woman $\to$ lady \\
+A mattress is leaned up against a wall & 39 $\to$ 1 & mattress $\to$ mattress; bộ ba ``mattress against wall'' \\
+\midrule
+A man eats a hotdog in a stadium. & 1 $\to$ 10 & Ảnh đúng thiếu ``man'', ``hot dog''; mọi thực thể vào thùng rác \\
+THERE IS A WALL CLOCK ABOVE THE MANTEL PIECE & 1 $\to$ 10 & Parser tách sai ``mantel piece'' thành ``building'' \\
+A motorcycle frame that has been made in to a tricycle. & 1 $\to$ 10 & Xe trong ảnh đúng gán nhãn ``cart''; câu tả một biến đổi \\
+A man in the kitchen holding a beverage. & 1 $\to$ 10 & Chú thích ảnh đúng chỉ có tường và tranh \\
+A zebra grazes in a cage at a fair. & 1 $\to$ 9 & Ảnh đúng thiếu nhãn ``zebra'' \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{report/scene-ranker.md}, mục 5.}
+\end{table}
+
+Nguyên nhân chính của thất bại là chú thích thiếu trong ảnh đúng, giống mô hình chính (Mục~\ref{sec:l1-cases}); lời giải thích
+chỉ ra phần nào của câu rơi vào thùng rác, nên lỗi chẩn đoán được trực tiếp. Hạn chế: lần train lại không cạnh chỉ có một
+seed, và bốn thành phần của mô hình (Sinkhorn, concept graph, term cố định, loss phụ) đã được thêm vào code của nhóm dưới dạng
+cờ nhưng chưa được train trên mô hình chính.
