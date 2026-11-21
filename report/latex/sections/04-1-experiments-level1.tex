@@ -1,12 +1,15 @@
 % =====================================================================
-\section{Kết quả cấp độ 1: Visual Genome $\cap$ COCO}
+% IV-B: kết quả cấp độ 1. Dòng scene ranker: experiments/improve/scene-ranker/personal-repo/comparison_test.json.
+\subsection{Kết quả cấp độ 1: Visual Genome $\cap$ COCO}
 \label{sec:l1}
 
-R@$k$ là tỉ lệ truy vấn có ảnh đúng trong $k$ kết quả đầu; MRR là trung bình nghịch đảo hạng của ảnh đúng, tính trong
-top-50. Mọi số của mô hình huấn luyện là trung bình $\pm$ độ lệch chuẩn qua 3 seed, lấy ở checkpoint tốt nhất theo val.
-Khi so hai mô hình, nhóm dùng kiểm định Welch trên 3 seed mỗi bên.
-
-\subsection{So sánh CLIP với CLIP + đồ thị trên test}
+\textbf{So sánh CLIP với CLIP + đồ thị trên test.}
+Bảng~\ref{tab:l1-test} là phép so bắt buộc của đề: CLIP thuần và CLIP + đồ thị trên cùng cách chia. Dòng ``ba kênh, không
+huấn luyện'' dùng cùng công thức trộn nhưng vector của phần đồ thị là vector CLIP text gốc, không qua GAT. Mô hình chính hơn
+CLIP 8,63 điểm R@1. So với mô hình cấp~1, mô hình chính hơn 2,18 điểm R@1 ($p = 0{,}0005$) và 2,00 điểm MRR
+($p = 0{,}0002$). Ba seed của mô hình chính cho R@1 48,06 / 47,78 / 47,99. Từ val sang test, R@1 giảm 0,96 điểm (48,91
+$\to$ 47,95), so với 0,71 điểm của mô hình cấp~1; mô hình chính được xây qua nhiều bước chọn trên val
+(Bảng~\ref{tab:l1-chain}).
 
 \begin{table}[t]
 \centering
@@ -23,112 +26,23 @@ CLIP thuần & 39,32 & 66,39 & 77,32 & 52,00 \\
 Ba kênh, không huấn luyện & 42,54 & 70,04 & 80,35 & 55,05 \\
 Mô hình cấp 1 (\texttt{main\_r3}) & \pmstd{45,77}{0,23} & \pmstd{72,87}{0,31} & \pmstd{82,69}{0,31} & \pmstd{58,14}{0,18} \\
 \textbf{Mô hình chính} & \textbf{\pmstd{47,95}{0,15}} & \textbf{\pmstd{74,79}{0,03}} & \textbf{\pmstd{84,38}{0,08}} & \textbf{\pmstd{60,15}{0,15}} \\
+\midrule
+Scene ranker\textsuperscript{\dag} & \pmstd{48,57}{0,36} & \pmstd{75,28}{0,03} & \pmstd{84,54}{0,11} & \pmstd{60,76}{0,21} \\
 \bottomrule
 \end{tabular}}
-\tabsrc{\file{experiments/level1/test/}, \file{experiments/improve/test/}}
+\par\smallskip
+{\scriptsize\raggedright \textsuperscript{\dag}Train và chấm test một lần ở repo cá nhân của một thành viên, cùng split,
+cùng pool và cùng CLIP; 10\,690 caption do hai repo xử lý dữ liệu độc lập. MRR tính trong top-50 như các dòng khác.
+Chi tiết ở Phụ lục~\ref{app:scene-ranker}.\par}
+\tabsrc{\file{experiments/level1/test/}, \file{experiments/improve/test/},
+\file{experiments/improve/scene-ranker/personal-repo/comparison_test.json}}
 \end{table}
 
-Bảng~\ref{tab:l1-test} là phép so bắt buộc của đề: CLIP thuần và CLIP + đồ thị trên cùng cách chia. Dòng ``ba kênh, không
-huấn luyện'' dùng cùng công thức trộn nhưng vector của phần đồ thị là vector CLIP text gốc, không qua GAT. Mô hình chính hơn
-CLIP 8,63 điểm R@1. So với mô hình cấp~1, mô hình chính hơn 2,18 điểm R@1 ($p = 0{,}0005$) và 2,00 điểm MRR
-($p = 0{,}0002$). Ba seed của mô hình chính cho R@1 48,06 / 47,78 / 47,99. Từ val sang test, R@1 giảm 0,96 điểm (48,91
-$\to$ 47,95), so với 0,71 điểm của mô hình cấp~1; mô hình chính được xây qua nhiều bước chọn trên val
-(Bảng~\ref{tab:l1-chain}).
-
-\subsection{Mô hình chính được xây thế nào}
-
-\begin{table}[t]
-\centering
-\caption{Từng bước từ mô hình cấp~1 tới mô hình chính, R@1 và MRR trên val. $p$: Welch so với bước trước.}
-\label{tab:l1-chain}
-\footnotesize
-\setlength{\tabcolsep}{2.5pt}
-\begin{tabular}{p{3.4cm}ccc}
-\toprule
-Bước (đổi một thứ so với bước trước) & R@1 & MRR & Chênh R@1 ($p$) \\
-\midrule
-Mô hình cấp 1 & \pmstd{46,48}{0,24} & 58,85 & \\
-+ Đồ thị câu FACTUAL-T5 & \pmstd{47,23}{0,36} & 59,49 & +0,76 ($\approx$0,05) \\
-+ Trộn điểm thô & \pmstd{47,48}{0,10} & 59,72 & +0,25 (n.s.) \\
-+ Đồ thị ảnh sạch và liền\textsuperscript{*} & \pmstd{48,38}{0,17} & 60,51 & +0,90 (0,003) \\
-+ Số lượng và bảng $g$ & \textbf{\pmstd{48,91}{0,21}} & \textbf{60,86} & +0,53 (0,032) \\
-\bottomrule
-\multicolumn{4}{p{0.95\columnwidth}}{\scriptsize \textsuperscript{*}Gộp bốn thay đổi (gộp trùng, hình học cạnh, cạnh
-kNN, node tổng) theo quyết định của nhóm; ablation bỏ cạnh ở Bảng~\ref{tab:l1-ablation-main} đo phần đóng góp của cạnh.}
-\end{tabular}
-\tabsrc{\file{experiments/improve/README.md}}
-\end{table}
-
-Mô hình chính được xây qua bốn bước; mỗi bước đổi một thứ và được giữ lại khi R@1 val tăng qua 3 seed
-(Bảng~\ref{tab:l1-chain}). Mức tăng của bước trộn điểm thô không có ý nghĩa thống kê. Bước này vẫn được giữ vì nó cho phép
-tách chính xác điểm cuối thành từng phần (Mục~\ref{sec:method-expl}) và có độ lệch giữa các seed nhỏ nhất. Các hướng thử trên val nhưng không
-giữ (so khớp bộ ba tách thành phần, kênh mức cả đồ thị, gom vật cùng loại thành một node nhóm, \dots) ghi ở
-\file{experiments/improve/README.md}. Ví dụ, gom vật cùng loại làm R@1 giảm 0,63 điểm ($p = 0{,}019$), nên mô hình chính chỉ
-thêm số lượng vào từng node.
-
-\subsection{Ablation: cải thiện có đến từ cấu trúc quan hệ không}
-
-Đề yêu cầu bỏ cạnh hoặc thay bằng cạnh ngẫu nhiên để kiểm tra phần cải thiện có đến từ cấu trúc quan hệ. Nhóm làm
-hai loại ablation. Loại thứ nhất huấn luyện lại từ đầu, cùng công thức, cùng 3 seed. Loại thứ hai giữ nguyên checkpoint và
-chỉ phá đồ thị lúc chấm.
-
-\begin{table}[t]
-\centering
-\caption{Ablation của mô hình cấp~1, mỗi dòng huấn luyện lại từ đầu. R@1.}
-\label{tab:l1-ablation}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{4.3cm}cc}
-\toprule
-Cấu hình & Val & Test \\
-\midrule
-Mô hình cấp 1 & \pmstd{46,48}{0,24} & \pmstd{45,77}{0,23} \\
-$a,b,c$ cố định cho mọi câu & \pmstd{46,13}{0,15} & \pmstd{45,13}{0,05} \\
-Bỏ GAT (không lan truyền) & \pmstd{46,71}{0,07} & \pmstd{45,95}{0,20} \\
-Tắt kênh bộ ba (GAT vẫn dùng cạnh) & \pmstd{45,99}{0,05} & \pmstd{45,07}{0,22} \\
-Bỏ hẳn quan hệ & \pmstd{45,98}{0,10} & \pmstd{45,26}{0,14} \\
-Câu không qua bộ mã hoá đồ thị & \pmstd{46,92}{0,07} & \pmstd{45,61}{0,29} \\
-Nối lại cạnh ngẫu nhiên (giữ bậc) & \pmstd{46,24}{0,24} & \pmstd{45,50}{0,40} \\
-Loss LambdaRank thay cross-entropy & \pmstd{45,18}{0,34} & \pmstd{44,28}{0,30} \\
-\bottomrule
-\end{tabular}
-\tabsrc{\file{experiments/level1/README.md}}
-\end{table}
-
-\begin{table}[t]
-\centering
-\caption{Ablation và đối chứng của mô hình chính, chỉ trên val. R@1 (chênh so với mô hình đủ).}
-\label{tab:l1-ablation-main}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{3.5cm}cc}
-\toprule
- & Mô hình chính & Mô hình cấp 1 \\
-\midrule
-Đủ đồ thị & \pmstd{48,91}{0,21} & \pmstd{46,48}{0,24} \\
-\multicolumn{3}{l}{\emph{Huấn luyện lại}} \\
-Bỏ mọi cạnh & $-$2,39 ($p$ = 0,0024) & $-$0,50 ($p$ = 0,055) \\
-\multicolumn{3}{l}{\emph{Chỉ phá lúc chấm}} \\
-Đồ thị của một ảnh khác & 21,91 ($-$27,00) & 26,33 ($-$20,15) \\
-Nối lại quan hệ có nhãn ngẫu nhiên & 48,32 ($-$0,59) & 46,29 ($-$0,19) \\
-Bỏ bảng $g$ & $-$0,35 & --- \\
-\bottomrule
-\end{tabular}
-\tabsrc{\file{experiments/improve/no-edges/REPORT.md}, \file{experiments/improve/controls/README.md}}
-\end{table}
-
-Bảng~\ref{tab:l1-ablation} và~\ref{tab:l1-ablation-main} cho ba kết luận.
-\begin{itemize}
-\item \textbf{Mô hình dựa vào đồ thị của đúng ảnh.} Khi mỗi ảnh mang scene graph của một ảnh khác, R@1 val của mô hình chính
-giảm từ 48,91 xuống 21,91, thấp hơn CLIP thuần (39,13).
-\item \textbf{Ở mô hình cấp~1, cạnh đóng góp ít.} Bỏ hẳn quan hệ làm R@1 giảm khoảng 0,5 điểm; bỏ GAT không làm giảm kết quả.
-\item \textbf{Ở mô hình chính, cạnh đóng góp 2,39 điểm.} Huấn luyện lại sau khi bỏ mọi cạnh làm R@1 val giảm 2,39 điểm
-($p = 0{,}0024$), tương ứng 24\% mức chênh giữa mô hình chính và CLIP trên val (2,39 / 9,78); ở mô hình cấp~1 tỉ lệ này là
-7\%. Khi bỏ cạnh, mô hình chính còn 46,52, ngang mô hình cấp~1 (46,48). Xáo các quan hệ có nhãn lúc chấm làm R@1 giảm 0,59
-điểm. Phần đóng góp riêng của từng loại cạnh (quan hệ có nhãn, kNN, node tổng) chưa được tách.
-\end{itemize}
-
-\subsection{Độ nhạy theo $\alpha$ và đồ thị giúp ở đâu}
+\textbf{Một bộ xếp lại thứ hai.} Dòng scene ranker là một mô hình do một thành viên phát triển song song: cùng top-50 của
+CLIP, nhưng khớp từng phần của câu với từng phần của ảnh bằng Sinkhorn có ``thùng rác'' (dustbin) thay cho softmax, và thêm
+một concept graph (WordNet, ConceptNet, đồng xuất hiện trên ảnh train) qua GAT. So với mô hình chính, R@1 cao hơn 0,63 điểm
+nhưng chưa có ý nghĩa thống kê với 3 seed (Welch $p = 0{,}079$); MRR cao hơn 0,61 điểm ($p = 0{,}018$). Hai mô hình gần
+ngang nhau. Mô hình này chưa được train trong repo nhóm, nên mọi phân tích còn lại của báo cáo dùng mô hình chính.
 
 \begin{figure}[t]
 \centering
@@ -187,13 +101,9 @@ $\ge$3 vật thể & 6\,607 & 41,40 & 50,20 & 53,32 & +3,11 [2,45; 3,77] \\
 trở lên.
 \item Với câu chỉ nêu vật thể, không có quan hệ (2,7\% số câu), mô hình chính thấp hơn CLIP 0,80 điểm.
 \item Với câu nêu số lượng, mức tăng so với mô hình cấp~1 là +3,37 điểm; với các câu còn lại là +2,31 điểm.
-\item Phần mất khi bỏ cạnh cũng tập trung ở câu có quan hệ và câu nhiều vật thể; câu chỉ có vật thể gần như không đổi
-(\file{experiments/improve/no-edges/REPORT.md}).
 \end{itemize}
 
-\subsection{Giải thích và phân tích 10 truy vấn}
-\label{sec:l1-cases}
-
+\subsubsection{Giải thích và phân tích 10 truy vấn}\label{sec:l1-cases}
 \textbf{Cách chọn.} Chỉ xét câu val có ít nhất một quan hệ. Nhóm bốc ngẫu nhiên với seed cố định (2026), theo quy tắc đặt
 trước: 5 câu thành công (CLIP xếp ảnh đúng dưới hạng 1, mô hình xếp hạng 1), 3 câu mô hình làm tệ đi (CLIP hạng 1, mô hình
 dưới hạng 1), 2 câu cả hai đều sai. Trên toàn val, mô hình chính (seed 0) có 1\,528 câu thành công, 463 câu làm tệ đi,
@@ -236,6 +146,5 @@ Mục~\ref{sec:xai} đo fidelity, validity và sparsity trên toàn bộ val.
 
 \textbf{Nguyên nhân thất bại} quan sát được khi xem ảnh thật, ở cả hai mô hình: chú thích VG thiếu nhãn hoặc đồ thị rỗng;
 khác biệt từ vựng giữa caption COCO và nhãn VG (\emph{plate}/\emph{tray}, \emph{child}/\emph{boy}); thuộc tính (màu, chất
-liệu) chưa được dùng; chi tiết mà scene graph không biểu diễn được (chữ trên biển hiệu); ảnh đúng nằm ngoài top-50 của CLIP.
-Về thuộc tính, một phép thử không huấn luyện chỉ tăng R@1 val 0,36 điểm, dưới ngưỡng 0,5 điểm nhóm đặt trước, nên nhóm
-không thêm thuộc tính vào mô hình (\file{experiments/checks/attribute-probe.REPORT.md}).
+liệu) chưa được dùng (Mục~\ref{sec:l1-ablation}); chi tiết mà scene graph không biểu diễn được (chữ trên biển hiệu); ảnh đúng
+nằm ngoài top-50 của CLIP.

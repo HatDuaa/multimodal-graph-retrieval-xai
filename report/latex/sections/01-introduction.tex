@@ -3,31 +3,38 @@
 \label{sec:intro}
 
 CLIP~\cite{radford2021clip} đưa ảnh và câu vào cùng một không gian vector, nên truy vấn văn bản--ảnh chỉ còn là tìm ảnh
-có cosine lớn nhất với câu. Cách so khớp này có hai giới hạn. Thứ nhất, nó không dùng quan hệ có cấu trúc giữa các vật
-thể trong ảnh, hay giữa các thực thể trong một đồ thị tri thức. Thứ hai, nó không cho biết vì sao một ảnh được xếp lên
-đầu. Đề bài yêu cầu một hệ thống trả lời ba câu hỏi nối tiếp nhau:
+có cosine lớn nhất với câu. Cách so khớp này có hai giới hạn. Thứ nhất, mỗi ảnh và mỗi câu chỉ còn một vector, nên mô hình
+không dùng quan hệ có cấu trúc giữa các vật thể trong ảnh, hay giữa các thực thể trong một đồ thị tri thức. Các benchmark
+ARO~\cite{rw-yuksekgonul2023aro} và Winoground~\cite{rw-thrush2022winoground} cho thấy các mô hình huấn luyện tương phản
+kiểu CLIP kém ở quan hệ, ở việc gắn thuộc tính với đúng vật thể và ở thứ tự từ. Thứ hai, cosine không cho biết vì sao một
+ảnh được xếp lên đầu.
+
+Đề bài yêu cầu một hệ thống trả lời ba câu hỏi nối tiếp nhau:
 (1) ảnh nào phù hợp nhất với truy vấn;
 (2) tri thức quan hệ giúp truy vấn tốt hơn ở đâu, nhất là với truy vấn gián tiếp;
 (3) vì sao mô hình trả về kết quả này.
-Nhóm làm nhánh A của đề (văn bản tìm ảnh) và thực hiện đủ ba cấp độ.
+Yêu cầu xuyên suốt là lời giải thích phải đến từ chính cơ chế xếp hạng, không được dựng một đường đi hợp lý sau khi đã có
+kết quả. Nhóm làm nhánh A của đề (văn bản tìm ảnh) và thực hiện đủ ba cấp độ. Các đóng góp chính:
+\begin{itemize}
+\item \textbf{Cấp độ~1} (Visual Genome $\cap$ COCO). CLIP đóng băng chọn 50 ứng viên. Một bộ mã hoá
+GATv2~\cite{brody2022gatv2} chạy trong scene graph của từng ảnh và trong đồ thị tách từ câu, rồi chấm điểm khớp ở hai mức:
+vật thể và bộ ba (chủ thể, quan hệ, đối tượng). Điểm cuối có dạng $\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$
+của đề, với $\alpha$ học theo từng câu. R@1 test tăng từ 39,32 (CLIP thuần) lên \pmstd{47,95}{0,15}. Ablation bỏ cạnh, nối
+lại cạnh ngẫu nhiên và thay đồ thị của ảnh khác cho thấy phần tăng phụ thuộc vào đồ thị của đúng ảnh.
+\item \textbf{Cấp độ~2} (thêm MKG-W). Nhóm tái lập NativE~\cite{zhang2024native}, một mô hình hoàn thiện đồ thị tri thức
+đa phương thức năm 2024, và lệch MRR của bài báo +0,41 điểm. Ba loại tín hiệu đồ thị được đưa vào cùng pipeline xếp lại:
+số cạnh tri thức, embedding của NativE và điểm bộ ba của NativE. Kênh đếm cạnh nâng R@1 test từ 24,89 lên 29,82. Trên bộ
+25 truy vấn tự viết, nhóm gián tiếp tăng R@1 từ 40 lên 80, nhóm trực tiếp không đổi.
+\item \textbf{Cấp độ~3}. Nhóm đo fidelity, validity và sparsity của lời giải thích trên toàn bộ 10\,633 câu val, 3 seed,
+kèm bằng chứng trên 13 truy vấn. Lời giải thích được so với 15 cách giải thích khác trên cùng độ đo và trên ba bộ có đáp án
+biết trước. Nhóm tự xây một MMKG tiếng Việt về di tích (150 thực thể, 325 triple, 331 ảnh), chạy phương pháp tốt nhất của
+cấp độ~2 trên đó và phân tích khả năng chuyển giao.
+\end{itemize}
+Ở mọi cấp độ, trọng số kết hợp, siêu tham số, checkpoint và từng bước xây mô hình được chọn trên train hoặc validation;
+mỗi mô hình đã chốt chỉ chấm test một lần.
 
-\textbf{Cấp độ~1} (Visual Genome $\cap$ COCO). CLIP đóng băng chọn 50 ứng viên. Một bộ mã hoá GATv2~\cite{brody2022gatv2}
-chạy trong scene graph của từng ảnh và trong đồ thị tách từ câu, rồi chấm điểm khớp ở hai mức: vật thể và bộ ba (chủ thể,
-quan hệ, đối tượng). Điểm cuối kết hợp cosine CLIP với điểm đồ thị theo dạng
-$\alpha\cdot\text{CLIP} + (1-\alpha)\cdot\text{đồ thị}$ của đề. Nhóm so với CLIP thuần trên cùng cách chia. Các ablation
-gồm bỏ cạnh, nối lại cạnh ngẫu nhiên và thay đồ thị của ảnh khác. Phần cuối phân tích 5 truy vấn thành công và 5 truy vấn
-thất bại.
-
-\textbf{Cấp độ~2} (thêm MKG-W). Nhóm tái lập NativE~\cite{zhang2024native}, một mô hình hoàn thiện đồ thị tri thức đa
-phương thức năm 2024, và kiểm tra lại con số link prediction của bài báo. Sau đó nhóm đưa ba loại tín hiệu đồ thị vào cùng
-pipeline xếp hạng lại: số cạnh tri thức, embedding của NativE, và điểm bộ ba của chính NativE. Nhóm xây thêm bộ 25 truy vấn
-tự viết, tách nhóm trực tiếp và gián tiếp.
-
-\textbf{Cấp độ~3}. Nhóm đo fidelity, validity và sparsity của lời giải thích trên toàn bộ tập validation, kèm bằng chứng
-trên từng truy vấn. Nhóm cũng xây một đồ thị tri thức đa phương thức (MMKG) tiếng Việt nhỏ, chạy phương pháp của cấp độ~2
-trên đó và phân tích khả năng chuyển giao.
-
-Mục~\ref{sec:data} mô tả dữ liệu và các quy tắc chống rò rỉ. Mục~\ref{sec:method} mô tả mô hình và cách lời giải thích được sinh ra. Các
-mục~\ref{sec:l1}--\ref{sec:vnmmkg} trình bày kết quả theo từng cấp độ. Mục~\ref{sec:conclusion} nêu hạn chế. Mục~\ref{sec:contrib}
-ghi phân công và phần đã dùng công cụ AI. Mọi con số đều lấy từ một file kết quả trong thư mục \file{experiments/} của
-repo; đường dẫn ghi ngay cạnh bảng.
+Mục~\ref{sec:related} điểm qua các công trình liên quan. Mục~\ref{sec:pipeline} mô tả pipeline theo từng cấp độ, mỗi cấp
+kèm ablation của các thành phần. Mục~\ref{sec:exp} trình bày dữ liệu, cách chống rò rỉ và kết quả. Mục~\ref{sec:conclusion}
+nêu kết luận và hạn chế. Phân công và khai báo công cụ AI nằm ngay trước tài liệu tham khảo. Phụ lục~\ref{app:vnmmkg} mô tả
+chi tiết MMKG tiếng Việt; Phụ lục~\ref{app:scene-ranker} mô tả một bộ xếp lại thứ hai do một thành viên phát triển song song.
+Mọi con số đều lấy từ một file kết quả trong thư mục \file{experiments/} của repo; đường dẫn ghi ngay cạnh bảng.

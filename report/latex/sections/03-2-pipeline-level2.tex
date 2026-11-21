@@ -1,0 +1,88 @@
+% =====================================================================
+% III-B: cấp độ 2. Ablation ở cuối (Bảng tab:l2-ablation); kết quả chính ở Mục IV-C.
+% Nguồn số của tab:l2-ablation: experiments/level2/{val,test}/summary.json (dòng kg_triple, shuffled_edges,
+% random_emb, random_kgc) và experiments/level2/val/alpha_beta_sweep{,_kgc}.json (β > 0 tốt nhất qua 3 seed).
+\subsection{Cấp độ 2: đồ thị tri thức MKG-W và NativE}
+\label{sec:method-l2}
+
+\subsubsection{NativE}
+NativE~\cite{zhang2024native} là một mô hình hoàn thiện đồ thị tri thức đa phương thức (MMKGC: dự đoán cạnh còn thiếu bằng
+cả cấu trúc lẫn ảnh và chữ của thực thể). Lõi cấu trúc là AdvRelRotatE, một biến thể của RotatE~\cite{sun2019rotate}: mỗi
+quan hệ là một phép quay trong không gian phức, và mẫu âm khó được sinh bằng huấn luyện đối kháng. Đặc trưng ảnh và chữ được
+trộn vào embedding thực thể với trọng số phụ thuộc quan hệ, nên mô hình chịu được thực thể thiếu ảnh hoặc thiếu chữ. Nhóm
+dùng NativE theo hai bước.
+\begin{itemize}
+\item \textbf{Bước a: tái lập.} Huấn luyện trên MKG-W gốc với đúng mã nguồn (commit \texttt{c72291c}) và siêu tham số của
+tác giả (1\,000 epoch, dim 250, margin 4, 128 mẫu âm, lr $10^{-4}$, batch 1\,024). So MRR và Hits@1 với bài báo
+(Mục~\ref{sec:l2}).
+\item \textbf{Bước b: đưa vào truy vấn.} Huấn luyện trên bản \texttt{MKG-W-rmask} (Mục~\ref{sec:leakage}) với 3 seed, rồi dùng
+mô hình đã học làm tín hiệu đồ thị.
+\end{itemize}
+
+\subsubsection{Liên kết truy vấn và điểm đồ thị}
+Câu truy vấn đã che tên đáp án nhưng vẫn hay nhắc tên thực thể khác (``a rock guitarist who was a member of \emph{Pink
+Floyd}''). \texttt{EntityLinker} tìm trong câu mọi nhãn và alias của thực thể trong đồ thị, ưu tiên cụm khớp dài nhất (tối
+đa 5 token). Gọi $L$ là tập thực thể khớp được, $c$ là thực thể ứng viên. Có ba kênh điểm đồ thị.
+\begin{itemize}
+\item \texttt{triple}: số cạnh KGC-train trực tiếp giữa $c$ và các thực thể trong $L$. Kênh này không cần huấn luyện.
+\item \texttt{emb}: cosine lớn nhất giữa embedding cấu trúc NativE của $c$ và của các thực thể trong $L$.
+\item \texttt{kgc}: điểm bộ ba của chính NativE, lấy giá trị lớn nhất qua mọi $l \in L\setminus\{c\}$, mọi quan hệ (169)
+và cả hai chiều $(c, r, l)$, $(l, r, c)$. Khác \texttt{emb} ở chỗ có dùng quan hệ. Code tính lại đúng hàm
+\texttt{forward()} của NativE và có test đối chiếu với checkpoint thật.
+\end{itemize}
+Câu không khớp thực thể nào nhận điểm đồ thị 0, nên thứ hạng của nó giữ nguyên như CLIP. Điểm cuối là
+\begin{equation}
+\alpha\,z(\text{CLIP}) + (1-\alpha)\,z\big(\beta\,z(N) + (1-\beta)\,z(\texttt{triple})\big),
+\end{equation}
+với $N$ là \texttt{emb} hoặc \texttt{kgc}. Lưới tìm $\alpha \in \{0; 0{,}05; \dots; 1\}$,
+$\beta \in \{0; 0{,}25; 0{,}5; 0{,}75; 1\}$, chọn trên val riêng cho từng seed theo R@1 (hoà thì xét MRR). Với
+$\beta = 1$, điểm đồ thị chỉ còn tín hiệu của NativE; với $\beta = 0$, chỉ còn số cạnh.
+
+\textbf{Về GAT trên MKG-W.} MKG-W không có scene graph cho từng ảnh, nên bộ xếp lại GATv2 của cấp~1 không áp dụng được. Ở
+bước b, tín hiệu từ đồ thị tri thức (đếm cạnh và NativE) thay vai trò của GNN.
+
+\subsubsection{Lời giải thích}\label{sec:l2-expl}
+Lời giải thích của một ứng viên là danh sách thực thể khớp được trong câu và các cạnh KGC-train giữa chúng với ứng viên. Đây
+chính là các cạnh đã được đếm vào kênh \texttt{triple}, nên khi $\beta = 0$ lời giải thích chứa đúng toàn bộ điểm đồ thị.
+
+\subsubsection{Ablation}\label{sec:l2-ablation}
+
+\begin{table}[t]
+\centering
+\caption{Ablation của kênh đồ thị trên MKG-W (892 truy vấn mỗi split). Các dòng dùng 3 seed của NativE; $\alpha,\beta$
+lấy từ val.}
+\label{tab:l2-ablation}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Val} & \multicolumn{2}{c}{Test} \\
+\cmidrule(lr){2-3}\cmidrule(l){4-5}
+Cấu hình & R@1 & MRR & R@1 & MRR \\
+\midrule
+Dòng chính (đếm cạnh, $\beta=0$) & 32,40 & 41,18 & 29,82 & 39,89 \\
+Cạnh xáo trộn (giữ bậc của đầu) & \pmstd{21,82}{0,39} & \pmstd{32,03}{0,23} & \pmstd{21,45}{0,06} & \pmstd{32,02}{0,16} \\
+NativE thay bằng nhiễu Gauss & 32,40 & 41,18 & 29,82 & 39,89 \\
+Thêm cosine NativE, $\beta>0$ tốt nhất\textsuperscript{*} & 31,61 & --- & --- & --- \\
+Thêm điểm NativE, $\beta>0$ tốt nhất\textsuperscript{*} & 30,38 & --- & --- & --- \\
+\bottomrule
+\end{tabular}}
+\par\smallskip
+{\scriptsize\raggedright \textsuperscript{*}R@1 val lớn nhất qua mọi $\alpha$, mọi $\beta>0$ và 3 seed; lưới chỉ lưu R@1, và
+test không chạy vì val chọn $\beta=0$.\par}
+\tabsrc{\file{experiments/level2/val/summary.json}, \file{experiments/level2/test/summary.json},
+\file{experiments/level2/val/alpha_beta_sweep.json}, \file{experiments/level2/val/alpha_beta_sweep_kgc.json}}
+\end{table}
+
+Bảng~\ref{tab:l2-ablation} kiểm tra hai điều.
+\begin{itemize}
+\item \textbf{Cạnh phải nối đúng thực thể.} Dòng ``cạnh xáo trộn'' đổi chỗ đuôi của các triple trong cùng một quan hệ, giữ
+nguyên bậc của đầu, rồi dùng lại $\alpha,\beta$ của dòng chính. R@1 khi đó thấp hơn CLIP thuần (val 21,82 so với 24,33; test
+21,45 so với 24,89). Vì phép xáo giữ nguyên bậc của đầu cạnh, mức tăng của dòng chính đến từ việc cạnh nối đúng thực thể,
+không đến từ bậc của thực thể.
+\item \textbf{NativE không đóng góp khi đã có kênh đếm cạnh.} Ở cả 3 seed, val chọn $\beta = 0$ cho cả kênh cosine lẫn kênh
+\texttt{kgc}; mọi $\beta > 0$ đều cho R@1 val thấp hơn (tốt nhất 31,61 với cosine và 30,38 với \texttt{kgc}, so với 32,40).
+Do kênh NativE có trọng số 0, thay embedding của nó bằng nhiễu Gauss cho đúng con số của dòng chính. Kết quả của NativE
+dùng riêng ($\beta = 1$) ở Bảng~\ref{tab:l2-results}.
+\end{itemize}

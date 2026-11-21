@@ -1,0 +1,30 @@
+% Phụ lục C: chi tiết cài đặt các cách giải thích đối chứng và các điểm sửa của bản đo v1. Không tính vào giới hạn trang.
+% Nguồn: experiments/xai-metrics-v2/REPORT.md, experiments/xai-metrics/REPORT.md (mục đính chính), src/explain/xai_baselines.py.
+\section{Chi tiết đánh giá lời giải thích}\label{app:xai}
+
+\subsection{Cách chỉnh các cách giải thích GNN}
+Các cách giải thích ở Mục~\ref{sec:xai-baselines} chạy trên cùng danh sách phần của ảnh hạng 1 (node vật thể và bộ ba có nhãn)
+và chấm lại bằng chính reranker.
+PGExplainer học một MLP sinh mask cho từng phần, trên 200 câu val nằm ngoài mẫu so sánh và ngoài 13 câu ở
+Mục~\ref{sec:xai-cases}, với hệ số phạt của GNNExplainer. GNN-LRP lan truyền relevance theo quy tắc
+$\varepsilon$~\cite{xai-bach2015lrp} qua các walk của hai lớp GAT, giữ chuẩn hoá và trọng số attention làm hằng số; điểm của
+một phần là tổng relevance của các walk đi qua nó. GraphSVX ước lượng giá trị Shapley bằng hồi quy có trọng số (Kernel SHAP)
+với cùng ngân sách lượt chấm như Shapley. SubgraphX tìm đồ thị con liên thông bằng MCTS (10 rollout, 10 mẫu cho mỗi ước lượng
+Shapley cục bộ); thứ tự các phần theo đường cắt tỉa.
+
+Các phép kiểm tra cài đặt: IG thoả completeness với sai số trung bình 0,7\% $\Delta$ (countonly) và 1,1\% (\texttt{main\_r3});
+Shapley và GraphSVX thoả efficiency với sai số tối đa $1{,}3\cdot10^{-7}$; GNN-LRP dựng lại đầu ra GAT với sai số tối đa
+$2{,}1\cdot10^{-6}$, và tổng relevance của các walk khớp relevance đầu ra, chỉ lệch do $\varepsilon$.
+
+\subsection{Bản đo v1 sai ở đâu}\label{sec:xai-v1v2}
+v1 được soát lại trước khi đưa vào báo cáo; nó giữ nguyên, kèm mục đính chính ở đầu \file{experiments/xai-metrics/REPORT.md}.
+v2 sửa sáu điểm.
+(1) Với \texttt{main\_r3}, v1 so term thô của hai kênh, dù fusion z-score cân hai kênh khác nhau; v2 thêm đạo hàm
+ở~\eqref{eq:xai-term}. Sau khi đưa các term về cùng thang điểm, bộ ba đứng đầu E ở 70,5\% câu thay vì 1\%, và Fid$^{+}$@3
+giảm từ \pmstd{65,7}{0,3}\% xuống \pmstd{34,9}{2,8}\%.
+(2) v1 lấy lượt chấm thường làm gốc và tính câu E rỗng là ``không đổi''.
+(3) Sparsity của v1 chia số dòng của bảng demo cho số phần của ảnh, hai đơn vị khác nhau.
+(4) Tiêu chí ngữ nghĩa của v1 chấp nhận cả cặp khác loại; v2 giữ nó dưới tên lenient và thêm strict.
+(5) v1 so khớp nhóm số lượng với \texttt{main\_r3} chấm trên đồ thị cấp 1 chưa gộp trùng, nơi hộp trùng làm tăng số đếm.
+(6) v1 bỏ cạnh có nhãn là bỏ luôn bộ ba; đo lại dạng này cho 5,7\% câu mất hạng 1 (ngẫu nhiên: 5,1\%), so với 1,0\% khi chỉ
+cắt truyền tin, nên hiệu ứng mà v1 thấy phần lớn đến từ việc mất bộ ba.

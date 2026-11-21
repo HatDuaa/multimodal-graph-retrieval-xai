@@ -1,0 +1,206 @@
+% =====================================================================
+% III-C: cấp độ 3 (đánh giá lời giải thích + MMKG tiếng Việt). Kết quả ở Mục IV-D, IV-E.
+% Nguồn số: experiments/xai-metrics-v2/{REPORT.md,summary.json}, experiments/xai-metrics-v3/REPORT.md,
+% experiments/xai-ground-truth/REPORT.md; vietnamese-mmkg/DATA_CARD.md, experiments/checks/multilingual_clip_probe.json.
+\subsection{Cấp độ 3: đánh giá lời giải thích và MMKG tiếng Việt}
+\label{sec:method-l3}
+
+Cấp độ 3 có hai phần. Phần thứ nhất đo fidelity (độ trung thực), validity (độ hợp lệ) và sparsity (độ gọn) của lời giải
+thích ở Mục~\ref{sec:method-expl}, mở rộng phép thử xoá của Mục~\ref{sec:l1-cases} ra toàn bộ 10\,633 câu val, 3 seed mỗi
+mô hình, cho cả mô hình chính \texttt{countonly\_factual\_r3} (gọi tắt là countonly) và \texttt{main\_r3} (cấp 1). Chỉ dùng
+val: không train, không chấm test, không chỉnh mô hình theo kết quả đo. Ảnh được giải thích là ảnh mô hình xếp hạng 1 cho
+mỗi câu, dù đúng hay sai. Phần thứ hai xây một MMKG tiếng Việt và chạy phương pháp tốt nhất của cấp~2 trên đó.
+
+\subsubsection{Lời giải thích E và phép sửa đồ thị}\label{sec:xai-setup}
+E được đọc ra từ chính lượt xếp hạng, không tốn thêm lượt chấm nào. Mỗi phần $j$ của ảnh hạng 1 (một node vật thể hoặc một
+bộ ba có nhãn) nhận term
+\begin{equation}
+  t_j=\frac{\partial s}{\partial S_{\kappa}}\sum_i w_i\,a_{ij}\,\mathit{sim}_{ij},
+  \label{eq:xai-term}
+\end{equation}
+với $\kappa\in\{\text{obj},\text{tri}\}$ là kênh của phần $j$, $S_\kappa$ là điểm kênh và $s$ là điểm cuối.
+E là danh sách các phần xếp theo $t_j$ giảm dần; top-$k$ là $k$ phần đầu.
+Với fusion raw của countonly, đạo hàm trong \eqref{eq:xai-term} là trọng số kênh ($b$ hoặc $c$ ở Mục~\ref{sec:method-main}),
+nên các term cộng lại đúng bằng phần đồ thị của điểm cuối. Với fusion z-score của \texttt{main\_r3}, đạo hàm được tính chính
+xác bằng autograd trên 50 ứng viên, để node và bộ ba được so trên cùng thang điểm cuối.
+
+Mọi độ đo đều sửa đồ thị của ảnh hạng 1 rồi chấm lại bằng chính mô hình đó (\file{src/explain/xai_metrics.py}).
+\emph{Bỏ một node} là bỏ node cùng mọi cạnh chạm vào nó, nên các bộ ba chạm vào nó cũng mất; cạnh kNN không được dựng lại.
+\emph{Bỏ một bộ ba} là bỏ đúng cạnh có nhãn đó.
+\emph{Chỉ giữ top-$k$} là giữ các phần đó cùng node tổng (nếu có); bộ ba được giữ thì hai node đầu--cuối của nó ở lại làm
+``carrier'', vẫn truyền tin qua GAT nhưng không được chấm ở kênh vật thể. Ảnh sau khi sửa được mã hoá lại bằng cả mô hình,
+kể cả GAT; 49 ứng viên còn lại giữ nguyên điểm kênh, còn fusion được tính lại trên cả 50 ứng viên.
+
+Mốc \emph{gốc} là ảnh không sửa, chấm lại qua đúng đường chấm đó; ở cả 3 seed của cả hai mô hình, ảnh này vẫn hạng 1 ở mọi
+câu, sai số điểm tối đa $2{,}4\cdot10^{-7}$ (countonly) và $2{,}0\cdot10^{-5}$ (\texttt{main\_r3}).
+Mốc \emph{rỗng} bỏ mọi phần; \emph{hiệu ứng đồ thị} là $\Delta=s_{\text{gốc}}-s_{\text{rỗng}}$.
+Mốc \emph{ngẫu nhiên} (NN) là trung bình 10 lần bốc cùng số node và cùng số bộ ba với top-$k$, rng cố định theo (seed, ảnh,
+câu). Câu có E rỗng (31--36 câu mỗi seed với countonly, 39--45 với \texttt{main\_r3}) bị loại khỏi trung bình fidelity.
+R@1 tính lại trong lúc đo trùng \file{metrics.json} của từng checkpoint (script kiểm bằng \texttt{assert}).
+
+\subsubsection{Độ đo}\label{sec:xai-metrics}
+\textbf{Fidelity} (tên theo~\cite{xai-yuan2023survey}), với $k\in\{1,3,5\}$.
+Fid$^{+}$@$k$ bỏ top-$k$ của E và đếm tỉ lệ câu ảnh mất hạng 1; Fid$^{-}$@$k$ chỉ giữ top-$k$ và ghi hạng của ảnh.
+Đường cong deletion / insertion~\cite{xai-petsiuk2018rise} bỏ dần, hoặc chỉ giữ dần, $k=1,\dots,10$ phần đầu;
+$\mathrm{AUC}=\frac{1}{10}\sum_{k}(s_k-s_{\text{rỗng}})/\Delta$, deletion thấp là tốt, insertion cao là tốt.
+AUC có thể âm hoặc lớn hơn 1, vì sửa đồ thị có thể đẩy điểm ra ngoài khoảng $[s_{\text{rỗng}},s_{\text{gốc}}]$.
+Fid$_{\alpha}^{\pm}$~\cite{xai-zheng2024fidalpha} bỏ mỗi phần trong 5 phần đầu (Fid$_{\alpha}^{+}$), hoặc mỗi phần còn lại
+(Fid$_{\alpha}^{-}$), với xác suất $\alpha=0{,}1$, rồi lấy phần $\Delta$ bị mất, trung bình 10 lần bốc. Đồ thị sau khi sửa
+vẫn gần đồ thị gốc, và lời giải thích trung thực cho Fid$_{\alpha}^{+}>{}$Fid$_{\alpha}^{-}$.
+\emph{Tính cộng} (additivity): vì E là một phép phân rã điểm, tổng term của top-$k$ là ``dự đoán'' của điểm mất khi bỏ
+top-$k$; nhóm so nó với điểm mất đo được qua tỉ số tổng (tổng đo được chia tổng dự đoán, trên mọi câu) và tương quan
+Spearman giữa các câu.
+
+\textbf{Validity.}
+Về phản thực tế (counterfactual), $k_{\text{flip}}$ là $k\le 10$ nhỏ nhất mà bỏ top-$k$ làm ảnh mất hạng 1.
+Về ngữ nghĩa, với mỗi node vật thể của câu, nhóm xét node ảnh có $a_{ij}$ lớn nhất có cùng loại với nó không.
+\emph{Strict}: cùng nhãn sau alias VG, hoặc synset của node ảnh trùng hay là hyponym của nghĩa danh từ đầu tiên của từ trong
+câu; node người chỉ khớp với từ chung (person, people\ldots).
+\emph{Lenient} là tiêu chí của bản đo v1: cùng nhãn sau alias, hoặc cùng loại theo \texttt{same\_type} (chấp nhận ``woman''
+$\sim$ ``man'' và hypernym hai chiều), hoặc cosine CLIP $\ge 0{,}955$.
+Dòng bộ ba khớp đủ khi chủ thể và đối tượng khớp strict và vị từ khớp sau alias.
+Khớp nhóm số lượng chỉ chấm mô hình có bảng $g$.
+
+\textbf{Sparsity}, theo phần của ảnh: $k_{80}$ là $k\le 10$ nhỏ nhất mà chỉ giữ top-$k$ còn ít nhất 80\% $\Delta$; $n_{80}$
+là số phần đầu của E chiếm 80\% khối term dương.
+
+Phép đo có ba bản: v1 (\file{experiments/xai-metrics/}), v2 (\file{experiments/xai-metrics-v2/}) là v1 sau khi soát lại
+(sáu điểm sửa ghi ở Phụ lục~\ref{app:xai}), và v3 (\file{experiments/xai-metrics-v3/}) thêm ba cách giải thích. Mọi số ở phần kết quả là của v2
+và v3, trừ các số v1 được nêu để đính chính; v3 giữ nguyên mọi số của v2 (14\,542 giá trị trùng tuyệt đối).
+
+\subsubsection{Cách giải thích đối chứng và benchmark có đáp án biết trước}\label{sec:xai-baselines}
+Nhóm đo thêm 15 cách giải thích khác trên cùng các phần của ảnh, bằng cùng các độ đo, trên một mẫu cố định 1\,000 câu val.
+Bốn mốc đơn giản: ngẫu nhiên, E đảo ngược, cosine CLIP (không dùng mô hình) và gradient $\times$ input.
+Hai cách thuộc tính chung: Integrated Gradients~\cite{xai-sundararajan2017ig} (IG, 20 bước) và
+occlusion~\cite{xai-zeiler2014occlusion} (bỏ từng phần). Tám cách viết cho GNN: GNNExplainer~\cite{xai-ying2019gnnexplainer},
+PGExplainer~\cite{xai-luo2020pgexplainer}, GNN-LRP~\cite{xai-schnake2022gnnlrp}, GraphSVX~\cite{xai-duval2021graphsvx},
+SubgraphX~\cite{xai-yuan2021subgraphx} (v2), cùng phản thực tế CF-GNNExplainer~\cite{xai-lucic2022cfgnn}, cổng trên message
+GraphMask~\cite{xai-schlichtkrull2021graphmask} và Shapley có cấu trúc GStarX~\cite{xai-zhang2022gstarx} (v3). Cuối cùng là
+giá trị Shapley lấy mẫu 16 hoán vị~\cite{xai-castro2009shapley}, dùng làm chuẩn. Hàm giá trị của Shapley là biên giữa ảnh
+được giải thích và ứng viên tốt nhất còn lại khi chỉ giữ một tập phần, theo ý tưởng của
+RankingSHAP~\cite{xai-heuss2025rankingshap}; nó tốn khoảng 700--740 lượt chấm mỗi câu.
+
+Các cách viết cho GNN vốn dành cho bài toán phân loại node hoặc đồ thị, nên được chỉnh cho các phần ảnh của reranker
+(\file{src/explain/xai_baselines.py}). Kết quả của chúng vì vậy phụ thuộc cách chỉnh và ngân sách đã chọn, không phải kết
+quả của bản cài gốc trên tác vụ gốc. Cách chỉnh từng cách và các phép kiểm tra cài đặt ở Phụ lục~\ref{app:xai}.
+
+\textbf{Đáp án biết trước.} Validity ngữ nghĩa chấm bằng WordNet, không biết phần nào thực sự khiến ảnh đứng hạng 1. Nhóm
+dựng ba bộ có đáp án sẵn, không gán tay, và chấm cả 16 cách bằng GEA~\cite{xai-agarwal2023graphxai}, Jaccard giữa $g$ phần
+đầu của thứ tự và đáp án $g$ phần; mỗi mô hình, mỗi seed, 100 ca mà ảnh có đáp án đứng hạng 1.
+(B) Dữ liệu tổng hợp: câu là một motif 2--3 vật, ảnh vàng chứa motif, và mỗi ảnh âm thiếu đúng một phần của motif, nên mô
+hình cần mọi phần của đáp án~\cite{xai-faber2021groundtruth}; điểm CLIP là hằng số, và mô hình cùng kiến trúc countonly học
+lại đạt R@1 100\% trên val tổng hợp.
+(C) Cài một quan hệ của câu cùng một mồi nhử không liên quan vào một ứng viên hạng 2--5, ở vị trí ngẫu nhiên trong danh sách
+phần của ảnh, chỉ giữ ca mà ảnh lên hạng 1.
+(A) Mô tả vùng của Visual Genome làm truy vấn, đáp án là các object và quan hệ người gán nhãn nói tới; bộ này đo độ hợp lý,
+không phải độ trung thực.
+
+\subsubsection{MMKG tiếng Việt}\label{sec:vn-data}
+Cấp độ 3 yêu cầu tự xây một MMKG nhỏ cho một miền hẹp, ưu tiên tiếng Việt, rồi chạy phương pháp tốt nhất của cấp 1--2 trên
+đó. Data card (nguồn, cách tạo triple, giấy phép, điều kiện sử dụng) ở \file{vietnamese-mmkg/DATA_CARD.md}; thống kê đầy đủ,
+mẫu dữ liệu và một ví dụ suy luận từng bước ở Phụ lục~\ref{app:vnmmkg}.
+
+\textbf{Miền và nguồn.} Di tích và công trình ở Việt Nam (chùa, đền, tháp, nhà thờ, lăng, bảo tàng, nơi có danh hiệu di
+sản), vì miền này có dữ liệu mở và nhiều quan hệ không thấy được trong ảnh: ở tỉnh nào, xây thời nào, ai sáng lập, thờ ai.
+Thực thể và triple lấy từ Wikidata~\cite{vn-vrandecic2014wikidata} (CC0); phần mở đầu và infobox lấy từ Wikipedia tiếng
+Việt~\cite{vn-viwiki} (CC BY-SA 4.0); ảnh lấy từ Wikimedia Commons~\cite{vn-commons}, tải ngày 24--25/10/2026.
+
+\textbf{Quy mô} (khung gợi ý của đề trong ngoặc): 150 thực thể (50--150), gồm 75 di tích và 75 thực thể ngữ cảnh (tỉnh,
+người, tôn giáo, danh hiệu, thời kỳ, lớp,~\ldots); 325 triple (300--1\,000) thuộc 13 quan hệ; 331 ảnh (200--500), mỗi di
+tích 3--5 ảnh. Di tích là thực thể Wikidata ở Việt Nam có danh hiệu di sản hoặc thuộc một trong 10 lớp công trình, xếp theo
+số sitelink.
+
+\textbf{Triple.} Mỗi bộ ba giữ một nguồn, ưu tiên Wikidata, rồi infobox, rồi suy diễn. 257 triple là giá trị truthy (hạng
+tốt nhất) trên Wikidata; 26 triple đọc từ ba trường infobox (người sáng lập, thờ, tôn giáo), chỉ nhận giá trị là wikilink
+để ánh xạ được sang QID; 42 triple sinh từ hai quy tắc cố định: tỉnh (theo chuỗi \texttt{P131}, chỉ tạo khi tới đúng một
+tỉnh) và thời kỳ (năm dựng đối chiếu với bảng 8 mốc triều đại). Toàn bộ 107 triple từ infobox và suy diễn được duyệt tay;
+1 triple bị loại.
+
+\textbf{Liên kết ảnh -- thực thể.} Ứng viên là ảnh \texttt{P18} cộng các file nằm trực tiếp trong Commons category của di
+tích (JPEG/PNG rộng từ 400\,px, tối đa 12). Từng ảnh được duyệt tay, chỉ giữ ảnh thể hiện chính di tích; bản đồ, ảnh gần
+trùng, ảnh có người là chủ thể chính bị bỏ (541 ảnh). Ảnh dùng chung chỉ giữ ở di tích xếp trên, nên mỗi ảnh thuộc đúng
+một di tích; 35/110 di tích bị loại vì còn dưới 3 ảnh.
+
+\textbf{Truy vấn.} 197 câu \emph{tự động} là tối đa 3 câu đầu bài Wikipedia, đã che nhãn và alias. 30 câu \emph{soạn tay}
+gồm 12 câu trực tiếp (tả điều thấy trong ảnh) và 18 câu gián tiếp (cần ít nhất một quan hệ không thấy trong ảnh); đáp án
+câu gián tiếp được tính tự động bằng cách khớp mẫu quan hệ trên triple. Câu đúng ở hạng $k$ nếu trong $k$ ảnh đầu có ảnh
+của một di tích đáp án.
+
+\textbf{Giấy phép và kiểm tra.} Chỉ nhận ảnh CC0, Public Domain, CC BY, CC BY-SA (163 ảnh CC BY-SA, 83 CC BY, 57 Public
+Domain, 28 CC0); tác giả, giấy phép và URL nguồn từng ảnh ghi trong \file{images.jsonl}. Bộ dữ liệu chỉ dùng cho học thuật
+trong môn học, phải ghi công tác giả khi hiển thị ảnh. Quyết định duyệt ảnh và triple lưu trong \file{review_images.json},
+\file{review_triples.json}; chạy lại \texttt{python -m src.data.build\_vnmmkg} từ cache cho ra đúng các file đã commit.
+
+\textbf{Giao thức đánh giá.}\label{sec:vn-leak} Bộ này quá nhỏ để vừa chọn tham số vừa chấm điểm, nên nhóm chốt hai giao
+thức trước khi chạy.
+\begin{itemize}
+\item \textbf{A0, zero-shot (chính):} không chọn gì trên bộ tiếng Việt. Pool 331 ảnh, 197 câu tự động và 30 câu soạn tay.
+  Encoder chọn trên MKG-W val (Mục~\ref{sec:vn-encoder}); $\alpha=0$ lấy từ \file{experiments/level2/val/choice.json} (hàng
+  \texttt{kg\_triple}, cả ba seed).
+\item \textbf{A1, chọn lại $\alpha$ (phụ):} chia di tích 50/50 bằng seed 0 (val: 38 di tích, 170 ảnh, 94 câu; test: 37 di
+  tích, 161 ảnh, 103 câu). $\alpha$ quét từ 0 đến 1, bước 0{,}05, chọn theo R@1 trên val (hoà thì theo MRR); test chạy một
+  lần. Câu soạn tay không tham gia.
+\item Câu soạn tay chỉ dùng để chấm: \file{queries_hand.json} khoá ở commit \texttt{55fa697} (26/10/2026), trước mọi lần
+  chạy, không sửa sau đó.
+\item Triple là tri thức có sẵn, không phải cạnh thống kê đồng xuất hiện, nên được dùng hết.
+\item Encoder đóng băng, không huấn luyện: kết quả tất định, chạy một lần, không có $\pm$std. Độ bất định đến từ cỡ mẫu:
+  một câu bằng 5{,}56 điểm ở nhóm gián tiếp, 8{,}33 điểm ở nhóm trực tiếp, 0{,}97 điểm ở test A1.
+\end{itemize}
+
+\textbf{Phương pháp chuyển giao.}\label{sec:vn-method} Phương pháp được chuyển là kênh đếm cạnh KG (hàng \texttt{kg\_triple},
+Mục~\ref{sec:method-l2}), mô hình tốt nhất ở cấp 2. Bộ xếp hạng GAT của cấp 1 cần scene graph của từng ảnh, còn bộ này chỉ có
+KG mức thực thể. Kênh embedding NativE phải train lại trên 325 triple, quá ít để học embedding; hơn nữa trên MKG-W val kênh
+này nhận trọng số $\beta=0$, nên mô hình chính của cấp 2 trùng với \texttt{kg\_triple}. Chỉ thay đồ thị, ngôn ngữ và encoder.
+Linker (\texttt{EntityLinker}) chuyển câu về chữ thường, tách theo chữ cái (mỗi âm tiết là một token, giữ dấu), so khớp
+chính xác với nhãn và alias tiếng Việt; độ dài tên tối đa nâng từ 5 token lên 12 âm tiết. Điểm đồ thị của một ảnh trong
+top-50 là số cạnh KG trực tiếp giữa di tích của ảnh và các thực thể được nhắc; điểm cuối là
+$\alpha\, z(\mathrm{CLIP}) + (1-\alpha)\, z(\text{đồ thị})$. Với $\alpha=0$, thứ tự CLIP chỉ còn dùng để phá thế hoà. Giải
+thích là chính danh sách cạnh đã đếm. Code: \file{scripts/eval_vnmmkg_transfer.py}.
+
+\subsubsection{Ablation}\label{sec:l3-ablation}
+\textbf{Cạnh mà GAT chú ý nhất.} Đề yêu cầu bỏ hoặc nhiễu cả các cạnh dùng làm lời giải thích; ngoài các bộ ba (cạnh có
+nhãn) trong E, nhóm thử cả các cạnh mà GAT chú ý nhất: với 3 node đầu của E, cắt đường truyền tin của các cạnh vào có
+attention lớn nhất (giữ bộ ba), rồi so với cắt cùng số cạnh vào ngẫu nhiên của từng node. Trên 2\,803 câu mỗi seed có nhiều
+cạnh vào hơn số cạnh cắt, tỉ lệ mất hạng 1 là \pmstd{1,0}{0,6}\% so với \pmstd{0,7}{0,4}\%, và điểm đổi
+\pmstd{$-0{,}0011$}{0,0007} so với \pmstd{$-0{,}0010$}{0,0005} (\texttt{main\_r3}): cắt cạnh có attention cao không làm thay
+đổi kết quả nhiều hơn cắt cạnh ngẫu nhiên. Với countonly (10\,481 câu mỗi seed), cắt cạnh có attention cao làm mất hạng 1 ở
+\pmstd{3,5}{1,5}\% câu, khoảng gấp đôi cắt ngẫu nhiên (\pmstd{1,8}{0,9}\%) ở cả 3 seed, nhưng điểm đổi như nhau
+(\pmstd{$+0{,}0025$}{0,0006} so với \pmstd{$+0{,}0021$}{0,0003}). Ở cả hai mô hình, hiệu ứng này nhỏ so với bỏ phần trong E;
+trọng số attention của GAT vì vậy không xác định được cạnh quyết định thứ hạng, tương tự nhận xét
+của~\cite{xai-jain2019attention}.
+
+\textbf{Mức message.} Ngừng mọi message GAT của ảnh hạng 1 (giữ bộ ba) làm ảnh mất điểm ở 12,2\% câu với countonly, và
+trung bình điểm còn tăng ($+0{,}0079$); với \texttt{main\_r3}, tỉ lệ là 48,2\% nhưng điểm chỉ giảm trung bình 0,0010. Ngừng
+dần top-$k$ message theo GraphMask, theo attention GAT hay ngẫu nhiên: với countonly, không thứ tự nào hơn ngẫu nhiên; với
+\texttt{main\_r3}, GraphMask và attention ngang nhau (AUC mất điểm 0,41 và 0,41) và hơn ngẫu nhiên (0,32). Truyền tin GAT
+mang rất ít điểm, nên các cách giải thích theo message có ít thứ để giải thích trên mô hình này.
+
+\textbf{Chọn encoder cho truy vấn tiếng Việt.}\label{sec:vn-encoder} CLIP ViT-B/32 của OpenAI (encoder cấp 1--2) chỉ học văn
+bản tiếng Anh. Nhóm so bốn encoder trên 84 thực thể MKG-W val có mô tả tiếng Việt, mỗi thực thể hỏi bằng cả tiếng Việt và
+tiếng Anh, pool 892 ảnh (Bảng~\ref{tab:vn-encoder}). Encoder đa ngữ gồm XLM-R~\cite{vn-conneau2020xlmr} ghép tháp ảnh huấn
+luyện trên LAION-5B~\cite{vn-schuhmann2022laion5b} (bản OpenCLIP~\cite{vn-ilharco2021openclip}) và một bộ mã hoá văn bản đa
+ngữ chưng cất vào không gian CLIP B/32~\cite{vn-reimers2020multilingual}. Với câu tiếng Việt, R@1 của OpenAI B/32 giảm từ
+35,71 xuống 10,71, nên không dùng được. XLM-R large + ViT-H/14 cao nhất và không chênh giữa hai ngôn ngữ; nhóm chốt encoder
+này. Hai encoder B/32 đa ngữ chỉ cách nhau 3 câu (mức nhiễu), còn H/14 hơn chúng khoảng 12 điểm R@1 (10 câu). Cấp 1--2 vẫn
+giữ OpenAI B/32, nên cột ``CLIP'' ở kết quả tiếng Việt không so trực tiếp được với MKG-W.
+
+\begin{table}[t]
+\centering
+\caption{Chọn encoder trên MKG-W val (84 thực thể, pool 892 ảnh). Tất định, chạy một lần. MRR nhân 100.}
+\label{tab:vn-encoder}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+ & \multicolumn{3}{c}{Tiếng Việt} & \multicolumn{2}{c}{Tiếng Anh} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-6}
+Encoder (văn bản + ảnh) & R@1 & R@10 & MRR & R@1 & MRR \\
+\midrule
+OpenAI ViT-B/32 (cấp 1--2) & 10,71 & 17,86 & 14,10 & 35,71 & 46,03 \\
+XLM-R base + ViT-B/32 & 25,00 & 61,90 & 37,83 & 28,57 & 40,50 \\
+Chưng cất đa ngữ + ViT-B/32 & 28,57 & 55,95 & 40,05 & 33,33 & 44,62 \\
+XLM-R large + ViT-H/14 & \textbf{40,48} & \textbf{78,57} & \textbf{51,80} & 40,48 & 51,31 \\
+\bottomrule
+\end{tabular}
+\tabsrc{\file{experiments/checks/multilingual_clip_probe.json}}
+\end{table}

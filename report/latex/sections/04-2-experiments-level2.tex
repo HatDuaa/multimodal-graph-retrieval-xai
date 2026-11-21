@@ -1,8 +1,16 @@
 % =====================================================================
-\section{Kết quả cấp độ 2: MKG-W và NativE}
+% IV-C: kết quả cấp độ 2. Các dòng ablation (cạnh xáo trộn, nhiễu Gauss, β > 0) ở Bảng tab:l2-ablation, Mục III-B.
+\subsection{Kết quả cấp độ 2: MKG-W và NativE}
 \label{sec:l2}
 
-\subsection{Bước a: tái lập link prediction của NativE}
+\textbf{Bước a: tái lập link prediction của NativE.}
+Nhóm chạy lại NativE trên MKG-W gốc với đúng mã nguồn và siêu tham số của tác giả. Tiêu chí đặt trước khi chạy: chênh không
+quá khoảng 1 điểm thì coi là tái lập được. Kết quả lệch +0,41 MRR và +0,61 Hits@1 (Bảng~\ref{tab:l2-repro}), nên bước a đạt.
+Bản \texttt{rmask}, đã che đặc trưng ảnh và chữ của 1\,784 thực thể val/test retrieval, cho cùng mức MRR, tức việc che
+không làm giảm chất lượng link prediction. Mỗi lần huấn luyện mất khoảng 1,1 giờ trên một GPU RTX 4090. Tham số
+\texttt{-seed} của mã nguồn chỉ đặt seed cho PyTorch; bộ lấy mẫu âm viết bằng C không được seed, nên chuỗi mẫu âm giống nhau
+ở mọi seed. Độ lệch chuẩn qua 3 seed vì vậy chỉ phản ánh khởi tạo và nhiễu của phần đối kháng, không bao gồm biến thiên do
+lấy mẫu âm.
 
 \begin{table}[t]
 \centering
@@ -24,21 +32,10 @@ MKG-W-rmask (seed 0, 1, 2) & \pmstd{36,99}{0,24} & \pmstd{29,98}{0,11} & \pmstd{
 \tabsrc{\file{experiments/level2/native-repro/metrics.json}, \file{experiments/level2/native-train/}}
 \end{table}
 
-Nhóm chạy lại NativE trên MKG-W gốc với đúng mã nguồn và siêu tham số của tác giả. Tiêu chí đặt trước khi chạy: chênh không
-quá khoảng 1 điểm thì coi là tái lập được. Kết quả lệch +0,41 MRR và +0,61 Hits@1 (Bảng~\ref{tab:l2-repro}), nên bước a đạt.
-Bản \texttt{rmask}, đã che đặc trưng ảnh và chữ của 1\,784 thực thể val/test retrieval, cho cùng mức MRR, tức việc che
-không làm giảm chất lượng link prediction. Mỗi lần huấn luyện mất khoảng 1,1 giờ trên một GPU RTX 4090.
-
-Về độ lệch chuẩn: tham số \texttt{-seed} của mã nguồn chỉ đặt seed cho PyTorch; bộ lấy mẫu âm viết bằng C không được seed,
-nên chuỗi mẫu âm giống nhau ở mọi seed. Độ lệch chuẩn qua 3 seed vì vậy chỉ phản ánh khởi tạo và nhiễu của phần đối kháng,
-không bao gồm biến thiên do lấy mẫu âm.
-
-\subsection{Bước b: kết quả truy vấn}
-
 \begin{table}[t]
 \centering
 \caption{Kết quả truy vấn trên MKG-W (892 truy vấn mỗi split, pool 892 ảnh). $\alpha,\beta$ chọn trên val; test chấm một lần.
-Ba dòng \texttt{kg\_triple}, \texttt{native}, \texttt{native\_kgc} trùng nhau vì val chọn $\beta = 0$.}
+Hai dòng NativE dùng riêng tín hiệu của NativE ($\beta = 1$).}
 \label{tab:l2-results}
 \footnotesize
 \setlength{\tabcolsep}{2.5pt}
@@ -47,54 +44,31 @@ Ba dòng \texttt{kg\_triple}, \texttt{native}, \texttt{native\_kgc} trùng nhau 
 \toprule
  & Dòng & R@1 & R@5 & R@10 & MRR \\
 \midrule
-\multirow{5}{*}{\rotatebox{90}{Val}} & CLIP thuần & 24,33 & 44,39 & 53,81 & 34,22 \\
+\multirow{4}{*}{\rotatebox{90}{Val}} & CLIP thuần & 24,33 & 44,39 & 53,81 & 34,22 \\
  & + đếm cạnh (dòng chính) & \textbf{32,40} & \textbf{50,78} & \textbf{57,62} & \textbf{41,18} \\
- & + điểm NativE, bỏ cạnh & \pmstd{28,25}{0,11} & \pmstd{45,85}{0,51} & \pmstd{54,37}{0,70} & \pmstd{36,97}{0,08} \\
- & + cosine NativE, bỏ cạnh & \pmstd{26,64}{0,26} & \pmstd{45,96}{0,39} & \pmstd{54,30}{0,62} & \pmstd{35,98}{0,15} \\
- & Cạnh xáo trộn & \pmstd{21,82}{0,39} & \pmstd{42,56}{0,06} & \pmstd{51,72}{0,26} & \pmstd{32,03}{0,23} \\
+ & + điểm NativE & \pmstd{28,25}{0,11} & \pmstd{45,85}{0,51} & \pmstd{54,37}{0,70} & \pmstd{36,97}{0,08} \\
+ & + cosine NativE & \pmstd{26,64}{0,26} & \pmstd{45,96}{0,39} & \pmstd{54,30}{0,62} & \pmstd{35,98}{0,15} \\
 \midrule
-\multirow{5}{*}{\rotatebox{90}{Test}} & CLIP thuần & 24,89 & 44,73 & 54,48 & 34,61 \\
+\multirow{4}{*}{\rotatebox{90}{Test}} & CLIP thuần & 24,89 & 44,73 & 54,48 & 34,61 \\
  & + đếm cạnh (dòng chính) & \textbf{29,82} & \textbf{51,46} & \textbf{59,42} & \textbf{39,89} \\
- & + điểm NativE, bỏ cạnh & \pmstd{27,24}{0,19} & \pmstd{46,52}{0,11} & \pmstd{56,28}{0,11} & \pmstd{36,67}{0,14} \\
- & + cosine NativE, bỏ cạnh & \pmstd{26,08}{0,45} & \pmstd{44,92}{0,53} & \pmstd{54,22}{0,95} & \pmstd{35,46}{0,58} \\
- & Cạnh xáo trộn & \pmstd{21,45}{0,06} & \pmstd{43,31}{0,51} & \pmstd{53,29}{0,13} & \pmstd{32,02}{0,16} \\
+ & + điểm NativE & \pmstd{27,24}{0,19} & \pmstd{46,52}{0,11} & \pmstd{56,28}{0,11} & \pmstd{36,67}{0,14} \\
+ & + cosine NativE & \pmstd{26,08}{0,45} & \pmstd{44,92}{0,53} & \pmstd{54,22}{0,95} & \pmstd{35,46}{0,58} \\
 \bottomrule
 \end{tabular}}
 \tabsrc{\file{experiments/level2/val/summary.json} và \file{experiments/level2/test/summary.json}}
 \end{table}
 
-Bảng~\ref{tab:l2-results} gom các dòng theo vai trò. ``Đếm cạnh'' là kênh \texttt{triple}; ``điểm NativE'' là kênh
-\texttt{kgc} (dòng \texttt{kgc\_only}, $\beta = 1$); ``cosine NativE'' là kênh \texttt{emb} (dòng \texttt{native\_emb},
-$\beta = 1$). Dòng ``cạnh xáo trộn'' đổi chỗ đuôi của các triple trong cùng một quan hệ, giữ nguyên bậc của đầu, rồi dùng
-lại $\alpha,\beta$ của dòng chính. Dòng chính hơn CLIP 4,93 điểm R@1 và 5,28 điểm MRR trên test.
-
-\textbf{Thứ tự kênh kgc được thêm.} Lần chạy val đầu tiên chỉ có kênh cosine, và val chọn $\beta = 0$ cho kênh này. Vì kênh
-cosine không dùng quan hệ, kênh \texttt{kgc} được thêm để dùng hàm chấm có quan hệ của chính NativE. Định
-nghĩa kênh và dòng chính mới được chốt trước khi chạy lại val và trước lần chấm test ngày 17/11. Lần chạy lại val giữ
-nguyên từng byte các file kết quả cũ (\file{experiments/level2/val/README.md}).
-
-\textbf{Các lần đọc test khác và một lần chạy lại độc lập.} (1) Khi kiểm tra code đánh giá,
-một lần chạy thử \texttt{--split test --hand} với embedding giả đã in ra số test của dòng đếm cạnh, kể cả trên bộ câu tự
-viết. Dòng này không có tham số nào ngoài $\alpha$, và $\alpha$ đã chốt trên val; không có gì được chỉnh sau đó.
-(2) Ngày 18/11, nhóm chạy lại độc lập toàn bộ cấp~2 trên molab: tự huấn luyện NativE 3 seed (MRR rmask \pmstd{36,89}{0,27},
-bản gốc 37,06), dùng đặc trưng CLIP gốc thay cho bản nhóm trích lại, tự chọn $\alpha,\beta$ trên val rồi chấm test một lần.
-Val lại chọn $\alpha = 0$, $\beta = 0$ ở cả 3 seed; dòng chính trên test cho đúng R@1 29,82, cosine NativE
-\pmstd{26,05}{0,51} và cạnh xáo trộn \pmstd{21,41}{0,11}, gần với Bảng~\ref{tab:l2-results}. CLIP thuần trên test là 25,00
-thay vì 24,89 vì khác bản đặc trưng. Kết quả và log của lần chạy này ở \file{experiments/level2/molab-rerun/}.
-
-\subsection{Phân tích kết quả}
-
+\textbf{Bước b: kết quả truy vấn} (Bảng~\ref{tab:l2-results}). ``Đếm cạnh'' là kênh \texttt{triple}; ``điểm NativE'' là kênh
+\texttt{kgc} (dòng \texttt{kgc\_only}); ``cosine NativE'' là kênh \texttt{emb} (dòng \texttt{native\_emb}). Khi kết hợp
+NativE với kênh đếm cạnh, val chọn $\beta = 0$, nên các dòng kết hợp trùng với dòng chính (Bảng~\ref{tab:l2-ablation}). Bảng
+này đủ ba dòng của khung so sánh: CLIP thuần, CLIP + đồ thị và CLIP + phương pháp 2024.
 \begin{itemize}
 \item \textbf{Kênh đếm cạnh cho mức tăng lớn nhất.} Kênh này không có tham số huấn luyện và nâng R@1 val từ 24,33 lên 32,40.
-\item \textbf{Đối chứng xáo cạnh.} Xáo đuôi cạnh làm R@1 thấp hơn CLIP (val 21,82, test 21,45). Vì phép xáo giữ nguyên bậc
-của đầu cạnh, mức tăng của dòng chính đến từ việc cạnh nối đúng thực thể, không đến từ bậc của thực thể.
+Trên test, dòng chính hơn CLIP 4,93 điểm R@1 và 5,28 điểm MRR.
 \item \textbf{NativE dùng riêng.} Điểm bộ ba của NativE nâng R@1 val 3,92 điểm so với CLIP; cosine embedding nâng 2,32 điểm.
 Thứ tự này giữ nguyên trên test và ở cả 3 seed: kênh dùng quan hệ (\texttt{kgc}) cho kết quả cao hơn kênh chỉ so vector thực
-thể (\texttt{emb}), nhưng cả hai thấp hơn kênh đếm cạnh.
-\item \textbf{NativE kết hợp với đếm cạnh.} Ở cả 3 seed, val chọn $\beta = 0$ cho cả kênh cosine lẫn kênh \texttt{kgc}. Mọi
-$\beta > 0$ đều cho R@1 val thấp hơn (tốt nhất 31,61 với cosine và 30,38 với \texttt{kgc}, so với 32,40). Do kênh NativE có
-trọng số 0, thay embedding của nó bằng nhiễu Gauss cho đúng con số của dòng chính. Như vậy, trong dòng chính của cấp~2,
-NativE không đóng góp; kết quả của NativE được báo cáo ở phần tái lập (Bảng~\ref{tab:l2-repro}) và ở hai dòng dùng riêng.
+thể (\texttt{emb}), nhưng cả hai thấp hơn kênh đếm cạnh. Như vậy, trong dòng chính của cấp~2, NativE không đóng góp; kết quả
+của NativE được báo cáo ở phần tái lập (Bảng~\ref{tab:l2-repro}) và ở hai dòng dùng riêng.
 \end{itemize}
 
 \textbf{Độ nhạy theo $\alpha$} (Hình~\ref{fig:alpha}). Trên MKG-W, R@1 val giữ ở 32,40 trong cả đoạn $\alpha \in [0; 0{,}35]$
@@ -105,9 +79,21 @@ chỉ còn số cạnh; các ứng viên cùng số cạnh giữ thứ tự củ
 \textbf{Theo nhóm truy vấn.} Truy vấn không khớp được thực thể nào (189 câu val, 170 câu test) giữ nguyên kết quả của CLIP
 theo thiết kế. Toàn bộ mức tăng nằm ở nhóm khớp được: R@1 val 20,91 $\to$ 31,15, test 22,71 $\to$ 28,81.
 
-\subsection{Bộ 25 truy vấn tự viết: trực tiếp và gián tiếp}
-\label{sec:l2-hand}
+\textbf{Thứ tự kênh kgc được thêm.} Lần chạy val đầu tiên chỉ có kênh cosine, và val chọn $\beta = 0$ cho kênh này. Vì kênh
+cosine không dùng quan hệ, kênh \texttt{kgc} được thêm để dùng hàm chấm có quan hệ của chính NativE. Định nghĩa kênh và dòng
+chính mới được chốt trước khi chạy lại val và trước lần chấm test ngày 17/11. Lần chạy lại val giữ nguyên từng byte các file
+kết quả cũ (\file{experiments/level2/val/README.md}).
 
+\textbf{Các lần đọc test khác và một lần chạy lại độc lập.} (1) Khi kiểm tra code đánh giá, một lần chạy thử
+\texttt{--split test --hand} với embedding giả đã in ra số test của dòng đếm cạnh, kể cả trên bộ câu tự viết. Dòng này không
+có tham số nào ngoài $\alpha$, và $\alpha$ đã chốt trên val; không có gì được chỉnh sau đó. (2) Ngày 18/11, nhóm chạy lại độc
+lập toàn bộ cấp~2 trên molab: tự huấn luyện NativE 3 seed (MRR rmask \pmstd{36,89}{0,27}, bản gốc 37,06), dùng đặc trưng
+CLIP gốc thay cho bản nhóm trích lại, tự chọn $\alpha,\beta$ trên val rồi chấm test một lần. Val lại chọn $\alpha = 0$,
+$\beta = 0$ ở cả 3 seed; dòng chính trên test cho đúng R@1 29,82, cosine NativE \pmstd{26,05}{0,51} và cạnh xáo trộn
+\pmstd{21,41}{0,11}, gần với Bảng~\ref{tab:l2-results} và~\ref{tab:l2-ablation}. CLIP thuần trên test là 25,00 thay vì 24,89
+vì khác bản đặc trưng. Kết quả và log của lần chạy này ở \file{experiments/level2/molab-rerun/}.
+
+\subsubsection{Bộ 25 truy vấn tự viết: trực tiếp và gián tiếp}\label{sec:l2-hand}
 \textbf{Cách xây và kiểm tra.} Bộ câu nằm ở \file{data/queries/mkgw_queries_hand.json}. Quy tắc được kiểm tra tự động bởi
 \file{scripts/build_mkgw_hand_queries.py}; script từ chối ghi file nếu có câu vi phạm.
 \begin{itemize}
@@ -151,9 +137,5 @@ minh hoạ và không thay cho kết quả trên 892 truy vấn.
 \emph{Bordeaux}. Ảnh đúng là ga Bordeaux-Saint-Jean, có cạnh KGC-train P131 (\emph{located in the administrative territorial
 entity}) tới Bordeaux. Lời giải thích của ứng viên là cạnh này, cũng là cạnh được đếm vào điểm đồ thị. Với câu về Pink
 Floyd, có hai cạnh KGC-train được đếm: P463 (\emph{member of}, David Gilmour $\to$ Pink Floyd) và P527 (\emph{has part},
-Pink Floyd $\to$ David Gilmour), nên điểm đồ thị của ảnh đúng là 2. \todo{Hạng của ảnh đúng theo CLIP và theo
-dòng chính cho từng câu: chờ bảng theo câu (việc 8, Khoa); lần chạy 17/11 chỉ lưu số tổng theo nhóm.}
-
-\textbf{Về GAT trên MKG-W.} MKG-W không có scene graph cho từng ảnh, nên bộ xếp lại GATv2 của cấp~1 không áp dụng được. Ở
-bước b, tín hiệu từ đồ thị tri thức (đếm cạnh và NativE) thay vai trò của GNN. Trên MKG-W, phép so ``CLIP với CLIP + đồ thị''
-của đề là hai dòng đầu của Bảng~\ref{tab:l2-results}.
+Pink Floyd $\to$ David Gilmour), nên điểm đồ thị của ảnh đúng là 2. Lần chấm ngày 17/11 chỉ lưu số tổng theo nhóm câu, không
+lưu hạng của ảnh đúng theo từng câu, nên báo cáo không nêu hạng của từng câu.

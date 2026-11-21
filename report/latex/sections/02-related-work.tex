@@ -1,0 +1,67 @@
+% =====================================================================
+% Công trình liên quan. Bài mới trích nằm trong refs-related.bib (đã đối chiếu tên, tác giả, nơi đăng).
+% Mục này không trích con số nào từ các bài báo.
+\section{Công trình liên quan}
+\label{sec:related}
+
+\subsection{Truy vấn văn bản--ảnh và giới hạn của CLIP}
+
+Các mô hình so khớp ảnh--văn bản trước CLIP căn từng vùng ảnh với từng từ trong câu; ví dụ, SCAN~\cite{rw-lee2018scan}
+dùng cross-attention giữa vùng ảnh và từ để tìm các cặp tương ứng. CLIP~\cite{radford2021clip} và
+OpenCLIP~\cite{cherti2023openclip} huấn luyện tương phản (contrastive) hai bộ mã hoá ảnh và văn bản trên các cặp ảnh--câu
+quy mô lớn. Truy vấn khi đó là tìm láng giềng gần theo cosine, làm được nhanh với FAISS~\cite{johnson2019faiss}, nhưng
+mỗi bên chỉ còn một vector. ARO~\cite{rw-yuksekgonul2023aro} cho thấy các mô hình này đạt kết quả truy vấn tốt trên các
+benchmark sẵn có mà không cần dùng thông tin về thành phần và thứ tự trong câu, và kém ở quan hệ, ở gắn thuộc tính với vật
+thể và ở thứ tự; bài báo sửa bằng mẫu âm khó khi huấn luyện. Winoground~\cite{rw-thrush2022winoground} kiểm tra cùng điểm
+yếu bằng các cặp câu có cùng các từ nhưng khác thứ tự. Nhóm không huấn luyện lại CLIP mà đưa cấu trúc vào ở bước xếp lại.
+
+\subsection{Scene graph và GNN trong truy vấn ảnh}
+
+Johnson và cộng sự~\cite{rw-johnson2015sgretrieval} đề xuất truy vấn ảnh bằng scene graph: truy vấn là một đồ thị gồm vật
+thể, thuộc tính và quan hệ; một trường ngẫu nhiên có điều kiện (CRF) tìm cách gắn đồ thị vào từng ảnh, và độ khả dĩ của
+cách gắn đó là điểm xếp hạng. Visual Genome~\cite{krishna2017vg} mở rộng ý tưởng này thành một bộ ảnh lớn có scene graph
+gán tay. Các mô hình so khớp sau đó đưa cấu trúc vào bộ mã hoá. VSRN~\cite{rw-li2019vsrn} nối các vùng ảnh phát hiện được
+thành đồ thị rồi chạy GCN. SGM~\cite{rw-wang2020sgm} biểu diễn cả ảnh và câu bằng scene graph và so khớp ở mức vật thể và
+mức quan hệ. GSMN~\cite{rw-liu2020gsmn} so khớp ở mức node và mức cấu trúc. Structure-CLIP~\cite{rw-huang2024structureclip}
+dùng scene graph của câu để sinh mẫu âm khó và đưa tri thức scene graph vào khi tinh chỉnh CLIP. Phía câu, scene graph được
+tách bằng parser dựa trên luật và cây cú pháp~\cite{schuster2015sgparser} hoặc bằng parser seq2seq như
+FACTUAL~\cite{li2023factual}. Các lớp GNN thường dùng là GCN~\cite{rw-kipf2017gcn}, GraphSAGE~\cite{rw-hamilton2017sage},
+GAT~\cite{rw-velickovic2018gat} và GATv2~\cite{brody2022gatv2}. Khác với các mô hình trên, nhóm giữ nguyên hai bộ mã hoá
+của CLIP; GATv2 chỉ chấm lại 50 ứng viên, và điểm đồ thị tách được thành từng cặp phần khớp giữa câu và ảnh, nên lời giải
+thích là chính các số hạng của điểm.
+
+\subsection{Đồ thị tri thức đa phương thức}
+
+Các mô hình embedding đồ thị tri thức học vector cho thực thể và quan hệ để chấm điểm một bộ ba:
+TransE~\cite{rw-bordes2013transe} coi quan hệ là một phép tịnh tiến, RotatE~\cite{sun2019rotate} coi quan hệ là một phép
+quay trong không gian phức. Đồ thị tri thức đa phương thức (multimodal knowledge graph, MMKG) gắn thêm ảnh và mô tả cho
+thực thể~\cite{rw-chen2024mmkgsurvey}. IKRL~\cite{rw-xie2017ikrl} học biểu diễn thực thể từ cả triple lẫn ảnh. Các mô hình
+hoàn thiện MMKG (MMKGC) gần đây gồm MKGformer~\cite{rw-chen2022mkgformer} (transformer lai, trộn hai phương thức ở nhiều
+mức), MMRNS~\cite{xu2022mmrns} (lấy mẫu âm theo quan hệ; đây cũng là nguồn của MKG-W), NativE~\cite{zhang2024native} và
+AdaMF-MAT~\cite{rw-zhang2024adamf} (xử lý thực thể thiếu hoặc mất cân bằng phương thức), và mô hình trên không gian đa độ
+cong (mixed-curvature) của~\cite{rw-gao2025mixedcurvature}. Các mô hình này được đánh giá bằng link prediction, không phải
+bằng truy vấn ảnh. Nhóm tái lập NativE, rồi dùng embedding và hàm chấm bộ ba của nó làm tín hiệu xếp lại, đặt cạnh một tín
+hiệu đơn giản hơn: số cạnh tri thức giữa thực thể ứng viên và các thực thể được nhắc trong câu.
+
+\subsection{Giải thích GNN và đánh giá lời giải thích}
+
+Phần lớn các cách giải thích GNN là hậu kiểm (post-hoc): sau khi mô hình đã dự đoán, chúng tìm phần đồ thị quan trọng bằng
+mask học được (GNNExplainer~\cite{xai-ying2019gnnexplainer}, PGExplainer~\cite{xai-luo2020pgexplainer},
+GraphMask~\cite{xai-schlichtkrull2021graphmask}), bằng giá trị Shapley (GraphSVX~\cite{xai-duval2021graphsvx},
+SubgraphX~\cite{xai-yuan2021subgraphx}, GStarX~\cite{xai-zhang2022gstarx}), bằng lan truyền relevance
+(GNN-LRP~\cite{xai-schnake2022gnnlrp}) hoặc bằng phản thực tế (CF-GNNExplainer~\cite{xai-lucic2022cfgnn}). Độ trung thực
+(fidelity) thường đo bằng cách bỏ, hoặc chỉ giữ, phần được giải thích rồi xem dự đoán thay đổi bao
+nhiêu~\cite{xai-yuan2023survey}. Fid$_\alpha$~\cite{xai-zheng2024fidalpha} chỉ bỏ ngẫu nhiên một phần nhỏ để đồ thị sau khi
+sửa không lệch xa phân phối lúc huấn luyện; GraphXAI~\cite{xai-agarwal2023graphxai} chấm lời giải thích bằng đáp án biết
+trước. Jain và Wallace~\cite{xai-jain2019attention} lưu ý rằng trọng số attention không nhất thiết là lời giải thích. Các
+cách trên chủ yếu viết cho phân loại node hoặc đồ thị; RankingSHAP~\cite{xai-heuss2025rankingshap} đưa cách tính kiểu
+Shapley sang mô hình xếp hạng. Vì đề bài không chấp nhận lời giải thích dựng sau khi đã có kết quả, lời giải thích chính
+của nhóm là phép phân rã của chính điểm xếp hạng; các cách hậu kiểm chỉ dùng làm mốc so sánh trên cùng độ đo.
+
+\subsection{Encoder văn bản đa ngữ}
+
+CLIP ViT-B/32 của OpenAI chỉ học văn bản tiếng Anh. Có hai cách thường dùng để truy vấn bằng ngôn ngữ khác: thay tháp văn
+bản bằng XLM-R~\cite{vn-conneau2020xlmr} rồi huấn luyện tương phản với tháp ảnh trên LAION-5B~\cite{vn-schuhmann2022laion5b}
+(bản OpenCLIP~\cite{vn-ilharco2021openclip}), hoặc chưng cất (knowledge distillation) một bộ mã hoá văn bản đa ngữ vào
+không gian của CLIP~\cite{vn-reimers2020multilingual}. Nhóm so cả hai cách trên MKG-W val trước khi chạy trên MMKG tiếng
+Việt (Mục~\ref{sec:vn-encoder}).

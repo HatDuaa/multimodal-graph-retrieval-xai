@@ -1,0 +1,52 @@
+% =====================================================================
+\section{Kết luận}
+\label{sec:conclusion}
+
+\subsection{Trả lời ba câu hỏi của đề}
+\begin{enumerate}
+\item \textbf{Kết quả nào phù hợp nhất?} Trên VG $\cap$ COCO, xếp lại top-50 của CLIP bằng scene graph nâng R@1 test từ
+39,32 lên 47,95. Trên MKG-W, kênh đếm cạnh tri thức nâng R@1 test từ 24,89 lên 29,82. Trên MMKG tiếng Việt, cùng kênh này,
+không chọn lại tham số nào, nâng R@1 từ 23,35 lên 33,92.
+\item \textbf{Tri thức quan hệ giúp ở đâu?} Trên VG, mức tăng so với CLIP tăng theo số vật thể trong câu; câu chỉ nêu vật thể,
+không có quan hệ, không tăng (−0,80 điểm). Trên 15 câu gián tiếp tự viết của MKG-W, R@1 tăng từ 40 lên 80; câu trực tiếp không
+đổi. Trên 18 câu gián tiếp tiếng Việt, số câu đúng ở hạng 1 tăng từ 2 lên 14, nhưng câu trực tiếp giảm từ 9 xuống 4. Thay đồ
+thị bằng đồ thị của ảnh khác, hoặc xáo cạnh tri thức, đều làm kết quả thấp hơn CLIP.
+\item \textbf{Vì sao mô hình trả về kết quả này?} Lời giải thích là các đại lượng của chính điểm đồ thị; với mô hình chính
+của VG, điểm tách chính xác thành từng phần. Bỏ 3 phần đứng đầu lời giải thích làm ảnh mất hạng 1 ở 58,1\% câu val, so với
+9,4\% khi bỏ ngẫu nhiên. Trên ba bộ có đáp án biết trước, occlusion là cách giải thích đúng nhất, và lời giải thích của mô
+hình chính ngang Shapley trên region graph của Visual Genome (Mục~\ref{sec:xai-v3}).
+\end{enumerate}
+Hai kết quả âm được ghi nhận: ở mô hình cấp~1, cạnh đóng góp khoảng 0,5 điểm R@1; ở MKG-W, NativE nhận trọng số 0 khi kết
+hợp với kênh đếm cạnh.
+
+\subsection{Hạn chế}
+\begin{itemize}
+\item \textbf{Chỉ 3 seed.} Mọi kiểm định giữa các cấu hình chỉ dựa trên 3 seed mỗi bên.
+\item \textbf{Val được dùng nhiều lần} để chọn từng bước của mô hình chính VG, nên số val hơi lạc quan (từ val sang test giảm
+0,96 điểm R@1). Test vẫn chỉ chấm một lần.
+\item \textbf{Chưa tách được đóng góp của từng loại cạnh} trong mô hình chính VG: bước đồ thị liền gộp bốn thay đổi, và chưa có
+ablation chỉ bỏ cạnh kNN.
+\item \textbf{Đếm số lượng coi mọi người là một loại.} Câu ``a lone woman'' trong ảnh nhiều người bị coi là sai số lượng.
+Ở 8,4\% node câu có số lượng, bảng $g$ làm đổi node ảnh được ghép, có khi sang một node khác nhãn.
+\item \textbf{Lỗi parser.} Thư viện FactualSceneGraph 0.7.3 cắt token cuối của câu dài nhất trong mỗi batch. Khoảng 1,8\%
+caption bị ảnh hưởng; 0,26\% (train), 0,24\% (val) và 0,31\% (test) mất một phần chữ. Lỗi xảy ra như nhau ở cả ba split.
+Nhóm không parse lại dữ liệu, giữ nguyên các số đã báo, và đã sửa lỗi này trong demo.
+\item \textbf{Thuộc tính và chữ trong ảnh chưa được dùng}, dù nhiều ca thất bại liên quan tới chúng.
+\item \textbf{Giới hạn của xếp lại.} 3,3\% câu test VG có ảnh đúng nằm ngoài top-50 của CLIP và không cứu được bằng xếp lại.
+\item \textbf{MKG-W.} Phương pháp năm 2024 không đóng góp vào dòng chính ($\beta = 0$). Đặc trưng ảnh của NativE (383 chiều,
+do tác giả trích sẵn) khác CLIP ViT-B/32 của nhóm. Cache Wikidata phải lấy lại ngày 17/11: 441 thực thể mất nhãn tiếng Anh,
+số truy vấn val khớp được thực thể đổi từ 704 xuống 703. Bộ câu tự viết chỉ có 25 câu và chỉ lưu số tổng theo nhóm.
+\item \textbf{Đánh giá lời giải thích.} Các cách giải thích GNN được chỉnh cho các phần ảnh của reranker, nên kết quả của
+chúng phụ thuộc cách chỉnh và ngân sách lượt chấm. Validity ngữ nghĩa chấm bằng WordNet; chỉ ba benchmark có đáp án biết
+trước mới cho biết phần nào thực sự quyết định thứ hạng.
+\item \textbf{MMKG tiếng Việt.} Cỡ mẫu nhỏ, chưa có khoảng tin cậy bootstrap; câu soạn tay chỉ được chấm ở $\alpha=0$. Dữ liệu
+ưu tiên di tích nổi tiếng; tỉnh lẫn trước và sau đợt sáp nhập năm 2025; thời kỳ chỉ suy theo năm. Linker không chuẩn hoá hai
+kiểu đặt dấu thanh (``hòa''/``hoà''), dù cả hai kiểu đều có trong nhãn và câu; ảnh hưởng chưa đo.
+\end{itemize}
+
+\subsection{Hướng phát triển}
+Các hướng sau đi thẳng từ các ca thất bại đã phân tích, chưa được thử: (1) cho linker đi thêm cạnh lớp con (\texttt{P279}) hoặc
+đếm cạnh 2-hop, để sửa các câu gián tiếp tiếng Việt sai vì đáp án thuộc lớp con; (2) chọn $\alpha$ theo từng câu ở kênh đồ thị
+tri thức, như trọng số $a$ học theo câu ở VG, vì một $\alpha$ chung không tối ưu cho cả câu trực tiếp lẫn gián tiếp; (3) đưa
+thuộc tính vào node ảnh; (4) ablation riêng cho từng loại cạnh của mô hình chính VG; (5) huấn luyện các thành phần của scene
+ranker (Phụ lục~\ref{app:scene-ranker}) trên mô hình chính để biết chúng có cộng thêm vào nhau không.

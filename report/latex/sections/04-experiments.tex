@@ -1,30 +1,19 @@
 % =====================================================================
-\section{Dữ liệu, cách chia tập và chống rò rỉ}
+% Mục IV: thiết lập (IV-A) và kết quả theo cấp độ (04-1, 04-2, 04-3).
+\section{Thực nghiệm}
+\label{sec:exp}
+
+\subsection{Thiết lập}
 \label{sec:data}
 
-\subsection{Visual Genome $\cap$ COCO (cấp độ 1)}
-\label{sec:data-vg}
-
-Tập công khai thứ nhất là phần giao giữa Visual Genome~\cite{krishna2017vg} (VG, ảnh có scene graph gán tay: vật thể,
-thuộc tính, quan hệ) và MS-COCO~\cite{lin2014coco} (mỗi ảnh có 5 caption). Hai bộ nối với nhau theo \texttt{coco\_id}. Truy
-vấn là caption COCO; đáp án là ảnh chứa caption đó. Nhóm chia theo split Karpathy~\cite{karpathy2015deep}, cách chia chuẩn
-của bài toán truy vấn ảnh--văn bản trên COCO, và gộp phần \texttt{restval} vào train. Nhóm lấy toàn bộ phần giao, không
-lấy mẫu, và bỏ 290 ảnh VG trùng \texttt{coco\_id} với ảnh khác (Bảng~\ref{tab:data}). Khi đánh giá một split, tập ứng viên
-(pool) là toàn bộ ảnh của chính split đó. Pool test (2\,138 ảnh) nhỏ hơn MSCOCO 5K, nên số của nhóm không so trực tiếp được
-với số trong các bài báo.
-
-\textbf{Đồ thị ảnh.} Mỗi ảnh có một scene graph riêng, lấy từ \texttt{objects.json} và \texttt{relationships.json} của VG.
-Nhãn giữ dạng mở, chỉ chuẩn hoá alias, không lọc về VG150 (bước kiểm tra độ phủ cho thấy lọc VG150 làm mất các nhãn hay
-gặp như \emph{water}, \emph{grass}, \emph{field}). Quan hệ có hướng; các quan hệ trùng cả ba thành phần được gộp. Không có
-cạnh giữa các ảnh, nên đồ thị không chứa cạnh suy ra từ thống kê toàn tập. Mỗi ảnh train và val có trung bình 26,7 node và
-18,0 cạnh; 3,0\% ảnh không có cạnh nào.
-
-\textbf{Đồ thị câu.} Mô hình cấp độ~1 tách caption bằng SceneGraphParser~\cite{schuster2015sgparser} (gói
-\texttt{sng\_parser}): trung bình 3,06 vật thể và 1,65 quan hệ mỗi câu, và 14,2\% câu val không tách được quan hệ nào. Mô
-hình chính dùng FACTUAL-T5 large~\cite{li2023factual}, một parser seq2seq đã huấn luyện sẵn để sinh scene graph từ câu.
-Parser chỉ chạy suy luận, không tinh chỉnh. Trên val, FACTUAL giảm tỉ lệ node là đại từ từ 3,9\% xuống 0,1\%, và tăng tỉ lệ
-câu có ít nhất một quan hệ từ 85,8\% lên 97,3\%. (Nguồn: \file{experiments/data_stats.md},
-\file{experiments/improve/parser-compare/REPORT.md}.)
+\textbf{Visual Genome $\cap$ COCO (cấp độ 1).} Tập công khai thứ nhất là phần giao giữa Visual Genome~\cite{krishna2017vg}
+(VG, ảnh có scene graph gán tay: vật thể, thuộc tính, quan hệ) và MS-COCO~\cite{lin2014coco} (mỗi ảnh có 5 caption). Hai bộ
+nối với nhau theo \texttt{coco\_id}. Truy vấn là caption COCO; đáp án là ảnh chứa caption đó. Nhóm chia theo split
+Karpathy~\cite{karpathy2015deep}, cách chia chuẩn của bài toán truy vấn ảnh--văn bản trên COCO, và gộp phần \texttt{restval}
+vào train. Nhóm lấy toàn bộ phần giao, không lấy mẫu, và bỏ 290 ảnh VG trùng \texttt{coco\_id} với ảnh khác
+(Bảng~\ref{tab:data}). Khi đánh giá một split, tập ứng viên (pool) là toàn bộ ảnh của chính split đó. Pool test (2\,138
+ảnh) nhỏ hơn MSCOCO 5K, nên số của nhóm không so trực tiếp được với số trong các bài báo. Cách dựng đồ thị ảnh và đồ thị câu
+ở Mục~\ref{sec:l1-graphs}.
 
 \begin{table}[t]
 \centering
@@ -44,11 +33,8 @@ MKG-W KGC: triple & 34\,196 & 4\,276 & 4\,274 \\
 \end{tabular}
 \end{table}
 
-\subsection{MKG-W (cấp độ 2)}
-\label{sec:data-mkgw}
-
-Tập công khai thứ hai là MKG-W~\cite{xu2022mmrns}, một đồ thị tri thức đa phương thức lấy từ Wikidata~\cite{vrandecic2014wikidata}:
-mỗi thực thể có nhãn, mô tả và ảnh. Nhóm dùng nó cho hai việc trên cùng một bộ thực thể.
+\textbf{MKG-W (cấp độ 2).} Tập công khai thứ hai là MKG-W~\cite{xu2022mmrns}, một đồ thị tri thức đa phương thức lấy từ
+Wikidata~\cite{vrandecic2014wikidata}: mỗi thực thể có nhãn, mô tả và ảnh. Nhóm dùng nó cho hai việc trên cùng một bộ thực thể.
 \begin{itemize}
 \item \textbf{Đồ thị tri thức.} Bản MKG-W của NativE có 15\,000 thực thể, 169 quan hệ, và các triple chia sẵn cho bài toán
 link prediction (KGC) như ở Bảng~\ref{tab:data}.
@@ -58,7 +44,12 @@ nhóm tác giả MMRNS: 37\,192 ảnh của 8\,961 thực thể; mỗi thực th
 đặc trưng ảnh. Split retrieval cố định với seed 0; tổng 8\,920 thực thể.
 \end{itemize}
 Trên val, 78,81\% truy vấn liên kết được với ít nhất một thực thể của đồ thị (test 80,94\%). Với 45,6\% truy vấn val, đáp án
-nối trực tiếp với một thực thể được nhắc trong câu bằng một cạnh KGC-train.
+nối trực tiếp với một thực thể được nhắc trong câu bằng một cạnh KGC-train. Tập thứ ba, MMKG tiếng Việt, mô tả ở
+Mục~\ref{sec:vn-data}.
+
+\textbf{Độ đo.} R@$k$ là tỉ lệ truy vấn có ảnh đúng trong $k$ kết quả đầu; MRR là trung bình nghịch đảo hạng của ảnh đúng,
+tính trong top-50. Mọi số của mô hình huấn luyện là trung bình $\pm$ độ lệch chuẩn qua 3 seed (0, 1, 2), lấy ở checkpoint
+tốt nhất theo val. Khi so hai mô hình, nhóm dùng kiểm định Welch trên 3 seed mỗi bên.
 
 \subsection{Chống rò rỉ dữ liệu}
 \label{sec:leakage}
@@ -80,18 +71,19 @@ File split trong \file{data/splits/} là nguồn duy nhất; SHA-256 ghi ở \fi
 chung danh sách top-50 của CLIP. \\
 Test không dùng để huấn luyện, chọn siêu tham số hay chọn mô hình &
 VG: mỗi mô hình đã chốt chấm test một lần, 25/09 (mô hình cấp~1) và 25/10 (mô hình chính); scene ranker
-(Mục~\ref{sec:contrib}) cũng chấm một lần. \texttt{GraphStore} từ chối nạp test nếu không gọi rõ
+(Phụ lục~\ref{app:scene-ranker}) cũng chấm một lần. \texttt{GraphStore} từ chối nạp test nếu không gọi rõ
 \texttt{allow\_test=True}; trước khi chấm, script kiểm tra ứng viên test tái tạo đúng số của CLIP thuần.
 MKG-W: lần chấm báo cáo là 17/11. Trước đó, một lần chạy thử code với embedding giả trên test đã in ra số của dòng đếm
 cạnh; ngày 18/11, một thành viên chạy lại độc lập toàn bộ cấp~2 với NativE tự huấn luyện (Mục~\ref{sec:l2}). Cả hai lần
 không dẫn tới thay đổi nào: $\alpha,\beta$ chỉ lấy từ val. \\
 Cạnh thống kê chỉ xây từ train &
 Đồ thị ảnh VG là chú thích của từng ảnh, không có cạnh giữa các ảnh. Kênh đồ thị của MKG-W chỉ nạp triple KGC-train; hàm
-dựng đồ thị có \texttt{assert kgc\_split == "train"}. \\
+dựng đồ thị có \texttt{assert kgc\_split == "train"}. Concept graph của scene ranker chỉ đếm đồng xuất hiện trên ảnh train. \\
 $\alpha$ và mọi lựa chọn dựa trên train/val &
 VG: trọng số kết hợp $a,b,c$ học trên train; dừng sớm, chọn checkpoint, ablation và từng bước xây mô hình chính dựa trên
 val; lr và weight decay cố định từ đầu, không dò. Với MKG-W, $\alpha,\beta$ chọn trên val
-cho từng seed, ghi vào \file{experiments/level2/val/choice.json}; lần chạy test chỉ đọc lại file này. \\
+cho từng seed, ghi vào \file{experiments/level2/val/choice.json}; lần chạy test chỉ đọc lại file này. MMKG tiếng Việt dùng lại
+$\alpha$ của MKG-W val (giao thức A0, Mục~\ref{sec:vn-data}). \\
 Ứng viên lúc huấn luyện không chạm val/test &
 Train được chia cố định (seed 0) thành 22 nhóm khoảng 2\,134 ảnh. Top-50 của mỗi caption train chỉ lấy trong nhóm của ảnh
 đúng, nên độ khó giống lúc đánh giá. CLIP và FACTUAL-T5 đóng băng. \\
@@ -100,7 +92,7 @@ Mô hình đồ thị tri thức không thấy truy vấn và ảnh của val/te
 Bản \texttt{MKG-W-rmask} đặt về 0 hai đặc trưng này cho 1\,784 thực thể val/test retrieval trước khi huấn luyện NativE. \\
 Bộ truy vấn tự viết chỉ để đánh giá &
 Bộ 25 câu MKG-W được commit một lần (16/11) cùng script kiểm tra, không sửa sau đó; lần chấm dùng lại $\alpha,\beta$
-của val. \\
+của val. Bộ 30 câu tiếng Việt khoá ở commit \texttt{55fa697} (26/10) trước mọi lần chạy. \\
 \bottomrule
 \end{tabular}
 \end{table*}
