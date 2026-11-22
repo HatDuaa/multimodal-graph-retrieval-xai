@@ -34,8 +34,6 @@ Scene ranker\textsuperscript{\dag} & \pmstd{48,57}{0,36} & \pmstd{75,28}{0,03} &
 {\scriptsize\raggedright \textsuperscript{\dag}Train và chấm test một lần ở repo cá nhân của một thành viên, cùng split,
 cùng pool và cùng CLIP; 10\,690 caption do hai repo xử lý dữ liệu độc lập. MRR tính trong top-50 như các dòng khác.
 Chi tiết ở Phụ lục~\ref{app:scene-ranker}.\par}
-\tabsrc{\file{experiments/level1/test/}, \file{experiments/improve/test/},
-\file{experiments/improve/scene-ranker/personal-repo/comparison_test.json}}
 \end{table}
 
 \textbf{Một bộ xếp lại thứ hai.} Dòng scene ranker là một mô hình do một thành viên phát triển song song: cùng top-50 của
@@ -61,8 +59,7 @@ ngang nhau. Mô hình này chưa được train trong repo nhóm, nên mọi ph�
 \end{axis}
 \end{tikzpicture}
 \caption{R@1 val khi ép một $\alpha$ cố định cho mọi truy vấn ($\alpha=1$ là CLIP thuần). Với VG, $b$ và $c$ giữ tỉ lệ đã
-học của từng câu, trung bình 3 seed. Với MKG-W, seed 0 (đường cong giống hệt ở cả 3 seed vì $\beta=0$ không dùng NativE).
-Nguồn: \file{experiments/improve/alpha-groups/alpha_sweep.json}, \file{experiments/level2/val/alpha_beta_sweep.json}.}
+học của từng câu, trung bình 3 seed. Với MKG-W, seed 0 (đường cong giống hệt ở cả 3 seed vì $\beta=0$ không dùng NativE).}
 \label{fig:alpha}
 \end{figure}
 
@@ -92,7 +89,6 @@ Chỉ vật thể & 291 & 32,99 & 33,91 & 32,19 & $-$1,72 [$-$4,7; 1,4] \\
 $\ge$3 vật thể & 6\,607 & 41,40 & 50,20 & 53,32 & +3,11 [2,45; 3,77] \\
 \bottomrule
 \end{tabular}
-\tabsrc{\file{experiments/improve/alpha-groups/REPORT.md}}
 \end{table}
 
 \textbf{Đồ thị giúp ở đâu} (Bảng~\ref{tab:l1-groups}). Đây là câu hỏi của nhiệm vụ~2 trong đề.
