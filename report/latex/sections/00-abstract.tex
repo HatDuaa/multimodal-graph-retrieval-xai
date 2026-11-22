@@ -6,9 +6,11 @@ hình nâng R@1 trên tập test từ 39,32 lên \pmstd{47,95}{0,15} (3 seed). H
 2,39 điểm; thay đồ thị của ảnh bằng đồ thị của một ảnh khác làm R@1 val giảm xuống 21,91, thấp hơn CLIP thuần. Trên MKG-W (cấp độ~2),
 nhóm tái lập NativE (SIGIR 2024), đạt MRR 36,99 so với 36,58 của bài báo, rồi đưa đồ thị tri thức vào điểm xếp hạng. Kênh
 đếm cạnh của đồ thị tri thức nâng R@1 test từ 24,89 lên 29,82. Trên 15 truy vấn gián tiếp tự viết, R@1 tăng từ 40 lên 80.
-Khi kết hợp với kênh đếm cạnh, tập validation chọn trọng số 0 cho tín hiệu của NativE. Ở cấp độ~3, nhóm đo fidelity,
-validity và sparsity của lời giải thích trên toàn bộ tập validation: bỏ 3 phần đứng đầu lời giải thích làm ảnh mất hạng 1 ở
-58,1\% số câu, so với 9,4\% khi bỏ 3 phần ngẫu nhiên. Nhóm cũng tự xây một đồ thị tri thức đa phương thức tiếng Việt
+Khi kết hợp với kênh đếm cạnh, tập validation chọn trọng số 0 cho tín hiệu của NativE. Ở cấp độ~3, nhóm đánh giá lời giải
+thích của mô hình chính trên toàn bộ tập validation bằng cách bỏ hoặc chỉ giữ một số phần của đồ thị rồi chấm lại: bỏ 3 phần
+đứng đầu lời giải thích làm ảnh mất hạng 1 ở 58,1\% số câu, so với 9,4\% khi bỏ 3 phần ngẫu nhiên và 34,9\% với mô hình
+cấp~1 gốc trộn điểm qua z-score. Trong các cách giải thích không ước lượng giá trị Shapley, lời giải thích này khớp Shapley
+tốt nhất mà không cần chấm thêm lần nào. Nhóm cũng tự xây một đồ thị tri thức đa phương thức tiếng Việt
 (150 thực thể, 325 triple, 331 ảnh); chạy nguyên phương pháp của cấp độ~2 trên đó, không chọn lại tham số nào, nâng R@1 từ
 23,35 lên 33,92. Ở mọi thực nghiệm, trọng số kết hợp, checkpoint và từng bước xây mô hình được chọn trên train hoặc
 validation, không dựa trên tập test. Kết quả báo cáo dạng trung bình $\pm$ độ lệch chuẩn qua 3 seed.

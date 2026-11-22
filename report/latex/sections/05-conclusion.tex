@@ -12,9 +12,10 @@ không có quan hệ, không tăng (−0,80 điểm). Trên 15 câu gián tiếp
 đổi. Trên 18 câu gián tiếp tiếng Việt, số câu đúng ở hạng 1 tăng từ 2 lên 14, nhưng câu trực tiếp giảm từ 9 xuống 4. Thay đồ
 thị bằng đồ thị của ảnh khác, hoặc xáo cạnh tri thức, đều làm kết quả thấp hơn CLIP.
 \item \textbf{Vì sao mô hình trả về kết quả này?} Lời giải thích là các đại lượng của chính điểm đồ thị; với mô hình chính
-của VG, điểm tách chính xác thành từng phần. Bỏ 3 phần đứng đầu lời giải thích làm ảnh mất hạng 1 ở 58,1\% câu val, so với
-9,4\% khi bỏ ngẫu nhiên. Trên ba bộ có đáp án biết trước, occlusion là cách giải thích đúng nhất, và lời giải thích của mô
-hình chính ngang Shapley trên region graph của Visual Genome (Mục~\ref{sec:xai-v3}).
+của VG, điểm cuối tách chính xác thành tổng các phần. Bỏ 3 phần đứng đầu lời giải thích làm ảnh mất hạng 1 ở 58,1\% câu
+val, so với 9,4\% khi bỏ ngẫu nhiên và 34,9\% ở mô hình cấp~1 gốc trộn điểm qua z-score. Lời giải thích này khớp Shapley
+tốt nhất trong các cách không ước lượng Shapley, và có GEA xấp xỉ Shapley trên region graph của Visual Genome
+(Mục~\ref{sec:xai-compare}).
 \end{enumerate}
 Hai kết quả âm được ghi nhận: ở mô hình cấp~1, cạnh đóng góp khoảng 0,5 điểm R@1; ở MKG-W, NativE nhận trọng số 0 khi kết
 hợp với kênh đếm cạnh.
@@ -36,9 +37,11 @@ Nhóm không parse lại dữ liệu, giữ nguyên các số đã báo, và đ�
 \item \textbf{MKG-W.} Phương pháp năm 2024 không đóng góp vào dòng chính ($\beta = 0$). Đặc trưng ảnh của NativE (383 chiều,
 do tác giả trích sẵn) khác CLIP ViT-B/32 của nhóm. Cache Wikidata phải lấy lại ngày 17/11: 441 thực thể mất nhãn tiếng Anh,
 số truy vấn val khớp được thực thể đổi từ 704 xuống 703. Bộ câu tự viết chỉ có 25 câu và chỉ lưu số tổng theo nhóm.
-\item \textbf{Đánh giá lời giải thích.} Các cách giải thích GNN được chỉnh cho các phần ảnh của reranker, nên kết quả của
-chúng phụ thuộc cách chỉnh và ngân sách lượt chấm. Validity ngữ nghĩa chấm bằng WordNet; chỉ ba benchmark có đáp án biết
-trước mới cho biết phần nào thực sự quyết định thứ hạng.
+\item \textbf{Lời giải thích.} Độ lớn của term không ước lượng được điểm mất: bỏ 3 phần đứng đầu chỉ làm mất khoảng một
+phần năm số điểm mà lời giải thích dự đoán, và bộ ba đứng đầu ít khi quyết định thứ hạng. Bỏ dần theo thứ tự của lời giải
+thích chỉ cho đúng phản thực tế nhỏ nhất ở 59,7\% câu, so với 90,6\% của occlusion. Các cách giải thích GNN dùng để so sánh
+được điều chỉnh cho reranker, nên kết quả của chúng phụ thuộc cách điều chỉnh; validity ngữ nghĩa chấm bằng WordNet, nên chỉ
+đo độ hợp lý.
 \item \textbf{MMKG tiếng Việt.} Cỡ mẫu nhỏ, chưa có khoảng tin cậy bootstrap; câu soạn tay chỉ được chấm ở $\alpha=0$. Dữ liệu
 ưu tiên di tích nổi tiếng; tỉnh lẫn trước và sau đợt sáp nhập năm 2025; thời kỳ chỉ suy theo năm. Linker không chuẩn hoá hai
 kiểu đặt dấu thanh (``hòa''/``hoà''), dù cả hai kiểu đều có trong nhãn và câu; ảnh hưởng chưa đo.
@@ -49,4 +52,6 @@ Các hướng sau đi thẳng từ các ca thất bại đã phân tích, chưa 
 đếm cạnh 2-hop, để sửa các câu gián tiếp tiếng Việt sai vì đáp án thuộc lớp con; (2) chọn $\alpha$ theo từng câu ở kênh đồ thị
 tri thức, như trọng số $a$ học theo câu ở VG, vì một $\alpha$ chung không tối ưu cho cả câu trực tiếp lẫn gián tiếp; (3) đưa
 thuộc tính vào node ảnh; (4) ablation riêng cho từng loại cạnh của mô hình chính VG; (5) huấn luyện các thành phần của scene
-ranker (Phụ lục~\ref{app:scene-ranker}) trên mô hình chính để biết chúng có cộng thêm vào nhau không.
+ranker (Phụ lục~\ref{app:scene-ranker}) trên mô hình chính để biết chúng có cộng thêm vào nhau không; (6) xếp lời giải thích
+theo điểm mất đo được khi bỏ từng phần, như cột ``bỏ phần này'' của demo, vì occlusion trung thực hơn lời giải thích hiện
+tại cả ở deletion lẫn phản thực tế.
