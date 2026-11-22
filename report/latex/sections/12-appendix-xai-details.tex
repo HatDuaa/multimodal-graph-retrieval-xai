@@ -48,7 +48,7 @@ Shapley và GraphSVX thoả efficiency với sai số tối đa $1{,}3\cdot10^{-
 $2{,}1\cdot10^{-6}$, và tổng relevance của các walk khớp relevance đầu ra, chỉ lệch do $\varepsilon$.
 
 \subsection{Độ đo dùng khi so sánh}\label{sec:xai-compare-metrics}
-Ngoài các độ đo ở Mục~\ref{sec:xai-metrics}, phép so sánh dùng thêm hai độ đo fidelity. đường cong deletion và insertion~\cite{xai-petsiuk2018rise}
+Ngoài các độ đo ở Mục~\ref{sec:xai-metrics}, phép so sánh dùng thêm hai độ đo fidelity: đường cong deletion và insertion~\cite{xai-petsiuk2018rise}
 gộp mọi $k\le K=\min(10,|E|)$ thành một số:
 \begin{equation}
   \mathrm{AUC}_{\text{del}}=\frac{1}{K}\sum_{k=1}^{K}\frac{s(\mathcal{G}\setminus E_k)-s(\mathcal{G}_0)}{\Delta},
@@ -259,8 +259,9 @@ là ba node \emph{dog}, \emph{umbrella}, \emph{umbrella} (hai node cùng nhãn);
 Mục~\ref{sec:xai} báo \texttt{main\_r3} ở Bảng~\ref{tab:xai-main} và Mục~\ref{sec:xai-findings}; tiểu mục này báo phần còn
 lại, cùng giao thức.
 
-\textbf{Khi ảnh hạng 1 sai} (5\,325 câu mỗi seed), bỏ tối đa 10 phần đầu của $E$ làm ảnh này mất hạng 1 ở 74,4\% câu, so với
-44,1\% khi ảnh đúng. Bỏ top-5 làm ảnh đúng tăng hạng ở 30,7\% câu và lên hạng 1 ở 13,1\%. Về ngữ nghĩa, 58,3\% dòng vật thể
+\textbf{Khi ảnh hạng 1 sai}, bỏ tối đa 10 phần đầu của $E$ làm ảnh này mất hạng 1 ở 74,4\% câu, so với 44,1\% khi ảnh
+đúng. Trong các câu có ảnh hạng 1 sai mà ảnh đúng vẫn nằm trong 50 ứng viên (trung bình 5\,325 câu mỗi seed), bỏ top-5 làm
+ảnh đúng tăng hạng ở 30,7\% câu và lên hạng 1 ở 13,1\%. Về ngữ nghĩa, 58,3\% dòng vật thể
 khớp strict và 5,4\% dòng bộ ba khớp đủ.
 
 \textbf{Tính cộng trên mẫu so sánh.} Occlusion cho $R_3={}$\pmstd{1,153}{0,017}, Spearman \pmstd{0,888}{0,011}; IG cho
