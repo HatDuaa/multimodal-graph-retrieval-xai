@@ -14,8 +14,7 @@ train và val có trung bình 26,7 node và 18,0 cạnh; 3,0\% ảnh không có 
 \texttt{sng\_parser}): trung bình 3,06 vật thể và 1,65 quan hệ mỗi câu, và 14,2\% câu val không tách được quan hệ nào. Mô
 hình chính dùng FACTUAL-T5 large~\cite{li2023factual}, một parser seq2seq đã huấn luyện sẵn để sinh scene graph từ câu.
 Parser chỉ chạy suy luận, không tinh chỉnh. Trên val, FACTUAL giảm tỉ lệ node là đại từ từ 3,9\% xuống 0,1\%, và tăng tỉ lệ
-câu có ít nhất một quan hệ từ 85,8\% lên 97,3\%. (Nguồn: \file{experiments/data_stats.md},
-\file{experiments/improve/parser-compare/REPORT.md}.)
+câu có ít nhất một quan hệ từ 85,8\% lên 97,3\%.
 
 \subsubsection{Bộ xếp lại GATv2}\label{sec:l1-model}
 \textbf{Mã hoá đồ thị.} Đồ thị câu và đồ thị ảnh dùng chung một bộ mã hoá. Vector khởi đầu của mỗi node là vector CLIP
@@ -98,7 +97,6 @@ Mô hình cấp 1 & \pmstd{46,48}{0,24} & 58,85 & \\
 \multicolumn{4}{p{0.95\columnwidth}}{\scriptsize \textsuperscript{*}Gộp bốn thay đổi (gộp trùng, hình học cạnh, cạnh
 kNN, node tổng) theo quyết định của nhóm; ablation bỏ cạnh ở Bảng~\ref{tab:l1-ablation-main} đo phần đóng góp của cạnh.}
 \end{tabular}
-\tabsrc{\file{experiments/improve/README.md}}
 \end{table}
 
 \textbf{Từng bước xây mô hình chính} (Bảng~\ref{tab:l1-chain}). Mỗi bước đổi một thứ và được giữ lại khi R@1 val tăng qua 3
@@ -135,7 +133,6 @@ Nối lại cạnh ngẫu nhiên (giữ bậc) & \pmstd{46,24}{0,24} & \pmstd{45
 Loss LambdaRank thay cross-entropy & \pmstd{45,18}{0,34} & \pmstd{44,28}{0,30} \\
 \bottomrule
 \end{tabular}
-\tabsrc{\file{experiments/level1/README.md}}
 \end{table}
 
 \begin{table}[t]
@@ -157,7 +154,6 @@ Nối lại quan hệ có nhãn ngẫu nhiên & 48,32 ($-$0,59) & 46,29 ($-$0,19
 Bỏ bảng $g$ & $-$0,35 & --- \\
 \bottomrule
 \end{tabular}
-\tabsrc{\file{experiments/improve/no-edges/REPORT.md}, \file{experiments/improve/controls/README.md}}
 \end{table}
 
 Bảng~\ref{tab:l1-ablation} và~\ref{tab:l1-ablation-main} cho bốn kết luận.

@@ -5,7 +5,11 @@
 \subsection{Kết quả cấp độ 3: đánh giá lời giải thích}
 \label{sec:xai}
 
-Thiết lập, độ đo và các cách giải thích đối chứng ở Mục~\ref{sec:method-l3}. Mọi số trong mục này đo trên val.
+Mục này kiểm tra lời giải thích $E$ của countonly theo ba câu hỏi: các phần đứng đầu $E$ có thực sự ảnh hưởng tới thứ
+hạng không; $E$ của countonly khác $E$ của mô hình gốc \texttt{main\_r3} thế nào; và $E$ đứng ở đâu so với các cách giải
+thích khác. Nhắc lại, $E$ là danh sách các phần của đồ thị ảnh hạng 1 (node vật thể hoặc bộ ba), xếp theo đóng góp $t_j$ vào
+điểm; để kiểm tra $E$, nhóm bỏ hoặc chỉ giữ các phần đứng đầu rồi chấm lại mô hình (Mục~\ref{sec:xai-metrics}). Mọi số đo
+trên val, trung bình $\pm$ std qua 3 seed; giao thức đầy đủ ở Phụ lục~\ref{sec:xai-protocol}.
 
 \begin{table*}[t]
   \caption{Kết quả chính trên val, trung bình $\pm$ std qua 3 seed}
@@ -14,237 +18,95 @@ Thiết lập, độ đo và các cách giải thích đối chứng ở Mục~\
   \footnotesize
   \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
     \toprule
-    & \multicolumn{2}{c}{\texttt{main\_r3} (v2)} & \multicolumn{2}{c}{countonly (v2)} \\
+    & \multicolumn{2}{c}{countonly (v2)} & \multicolumn{2}{c}{\texttt{main\_r3}, mốc so sánh (v2)} \\
     \cmidrule{2-3}\cmidrule{4-5}
     Độ đo & E & NN & E & NN \\
     \midrule
-    \multicolumn{5}{@{}l}{\emph{Fidelity: bỏ top-$k$ (Fid$^{+}$), \% câu ảnh mất hạng 1 (cao là tốt)}} \\
-    \quad $k=1$ & \pmstd{20,5}{1,8} & \pmstd{3,0}{0,2} & \pmstd{34,4}{4,8} & \pmstd{4,4}{0,5} \\
-    \quad $k=3$ & \pmstd{34,9}{2,8} & \pmstd{6,5}{0,3} & \pmstd{58,1}{4,1} & \pmstd{9,4}{0,9} \\
-    \quad $k=5$ & \pmstd{43,6}{3,1} & \pmstd{9,8}{0,5} & \pmstd{68,2}{3,0} & \pmstd{12,9}{0,7} \\
-    \quad Tính cộng: điểm mất / tổng term của top-3 & \pmstd{0,063}{0,016} & & \pmstd{0,189}{0,045} & \\
-    \multicolumn{5}{@{}l}{\emph{Fidelity: chỉ giữ top-$k$ (Fid$^{-}$), hạng của ảnh (thấp là tốt)}} \\
-    \quad $k=1$ & \pmstd{3,00}{0,03} & \pmstd{9,19}{0,55} & \pmstd{4,19}{0,84} & \pmstd{10,16}{2,27} \\
-    \quad $k=3$ & \pmstd{2,16}{0,08} & \pmstd{7,38}{0,36} & \pmstd{2,22}{0,74} & \pmstd{8,15}{1,41} \\
-    \quad $k=5$ & \pmstd{2,17}{0,06} & \pmstd{6,89}{0,33} & \pmstd{1,86}{0,54} & \pmstd{6,95}{0,96} \\
-    \multicolumn{5}{@{}l}{\emph{Validity}} \\
-    \quad Câu có $k_{\text{flip}}\le 10$ (\%); trung vị $k_{\text{flip}}$ & \pmstd{60,3}{2,9}; 3 & & \pmstd{80,2}{1,5}; 2 & \\
-    \quad Vật thể khớp strict (\%) & \pmstd{58,3}{0,3} & & \pmstd{63,8}{0,9} & \\
-    \quad Vật thể khớp lenient (\%) & \pmstd{63,8}{0,2} & & \pmstd{70,0}{1,0} & \\
-    \quad Bộ ba khớp đủ chủ thể, đối tượng, vị từ (\%) & \pmstd{5,4}{0,2} & & \pmstd{2,9}{0,6} & \\
-    \quad Khớp nhóm số lượng (\%) & không chấm$^{b}$ & & \pmstd{66,7}{0,8} & \\
-    \multicolumn{5}{@{}l}{\emph{Sparsity (đơn vị: phần của ảnh)}} \\
-    \quad $k_{80}$; \% câu đạt trong $k\le 10$ & \pmstd{2,65}{0,14}; 55,7 & & \pmstd{2,78}{0,27}; 94,5 & \\
-    \quad $n_{80}$; \% số phần của ảnh & \pmstd{15,4}{0,2}; 33,0 & & \pmstd{15,0}{0,3}; 35,4 & \\
+    \multicolumn{5}{@{}l}{\emph{Độ trung thực (fidelity): bỏ $k$ phần đầu của $E$ (Fid$^{+}$), \% câu ảnh mất hạng 1 (cao là tốt)}} \\
+    \quad $k=1$ & \pmstd{34,4}{4,8} & \pmstd{4,4}{0,5} & \pmstd{20,5}{1,8} & \pmstd{3,0}{0,2} \\
+    \quad $k=3$ & \pmstd{58,1}{4,1} & \pmstd{9,4}{0,9} & \pmstd{34,9}{2,8} & \pmstd{6,5}{0,3} \\
+    \quad $k=5$ & \pmstd{68,2}{3,0} & \pmstd{12,9}{0,7} & \pmstd{43,6}{3,1} & \pmstd{9,8}{0,5} \\
+    \quad Tính cộng $R_3$: điểm mất / tổng đóng góp của 3 phần đầu & \pmstd{0,189}{0,045} &  & \pmstd{0,063}{0,016} &  \\
+    \multicolumn{5}{@{}l}{\emph{Độ trung thực (fidelity): chỉ giữ $k$ phần đầu của $E$ (Fid$^{-}$), hạng của ảnh (thấp là tốt)}} \\
+    \quad $k=1$ & \pmstd{4,19}{0,84} & \pmstd{10,16}{2,27} & \pmstd{3,00}{0,03} & \pmstd{9,19}{0,55} \\
+    \quad $k=3$ & \pmstd{2,22}{0,74} & \pmstd{8,15}{1,41} & \pmstd{2,16}{0,08} & \pmstd{7,38}{0,36} \\
+    \quad $k=5$ & \pmstd{1,86}{0,54} & \pmstd{6,95}{0,96} & \pmstd{2,17}{0,06} & \pmstd{6,89}{0,33} \\
+    \multicolumn{5}{@{}l}{\emph{Tính hợp lệ (validity)}} \\
+    \quad Câu có $k_{\text{flip}}\le 10$ (\%); trung vị $k_{\text{flip}}$ & \pmstd{80,2}{1,5}; 2 &  & \pmstd{60,3}{2,9}; 3 &  \\
+    \quad Vật thể khớp strict (\%) & \pmstd{63,8}{0,9} &  & \pmstd{58,3}{0,3} &  \\
+    \quad Vật thể khớp lenient (\%) & \pmstd{70,0}{1,0} &  & \pmstd{63,8}{0,2} &  \\
+    \quad Bộ ba khớp đủ chủ thể, đối tượng, vị từ (\%) & \pmstd{2,9}{0,6} &  & \pmstd{5,4}{0,2} &  \\
+    \multicolumn{5}{@{}l}{\emph{Độ gọn (sparsity), đơn vị: phần của ảnh}} \\
+    \quad $k_{80}$; \% câu đạt trong $k\le 10$ & \pmstd{2,78}{0,27}; 94,5 &  & \pmstd{2,65}{0,14}; 55,7 &  \\
     \bottomrule
   \end{tabular*}
   \par\smallskip
   {\scriptsize\raggedright
-    NN: trung bình 10 lần chọn ngẫu nhiên cùng số node và bộ ba.
-    Lenient là tiêu chí ngữ nghĩa của v1.
-    $^{b}$Chỉ chấm mô hình có bảng số lượng.\par}
-  \tabsrc{\file{experiments/xai-metrics-v2/summary.json}, \file{experiments/xai-metrics-v2/REPORT.md}}
+    NN: chọn ngẫu nhiên cùng số node vật thể và cùng số bộ ba với $k$ phần đầu của $E$, trung bình 10 lần. Trung vị
+    $k_{\text{flip}}$ và trung bình $k_{80}$ chỉ tính trên các câu đạt trong 10 phần. Strict: khớp nhãn hoặc WordNet;
+    lenient: tiêu chí rộng hơn của bản đo v1.\par}
 \end{table*}
 
-\subsubsection{Kết quả trên toàn bộ val}\label{sec:xai-results}
-Theo Bảng~\ref{tab:xai-main}, ở cả hai mô hình, E vượt mốc ngẫu nhiên theo cả hai chiều của fidelity: bỏ top-3 làm ảnh mất
-hạng 1 ở số câu gấp 5--6 lần bỏ ngẫu nhiên; chỉ giữ top-3 cho hạng trung bình khoảng 2,2, so với 7--8 của mốc ngẫu nhiên.
-E của countonly trung thực hơn E của \texttt{main\_r3} theo Fid$^{+}$: bỏ top-3 làm ảnh mất hạng 1 ở 58,1\% câu, so với
-34,9\%.
+\subsubsection{Kết quả chính}\label{sec:xai-results}
+\textbf{Các phần đứng đầu $E$ ảnh hưởng mạnh tới thứ hạng.} Theo Bảng~\ref{tab:xai-main}, bỏ 3 phần đứng đầu $E$ làm ảnh
+mất hạng 1 ở 58,1\% câu, gấp sáu lần khi bỏ 3 phần chọn ngẫu nhiên (9,4\%). Ngược lại, chỉ giữ 3 phần đó thì ảnh vẫn ở
+hạng trung bình 2,22, so với 8,15 khi giữ 3 phần ngẫu nhiên. Ở 94,5\% câu, chỉ giữ tối đa 10 phần đầu đã còn ít nhất 80\%
+phần điểm mà đồ thị mang lại; trên các câu này, trung bình cần 2,78 phần.
 
-Với ảnh hạng 1 sai, $k_{\text{flip}}\le 10$ ở 91,8\% câu với countonly và 74,4\% với \texttt{main\_r3}; với ảnh hạng 1 đúng,
-tỉ lệ này là 68,0\% và 44,1\%. Với các câu có ảnh hạng 1 sai (5\,069 câu mỗi seed với countonly, 5\,325 với
-\texttt{main\_r3}), bỏ top-5 của E làm ảnh đúng tăng hạng ở 51,9\% và 30,7\% câu, và lên hạng 1 ở 20,6\% và 13,1\% câu. Về
-ngữ nghĩa, node ảnh có attention lớn nhất cùng loại với node câu ở 63,8\% (countonly) và 58,3\% (\texttt{main\_r3}) dòng vật
-thể theo tiêu chí strict; với dòng bộ ba, tỉ lệ khớp đủ cả ba thành phần chỉ là 2,9\% và 5,4\%.
+\textbf{$E$ của countonly có ảnh hưởng rõ hơn $E$ của \texttt{main\_r3}.} Bỏ 3 phần đứng đầu làm ảnh mất hạng 1 ở 58,1\% câu
+với countonly, so với 34,9\% với \texttt{main\_r3}. Tỉ lệ câu tìm được phản thực tế trong 10 phần đầu là 80,2\% so với
+60,3\%, và tỉ lệ câu giữ được 80\% $\Delta$ trong 10 phần là 94,5\% so với 55,7\%. Chiều ngược lại không rõ bằng: khi chỉ
+giữ 1 phần, ảnh của \texttt{main\_r3} đứng cao hơn (hạng 3,00 so với 4,19). Hai mô hình khác nhau ở bốn thay đổi
+(Mục~\ref{sec:method-main}), nên kết quả này phù hợp với lựa chọn trộn điểm thô nhưng chưa tách được tác dụng riêng của nó.
 
-Về sparsity theo hiệu ứng, với countonly, trung bình 2,78 phần đầu giữ được 80\% $\Delta$, và mức này đạt được trong
-$k\le 10$ ở 94,5\% câu. Với \texttt{main\_r3}, con số là 2,65 phần, nhưng chỉ đạt ở 55,7\% câu; ở các câu còn lại, 10 phần
-đầu chưa giữ được 80\% $\Delta$. Theo khối term, cần 15,0 phần (35,4\% số phần của ảnh) với countonly và 15,4 phần (33,0\%)
-với \texttt{main\_r3} để đạt 80\% term dương.
+\textbf{$E$ giúp kiểm tra các phần đã đẩy ảnh sai lên đầu.} Khi ảnh hạng 1 sai, bỏ tối đa 10 phần đầu của $E$ làm ảnh này
+mất hạng 1 ở 91,8\% câu, so với 68,0\% khi ảnh hạng 1 đúng. Trong các câu có ảnh hạng 1 sai mà ảnh đúng vẫn nằm trong 50
+ứng viên (trung bình 5\,069 câu mỗi seed), bỏ 5 phần đầu của $E$ làm ảnh đúng tăng hạng ở 51,9\% câu, và đưa nó lên hạng 1
+ở 20,6\%.
 
-\subsubsection{Thứ tự và độ lớn của term trong E}\label{sec:xai-findings}
-\textbf{Bộ ba đứng đầu E thường không quyết định thứ hạng.}
-Với \texttt{main\_r3}, bộ ba đứng đầu E ở 70,5\% câu. Bỏ top-1 làm ảnh mất hạng 1 ở \pmstd{49,3}{0,3}\% câu khi nó là node
-(ngẫu nhiên: \pmstd{4,4}{0,1}\%), nhưng chỉ ở \pmstd{8,4}{0,4}\% câu khi nó là bộ ba (ngẫu nhiên: \pmstd{2,5}{0,2}\%).
-Countonly không có bước đổi thang này nhưng cho cùng xu hướng: bộ ba đứng đầu E ở 43,6\% câu, và hai con số là
-\pmstd{46,5}{0,8}\% (ngẫu nhiên: \pmstd{4,7}{0,1}\%) và \pmstd{19,7}{3,2}\% (ngẫu nhiên: \pmstd{4,2}{1,0}\%). Term của kênh bộ
-ba phân tán hơn kênh vật thể: top-3 bộ ba chiếm \pmstd{22,8}{0,2}\% term dương của kênh với \texttt{main\_r3} và
-\pmstd{38,7}{1,3}\% với countonly, còn top-3 node chiếm \pmstd{63,1}{0,9}\% và \pmstd{68,0}{0,5}\%.
+\textbf{Ghép vật thể thường đúng loại, ghép bộ ba hiếm khi khớp đủ.} Xét mọi cặp ghép giữa một vật thể của câu và node ảnh
+có attention lớn nhất với nó, 63,8\% cặp cùng loại theo tiêu chí strict, và 70,0\% theo tiêu chí lenient rộng hơn. Với các
+cặp ghép bộ ba, chỉ 2,9\% khớp đủ cả chủ thể, đối tượng và vị từ.
 
-\textbf{Độ lớn của term không dự đoán điểm mất.}
-Với \texttt{main\_r3}, tổng term của top-3 là \pmstd{6,12}{0,96}, nhưng bỏ top-3 chỉ làm điểm giảm \pmstd{0,375}{0,036}: tỉ số
-tổng là \pmstd{0,063}{0,016}, Spearman là \pmstd{$-0{,}035$}{0,016}. Với countonly, tỉ số tổng ở $k=3$ là
-\pmstd{0,189}{0,045} và Spearman là \pmstd{0,402}{0,149}: điểm mất chỉ bằng khoảng một phần năm tổng term, dù vẫn tương quan
-vừa phải với nó. Trên các câu của Mục~\ref{sec:xai-compare}, occlusion (tỉ số \pmstd{1,153}{0,017}, Spearman
-\pmstd{0,888}{0,011} với \texttt{main\_r3}; \pmstd{0,968}{0,008}, \pmstd{0,910}{0,008} với countonly) và IG
-(\pmstd{1,434}{0,037}, \pmstd{0,815}{0,009}; \pmstd{1,320}{0,015}, \pmstd{0,814}{0,014}) cộng tính tốt hơn nhiều. Với
-countonly, chỉ giữ top-5 cho 116,6\% $\Delta$, tức điểm cao hơn ảnh gốc. Vì độ lớn term của E không ước lượng được điểm mất,
-demo kèm mỗi dòng của E một phép chấm lại khi bỏ phần đó (cột ``bỏ phần này'', Mục~\ref{sec:demo}).
+\subsubsection{Hạn chế của $E$}\label{sec:xai-findings}
+Các kết quả trên cho thấy thứ tự của $E$ phản ánh phần nào giữ ảnh ở hạng 1. Hai kết quả sau cho thấy giới hạn của nó.
 
-\subsubsection{So sánh với 12 cách giải thích của v2}\label{sec:xai-compare}
+\textbf{Bộ ba đứng đầu $E$ ít ảnh hưởng hơn node đứng đầu.} Khi phần đứng đầu $E$ là một node vật thể, bỏ nó làm ảnh mất hạng
+1 ở \pmstd{46,5}{0,8}\% câu; khi đó là một bộ ba, tỉ lệ chỉ là \pmstd{19,7}{3,2}\% (bỏ ngẫu nhiên: khoảng 4\%). Dù vậy, bộ
+ba đứng đầu $E$ ở 43,6\% câu. Với \texttt{main\_r3}, bộ ba đứng đầu ở 70,5\% câu và khoảng cách còn lớn hơn (49,3\% so với
+8,4\%). Hai phép bỏ khác nhau về phạm vi: bỏ một node kéo theo mọi bộ ba chứa nó, còn bỏ một bộ ba chỉ bỏ một cạnh. Kết quả
+này cũng có thể liên quan đến việc đóng góp của kênh bộ ba phân tán hơn: ba bộ ba lớn nhất chỉ chiếm 38,7\% tổng đóng góp
+dương của kênh, so với 68,0\% của ba node lớn nhất. Phụ lục~\ref{sec:xai-cases} minh hoạ hai trường hợp này bằng ảnh
+(Hình~\ref{fig:xai-cases}).
 
-\begin{table*}[t]
-  \caption{So sánh 13 cách giải thích trên val (v2)}
-  \label{tab:xai-explainers}
-  \centering
-  \footnotesize
-  \setlength{\tabcolsep}{3pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrr@{}}
-    \toprule
-    & \multicolumn{6}{c}{countonly} & \multicolumn{6}{c}{\texttt{main\_r3}} \\
-    \cmidrule{2-7}\cmidrule{8-13}
-    Cách & Del.\,$\downarrow$ & Ins.\,$\uparrow$ & Fid$_{\alpha}^{+}$ & Fid$_{\alpha}^{-}$ & $\rho$ & T5
-         & Del.\,$\downarrow$ & Ins.\,$\uparrow$ & Fid$_{\alpha}^{+}$ & Fid$_{\alpha}^{-}$ & $\rho$ & T5 \\
-    \midrule
-    Shapley$^{\dagger}$ & $-0{,}187$ & 1,542 & 0,081 & $-0{,}051$ & chuẩn & chuẩn & $-0{,}683$ & 1,532 & 0,118 & $-0{,}046$ & chuẩn & chuẩn \\
-    GraphSVX$^{\dagger}$ & $-0{,}243$ & 1,562 & 0,084 & $-0{,}055$ & 0,754 & 73,2 & $-0{,}708$ & 1,502 & 0,114 & $-0{,}047$ & 0,719 & 71,9 \\
-    IG & $-0{,}220$ & 1,238 & 0,087 & $-0{,}045$ & 0,335 & 60,4 & $-0{,}445$ & 0,646 & 0,090 & $-0{,}024$ & 0,288 & 62,9 \\
-    Occlusion & $-0{,}007$ & 1,447 & 0,102 & $-0{,}065$ & 0,446 & 55,3 & $-0{,}244$ & 1,234 & 0,106 & $-0{,}046$ & 0,476 & 58,5 \\
-    \textbf{E} & 0,070 & 1,262 & 0,076 & $-0{,}032$ & 0,605 & 56,5 & 0,237 & 0,764 & 0,050 & 0,016 & 0,460 & 31,8 \\
-    GNNExplainer$^{\dagger}$ & 0,107 & 1,059 & 0,070 & $-0{,}043$ & 0,365 & 57,1 & $-0{,}169$ & $-0{,}336$ & 0,091 & $-0{,}000$ & 0,255 & 56,7 \\
-    GNN-LRP & 0,114 & 0,880 & 0,063 & $-0{,}025$ & 0,078 & 47,4 & 0,038 & 0,391 & 0,068 & 0,001 & 0,070 & 39,5 \\
-    PGExplainer & 0,213 & 0,636 & 0,051 & $-0{,}009$ & $-0{,}026$ & 42,8 & 0,081 & 0,196 & 0,050 & 0,018 & 0,069 & 43,4 \\
-    CLIP & 0,387 & 0,899 & 0,049 & $-0{,}006$ & 0,424 & 40,3 & 0,283 & 0,234 & 0,047 & 0,021 & 0,352 & 35,4 \\
-    SubgraphX$^{\dagger}$ & 0,392 & 0,949 & 0,051 & $-0{,}019$ & 0,024 & 38,1 & 0,276 & 0,617 & 0,083 & $-0{,}009$ & 0,110 & 33,9 \\
-    Gradient$\times$input & 0,759 & 0,241 & 0,020 & 0,022 & $-0{,}207$ & 24,0 & 0,826 & $-1{,}038$ & 0,012 & 0,057 & $-0{,}133$ & 17,8 \\
-    Ngẫu nhiên & 0,891 & 0,206 & 0,011 & 0,028 & 0,004 & 16,9 & 0,838 & $-0{,}621$ & 0,013 & 0,053 & $-0{,}012$ & 14,3 \\
-    E đảo ngược & 1,064 & $-1{,}309$ & $-0{,}003$ & 0,044 & $-0{,}605$ & 3,4 & 1,009 & $-2{,}300$ & 0,002 & 0,068 & $-0{,}460$ & 2,1 \\
-    \bottomrule
-  \end{tabular*}
-  \par\smallskip
-  {\scriptsize\raggedright
-    Val, trung bình 3 seed; std trong file nguồn, lớn nhất ở GNNExplainer của \texttt{main\_r3} (Ins.\ $\pm$\,0,951) và Shapley của \texttt{main\_r3} (Del.\ $\pm$\,0,226).
-    Del., Ins.: AUC của đường cong deletion và insertion.
-    Fid$_{\alpha}^{\pm}$: 5 phần đầu, $\alpha=0{,}1$.
-    $\rho$: Spearman với Shapley; T5: \% top-5 trùng Shapley.
-    $^{\dagger}$196 câu mỗi seed (countonly) và 195 (\texttt{main\_r3}); các dòng khác 983 và 977 câu.\par}
-  \tabsrc{\file{experiments/xai-metrics-v2/REPORT.md}, \file{experiments/xai-metrics-v2/summary.json}}
-\end{table*}
+\textbf{Tổng đóng góp đánh giá quá cao điểm mất khi bỏ phần.} Đóng góp $t_j$ được tính trên đồ thị gốc. Khi bỏ phần rồi chấm
+lại, attention dồn sang các phần còn lại và GAT tính lại biểu diễn của các node, nên điểm mất thật khác tổng đóng góp. Trên
+toàn val, tổng điểm mất khi bỏ 3 phần đầu chỉ bằng 18,9\% tổng đóng góp của chúng ($R_3={}$\pmstd{0,189}{0,045}), dù hai
+đại lượng vẫn tương quan dương giữa các câu (Spearman \pmstd{0,402}{0,149}). Với \texttt{main\_r3}, tỉ số chỉ còn 0,063 và
+gần như không tương quan. Chiều ngược lại cũng không cộng tính: chỉ giữ 5 phần đầu cho điểm cao hơn ảnh gốc (116,6\%
+$\Delta$). Occlusion, tức chấm lại sau khi bỏ riêng từng phần, cộng tính tốt hơn nhiều ($R_3={}$\pmstd{0,968}{0,008} trên
+mẫu so sánh). Vì vậy demo kèm mỗi dòng của $E$ một phép chấm lại khi bỏ phần đó (cột ``bỏ phần này'', Mục~\ref{sec:demo}).
 
-Theo Bảng~\ref{tab:xai-explainers}, ở cả hai mô hình, Shapley, GraphSVX, IG và occlusion dẫn đầu ở deletion AUC và
-Fid$_{\alpha}$: deletion AUC âm hoặc gần 0, và Fid$_{\alpha}^{+}>{}$Fid$_{\alpha}^{-}$. GraphSVX khớp Shapley ở mức Spearman
-0,754 và 0,719, trùng top-5 ở 72--73\%, với deletion AUC, insertion AUC và $k_{\text{flip}}$ ngang hoặc nhỉnh hơn chính
-Shapley; hai cách ước lượng cùng một đại lượng với cùng chi phí. Với countonly, E khớp Shapley tốt nhất trong các cách không
-ước lượng Shapley (Spearman \pmstd{0,605}{0,048}, so với \pmstd{0,446}{0,041} của occlusion), insertion AUC ngang IG (1,262 so
-với 1,238), và có Fid$_{\alpha}^{+}>{}$Fid$_{\alpha}^{-}$. E chỉ kém occlusion ở deletion AUC (0,070 so với $-0{,}007$;
-Wilcoxon ghép cặp, $p$ lớn nhất 0,042), trong khi không tốn lượt chấm nào. Với \texttt{main\_r3}, E có deletion AUC dương
-(0,237) và không khác CLIP có ý nghĩa thống kê ($p$ lớn nhất 0,96); thứ tự của E khớp Shapley gần bằng occlusion
-(\pmstd{0,460}{0,007} so với \pmstd{0,476}{0,007}), nhưng top-5 chỉ trùng 31,8\%, so với 58,5\% của occlusion.
+\subsubsection{So với các cách giải thích khác}\label{sec:xai-compare}
+Phụ lục~\ref{sec:xai-compare-results} so $E$ với 15 cách giải thích khác (12 cách ở bản đo v2, 3 cách thêm ở v3) trên một
+mẫu 1\,000 câu val, và trên ba bộ có đáp án biết trước.
 
-GNN-LRP, PGExplainer và SubgraphX khớp Shapley kém ở cả hai mô hình (Spearman $\le 0{,}11$, so với 0,46--0,61 của E). Với
-\texttt{main\_r3}, GNN-LRP và PGExplainer có deletion AUC tốt hơn E (0,038 và 0,081 so với 0,237) nhưng insertion AUC kém hơn
-nhiều (0,391 và 0,196 so với 0,764); với countonly, chúng kém E ở cả deletion, insertion và độ khớp Shapley. GNN-LRP vẫn tốt
-hơn hẳn gradient $\times$ input, cách cùng dựa trên tuyến tính hoá cục bộ. SubgraphX có $k_{\text{flip}}\le 10$ ở ít câu nhất
-trong bốn cách GNN thêm sau (60\% và 50\%) và tốn nhiều lượt chấm nhất với countonly (trung bình 5\,769, 2,3 giây mỗi câu trên
-CPU). Gradient $\times$ input gần như ngẫu nhiên, và E đảo ngược cho kết quả thấp nhất ở mọi cột, nên thứ tự của E chứa
-thông tin về thứ hạng. Thêm bốn cách GNN sau cùng (PGExplainer, GNN-LRP, GraphSVX, SubgraphX) không làm đổi số của các cách
-cũ ở cả 6 run.
+\textbf{Thứ tự của $E$ gần với Shapley.} Tương quan Spearman giữa thứ tự của $E$ và giá trị Shapley là 0,605, cao hơn
+occlusion (0,446) và IG (0,335); chỉ hai cách ước lượng chính giá trị Shapley, GraphSVX (0,754) và GStarX (0,653), cao hơn.
+$E$ đạt được điều này mà không cần chấm thêm sau lượt xếp hạng.
 
-\subsubsection{Phản thực tế và đáp án biết trước (v3)}\label{sec:xai-v3}
-GStarX khớp Shapley tốt thứ hai sau GraphSVX ($\rho=0{,}653$ với countonly, $0{,}656$ với \texttt{main\_r3}) với khoảng nửa
-số lượt chấm (542 và 318 mỗi câu); insertion AUC của nó cao (1,385 và 1,257) nhưng deletion AUC kém occlusion (0,161 và
-$-0{,}131$). CF-GNNExplainer cho thứ tự kém ($\rho=0{,}182$ và 0,009), và GraphMask gần mức ngẫu nhiên (deletion AUC 0,765 và
-0,775; ngẫu nhiên 0,891 và 0,838). GraphMask học được trong ràng buộc 5\% ở cả 6 checkpoint, sau khi sửa cách học để giữ
-trạng thái mở ít cổng nhất trong ràng buộc thay cho trạng thái epoch cuối; với \texttt{main\_r3} nó đóng gần hết message mà
-điểm chỉ đổi 2--4\% hiệu ứng.
+\textbf{Về độ trung thực, $E$ đứng sau occlusion và nhóm Shapley.} Deletion AUC, tức phần điểm còn lại khi bỏ dần các phần
+đầu (thấp là tốt), của $E$ là 0,070, so với $-0{,}007$ của occlusion và $-0{,}243$ của GraphSVX. Insertion AUC, tức phần
+điểm đạt được khi chỉ giữ các phần đầu (cao là tốt), của $E$ là 1,262, ngang IG (1,238) nhưng thấp hơn occlusion (1,447).
+Trong các phiên bản được điều chỉnh cho bài toán này, GNN-LRP, PGExplainer và SubgraphX khớp Shapley kém hơn $E$ (Spearman
+$\le 0{,}08$).
 
-\textbf{Phản thực tế nhỏ nhất.} Duyệt mọi tập 1 hoặc 2 phần của ảnh hạng 1 trên tập con 200 câu, \pmstd{74,2}{1,9}\% ảnh
-(countonly) và \pmstd{70,7}{1,3}\% (\texttt{main\_r3}) mất hạng 1 khi bỏ $\le 2$ phần, 53,5\% và 51,5\% chỉ với 1 phần.
-CF-GNNExplainer chỉ tìm được phản thực tế ở \pmstd{45,7}{4,3}\% và \pmstd{34,6}{2,9}\% câu. Bỏ dần theo thứ tự của occlusion
-cho phản thực tế đúng cỡ nhỏ nhất ở 90,6\% và 92,4\% các câu có phản thực tế $\le 2$ phần, hơn GraphSVX (81,3\% và 82,3\%) và
-E (59,7\% và 46,7\%).
+\textbf{Đáp án biết trước.} Trên bộ mô tả vùng của Visual Genome, GEA của $E$, tức mức trùng giữa các phần đầu của thứ tự và
+tập phần đáp án, xấp xỉ Shapley (0,595 so với 0,592); bộ này đo mức khớp với chú thích của người, không phải nguyên nhân của
+thứ hạng. Trên dữ liệu tổng hợp, phần đứng đầu $E$ luôn thuộc đáp án ở cả 100 ca mỗi seed. Occlusion đứng đầu ở cả ba bộ.
 
-\begin{table}[t]
-  \caption{GEA trên ba benchmark có đáp án biết trước}
-  \label{tab:xai-gt}
-  \centering
-  \footnotesize
-  \setlength{\tabcolsep}{3pt}
-  \begin{tabular}{@{}lrrrrr@{}}
-    \toprule
-    & B & \multicolumn{2}{c}{C. cài vào ảnh} & \multicolumn{2}{c}{A. region VG} \\
-    \cmidrule{3-4}\cmidrule{5-6}
-    Cách & tổng hợp & countonly & \texttt{main\_r3} & countonly & \texttt{main\_r3} \\
-    \midrule
-    Occlusion & \textbf{1,000} & \textbf{0,654} & \textbf{0,606} & \textbf{0,771} & \textbf{0,758} \\
-    GraphSVX & 0,333 & 0,466 & 0,396 & 0,620 & 0,512 \\
-    Shapley & 0,514 & 0,445 & 0,389 & 0,592 & 0,505 \\
-    SubgraphX & 0,839 & 0,465 & 0,020 & 0,453 & 0,594 \\
-    IG & 0,802 & 0,388 & 0,396 & 0,539 & 0,433 \\
-    GNNExplainer & 0,772 & 0,434 & 0,386 & 0,543 & 0,427 \\
-    \textbf{E} & 0,665 & 0,416 & 0,250 & 0,595 & 0,281 \\
-    GStarX & 0,283 & 0,372 & 0,288 & 0,393 & 0,422 \\
-    CF-GNNExplainer & 0,699 & 0,356 & 0,244 & 0,396 & 0,225 \\
-    CLIP & 0,878 & 0,376 & 0,356 & 0,386 & 0,378 \\
-    GraphMask & 0,171 & 0,060 & 0,101 & 0,070 & 0,108 \\
-    Ngẫu nhiên & 0,143 & 0,049 & 0,052 & 0,050 & 0,057 \\
-    \bottomrule
-  \end{tabular}
-  \par\smallskip
-  {\scriptsize\raggedright
-    Trung bình 3 seed, 100 ca mỗi seed; GNN-LRP, PGExplainer, gradient và E đảo ngược ở file nguồn.\par}
-  \tabsrc{\file{experiments/xai-ground-truth/REPORT.md}, \file{experiments/xai-ground-truth/summary.json}}
-\end{table}
-
-\textbf{Đáp án biết trước} (Bảng~\ref{tab:xai-gt}, cách dựng ở Mục~\ref{sec:xai-baselines}). Occlusion đứng đầu ở cả năm
-cột, và đúng tuyệt đối trên dữ liệu tổng hợp. E của countonly ngang Shapley trên region graph (0,595 so với 0,592) và luôn
-đặt một phần đúng lên đầu ở dữ liệu tổng hợp (AUROC 0,956); E của \texttt{main\_r3} kém rõ ở A và C, cùng chiều với
-Mục~\ref{sec:xai-findings}. SubgraphX phụ thuộc tính liên thông: với \texttt{main\_r3}, đồ thị không có cạnh hoàn thiện nên
-cụm phần cài vào tách khỏi phần còn lại của ảnh, và SubgraphX, vốn giữ thành phần liên thông lớn nhất khi tỉa, thường tỉa cụm
-đó sớm (GEA 0,020). Shapley và GraphSVX tốt trên ảnh thật nhưng kém trên dữ liệu tổng hợp, còn CLIP chỉ mạnh khi phần đúng
-trùng tên trong câu. Ngoài occlusion, không cách nào ổn định trên cả ba bộ.
-
-\subsubsection{Bằng chứng trên 13 truy vấn}\label{sec:xai-cases}
-
-\begin{table*}[t]
-  \caption{Bằng chứng trên 13 câu val, seed 0 của mỗi mô hình (v2)}
-  \label{tab:xai-cases}
-  \centering
-  \footnotesize
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lllrrclllrrc@{}}
-    \toprule
-    & \multicolumn{5}{c}{countonly} & & \multicolumn{5}{c}{\texttt{main\_r3}} \\
-    \cmidrule{2-6}\cmidrule{8-12}
-    Câu & Ảnh & Top-3 của E & Bỏ top-3 & Giữ top-3 & $k_{\text{flip}}$ & & Ảnh & Top-3 của E & Bỏ top-3 & Giữ top-3 & $k_{\text{flip}}$ \\
-    \midrule
-    302038\_1 & Đ & 3 node & 4 (1,0) & 1 (6,7) & 1 & & Đ & 3 bộ ba & 1 (1,0) & 1 (3,2) & 7 \\
-    422698\_1 & Đ & 3 bộ ba & 1 (1,0) & 1 (1,0) & 4 & & Đ & 3 bộ ba & 1 (1,0) & 11 (12,2) & $>10$ \\
-    357943\_3 & Đ & 2 node, 1 bộ ba & 2 (1,3) & 2 (6,0) & 1 & & Đ & 3 bộ ba & 1 (1,0) & 2 (11,7) & 5 \\
-    445695\_1 & Đ & 2 node, 1 bộ ba & 4 (1,4) & 1 (4,7) & 1 & & Đ & 3 node & 11 (2,4) & 1 (8,0) & 1 \\
-    574350\_4 & Đ & 3 node & 22 (1,8) & 1 (14,1) & 1 & & Đ & 3 bộ ba & 1 (1,0) & 2 (2,0) & 7 \\
-    1153\_3 & S & 3 bộ ba & 1 (1,0) & 1 (1,0) & 9 & & S & 3 bộ ba & 1 (1,0) & 2 (2,8) & 9 \\
-    279933\_1 & S & 3 bộ ba & 2 (1,3) & 3 (3,1) & 1 & & S & 3 bộ ba & 1 (1,0) & 4 (10,7) & 8 \\
-    159627\_2 & S & 2 node, 1 bộ ba & 9 (1,5) & 1 (7,4) & 1 & & Đ & 3 node & 3 (1,0) & 3 (5,8) & 3 \\
-    34471\_0 & S & 1 node, 2 bộ ba & 2 (1,1) & 1 (6,0) & 1 & & S & 3 bộ ba & 1 (1,0) & 1 (2,2) & $>10$ \\
-    526446\_0 & S & 3 bộ ba & 1 (1,0) & 44 (44,4) & 4 & & S & 3 node & 45 (21,9) & 1 (22,0) & 1 \\
-    472772\_2 & Đ & 2 node, 1 bộ ba & 3 (1,0) & 1 (14,1) & 3 & & S & 3 bộ ba & 1 (1,0) & 1 (2,1) & 4 \\
-    237041\_4 & Đ & 1 node, 2 bộ ba & 2 (1,2) & 3 (4,1) & 3 & & S & 3 bộ ba & 1 (1,0) & 1 (5,5) & $>10$ \\
-    151938\_1 & Đ & 3 node & 8 (2,5) & 1 (8,9) & 1 & & S & 3 bộ ba & 1 (1,0) & 1 (2,5) & 7 \\
-    \bottomrule
-  \end{tabular*}
-  \par\smallskip
-  {\scriptsize\raggedright
-    Ảnh: ảnh hạng 1 của mô hình đó đúng (Đ) hay sai (S); hai mô hình có thể giải thích hai ảnh khác nhau.
-    Bỏ top-3, giữ top-3: hạng của ảnh sau khi bỏ, hoặc chỉ giữ, top-3 của E; trong ngoặc là trung bình 10 lần chọn ngẫu nhiên.\par}
-  \tabsrc{\file{experiments/xai-metrics-v2/cases.json}}
-\end{table*}
-
-Bảng~\ref{tab:xai-cases} dùng lại 10 câu của Mục~\ref{sec:l1-cases} và 3 câu ví dụ trong
-\file{experiments/improve/explanations/}, lần này chấm bằng seed 0 của từng mô hình.
-
-Với countonly, top-3 của E có ít nhất một node ở 9/13 câu; bỏ top-3 làm ảnh mất hạng 1 ở 10/13 câu, và $k_{\text{flip}}=1$ ở
-8/13 câu. Ví dụ, ở câu 574350\_4, top-3 của E là các node dog, umbrella, umbrella; bỏ ba node này đưa ảnh từ hạng 1 xuống hạng
-22 (ngẫu nhiên: 1,8), còn chỉ giữ chúng thì ảnh vẫn hạng 1 (ngẫu nhiên: 14,1). Ba câu mà bỏ top-3 không đổi hạng (422698\_1,
-1153\_3, 526446\_0) đều có top-3 toàn là bộ ba.
-
-Với \texttt{main\_r3}, ở 3 câu có top-3 của E là node, bỏ top-3 đưa ảnh xuống hạng 11, 3 và 45 (ngẫu nhiên: 2,4; 1,0; 21,9).
-Ví dụ, ở câu 526446\_0, top-3 của E là các node catcher, dirt, guard; bỏ ba node này đưa ảnh (sai) xuống hạng 45, còn chỉ giữ
-chúng thì ảnh vẫn hạng 1. Ở 10 câu còn lại, top-3 đều là bộ ba, và bỏ cả ba thì ảnh vẫn hạng 1. Cùng câu 574350\_4, top-3 của
-E là ``frame has frame'', ``man has pant'', ``woman wearing pant'', và bỏ cả ba không đổi hạng.
-
-Chỉ giữ top-3, ảnh vẫn ở hạng 1--2 ở 10/13 câu với cả hai mô hình. Kết quả trên 13 câu cùng chiều với kết quả trên toàn val:
-khi top-3 của E có node, bỏ chúng thường làm ảnh mất hạng; khi top-3 là bộ ba, ảnh thường giữ hạng 1.
+\textbf{Phản thực tế là điểm yếu của $E$.} Trên 200 câu đầu của mẫu, xét các câu mà bỏ không quá 2 phần đã đủ làm ảnh mất
+hạng 1: bỏ dần theo $E$ chỉ đạt đúng số phần bỏ nhỏ nhất ở 59,7\% câu, còn occlusion đạt 90,6\%.
 
 % ---------------------------------------------------------------------
 \subsection{Kết quả cấp độ 3: MMKG tiếng Việt}
@@ -269,7 +131,6 @@ Tay, trực tiếp & 12 & \textbf{75,00} & 33,33 & \textbf{100,00} & 75,00 & \te
 Tay, gián tiếp & 18 & 11,11 & \textbf{77,78} & 83,33 & \textbf{88,89} & 29,41 & \textbf{81,81} \\
 \bottomrule
 \end{tabular}
-\tabsrc{\file{experiments/level3/vnmmkg/xlmr_h14/a0_metrics.json}}
 \end{table}
 
 \begin{table}[t]
@@ -287,7 +148,6 @@ CLIP (XLM-R H/14) & 37,86 & 72,82 & 79,61 & 52,39 \\
 +KG, $\alpha=0$ (của A0) & 50,49 & 70,87 & 81,55 & 60,46 \\
 \bottomrule
 \end{tabular}
-\tabsrc{\file{experiments/level3/vnmmkg/xlmr_h14/a1_metrics.json}}
 \end{table}
 
 \textbf{Kết quả.} Ở A0 (Bảng~\ref{tab:vn-a0}), kênh KG nâng R@1 từ 23,35 lên 33,92 (+10,6 điểm). Câu gián tiếp đúng ở hạng 1

@@ -25,9 +25,11 @@ lại cạnh ngẫu nhiên và thay đồ thị của ảnh khác cho thấy ph�
 đa phương thức năm 2024, và lệch MRR của bài báo +0,41 điểm. Ba loại tín hiệu đồ thị được đưa vào cùng pipeline xếp lại:
 số cạnh tri thức, embedding của NativE và điểm bộ ba của NativE. Kênh đếm cạnh nâng R@1 test từ 24,89 lên 29,82. Trên bộ
 25 truy vấn tự viết, nhóm gián tiếp tăng R@1 từ 40 lên 80, nhóm trực tiếp không đổi.
-\item \textbf{Cấp độ~3}. Nhóm đo fidelity, validity và sparsity của lời giải thích trên toàn bộ 10\,633 câu val, 3 seed,
-kèm bằng chứng trên 13 truy vấn. Lời giải thích được so với 15 cách giải thích khác trên cùng độ đo và trên ba bộ có đáp án
-biết trước. Nhóm tự xây một MMKG tiếng Việt về di tích (150 thực thể, 325 triple, 331 ảnh), chạy phương pháp tốt nhất của
+\item \textbf{Cấp độ~3}. Nhóm đánh giá lời giải thích của mô hình chính bằng các phép can thiệp trên đồ thị: bỏ hoặc chỉ giữ
+các phần mà lời giải thích đặt lên đầu, rồi chấm lại, trên toàn bộ 10\,633 câu val, 3 seed. Các phần đứng đầu lời
+giải thích ảnh hưởng tới thứ hạng mạnh hơn hẳn mốc ngẫu nhiên, và rõ hơn so với lời giải thích của mô hình cấp~1 gốc. So với
+15 cách giải thích khác, thứ tự của nó khớp giá trị Shapley tốt nhất trong các cách không ước lượng Shapley, nhưng kém
+occlusion về độ trung thực và phản thực tế. Nhóm tự xây một MMKG tiếng Việt về di tích (150 thực thể, 325 triple, 331 ảnh), chạy phương pháp tốt nhất của
 cấp độ~2 trên đó và phân tích khả năng chuyển giao.
 \end{itemize}
 Ở mọi cấp độ, trọng số kết hợp, siêu tham số, checkpoint và từng bước xây mô hình được chọn trên train hoặc validation;
@@ -36,5 +38,6 @@ mỗi mô hình đã chốt chỉ chấm test một lần.
 Mục~\ref{sec:related} điểm qua các công trình liên quan. Mục~\ref{sec:pipeline} mô tả pipeline theo từng cấp độ, mỗi cấp
 kèm ablation của các thành phần. Mục~\ref{sec:exp} trình bày dữ liệu, cách chống rò rỉ và kết quả. Mục~\ref{sec:conclusion}
 nêu kết luận và hạn chế. Phân công và khai báo công cụ AI nằm ngay trước tài liệu tham khảo. Phụ lục~\ref{app:vnmmkg} mô tả
-chi tiết MMKG tiếng Việt; Phụ lục~\ref{app:scene-ranker} mô tả một bộ xếp lại thứ hai do một thành viên phát triển song song.
-Mọi con số đều lấy từ một file kết quả trong thư mục \file{experiments/} của repo; đường dẫn ghi ngay cạnh bảng.
+chi tiết MMKG tiếng Việt; Phụ lục~\ref{app:scene-ranker} mô tả một bộ xếp lại thứ hai do một thành viên phát triển song song;
+Phụ lục~\ref{app:xai} trình bày chi tiết đánh giá lời giải thích.
+Mọi con số trong báo cáo đều lấy từ các file kết quả đi kèm mã nguồn của nhóm.
